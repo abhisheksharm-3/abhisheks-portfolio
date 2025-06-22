@@ -3,15 +3,21 @@ import { useState, useEffect } from "react";
 
 export function useScrollPosition() {
   const [scrollPosition, setScrollPosition] = useState(0);
+  const [scrollHeight, setScrollHeight] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const update = () => {
       setScrollPosition(window.scrollY);
+      setScrollHeight(document.body.scrollHeight - window.innerHeight);
     };
-    
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    update(); // set initial values
+    window.addEventListener("scroll", update);
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
-  return scrollPosition;
+  return { scrollPosition, scrollHeight };
 }
