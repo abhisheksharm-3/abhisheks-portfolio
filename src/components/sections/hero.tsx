@@ -12,16 +12,40 @@ export function Hero() {
   
   // Mouse position for parallax
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  // Add window dimensions state to avoid direct window access
+  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      // Normalize mouse position to be between -1 and 1
-      const x = (e.clientX / window.innerWidth) * 2 - 1;
-      const y = (e.clientY / window.innerHeight) * 2 - 1;
-      setMousePosition({ x, y });
-    };
-    
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    // Only run on client side
+    if (typeof window !== "undefined") {
+      // Set initial window size
+      setWindowSize({ 
+        width: window.innerWidth, 
+        height: window.innerHeight 
+      });
+      
+      const handleMouseMove = (e: MouseEvent) => {
+        // Normalize mouse position to be between -1 and 1
+        const x = (e.clientX / window.innerWidth) * 2 - 1;
+        const y = (e.clientY / window.innerHeight) * 2 - 1;
+        setMousePosition({ x, y });
+      };
+      
+      const handleResize = () => {
+        setWindowSize({ 
+          width: window.innerWidth, 
+          height: window.innerHeight 
+        });
+      };
+      
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("resize", handleResize);
+      
+      return () => {
+        window.removeEventListener("mousemove", handleMouseMove);
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, []);
   
   // Derived motion values
@@ -48,9 +72,11 @@ export function Hero() {
   }, []);
   
   const scrollToWork = () => {
-    const workSection = document.getElementById("work-section");
-    if (workSection) {
-      workSection.scrollIntoView({ behavior: "smooth" });
+    if (typeof window !== "undefined") {
+      const workSection = document.getElementById("work-section");
+      if (workSection) {
+        workSection.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -100,10 +126,12 @@ export function Hero() {
             className="absolute w-[40vw] h-[40vw] rounded-full bg-gradient-to-tr from-primary/5 to-transparent blur-[80px]"
             style={{ 
               left: useTransform(
-                () => mousePosition.x * -30 + window.innerWidth * 0.75
+                // Using state instead of direct window access
+                () => mousePosition.x * -30 + windowSize.width * 0.75
               ),
               top: useTransform(
-                () => mousePosition.y * -30 + window.innerHeight * 0.3
+                // Using state instead of direct window access
+                () => mousePosition.y * -30 + windowSize.height * 0.3
               ),
             }}
             animate={{
