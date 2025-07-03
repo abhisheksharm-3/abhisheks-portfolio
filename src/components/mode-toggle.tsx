@@ -22,7 +22,7 @@ export function ModeToggle() {
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-primary/5 bg-background/30">
+      <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-primary/5 bg-background/30 cursor-pointer">
         <span className="sr-only">Toggle theme</span>
       </Button>
     );
