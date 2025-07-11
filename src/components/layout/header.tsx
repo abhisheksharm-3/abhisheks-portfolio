@@ -10,6 +10,7 @@ import { usePathname } from "next/navigation";
 
 interface HeaderProps {
   scrollPosition: number;
+  activePage?: string;
 }
 
 // Define the NavItem type to be exported and reused
@@ -20,13 +21,30 @@ export type NavItem = {
 
 // Single source of navigation items
 export const navigationItems: NavItem[] = [
+  { name: "Home", href: "/" },
   { name: "About", href: "/about" },
-  { name: "Work", href: "/work" },
-  { name: "Graveyard", href: "/graveyard" },
+  { name: "Projects", href: "/projects" },
+  { name: "Skills", href: "/skills" },
   { name: "Contact", href: "/contact" }
 ];
 
-export function Header({ scrollPosition }: HeaderProps) {
+// Abstract SVG paths for decorative elements
+function AbstractPath({ className, pathD }: { className?: string; pathD?: string }) {
+  return (
+    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className={className}>
+      <motion.path
+        d={pathD || "M30,20 Q50,10 70,30 T90,50"}
+        stroke="currentColor"
+        strokeWidth="0.5"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 2, delay: 0.5 }}
+      />
+    </svg>
+  );
+}
+
+export function Header({ scrollPosition, activePage }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeItem, setActiveItem] = useState<string | null>(null);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
@@ -44,15 +62,19 @@ export function Header({ scrollPosition }: HeaderProps) {
   const cursorXSpring = useSpring(cursorX, springConfig);
   const cursorYSpring = useSpring(cursorY, springConfig);
 
-  // Set active item based on pathname
+  // Set active item based on activePage prop or pathname
   useEffect(() => {
-    const active = navigationItems.find(item => 
-      item.href === "/" 
-        ? pathname === "/" 
-        : pathname.startsWith(item.href)
-    );
-    setActiveItem(active?.name || null);
-  }, [pathname]);
+    if (activePage) {
+      setActiveItem(activePage);
+    } else {
+      const active = navigationItems.find(item => 
+        item.href === "/" 
+          ? pathname === "/" 
+          : pathname.startsWith(item.href)
+      );
+      setActiveItem(active?.name || null);
+    }
+  }, [pathname, activePage]);
 
   // Handle mouse movement for cursor and hover effects
   useEffect(() => {
@@ -129,11 +151,22 @@ export function Header({ scrollPosition }: HeaderProps) {
           className="absolute inset-0 -z-10 transition-opacity duration-500"
           style={{ 
             opacity: headerOpacity,
-            background: `backdrop-filter: blur(${8 * Math.min(1, scrollPosition / 100)}px)`,
             backdropFilter: `blur(${8 * Math.min(1, scrollPosition / 100)}px)`,
             borderBottom: isScrolled ? '1px solid rgba(var(--primary), 0.08)' : 'none'
           }}
-        />
+        >
+          {/* Noise texture for header background */}
+          {isScrolled && (
+            <div className="absolute inset-0 z-0 mix-blend-overlay opacity-10">
+              <svg className="w-full h-full opacity-20" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <filter id="headerNoiseFilter">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+                </filter>
+                <rect width="100%" height="100%" filter="url(#headerNoiseFilter)" />
+              </svg>
+            </div>
+          )}
+        </div>
 
         {/* Logo Section with golden ratio design elements */}
         <Link href="/" className="group relative z-50">
@@ -301,23 +334,26 @@ export function Header({ scrollPosition }: HeaderProps) {
               variant="outline"
               size="sm"
               className="border-primary/10 bg-primary/5 hover:bg-primary/10 text-xs group relative overflow-hidden cursor-pointer"
+              asChild
             >
-              <motion.span className="relative z-10">
-                Hire me
-              </motion.span>
-              <motion.div
-                initial={{ x: "100%" }}
-                whileHover={{ x: 0 }}
-                transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-                className="absolute inset-0 bg-primary/10 z-0"
-              />
-              <motion.div 
-                initial={{ scale: 0, opacity: 0 }}
-                whileHover={{ scale: 1, opacity: 0.8 }}
-                transition={{ duration: 0.4 }}
-                className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary/40"
-              />
-              <ArrowRight className="ml-1 h-3 w-3 text-primary/80 group-hover:translate-x-1 transition-transform duration-300" />
+              <Link href="/contact">
+                <motion.span className="relative z-10">
+                  Hire me
+                </motion.span>
+                <motion.div
+                  initial={{ x: "100%" }}
+                  whileHover={{ x: 0 }}
+                  transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                  className="absolute inset-0 bg-primary/10 z-0"
+                />
+                <motion.div 
+                  initial={{ scale: 0, opacity: 0 }}
+                  whileHover={{ scale: 1, opacity: 0.8 }}
+                  transition={{ duration: 0.4 }}
+                  className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-primary/40"
+                />
+                <ArrowRight className="ml-1 h-3 w-3 text-primary/80 group-hover:translate-x-1 transition-transform duration-300" />
+              </Link>
             </Button>
           </motion.div>
         </div>
@@ -411,12 +447,16 @@ export function Header({ scrollPosition }: HeaderProps) {
         )}
       </motion.header>
 
-      {/* Pass navigationItems to MobileMenu */}
-      <MobileMenu 
-        isOpen={mobileMenuOpen} 
-        onClose={() => setMobileMenuOpen(false)} 
-        navigationItems={navigationItems}
-      />
+      {/* Mobile menu */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <MobileMenu 
+            onClose={() => setMobileMenuOpen(false)} 
+            navigationItems={navigationItems}
+            activeItem={activeItem}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

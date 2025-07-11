@@ -1,52 +1,53 @@
 "use client";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Code, Terminal, Layout, ArrowRight, Layers, LineChart, Palette, Users } from "lucide-react";
+import { Code, Terminal, Layout, ArrowRight, Layers, LineChart, Palette, Users, Globe, Database, Cloud, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
 
-// Expanded services with more details but no numerical proficiency
+// Updated services with real skills from resume
 const services = [
   {
     icon: <Code />,
     title: "Frontend Development",
     description: "Building responsive, accessible web applications using modern frameworks and styling approaches.",
-    skills: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
+    skills: ["React.js", "Next.js", "SvelteKit", "TailwindCSS", "TypeScript"],
     level: "Specialist"
   },
   {
     icon: <Terminal />,
     title: "Backend Solutions",
     description: "Creating robust API endpoints and database architectures that power seamless user experiences.",
-    skills: ["Node.js", "Express", "MongoDB", "PostgreSQL"],
+    skills: ["Node.js", "Express.js", "Flask", "FastAPI", "Go"],
     level: "Advanced"
   },
   {
-    icon: <Layout />,
-    title: "UI/UX Design",
-    description: "Crafting intuitive interfaces with a focus on user experience, accessibility and visual consistency.",
-    skills: ["Figma", "Design Systems", "Prototyping", "User Testing"],
+    icon: <Database />,
+    title: "Database Management",
+    description: "Designing and implementing efficient database solutions for various application needs.",
+    skills: ["MongoDB", "Neo4j", "MySQL", "Firebase", "Appwrite"],
     level: "Proficient"
   },
   {
-    icon: <LineChart />,
-    title: "Performance Focus",
-    description: "Optimizing applications for speed, accessibility, and user experience across all devices.",
-    skills: ["Lighthouse", "WebVitals", "Lazy Loading", "Code Splitting"],
+    icon: <Smartphone />,
+    title: "Mobile Development",
+    description: "Creating native and cross-platform mobile applications with modern frameworks.",
+    skills: ["React Native", "Expo", "Jetpack Compose", "Kotlin"],
     level: "Advanced"
   },
   {
-    icon: <Layers />,
-    title: "Full Stack Integration",
-    description: "Connecting frontend and backend layers into cohesive, scalable application architectures.",
-    skills: ["API Design", "State Management", "Authentication", "Deployment"],
+    icon: <Cloud />,
+    title: "Cloud & DevOps",
+    description: "Deploying and managing applications with modern cloud infrastructure and DevOps practices.",
+    skills: ["AWS", "Docker", "Firebase", "Appwrite", "CI/CD"],
     level: "Experienced"
   },
   {
-    icon: <Users />,
-    title: "Collaboration",
-    description: "Working effectively with teams through clear communication and efficient development practices.",
-    skills: ["Git", "Code Review", "Agile", "Documentation"],
+    icon: <Globe />,
+    title: "Programming Languages",
+    description: "Proficiency across multiple programming languages for diverse application development.",
+    skills: ["JavaScript", "TypeScript", "Python", "C/C++", "Go", "Kotlin"],
     level: "Proficient"
   }
 ];
@@ -68,6 +69,22 @@ const itemVariants = {
   show: { y: 0, opacity: 1, transition: { duration: 0.5 } }
 };
 
+// Abstract SVG paths for decorative elements
+function AbstractPath({ className, pathD }: { className?: string; pathD?: string }) {
+  return (
+    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className={className}>
+      <motion.path
+        d={pathD || "M30,20 Q50,10 70,30 T90,50"}
+        stroke="currentColor"
+        strokeWidth="0.5"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 2, delay: 0.5 }}
+      />
+    </svg>
+  );
+}
+
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
@@ -78,77 +95,160 @@ export function Skills() {
   const additionalServices = services.slice(3);
 
   return (
-    <section ref={sectionRef} className="py-24 sm:py-32 relative">
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <svg className="absolute right-0 top-20 w-64 h-64 text-primary/3" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.5" />
-          <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" strokeWidth="0.3" />
-          <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" strokeWidth="0.2" />
-        </svg>
-        <svg className="absolute left-10 bottom-10 w-40 h-40 text-primary/3" viewBox="0 0 100 100">
-          <path d="M10,30 L90,30 M10,50 L90,50 M10,70 L90,70" stroke="currentColor" strokeWidth="0.5" fill="none" />
-        </svg>
+    <section ref={sectionRef} className="py-28 sm:py-36 relative overflow-hidden">
+      {/* Background elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        {/* Noise texture */}
+        <div className="absolute inset-0 z-0 mix-blend-overlay opacity-10">
+          <svg className="w-full h-full opacity-20" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <filter id="noiseFilter">
+              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+          </svg>
+        </div>
+        
+        {/* Asymmetrical grid lines matching hero component */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/30" style={{ left: '13%' }} />
+          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/10" style={{ left: '28%' }} />
+          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/20" style={{ left: '67%' }} />
+          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/15" style={{ left: '89%' }} />
+          
+          <div className="absolute left-0 right-0 h-[1px] bg-primary/25" style={{ top: '22%' }} />
+          <div className="absolute left-0 right-0 h-[1px] bg-primary/10" style={{ top: '58%' }} />
+          <div className="absolute left-0 right-0 h-[1px] bg-primary/20" style={{ top: '81%' }} />
+        </div>
+        
+        {/* Abstract SVG paths */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 1, delay: 0.6 }}
+          className="absolute left-[5%] top-[15%] text-primary/8"
+        >
+          <AbstractPath pathD="M10,30 C20,50 40,10 50,40 S80,20 90,40" />
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="absolute right-[10%] bottom-[20%] rotate-180 text-primary/8"
+        >
+          <AbstractPath pathD="M10,50 Q40,20 50,50 T90,30" />
+        </motion.div>
       </div>
 
       {/* Main content */}
       <div className="container mx-auto px-6">
         {/* Section header */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="mb-16"
+          transition={{ duration: 1 }}
+          className="flex flex-col mb-16 sm:mb-20 relative z-10"
         >
           <div className="flex items-center mb-4">
-            <div className="w-8 h-[1px] bg-primary/30 mr-3"></div>
-            <span className="text-xs text-primary/80 uppercase tracking-wider font-light">Expertise</span>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={isInView ? { scale: 1 } : { scale: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="w-7 h-7 rounded-md border border-primary/10 flex items-center justify-center mr-3"
+            >
+              <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+            </motion.div>
+            <motion.span 
+              initial={{ opacity: 0, x: -10 }}
+              animate={isInView ? { opacity: 1, x: 0 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="text-xs text-primary/60 uppercase tracking-wider font-light"
+            >
+              Expertise
+            </motion.span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif italic leading-tight mb-6">
-            <span className="bg-gradient-to-br from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Technical Proficiency
-            </span>
-          </h2>
-          <p className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed">
+          <div className="overflow-hidden">
+            <motion.h2 
+              initial={{ y: 60 }}
+              animate={isInView ? { y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-none"
+            >
+              <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
+                Technical Proficiency
+              </span>
+            </motion.h2>
+          </div>
+          <motion.div 
+            initial={{ width: 0, opacity: 0 }}
+            animate={isInView ? { width: "5rem", opacity: 1 } : {}}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent mt-4"
+          />
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.7 }}
+            className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
+          >
             I bring a versatile skill set focused on building exceptional digital experiences through clean code, 
             thoughtful design, and performance optimization.
-          </p>
+          </motion.p>
         </motion.div>
 
         {/* Main skills card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.7, delay: 0.1 }}
-          className="w-full border border-primary/5 bg-card/20 backdrop-blur-sm overflow-hidden rounded-2xl transition-all duration-500 hover:border-primary/10 relative mb-12"
-        >
-          <div className="p-8 sm:p-12">
+        <Card className="border-primary/10 backdrop-blur-sm overflow-hidden py-0 mb-12 relative">
+          <div className="p-8 sm:p-10">
             <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
               <div className="w-full lg:w-1/3">
                 <motion.div
                   initial={{ scale: 0.9, opacity: 0 }}
                   animate={isInView ? { scale: 1, opacity: 1 } : {}}
                   transition={{ duration: 0.5, delay: 0.3 }}
-                  className="w-16 h-16 bg-gradient-to-br from-primary/10 to-primary/5 rounded-full flex items-center justify-center mb-8 border border-primary/10"
+                  className="w-16 h-16 rounded-md border border-primary/10 flex items-center justify-center mb-8"
                 >
-                  <Palette className="h-8 w-8 text-primary/80" strokeWidth={1.25} />
+                  <Palette className="h-8 w-8 text-primary/70" strokeWidth={1.25} />
                 </motion.div>
                 
-                <h3 className="text-2xl sm:text-3xl font-serif italic mb-6">Development Approach</h3>
+                <motion.h3 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="text-2xl sm:text-3xl font-serif italic mb-6"
+                >
+                  Development Approach
+                </motion.h3>
                 
-                <p className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={isInView ? { width: "3rem" } : {}}
+                  transition={{ duration: 0.5, delay: 0.5 }}
+                  className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-6"
+                />
+                
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={isInView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.6 }}
+                  className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8"
+                >
                   I build solutions that prioritize clean code, performance, and user experience. My approach combines 
                   technical expertise with an understanding of what makes interfaces intuitive and enjoyable to use.
-                </p>
+                </motion.p>
                 
                 <Button 
                   variant="outline" 
-                  className="group text-xs border-primary/10 bg-primary/5 hover:bg-primary/10"
+                  className="group border-primary/10 hover:bg-primary/5 rounded-md"
                   asChild
                 >
-                  <Link href="/about">
-                    Learn more about my process
-                    <ArrowRight className="ml-2 h-3 w-3 transition-transform group-hover:translate-x-1 duration-300" />
+                  <Link href="/about" className="flex items-center">
+                    <span className="text-sm">Learn more about my process</span>
+                    <motion.div
+                      className="ml-2 flex items-center justify-center"
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ArrowRight className="h-4 w-4 text-primary/70" />
+                    </motion.div>
                   </Link>
                 </Button>
               </div>
@@ -166,16 +266,29 @@ export function Skills() {
                       variants={itemVariants}
                       className="group flex flex-col"
                     >
-                      <div className="p-3 bg-gradient-to-br from-primary/10 to-primary/5 rounded-lg inline-flex mb-4 border border-primary/10 group-hover:border-primary/30 transition-colors duration-300">
-                        {service.icon}
+                      <div className="p-3 rounded-md border border-primary/10 inline-flex mb-4 group-hover:border-primary/20 transition-colors duration-300">
+                        <motion.div 
+                          whileHover={{ rotate: 15 }}
+                          transition={{ duration: 0.3 }}
+                          className="text-primary/70"
+                        >
+                          {service.icon}
+                        </motion.div>
                       </div>
                       
-                      <h4 className="text-lg font-light mb-3 flex items-center gap-2">
-                        {service.title}
-                        <span className="text-xs font-light text-primary/60 px-2 py-0.5 border border-primary/10 rounded-full">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="text-lg font-light">{service.title}</h4>
+                        <span className="text-xs font-light text-primary/60 px-2 py-0.5 border border-primary/10 rounded-md">
                           {service.level}
                         </span>
-                      </h4>
+                      </div>
+                      
+                      <motion.div 
+                        initial={{ width: 0 }}
+                        animate={{ width: "2rem" }}
+                        transition={{ duration: 0.5, delay: 0.2 }}
+                        className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-3"
+                      />
                       
                       <p className="text-foreground/60 text-sm font-light leading-relaxed mb-4">
                         {service.description}
@@ -186,7 +299,7 @@ export function Skills() {
                         {service.skills.map((skill) => (
                           <span 
                             key={skill} 
-                            className="px-2 py-1 bg-primary/5 border border-primary/5 rounded-md text-xs text-primary/70"
+                            className="px-2 py-1 bg-primary/5 border border-primary/10 rounded-md text-xs text-primary/70"
                           >
                             {skill}
                           </span>
@@ -204,7 +317,7 @@ export function Skills() {
             <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />
             <div className="absolute top-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
           </div>
-        </motion.div>
+        </Card>
         
         {/* Additional skills grid */}
         <motion.div
@@ -214,41 +327,57 @@ export function Skills() {
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
         >
           {additionalServices.map((service, index) => (
-            <motion.div
+            <Card 
               key={index}
-              variants={itemVariants}
-              className="group border border-primary/5 bg-card/10 backdrop-blur-sm p-6 rounded-xl hover:border-primary/20 transition-all duration-300"
+              className="group border-primary/10 backdrop-blur-sm py-0 hover:border-primary/20 transition-all duration-300"
             >
-              <div className="flex items-start mb-4">
-                <div className="p-2 bg-primary/5 rounded-lg mr-3 border border-primary/10 group-hover:border-primary/20 transition-colors duration-300">
-                  {service.icon}
-                </div>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <h4 className="text-base font-medium">{service.title}</h4>
-                    <span className="text-xs text-primary/60 px-2 py-0.5 border border-primary/10 rounded-full">
-                      {service.level}
-                    </span>
+              <CardHeader className="pt-6 pb-0 px-6">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 rounded-md border border-primary/10 group-hover:border-primary/20 transition-colors duration-300">
+                    <motion.div 
+                      whileHover={{ rotate: 15 }}
+                      transition={{ duration: 0.3 }}
+                      className="text-primary/70"
+                    >
+                      {service.icon}
+                    </motion.div>
                   </div>
-                  <div className="h-0.5 w-12 bg-gradient-to-r from-primary/30 to-transparent rounded-full mt-1" />
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <h4 className="text-base font-medium">{service.title}</h4>
+                      <span className="text-xs text-primary/60 px-2 py-0.5 border border-primary/10 rounded-md">
+                        {service.level}
+                      </span>
+                    </div>
+                    <motion.div 
+                      initial={{ width: 0 }}
+                      animate={{ width: "2rem" }}
+                      transition={{ duration: 0.5, delay: 0.2 }}
+                      className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mt-2"
+                    />
+                  </div>
                 </div>
-              </div>
+              </CardHeader>
               
-              <p className="text-foreground/60 text-sm font-light leading-relaxed mb-4">
-                {service.description}
-              </p>
+              <CardContent className="pt-4 px-6">
+                <p className="text-foreground/60 text-sm font-light leading-relaxed mb-4">
+                  {service.description}
+                </p>
+              </CardContent>
               
-              <div className="flex flex-wrap gap-2">
-                {service.skills.map((skill) => (
-                  <span 
-                    key={skill} 
-                    className="px-2 py-1 bg-primary/3 border border-primary/5 rounded-md text-xs text-primary/70"
-                  >
-                    {skill}
-                  </span>
-                ))}
-              </div>
-            </motion.div>
+              <CardFooter className="px-6 pt-0 pb-6">
+                <div className="flex flex-wrap gap-2">
+                  {service.skills.map((skill) => (
+                    <span 
+                      key={skill} 
+                      className="px-2 py-1 bg-primary/5 border border-primary/10 rounded-md text-xs text-primary/70"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </CardFooter>
+            </Card>
           ))}
         </motion.div>
       </div>
