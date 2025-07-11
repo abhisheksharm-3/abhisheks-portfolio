@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
-import type { Project } from "@/data/project";
+import { featuredProjects, type Project } from "@/data/project";
 
 // Abstract SVG paths for decorative elements
 function AbstractPath({ className, pathD }: { className?: string; pathD?: string }) {
@@ -35,10 +35,8 @@ export function Projects({ projects, headline = "Selected Projects", cta = true 
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
-  const featured = projects
-    .filter((p) => p.featured)
-    .sort((a, b) => Number(b.year) - Number(a.year))
-    .slice(0, 2);
+  // Use the projects prop if provided, otherwise use featuredProjects
+  const projectsToShow = projects || featuredProjects;
 
   return (
     <section 
@@ -161,7 +159,7 @@ export function Projects({ projects, headline = "Selected Projects", cta = true 
 
       {/* Projects grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
-        {featured.map((project, idx) => (
+        {projectsToShow.map((project, idx) => (
           <ProjectCard
             key={project.slug}
             project={project}

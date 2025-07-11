@@ -245,8 +245,10 @@ export default function AboutPage() {
               transition={{ duration: 0.8, delay: 0.7 }}
               className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
             >
-              CS Graduate & Tech Enthusiast. Building useful stuff with code, one project at a time.
-              With a passion for clean code and intuitive design, I build applications that solve real problems.
+              CS Graduate & Tech Enthusiast with a passion for building impactful digital solutions. 
+              I transform ideas into elegant, functional applications that solve real problems. 
+              Currently exploring the exciting intersection of mobile development and AI while 
+              pursuing my degree in Computer Science (CGPA: 8.31).
             </motion.p>
           </motion.div>
 
@@ -261,36 +263,88 @@ export default function AboutPage() {
               <Card className="border-primary/10 backdrop-blur-sm h-full">
                 <CardContent className="p-8">
                   <h3 className="text-2xl font-serif italic mb-6">Biography</h3>
+                  
+                  {/* Decorative element */}
+                  <div className="absolute top-8 right-8 opacity-10">
+                    <svg width="80" height="80" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M30,20 Q50,10 70,30 T90,50" stroke="currentColor" strokeWidth="1" />
+                      <path d="M20,40 Q40,20 60,40 T80,60" stroke="currentColor" strokeWidth="1" />
+                      <path d="M10,60 Q30,30 50,50 T70,70" stroke="currentColor" strokeWidth="1" />
+                    </svg>
+                  </div>
+                  
                   <div className="space-y-4 text-foreground/70 font-light">
                     <p>
                       I&apos;m a Software Developer with a strong focus on creating intuitive and efficient digital experiences. 
                       My journey in technology began with a curiosity about how applications work, which led me to pursue 
                       Computer Science and develop expertise in both frontend and backend technologies.
                     </p>
+                    
+                    <div className="pl-4 border-l-2 border-primary/30 my-6 italic">
+                      <p className="text-foreground/80">
+                        &ldquo;I believe in building technology that not only works well, but feels intuitive and brings joy to its users.&rdquo;
+                      </p>
+                    </div>
+                    
                     <p>
                       I specialize in building responsive web applications and mobile solutions using modern frameworks 
                       and practices. My approach combines technical expertise with an understanding of user needs, 
                       resulting in applications that are both functional and enjoyable to use.
                     </p>
+                    
+                    <div className="bg-primary/5 p-4 rounded-md border border-primary/10 my-6">
+                      <h4 className="text-sm font-medium mb-2 text-primary/80">Current Focus</h4>
+                      <p className="text-sm">
+                        Expanding my knowledge in Android native development, generative AI applications, 
+                        and LLM integrations. I&apos;m particularly interested in creating the next generation of intelligent 
+                        mobile experiences that blend cutting-edge technology with intuitive design.
+                      </p>
+                    </div>
+                    
                     <p>
-                      Currently, I&apos;m focused on expanding my knowledge in Android native development, generative AI applications, 
-                      and LLM integrations. I&apos;m particularly interested in creating the next generation of intelligent mobile experiences 
-                      that blend cutting-edge technology with intuitive design.
+                      Beyond coding, I&apos;m passionate about solving real-world problems through technology. Whether it&apos;s building 
+                      a media verification system at a hackathon or optimizing user experiences for clients, I thrive on challenges 
+                      that push my skills forward. My experience in hackathons has taught me to work efficiently under pressure 
+                      and collaborate effectively with diverse teams.
+                    </p>
+                    <p>
+                      I believe in continuous learning and staying ahead of technological trends. Right now, I&apos;m diving deep into 
+                      Jetpack Compose, LLM integrations, and native Android development — all while balancing my academic 
+                      responsibilities and personal projects.
                     </p>
                   </div>
                   
-                  <div className="mt-8 space-y-4">
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-primary/60" />
-                      <span className="text-sm">Abhishek Sharma</span>
+                  <Separator className="my-6 bg-primary/10" />
+                  
+                  <div className="mt-6 space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
+                        <User className="h-4 w-4 text-primary/60" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-foreground/50">Name</p>
+                        <p className="text-sm font-medium">Abhishek Sharma</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-primary/60" />
-                      <span className="text-sm">Delhi, India</span>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
+                        <MapPin className="h-4 w-4 text-primary/60" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-foreground/50">Location</p>
+                        <p className="text-sm font-medium">Chandigarh, India</p>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-primary/60" />
-                      <span className="text-sm">Available for new projects</span>
+                    
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
+                        <Calendar className="h-4 w-4 text-primary/60" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-foreground/50">Availability</p>
+                        <p className="text-sm font-medium">Open to new projects and job opportunities</p>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
@@ -302,15 +356,24 @@ export default function AboutPage() {
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.6 }}
             >
-              <Card className="border-primary/10 backdrop-blur-sm h-full">
+              <Card className="border-primary/10 backdrop-blur-sm h-full relative">
                 <CardContent className="p-8">
-                  <div className="relative w-full aspect-square mb-6 overflow-hidden rounded-md">
+                  {/* Decorative element */}
+                  <div className="absolute top-8 right-8 opacity-10 pointer-events-none">
+                    <svg width="60" height="60" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="50" cy="50" r="40" stroke="currentColor" strokeWidth="1" strokeDasharray="4 4" />
+                      <circle cx="50" cy="50" r="30" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+                    </svg>
+                  </div>
+
+                  <div className="relative w-full aspect-square mb-6 overflow-hidden rounded-md group">
                     <Image 
                       src="https://github.com/abhisheksharm-3.png" 
                       alt="Abhishek Sharma" 
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
                     />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </div>
                   
                   <h3 className="text-xl font-medium mb-4">Contact Details</h3>
@@ -329,10 +392,10 @@ export default function AboutPage() {
                         href="https://linkedin.com/in/abhisheksan/" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-sm text-primary/80 hover:text-primary flex items-center"
+                        className="text-sm text-primary/80 hover:text-primary flex items-center group"
                       >
                         linkedin.com/in/abhisheksan
-                        <ArrowRight className="ml-1 h-3 w-3" />
+                        <ArrowRight className="ml-1 h-3 w-3 transform transition-transform group-hover:translate-x-1" />
                       </a>
                     </div>
                     <div>
@@ -341,10 +404,10 @@ export default function AboutPage() {
                         href="https://github.com/abhisheksharm-3" 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="text-sm text-primary/80 hover:text-primary flex items-center"
+                        className="text-sm text-primary/80 hover:text-primary flex items-center group"
                       >
                         github.com/abhisheksharm-3
-                        <ArrowRight className="ml-1 h-3 w-3" />
+                        <ArrowRight className="ml-1 h-3 w-3 transform transition-transform group-hover:translate-x-1" />
                       </a>
                     </div>
                   </div>
@@ -353,14 +416,21 @@ export default function AboutPage() {
                   
                   <Button 
                     variant="outline" 
-                    className="w-full border-primary/10 hover:bg-primary/5 text-sm"
+                    className="w-full border-primary/10 hover:bg-primary/5 text-sm group relative overflow-hidden"
                     asChild
                   >
                     <Link href="/contact" className="flex items-center justify-center">
-                      <span>Get in touch</span>
-                      <ArrowRight className="ml-2 h-4 w-4" />
+                      <span className="relative z-10">Get in touch</span>
+                      <ArrowRight className="ml-2 h-4 w-4 relative z-10 transform transition-transform group-hover:translate-x-1" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
                     </Link>
                   </Button>
+                  
+                  {/* Decorative corner element */}
+                  <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden opacity-30 pointer-events-none">
+                    <div className="absolute bottom-0 right-0 w-px h-16 bg-gradient-to-t from-primary/20 to-transparent" />
+                    <div className="absolute bottom-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
@@ -378,7 +448,7 @@ export default function AboutPage() {
               <Card className="border-primary/10 backdrop-blur-sm">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 rounded-md border border-primary/10 flex items-center justify-center mr-3">
+                    <div className="w-10 h-10 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5">
                       <Briefcase className="h-5 w-5 text-primary/70" strokeWidth={1.5} />
                     </div>
                     <h3 className="text-xl font-serif italic">Experience</h3>
@@ -386,17 +456,23 @@ export default function AboutPage() {
                   
                   <div className="space-y-8">
                     {experience.map((item, index) => (
-                      <div key={index} className="relative pl-6 border-l border-primary/10">
-                        <div className="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-primary/40" />
-                        <h4 className="text-lg font-medium">{item.position}</h4>
+                      <div key={index} className="relative pl-6 border-l border-primary/10 group hover:border-primary/30 transition-colors duration-300">
+                        <div className="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary/70 transition-colors duration-300" />
+                        <h4 className="text-lg font-medium group-hover:text-primary/90 transition-colors duration-300">{item.position}</h4>
                         <div className="flex items-center text-sm text-foreground/60 mt-1 mb-2">
-                          <span>{item.company}</span>
+                          <span className="font-medium">{item.company}</span>
                           <span className="mx-2">•</span>
-                          <span>{item.duration}</span>
+                          <span className="italic">{item.duration}</span>
                         </div>
                         <p className="text-sm text-foreground/70 font-light">{item.description}</p>
                       </div>
                     ))}
+                  </div>
+                  
+                  {/* Decorative corner element */}
+                  <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden opacity-30 pointer-events-none">
+                    <div className="absolute bottom-0 right-0 w-px h-16 bg-gradient-to-t from-primary/20 to-transparent" />
+                    <div className="absolute bottom-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
                   </div>
                 </CardContent>
               </Card>
@@ -405,7 +481,7 @@ export default function AboutPage() {
               <Card className="border-primary/10 backdrop-blur-sm">
                 <CardContent className="p-8">
                   <div className="flex items-center mb-6">
-                    <div className="w-10 h-10 rounded-md border border-primary/10 flex items-center justify-center mr-3">
+                    <div className="w-10 h-10 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5">
                       <GraduationCap className="h-5 w-5 text-primary/70" strokeWidth={1.5} />
                     </div>
                     <h3 className="text-xl font-serif italic">Education</h3>
@@ -413,27 +489,35 @@ export default function AboutPage() {
                   
                   <div className="space-y-8">
                     {education.map((item, index) => (
-                      <div key={index} className="relative pl-6 border-l border-primary/10">
-                        <div className="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-primary/40" />
-                        <h4 className="text-lg font-medium">{item.degree}</h4>
+                      <div key={index} className="relative pl-6 border-l border-primary/10 group hover:border-primary/30 transition-colors duration-300">
+                        <div className="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary/70 transition-colors duration-300" />
+                        <h4 className="text-lg font-medium group-hover:text-primary/90 transition-colors duration-300">{item.degree}</h4>
                         <div className="flex items-center text-sm text-foreground/60 mt-1 mb-2">
-                          <span>{item.institution}</span>
+                          <span className="font-medium">{item.institution}</span>
                           <span className="mx-2">•</span>
-                          <span>{item.year}</span>
+                          <span className="italic">{item.year}</span>
                         </div>
                         <p className="text-sm text-foreground/70 font-light">{item.description}</p>
-                        {item.cgpa && (
-                          <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/5 text-primary/80">
-                            CGPA: {item.cgpa}
-                          </div>
-                        )}
-                        {item.percentage && (
-                          <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/5 text-primary/80">
-                            Score: {item.percentage}
-                          </div>
-                        )}
+                        <div className="flex gap-2 mt-3">
+                          {item.cgpa && (
+                            <div className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/5 text-primary/80 border border-primary/10">
+                              CGPA: {item.cgpa}
+                            </div>
+                          )}
+                          {item.percentage && (
+                            <div className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/5 text-primary/80 border border-primary/10">
+                              Score: {item.percentage}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     ))}
+                  </div>
+                  
+                  {/* Decorative corner element */}
+                  <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden opacity-30 pointer-events-none">
+                    <div className="absolute bottom-0 right-0 w-px h-16 bg-gradient-to-t from-primary/20 to-transparent" />
+                    <div className="absolute bottom-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
                   </div>
                 </CardContent>
               </Card>
@@ -447,7 +531,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="mb-20"
           >
-            <div className="mb-10">
+            <div className="mb-10 relative">
               <h3 className="text-2xl font-serif italic mb-6">Technical Skills</h3>
               <motion.div 
                 initial={{ width: 0 }}
@@ -455,31 +539,51 @@ export default function AboutPage() {
                 transition={{ duration: 0.5, delay: 0.5 }}
                 className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-8"
               />
+              
+              {/* Decorative element */}
+              <div className="absolute top-0 right-0 opacity-10 pointer-events-none hidden md:block">
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="70" cy="30" r="20" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+                  <circle cx="70" cy="30" r="10" stroke="currentColor" strokeWidth="1" />
+                  <circle cx="70" cy="30" r="5" stroke="currentColor" strokeWidth="1" fill="currentColor" fillOpacity="0.1" />
+                </svg>
+              </div>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {skillCategories.map((category, index) => (
                 <Card 
                   key={index} 
-                  className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300"
+                  className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300 group relative overflow-hidden"
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5">
-                        {category.icon}
+                      <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5 group-hover:bg-primary/10 transition-colors duration-300">
+                        <motion.div
+                          whileHover={{ rotate: 15 }}
+                          className="text-primary/70"
+                        >
+                          {category.icon}
+                        </motion.div>
                       </div>
-                      <h4 className="text-base font-medium">{category.title}</h4>
+                      <h4 className="text-base font-medium group-hover:text-primary/90 transition-colors duration-300">{category.title}</h4>
                     </div>
                     
                     <div className="flex flex-wrap gap-2">
                       {category.skills.map((skill) => (
                         <span 
                           key={skill} 
-                          className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-full text-xs text-foreground/70"
+                          className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-full text-xs text-foreground/70 group-hover:border-primary/20 transition-colors duration-300"
                         >
                           {skill}
                         </span>
                       ))}
+                    </div>
+                    
+                    {/* Decorative corner element */}
+                    <div className="absolute bottom-0 right-0 w-12 h-12 overflow-hidden opacity-20 pointer-events-none">
+                      <div className="absolute bottom-0 right-0 w-px h-12 bg-gradient-to-t from-primary/20 to-transparent" />
+                      <div className="absolute bottom-0 right-0 h-px w-12 bg-gradient-to-l from-primary/20 to-transparent" />
                     </div>
                   </CardContent>
                 </Card>
@@ -494,7 +598,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8, delay: 0.9 }}
             className="mb-20"
           >
-            <div className="mb-10">
+            <div className="mb-10 relative">
               <h3 className="text-2xl font-serif italic mb-6">Beyond Code</h3>
               <motion.div 
                 initial={{ width: 0 }}
@@ -505,20 +609,34 @@ export default function AboutPage() {
               <p className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mb-8">
                 When I&apos;m not coding, you&apos;ll find me exploring these interests and hobbies.
               </p>
+              
+              {/* Decorative element */}
+              <div className="absolute top-0 right-0 opacity-10 pointer-events-none hidden md:block">
+                <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10,90 Q30,70 50,90 T90,90" stroke="currentColor" strokeWidth="1" />
+                  <path d="M10,70 Q30,50 50,70 T90,70" stroke="currentColor" strokeWidth="1" />
+                  <path d="M10,50 Q30,30 50,50 T90,50" stroke="currentColor" strokeWidth="1" />
+                </svg>
+              </div>
             </div>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {personalInterests.map((interest, index) => (
                 <Card 
                   key={index} 
-                  className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300"
+                  className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300 group relative overflow-hidden"
                 >
                   <CardContent className="p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5">
-                        {interest.icon}
+                      <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5 group-hover:bg-primary/10 transition-colors duration-300">
+                        <motion.div
+                          whileHover={{ rotate: 15 }}
+                          className="text-primary/70"
+                        >
+                          {interest.icon}
+                        </motion.div>
                       </div>
-                      <h4 className="text-base font-medium">{interest.category}</h4>
+                      <h4 className="text-base font-medium group-hover:text-primary/90 transition-colors duration-300">{interest.category}</h4>
                     </div>
                     
                     <p className="text-sm text-foreground/70 font-light mb-4">
@@ -529,12 +647,15 @@ export default function AboutPage() {
                       {interest.tags.map((tag) => (
                         <span 
                           key={tag} 
-                          className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-full text-xs text-foreground/70"
+                          className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-full text-xs text-foreground/70 group-hover:border-primary/20 transition-colors duration-300"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
+                    
+                    {/* Decorative corner dot */}
+                    <div className="absolute bottom-3 right-3 w-1.5 h-1.5 rounded-full bg-primary/20 group-hover:bg-primary/40 transition-colors duration-300"></div>
                   </CardContent>
                 </Card>
               ))}
@@ -563,11 +684,11 @@ export default function AboutPage() {
                   View my projects
                 </motion.span>
                 <motion.div
-                  className="ml-3 h-6 w-6 rounded-full border border-primary/20 flex items-center justify-center relative z-10"
+                  className="ml-3 h-6 w-6 rounded-full border border-primary/20 flex items-center justify-center relative z-10 group-hover:border-primary/40 transition-colors duration-300"
                   whileHover={{ rotate: 45 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <ArrowRight className="h-3 w-3 text-primary/70" />
+                  <ArrowRight className="h-3 w-3 text-primary/70 group-hover:text-primary/90 transition-colors duration-300" />
                 </motion.div>
                 <motion.div 
                   className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
@@ -575,6 +696,18 @@ export default function AboutPage() {
                   whileHover={{ x: 0 }}
                   transition={{ duration: 0.5 }}
                 />
+                
+                {/* Subtle decorative elements */}
+                <div className="absolute -bottom-2 -left-2 w-8 h-8 opacity-10 pointer-events-none">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+                  </svg>
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 opacity-10 pointer-events-none">
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="16" cy="16" r="12" stroke="currentColor" strokeWidth="1" strokeDasharray="2 2" />
+                  </svg>
+                </div>
               </Link>
             </Button>
           </motion.div>

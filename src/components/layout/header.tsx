@@ -24,6 +24,7 @@ export const navigationItems: NavItem[] = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Projects", href: "/projects" },
+  { name: "Graveyard", href: "/graveyard" },
   { name: "Contact", href: "/contact" }
 ];
 
