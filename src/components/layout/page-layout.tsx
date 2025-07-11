@@ -35,7 +35,7 @@ export function PageLayout({
         </div>
       )}
       <Header scrollPosition={scrollPosition} activePage={activePage} />
-      <main className="flex-1 pt-24 relative z-10">{children}</main>
+      <main className="flex-1 relative z-10">{children}</main>
       <Footer />
     </div>
   );

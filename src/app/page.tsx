@@ -10,7 +10,7 @@ import { ContactCTA } from "@/components/sections/contact-cta";
 export default function Home() {
   return (
     <PageLayout activePage="Home">
-      <main className="px-6 sm:px-8 lg:px-32">
+      <main className="pt-24 px-6 sm:px-8 lg:px-32">
         <Hero />
         <Projects projects={featuredProjects} />
         <Skills />

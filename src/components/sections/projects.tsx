@@ -3,7 +3,7 @@ import { useState, useRef } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowUpRight, ExternalLink, Code2, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/data/project";
@@ -42,7 +42,7 @@ export function Projects({ projects, headline = "Selected Projects", cta = true 
 
   return (
     <section 
-      className="py-28 sm:py-36 relative overflow-hidden"
+      className="py-36 sm:py-44 relative overflow-hidden"
       ref={sectionRef}
       id="work-section"
     >
@@ -115,16 +115,18 @@ export function Projects({ projects, headline = "Selected Projects", cta = true 
               My Work
             </motion.span>
           </div>
-          <div className="overflow-hidden">
+          <div className="overflow-visible mb-4">
             <motion.h2 
-              initial={{ y: 60 }}
-              animate={isInView ? { y: 0 } : {}}
+              initial={{ y: 60, opacity: 0 }}
+              animate={isInView ? { y: 0, opacity: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-none"
+              className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"
             >
-              <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
-                {headline}
-              </span>
+              <div className="py-1">
+                <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
+                  {headline}
+                </span>
+              </div>
             </motion.h2>
           </div>
           <motion.div 
@@ -192,7 +194,7 @@ export function Projects({ projects, headline = "Selected Projects", cta = true 
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
-                Let's collaborate
+                Let&apos;s collaborate
               </motion.span>
               <motion.div
                 className="ml-3 h-6 w-6 rounded-full border border-primary/20 flex items-center justify-center relative z-10"

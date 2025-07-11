@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Code, Terminal, Layout, ArrowRight, Layers, LineChart, Palette, Users, Globe, Database, Cloud, Smartphone } from "lucide-react";
+import { Code, Terminal, ArrowRight, Palette, Globe, Database, Cloud, Smartphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
@@ -95,7 +95,7 @@ export function Skills() {
   const additionalServices = services.slice(3);
 
   return (
-    <section ref={sectionRef} className="py-28 sm:py-36 relative overflow-hidden">
+    <section ref={sectionRef} className="py-36 sm:py-44 relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 pointer-events-none">
         {/* Noise texture */}
@@ -166,16 +166,18 @@ export function Skills() {
               Expertise
             </motion.span>
           </div>
-          <div className="overflow-hidden">
+          <div className="overflow-visible mb-4">
             <motion.h2 
-              initial={{ y: 60 }}
-              animate={isInView ? { y: 0 } : {}}
+              initial={{ y: 60, opacity: 0 }}
+              animate={isInView ? { y: 0, opacity: 1 } : {}}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-none"
+              className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"
             >
-              <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
-                Technical Proficiency
-              </span>
+              <div className="py-1">
+                <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
+                  Technical Proficiency
+                </span>
+              </div>
             </motion.h2>
           </div>
           <motion.div 

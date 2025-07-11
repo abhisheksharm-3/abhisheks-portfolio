@@ -3,7 +3,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import Image from "next/image";
 
 // Custom hook for mouse tracking
 const useMousePosition = () => {
@@ -21,26 +20,6 @@ const useMousePosition = () => {
   }, []);
 
   return mousePosition;
-};
-
-// Custom hook for window size
-const useWindowSize = () => {
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  return windowSize;
 };
 
 // Animated Noise Background
@@ -328,7 +307,6 @@ const AsymmetricalDecoration = ({ mousePosition }: { mousePosition: { x: number;
 export function Hero() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mousePosition = useMousePosition();
-  const windowSize = useWindowSize();
   
   const { scrollYProgress } = useScroll({
     target: containerRef,

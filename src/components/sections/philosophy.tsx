@@ -29,10 +29,7 @@ export function Philosophy() {
     target: sectionRef,
     offset: ["start end", "end start"],
   });
-  
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -20]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -10]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -30]);
+
 
   return (
     <section 
