@@ -1,4 +1,8 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import PageLayout from "@/components/layout/page-layout";
@@ -6,18 +10,31 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import { featuredProjects } from "@/data/project";
-import ProjectAnimation from "./project-animation";
 
-// Define the props interface for the page component
-interface ProjectPageProps {
-  params: {
-    slug: string;
-  };
+// Abstract SVG paths for decorative elements
+function AbstractPath({ className, pathD }: { className?: string; pathD?: string }) {
+  return (
+    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className={className}>
+      <motion.path
+        d={pathD || "M30,20 Q50,10 70,30 T90,50"}
+        stroke="currentColor"
+        strokeWidth="0.5"
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ duration: 2, delay: 0.5 }}
+      />
+    </svg>
+  );
 }
 
-export default function ProjectDetailPage({ params }: ProjectPageProps) {
-  const { slug } = params;
+export default function ProjectDetailPage() {
+  // Use the useParams hook to get the slug from the URL
+  const params = useParams();
+  const slug = params?.slug as string;
+  
   const project = featuredProjects.find(p => p.slug === slug);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   
   // If project not found, redirect to 404
   if (!project) {
@@ -26,7 +43,7 @@ export default function ProjectDetailPage({ params }: ProjectPageProps) {
 
   return (
     <PageLayout activePage="Projects">
-      <div className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden">
+      <div ref={sectionRef} className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 pointer-events-none">
           {/* Noise texture */}
@@ -51,11 +68,32 @@ export default function ProjectDetailPage({ params }: ProjectPageProps) {
             <div className="absolute left-0 right-0 h-[1px] bg-primary/20" style={{ top: '81%' }} />
           </div>
 
-          {/* AbstractPath elements will be handled by the client component */}
+          {/* Abstract SVG paths */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="absolute left-[5%] top-[15%] text-primary/8"
+          >
+            <AbstractPath pathD="M10,30 C20,50 40,10 50,40 S80,20 90,40" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="absolute right-[10%] bottom-[20%] rotate-180 text-primary/8"
+          >
+            <AbstractPath pathD="M10,50 Q40,20 50,50 T90,30" />
+          </motion.div>
         </div>
 
         {/* Back button */}
-        <div className="mb-8">
+        <motion.div
+          initial={{ opacity: 0, x: -10 }}
+          animate={isInView ? { opacity: 1, x: 0 } : {}}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="mb-8"
+        >
           <Button 
             variant="outline" 
             size="sm" 
@@ -67,32 +105,62 @@ export default function ProjectDetailPage({ params }: ProjectPageProps) {
               Back to Projects
             </Link>
           </Button>
-        </div>
+        </motion.div>
 
         {/* Project Header */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <div className="lg:col-span-2">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="lg:col-span-2"
+          >
             <div className="overflow-visible mb-4">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2">
+              <motion.h1 
+                initial={{ y: 60, opacity: 0 }}
+                animate={isInView ? { y: 0, opacity: 1 } : {}}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"
+              >
                 <div className="py-1">
                   <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
                     {project.title}
                   </span>
                 </div>
-              </h1>
+              </motion.h1>
             </div>
-            <div className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent mt-4 mb-6 w-20" />
-            <p className="text-foreground/70 max-w-2xl text-base sm:text-lg font-light leading-relaxed">
+            <motion.div 
+              initial={{ width: 0, opacity: 0 }}
+              animate={isInView ? { width: "5rem", opacity: 1 } : {}}
+              transition={{ duration: 1, delay: 0.6 }}
+              className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent mt-4 mb-6"
+            />
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: 0.7 }}
+              className="text-foreground/70 max-w-2xl text-base sm:text-lg font-light leading-relaxed"
+            >
               {project.longDescription || project.description}
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          <div className="lg:col-span-1">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="lg:col-span-1"
+          >
             <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative">
               <div className="p-6 sm:p-8">
                 <h3 className="text-xl font-medium mb-4">Project Details</h3>
                 
-                <div className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-6 w-12" />
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: "3rem" }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-6"
+                />
                 
                 <div className="space-y-4">
                   <div className="flex items-center">
@@ -173,11 +241,16 @@ export default function ProjectDetailPage({ params }: ProjectPageProps) {
                 <div className="absolute top-0 right-0 h-px w-12 bg-gradient-to-l from-primary/20 to-transparent" />
               </div>
             </Card>
-          </div>
+          </motion.div>
         </div>
 
         {/* Project Image */}
-        <div className="mb-12">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="mb-12"
+        >
           <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-xl border border-primary/10">
             <Image
               src={project.imageSrc}
@@ -187,15 +260,25 @@ export default function ProjectDetailPage({ params }: ProjectPageProps) {
               sizes="(max-width: 768px) 100vw, 1200px"
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Project Description */}
-        <div className="mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.7 }}
+          className="mb-16"
+        >
           <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative">
             <div className="p-8 sm:p-10">
               <h2 className="text-2xl font-serif italic mb-6">Project Overview</h2>
               
-              <div className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-6 w-12" />
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: "3rem" }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-6"
+              />
               
               <div className="prose prose-sm dark:prose-invert max-w-none">
                 <p className="text-foreground/70 text-base font-light leading-relaxed">
@@ -219,13 +302,23 @@ export default function ProjectDetailPage({ params }: ProjectPageProps) {
               <div className="absolute top-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
             </div>
           </Card>
-        </div>
+        </motion.div>
 
         {/* More Projects */}
-        <div className="text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.8 }}
+          className="text-center"
+        >
           <h3 className="text-2xl font-serif italic mb-4">Explore More Projects</h3>
           
-          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto mb-8 w-32" />
+          <motion.div 
+            initial={{ width: 0 }}
+            animate={{ width: "8rem" }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto mb-8"
+          />
           
           <Button
             size="lg"
@@ -234,16 +327,17 @@ export default function ProjectDetailPage({ params }: ProjectPageProps) {
           >
             <Link href="/projects" className="flex items-center">
               View All Projects
-              <div className="ml-2 flex items-center justify-center">
+              <motion.div
+                className="ml-2 flex items-center justify-center"
+                whileHover={{ x: 3 }}
+                transition={{ duration: 0.3 }}
+              >
                 <ArrowLeft className="h-4 w-4 rotate-180" />
-              </div>
+              </motion.div>
             </Link>
           </Button>
-        </div>
-
-        {/* Client component for animations */}
-        <ProjectAnimation project={project} />
+        </motion.div>
       </div>
     </PageLayout>
   );
-}
+} 
