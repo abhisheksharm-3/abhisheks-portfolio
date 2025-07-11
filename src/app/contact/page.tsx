@@ -5,8 +5,7 @@ import { motion, useInView } from "framer-motion";
 import PageLayout from "@/components/layout/page-layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Calendar, Mail, MessageCircle, Send, ExternalLink } from "lucide-react";
-import Link from "next/link";
+import { Calendar, Mail, MessageCircle, ExternalLink } from "lucide-react";
 import { ContactForm } from "@/components/sections/contact-form";
 
 // Abstract SVG paths for decorative elements

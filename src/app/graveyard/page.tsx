@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, useInView, AnimatePresence } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import PageLayout from "@/components/layout/page-layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -19,7 +19,7 @@ const inspirationalQuotes = [
 ];
 
 // Custom Tombstone icon since it's not in Lucide
-function TombstoneIcon(props: any) {
+function TombstoneIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -43,7 +43,7 @@ function TombstoneIcon(props: any) {
 }
 
 // Custom Ghost icon since it's not in Lucide
-function GhostIcon(props: any) {
+function GhostIcon(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,7 @@ const causeOfDeath = [
 ];
 
 // Project card component
-function GraveyardProjectCard({ project, index }: { project: any; index: number }) {
+function GraveyardProjectCard({ project, index }: { project: Record<string, any>; index: number }) {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.2 });
@@ -213,7 +213,7 @@ function GraveyardProjectCard({ project, index }: { project: any; index: number 
                   className="flex flex-col items-center"
                 >
                   <GhostIcon className="h-12 w-12 text-white/50 mb-2" strokeWidth={1.5} />
-                  <span className="text-white/70 text-xs font-light italic">Boo! I'm still here!</span>
+                  <span className="text-white/70 text-xs font-light italic">Boo! I&apos;m still here!</span>
                 </motion.div>
               ) : (
                 <TombstoneIcon className="h-12 w-12 text-gray-400/50" strokeWidth={1.5} />
@@ -260,7 +260,7 @@ function GraveyardProjectCard({ project, index }: { project: any; index: number 
           {/* Epitaph */}
           <div className="mb-4 p-3 bg-red-500/5 border border-red-500/10 rounded-md">
             <p className="text-center text-xs italic text-foreground/60">
-              "{project.epitaph}"
+              &quot;{project.epitaph}&quot;
             </p>
           </div>
           
