@@ -27,7 +27,14 @@ function AbstractPath({ className, pathD }: { className?: string; pathD?: string
   );
 }
 
-export default function ProjectDetailPage({ params }: { params: { slug: string } }) {
+interface ProjectDetailPageProps {
+  params: {
+    slug: string;
+  };
+  searchParams?: Record<string, string | string[] | undefined>;
+}
+
+export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
   const project = featuredProjects.find(p => p.slug === params.slug);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
