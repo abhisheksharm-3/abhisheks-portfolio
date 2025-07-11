@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Send, Loader2 } from "lucide-react";
 
 export function ContactForm() {
@@ -199,7 +198,7 @@ export function ContactForm() {
             className={`w-full px-4 py-2 bg-background border ${
               errors.subject ? "border-red-500" : "border-primary/10"
             } focus:border-primary/30 focus:ring-1 focus:ring-primary/20 rounded-md outline-none transition-colors duration-300 text-sm`}
-            placeholder="What's this about?"
+            placeholder="What&apos;s this about?"
           />
         </div>
       </div>
@@ -264,7 +263,7 @@ export function ContactForm() {
           transition={{ duration: 0.3 }}
           className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-md text-sm text-green-500"
         >
-          Thank you! Your message has been sent successfully. I'll get back to you soon.
+          Thank you! Your message has been sent successfully. I&apos;ll get back to you soon.
         </motion.div>
       )}
       

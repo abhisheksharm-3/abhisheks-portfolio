@@ -6,10 +6,10 @@ import PageLayout from "@/components/layout/page-layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ArrowUpRight, ExternalLink, Github, Calendar, Code2 } from "lucide-react";
+import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { projects, featuredProjects } from "@/data/project";
+import { projects } from "@/data/project";
 
 // Abstract SVG paths for decorative elements
 function AbstractPath({ className, pathD }: { className?: string; pathD?: string }) {
@@ -33,7 +33,23 @@ const allTags = Array.from(
 ).sort();
 
 // Project card component
-function ProjectCard({ project, index, delay = 0 }: { project: any; index: number; delay?: number }) {
+function ProjectCard({ project, delay = 0 }: { 
+  project: {
+    title: string;
+    description: string;
+    tags: string[];
+    year: string;
+    role?: string;
+    client?: string;
+    duration?: string;
+    imageSrc: string;
+    url?: string;
+    github?: string;
+    slug: string;
+  }; 
+  index?: number; 
+  delay?: number 
+}) {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.2 });
@@ -79,7 +95,7 @@ function ProjectCard({ project, index, delay = 0 }: { project: any; index: numbe
           
           {/* Tags */}
           <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
-            {project.tags.slice(0, 3).map((tag) => (
+            {project.tags.slice(0, 3).map((tag: string) => (
               <span
                 key={tag}
                 className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md text-xs"
@@ -397,7 +413,7 @@ export default function ProjectsPage() {
               />
               
               <p className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8 max-w-xl mx-auto">
-                I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+                I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
               </p>
               
               <Button 

@@ -8,7 +8,7 @@ import Link from "next/link";
 import PageLayout from "@/components/layout/page-layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, ExternalLink, Github, Calendar } from "lucide-react";
+import { ArrowLeft, ExternalLink, Github } from "lucide-react";
 import { featuredProjects } from "@/data/project";
 
 // Abstract SVG paths for decorative elements

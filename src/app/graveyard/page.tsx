@@ -150,7 +150,22 @@ const causeOfDeath = [
 ];
 
 // Project card component
-function GraveyardProjectCard({ project, index }: { project: Record<string, any>; index: number }) {
+function GraveyardProjectCard({ project, index }: { 
+  project: {
+    title: string;
+    description: string;
+    reason: string;
+    lessons: string;
+    progress: string;
+    technologies: string[];
+    year: string;
+    duration: string;
+    imageSrc: string;
+    epitaph: string;
+    resurrectionPotential?: number;
+  }; 
+  index: number 
+}) {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.2 });
@@ -306,7 +321,6 @@ function GraveyardProjectCard({ project, index }: { project: Record<string, any>
 export default function GraveyardPage() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
-  const [randomQuote, setRandomQuote] = useState("");
   
   // Select a random quote
   const getRandomQuote = () => {
@@ -455,7 +469,7 @@ export default function GraveyardPage() {
             className="mt-4 max-w-2xl"
           >
             <blockquote className="italic text-sm text-amber-500/80">
-              "{getRandomQuote()}"
+              &quot;{getRandomQuote()}&quot;
             </blockquote>
           </motion.div>
         </motion.div>
