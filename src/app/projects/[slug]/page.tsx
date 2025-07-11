@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import PageLayout from "@/components/layout/page-layout";
@@ -27,15 +27,12 @@ function AbstractPath({ className, pathD }: { className?: string; pathD?: string
   );
 }
 
-interface ProjectDetailPageProps {
-  params: {
-    slug: string;
-  };
-  searchParams?: Record<string, string | string[] | undefined>;
-}
-
-export default function ProjectDetailPage({ params }: ProjectDetailPageProps) {
-  const project = featuredProjects.find(p => p.slug === params.slug);
+export default function ProjectDetailPage() {
+  // Use the useParams hook to get the slug from the URL
+  const params = useParams();
+  const slug = params?.slug as string;
+  
+  const project = featuredProjects.find(p => p.slug === slug);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   
