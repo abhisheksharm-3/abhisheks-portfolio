@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { SpinningText } from "@/components/magicui/spinning-text";
 import { Card } from "@/components/ui/card";
 
@@ -23,12 +23,6 @@ function AbstractPath({ className, pathD }: { className?: string; pathD?: string
 export function Philosophy() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
-  
-  // Subtle parallax effect
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
 
 
   return (

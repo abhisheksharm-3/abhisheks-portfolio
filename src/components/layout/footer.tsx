@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef } from "react";
-import { Github, Twitter, Linkedin, Mail, ArrowUpRight, Code, ExternalLink } from "lucide-react";
+import { Github, Twitter, Linkedin, Mail, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";

@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { ArrowRight, Code, Terminal, Database, Cloud, Smartphone, Globe, GraduationCap, Briefcase, User, Calendar, MapPin } from "lucide-react";
+import { ArrowRight, Code, Terminal, Database, Cloud, Smartphone, Globe, GraduationCap, Briefcase, User, Calendar, MapPin, BookOpen, Camera, Music, Gamepad, Film, Coffee } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -59,28 +59,84 @@ const skillCategories = [
   }
 ];
 
-// Education & Experience data
+// Education data
 const education = [
   {
     degree: "Bachelor of Technology in Computer Science",
     institution: "Maharaja Surajmal Institute of Technology",
     year: "2021-2025",
-    description: "Focused on core computer science principles, web development, and software engineering."
+    description: "Focused on core computer science principles, web development, and software engineering.",
+    cgpa: 8.31
+  },
+  {
+    degree: "12th Grade",
+    institution: "Mount Carmel School, Chandigarh",
+    year: "2021",
+    description: "Completed senior secondary education with focus on science and mathematics.",
+    percentage: "92.4%"
+  },
+  {
+    degree: "10th Grade",
+    institution: "Mount Carmel School, Chandigarh",
+    year: "2019",
+    description: "Completed secondary education with excellent academic performance.",
+    percentage: "92.2%"
   }
 ];
 
+// Experience data
 const experience = [
   {
-    position: "Software Developer Intern",
-    company: "Credify",
-    duration: "Jan 2023 - Apr 2023",
-    description: "Developed a comprehensive credit scoring system using React, Next.js, and MongoDB. Implemented secure authentication and real-time data visualization."
+    position: "Software Development Intern",
+    company: "Stardom",
+    duration: "January 2025 - June 2025",
+    description: "Driving the company's website development and digital infrastructure. Built company website with Next.js and optimized frontend performance. Designed and deployed cloud infrastructure and email systems."
   },
   {
-    position: "Full Stack Developer",
-    company: "Freelance",
-    duration: "2022 - Present",
-    description: "Designed and developed custom web applications for clients. Created responsive interfaces and implemented backend solutions with Node.js and various databases."
+    position: "Winner - Network 18 Track",
+    company: "Gen AI Exchange Hackathon by Google",
+    duration: "October 2024",
+    description: "Developed AI-powered media verification system called Credify. Applied cutting-edge techniques in AI media attribution."
+  },
+];
+
+// Personal interests
+const personalInterests = [
+  {
+    category: "Photography",
+    icon: <Camera className="h-5 w-5" />,
+    description: "Capturing city life and nature. My phone gallery is 70% cloud shots!",
+    tags: ["Urban Photography", "Nature", "Golden Hour"]
+  },
+  {
+    category: "Reading",
+    icon: <BookOpen className="h-5 w-5" />,
+    description: "Currently reading The Almanack of Naval Ravikant and The Courage to be Disliked.",
+    tags: ["Personal Development", "Popular Science", "Business"]
+  },
+  {
+    category: "Music",
+    icon: <Music className="h-5 w-5" />,
+    description: "Soundtrack to my coding sessions. Lo-fi beats for focused coding, rock classics for debugging.",
+    tags: ["Lo-fi", "Rock", "Classical"]
+  },
+  {
+    category: "Gaming",
+    icon: <Gamepad className="h-5 w-5" />,
+    description: "Perfect way to unwind after debugging sessions. Currently playing Valorant and Red Dead Redemption 2.",
+    tags: ["Valorant", "RDR2", "PC Gaming"]
+  },
+  {
+    category: "Sci-Fi Media",
+    icon: <Film className="h-5 w-5" />,
+    description: "Love sci-fi that blends technology with imagination. Favorites include Interstellar and The Martian.",
+    tags: ["Interstellar", "The Martian", "Inception"]
+  },
+  {
+    category: "Exploration",
+    icon: <Coffee className="h-5 w-5" />,
+    description: "Weekend wanderer & street food enthusiast. Love discovering hidden cafes and quiet spots for reading & coding.",
+    tags: ["Cafes", "Street Food", "City Exploration"]
   }
 ];
 
@@ -189,7 +245,7 @@ export default function AboutPage() {
               transition={{ duration: 0.8, delay: 0.7 }}
               className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
             >
-              I'm a Software Developer specializing in full stack web & mobile development. 
+              CS Graduate & Tech Enthusiast. Building useful stuff with code, one project at a time.
               With a passion for clean code and intuitive design, I build applications that solve real problems.
             </motion.p>
           </motion.div>
@@ -207,7 +263,7 @@ export default function AboutPage() {
                   <h3 className="text-2xl font-serif italic mb-6">Biography</h3>
                   <div className="space-y-4 text-foreground/70 font-light">
                     <p>
-                      I'm a Software Developer with a strong focus on creating intuitive and efficient digital experiences. 
+                      I&apos;m a Software Developer with a strong focus on creating intuitive and efficient digital experiences. 
                       My journey in technology began with a curiosity about how applications work, which led me to pursue 
                       Computer Science and develop expertise in both frontend and backend technologies.
                     </p>
@@ -217,9 +273,9 @@ export default function AboutPage() {
                       resulting in applications that are both functional and enjoyable to use.
                     </p>
                     <p>
-                      Currently, I'm focused on expanding my knowledge in cloud architecture and exploring new ways 
-                      to create more efficient, scalable applications. I'm particularly interested in the intersection 
-                      of performance optimization and excellent user experience.
+                      Currently, I&apos;m focused on expanding my knowledge in Android native development, generative AI applications, 
+                      and LLM integrations. I&apos;m particularly interested in creating the next generation of intelligent mobile experiences 
+                      that blend cutting-edge technology with intuitive design.
                     </p>
                   </div>
                   
@@ -249,10 +305,12 @@ export default function AboutPage() {
               <Card className="border-primary/10 backdrop-blur-sm h-full">
                 <CardContent className="p-8">
                   <div className="relative w-full aspect-square mb-6 overflow-hidden rounded-md">
-                    <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-primary/20 z-0" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <User className="h-20 w-20 text-primary/30" />
-                    </div>
+                    <Image 
+                      src="https://github.com/abhisheksharm-3.png" 
+                      alt="Abhishek Sharma" 
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   
                   <h3 className="text-xl font-medium mb-4">Contact Details</h3>
@@ -274,6 +332,18 @@ export default function AboutPage() {
                         className="text-sm text-primary/80 hover:text-primary flex items-center"
                       >
                         linkedin.com/in/abhisheksan
+                        <ArrowRight className="ml-1 h-3 w-3" />
+                      </a>
+                    </div>
+                    <div>
+                      <p className="text-xs text-foreground/50 mb-1">GitHub</p>
+                      <a 
+                        href="https://github.com/abhisheksharm-3" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-sm text-primary/80 hover:text-primary flex items-center"
+                      >
+                        github.com/abhisheksharm-3
                         <ArrowRight className="ml-1 h-3 w-3" />
                       </a>
                     </div>
@@ -352,6 +422,16 @@ export default function AboutPage() {
                           <span>{item.year}</span>
                         </div>
                         <p className="text-sm text-foreground/70 font-light">{item.description}</p>
+                        {item.cgpa && (
+                          <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/5 text-primary/80">
+                            CGPA: {item.cgpa}
+                          </div>
+                        )}
+                        {item.percentage && (
+                          <div className="mt-2 inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/5 text-primary/80">
+                            Score: {item.percentage}
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -365,7 +445,7 @@ export default function AboutPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="mb-10"
+            className="mb-20"
           >
             <div className="mb-10">
               <h3 className="text-2xl font-serif italic mb-6">Technical Skills</h3>
@@ -398,6 +478,60 @@ export default function AboutPage() {
                           className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-full text-xs text-foreground/70"
                         >
                           {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </motion.div>
+          
+          {/* Personal Interests Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={isInView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="mb-20"
+          >
+            <div className="mb-10">
+              <h3 className="text-2xl font-serif italic mb-6">Beyond Code</h3>
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={isInView ? { width: "3rem" } : {}}
+                transition={{ duration: 0.5, delay: 0.5 }}
+                className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-8"
+              />
+              <p className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mb-8">
+                When I&apos;m not coding, you&apos;ll find me exploring these interests and hobbies.
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {personalInterests.map((interest, index) => (
+                <Card 
+                  key={index} 
+                  className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300"
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-4">
+                      <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5">
+                        {interest.icon}
+                      </div>
+                      <h4 className="text-base font-medium">{interest.category}</h4>
+                    </div>
+                    
+                    <p className="text-sm text-foreground/70 font-light mb-4">
+                      {interest.description}
+                    </p>
+                    
+                    <div className="flex flex-wrap gap-2">
+                      {interest.tags.map((tag) => (
+                        <span 
+                          key={tag} 
+                          className="px-3 py-1 bg-primary/5 border border-primary/10 rounded-full text-xs text-foreground/70"
+                        >
+                          {tag}
                         </span>
                       ))}
                     </div>
