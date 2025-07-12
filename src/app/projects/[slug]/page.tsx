@@ -9,7 +9,7 @@ import PageLayout from "@/components/layout/page-layout";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ArrowLeft, ExternalLink, Github } from "lucide-react";
-import { featuredProjects } from "@/data/project";
+import { projects } from "@/data/project";
 
 // Abstract SVG paths for decorative elements
 function AbstractPath({ className, pathD }: { className?: string; pathD?: string }) {
@@ -32,7 +32,7 @@ export default function ProjectDetailPage() {
   const params = useParams();
   const slug = params?.slug as string;
   
-  const project = featuredProjects.find(p => p.slug === slug);
+  const project = projects.find(p => p.slug === slug);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   

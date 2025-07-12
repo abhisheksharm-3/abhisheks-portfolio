@@ -62,8 +62,8 @@ const skillCategories = [
 // Education data
 const education = [
   {
-    degree: "Bachelor of Technology in Computer Science",
-    institution: "Maharaja Surajmal Institute of Technology",
+    degree: "Bachelor of Engineering in Computer Science & Engineering",
+    institution: "Chandigarh College of Engineering and Technology (CCET)",
     year: "2021-2025",
     description: "Focused on core computer science principles, web development, and software engineering.",
     cgpa: 8.31
@@ -124,7 +124,7 @@ const personalInterests = [
     category: "Gaming",
     icon: <Gamepad className="h-5 w-5" />,
     description: "Perfect way to unwind after debugging sessions. Currently playing Valorant and Red Dead Redemption 2.",
-    tags: ["Valorant", "RDR2", "PC Gaming"]
+    tags: ["Valorant", "RDR2", "Far Cry 4", "PC Gaming"]
   },
   {
     category: "Sci-Fi Media",
