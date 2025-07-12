@@ -1,19 +1,4 @@
-export interface Project {
-  title: string;
-  slug: string;
-  description: string;
-  longDescription?: string;
-  imageSrc: string;
-  tags: string[];
-  year: string;
-  url?: string;
-  github?: string;
-  featured: boolean;
-  role?: string;
-  client?: string;
-  duration?: string;
-  building?: boolean;
-}
+import { Project } from "@/lib/types";
 
 /**
  * Array of all projects containing information about each project.
