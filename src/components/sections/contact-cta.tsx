@@ -334,7 +334,8 @@ function CardCornerAccent() {
 export function ContactCTA() {
   const [isHovering, setIsHovering] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
+  // Modified to make content visible without scrolling
+  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
 
   return (
     <section 

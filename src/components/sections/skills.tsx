@@ -409,7 +409,8 @@ function SecondarySkillsGrid({ additionalServices, isInView }: { additionalServi
 // Main Skills component - now focused on composition and layout
 export function Skills() {
   const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  // Modified to make content visible without scrolling
+  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
 
   // Split services into featured and secondary for different presentations
   const mainServices = SERVICES.slice(0, 3);

@@ -266,7 +266,8 @@ function CTASection({ isInView }: { isInView: boolean }) {
 export function Projects({ headline = "Selected Projects", cta = true }: ProjectsProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  // Modified to make content visible without scrolling
+  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
 
   const handleProjectHover = (index: number) => setHoveredIndex(index);
   const handleProjectLeave = () => setHoveredIndex(null);

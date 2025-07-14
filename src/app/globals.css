@@ -112,6 +112,25 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+/* Card flip effect for project graveyard */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
+
+/* End card flip effect */
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

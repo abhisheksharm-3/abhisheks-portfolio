@@ -34,7 +34,8 @@ export default function ProjectDetailPage() {
   
   const project = projects.find(p => p.slug === slug);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  // Modified to make content visible without scrolling
+  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
   
   // If project not found, redirect to 404
   if (!project) {

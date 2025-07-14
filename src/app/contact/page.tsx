@@ -196,7 +196,7 @@ export default function ContactPage() {
                   className="group bg-primary hover:bg-primary/90 text-primary-foreground"
                   asChild
                 >
-                  <a href="https://cal.com/abhisheksharma" target="_blank" rel="noopener noreferrer">
+                  <a href="https://cal.com/abhisheksan/30min" target="_blank" rel="noopener noreferrer">
                     Book a time slot
                     <ExternalLink className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                   </a>
@@ -235,10 +235,10 @@ export default function ContactPage() {
                     <div>
                       <p className="text-xs text-foreground/40 mb-1">Email</p>
                       <a 
-                        href="mailto:abhitiku2003@gmail.com"
+                        href="&#109;&#97;&#x69;&#x6c;&#116;&#111;&#x3a;&#97;%62%68&#105;%74&#x69;%6b&#x75;%32%30%30&#51;%40&#103;&#x6d;%61%69&#108;&#x2e;&#99;&#x6f;%6d"
                         className="text-sm text-foreground/80 hover:text-primary transition-colors duration-300"
                       >
-                        abhitiku2003@gmail.com
+                        Email me
                       </a>
                     </div>
                   </div>
@@ -273,12 +273,12 @@ export default function ContactPage() {
                     <div>
                       <p className="text-xs text-foreground/40 mb-1">LinkedIn</p>
                       <a 
-                        href="https://linkedin.com/in/abhishek-sharma-a4831a250"
+                        href="https://www.linkedin.com/in/abhisheksan/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-foreground/80 hover:text-primary transition-colors duration-300"
                       >
-                        linkedin.com/in/abhishek-sharma-a4831a250
+                        linkedin.com/in/abhisheksan/
                       </a>
                     </div>
                   </div>
@@ -294,12 +294,12 @@ export default function ContactPage() {
                     <div>
                       <p className="text-xs text-foreground/40 mb-1">Instagram</p>
                       <a 
-                        href="https://instagram.com/abhisheksharma.dev"
+                        href="https://instagram.com/abhishekxsharmaa"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-sm text-foreground/80 hover:text-primary transition-colors duration-300"
                       >
-                        instagram.com/abhisheksharma.dev
+                        instagram.com/abhishekxsharmaa
                       </a>
                     </div>
                   </div>

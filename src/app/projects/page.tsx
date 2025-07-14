@@ -52,7 +52,8 @@ function ProjectCard({ project, delay = 0 }: {
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(cardRef, { once: true, amount: 0.2 });
+  // Modified to make cards visible without scrolling
+  const isInView = useInView(cardRef, { once: true, amount: 0.01 });
 
   return (
     <motion.div
@@ -213,7 +214,8 @@ export default function ProjectsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const [filteredProjects, setFilteredProjects] = useState(projects);
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  // Modified to make content visible without scrolling
+  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
 
   // Filter projects based on active tag
   useEffect(() => {
@@ -362,7 +364,7 @@ export default function ProjectsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
-                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
                 >
                   {filteredProjects.length > 0 ? (
                     filteredProjects.map((project, index) => (
