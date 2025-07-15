@@ -50,15 +50,16 @@ export function ContactForm() {
       // Simulate API delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // In a real implementation, you would send the form data to your backend
-      // const response = await fetch('/api/contact', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify(data)
-      // });
-      
-      // if (!response.ok) throw new Error('Failed to submit form');
-      
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) throw new Error("Failed to submit form");
+
       setSubmitStatus("success");
       form.reset();
       
