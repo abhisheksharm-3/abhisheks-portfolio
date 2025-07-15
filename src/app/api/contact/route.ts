@@ -1,6 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
+// Robust escaping function to prevent HTML injection
+function escapeHtml(str: string) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
 const transporter = nodemailer.createTransport({
   // @ts-expect-error nodemailer types don't recognize OAuth2 options
   service: "gmail",
@@ -27,17 +37,25 @@ export async function POST(request: NextRequest) {
       message: senderMessage,
     } = reqBody;
 
-    // --- Additional Metadata ---
+    // Additional Metadata
     const submittedAt = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
     const userAgent = request.headers.get("user-agent") || "Unknown";
     const referer = request.headers.get("referer") || "Unknown";
 
+    // Escape all user-provided fields
+    const safeName = escapeHtml(senderName || "Anonymous");
+    const safeEmail = escapeHtml(senderEmail || "");
+    const safeSubject = escapeHtml(senderSubject || "(No subject)");
+    const safeMessage = escapeHtml(senderMessage || "").replace(/\n/g, "<br>");
+    const safeUserAgent = escapeHtml(userAgent);
+    const safeReferer = escapeHtml(referer);
+
     const mailOptions: nodemailer.SendMailOptions = {
-      from: `"${senderName}" <${senderEmail}>`,
+      from: `"${safeName}" <${safeEmail}>`,
       to: process.env.MY_MAIL!,
-      replyTo: senderEmail,
+      replyTo: safeEmail,
       priority: "high",
-      subject: `📩 ${senderSubject || "New Contact Form Submission"}`,
+      subject: `📩 ${safeSubject}`,
       html: `
   <body style="margin:0;background:#f6f8fa;padding:32px 0;font-family:'Inter',system-ui,sans-serif;">
     <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 8px 32px 0 #0002;border:1px solid #e5e7eb;">
@@ -54,17 +72,17 @@ export async function POST(request: NextRequest) {
         <table style="width:100%;margin-bottom:18px;">
           <tr>
             <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Name:</td>
-            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${senderName || "Anonymous"}</td>
+            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${safeName}</td>
           </tr>
           <tr>
             <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Email:</td>
             <td style="padding:6px 0 2px 0;font-size:13px;">
-              <a href="mailto:${senderEmail}" style="color:#6366f1;text-decoration:none;">${senderEmail}</a>
+              <a href="mailto:${safeEmail}" style="color:#6366f1;text-decoration:none;">${safeEmail}</a>
             </td>
           </tr>
           <tr>
             <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Subject:</td>
-            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${senderSubject || "(No subject)"}</td>
+            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${safeSubject}</td>
           </tr>
           <tr>
             <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Submitted:</td>
@@ -72,18 +90,18 @@ export async function POST(request: NextRequest) {
           </tr>
           <tr>
             <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Referrer:</td>
-            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${referer}</td>
+            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${safeReferer}</td>
           </tr>
           <tr>
             <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">User Agent:</td>
-            <td style="padding:6px 0 2px 0;font-size:13px;color:#52525b;">${userAgent}</td>
+            <td style="padding:6px 0 2px 0;font-size:13px;color:#52525b;">${safeUserAgent}</td>
           </tr>
         </table>
         <div style="margin:22px 0 16px 0;">
           <div style="background:#f3f4f6;border-radius:8px;padding:18px 16px;border:1px solid #e5e7eb;">
             <span style="display:block;color:#6366f1;font-size:13px;font-weight:500;margin-bottom:6px;">Message:</span>
             <div style="color:#18181b;font-size:15px;white-space:pre-line;line-height:1.7;">
-              ${senderMessage.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>")}
+              ${safeMessage}
             </div>
           </div>
         </div>
