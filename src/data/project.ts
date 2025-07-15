@@ -342,3 +342,31 @@ export const projects: Project[] = [
 
 // Export just the featured projects for quick access
 export const featuredProjects = projects.filter(project => project.featured);
+
+export const deadProjects = [
+  {
+    title: "WebList",
+    description: "Useful web tools all in one place - curated & community submitted.",
+    reason: "Lack of time and proper planning",
+    lessons: "Always acquire domain name first and scope out enough time even for small projects.",
+    progress: "35%",
+    technologies: ["Next.js", "Appwrite", "TailwindCSS"],
+    year: "2025",
+    duration: "2 months",
+    imageSrc: "/images/graveyard/weblist.png",
+    epitaph: "WebList: Died before it could list itself. Jan 2025 - Feb 2025"
+  },
+  {
+    title: "Aventra",
+    description: "An AI Powered Trip Planning Platform.",
+    reason: "Underestimated complexity and time required",
+    lessons: "Ensure the project scope is well defined and manageable within the available time.",
+    progress: "60%",
+    technologies: ["Next.js", "Appwrite", "FastAPI", "TailwindCSS"],
+    year: "2025",
+    duration: "2 months",
+    imageSrc: "/images/graveyard/aventra.png",
+    epitaph: "Aventra: Planned its own final trip. April 2025 - May 2025",
+    resurrectionPotential: 60
+  }
+];
