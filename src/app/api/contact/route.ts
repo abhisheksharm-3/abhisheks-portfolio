@@ -6,7 +6,7 @@ const transporter = nodemailer.createTransport({
   service: "gmail",
   host: "smtp.gmail.com",
   port: 465,
-  secure: true, // use TLS
+  secure: true,
   auth: {
     type: "OAuth2",
     user: process.env.MAIL_USER!,
@@ -27,13 +27,18 @@ export async function POST(request: NextRequest) {
       message: senderMessage,
     } = reqBody;
 
-const mailOptions: nodemailer.SendMailOptions = {
-  from: `"${senderName}" <${senderEmail}>`,
-  to: process.env.MY_MAIL!,
-  replyTo: senderEmail,
-  priority: "high",
-  subject: `📩 ${senderSubject || "New Contact Form Submission"}`,
-  html: `
+    // --- Additional Metadata ---
+    const submittedAt = new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" });
+    const userAgent = request.headers.get("user-agent") || "Unknown";
+    const referer = request.headers.get("referer") || "Unknown";
+
+    const mailOptions: nodemailer.SendMailOptions = {
+      from: `"${senderName}" <${senderEmail}>`,
+      to: process.env.MY_MAIL!,
+      replyTo: senderEmail,
+      priority: "high",
+      subject: `📩 ${senderSubject || "New Contact Form Submission"}`,
+      html: `
   <body style="margin:0;background:#f6f8fa;padding:32px 0;font-family:'Inter',system-ui,sans-serif;">
     <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 8px 32px 0 #0002;border:1px solid #e5e7eb;">
       <div style="padding:36px 32px 28px 32px;">
@@ -61,6 +66,18 @@ const mailOptions: nodemailer.SendMailOptions = {
             <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Subject:</td>
             <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${senderSubject || "(No subject)"}</td>
           </tr>
+          <tr>
+            <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Submitted:</td>
+            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${submittedAt}</td>
+          </tr>
+          <tr>
+            <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">Referrer:</td>
+            <td style="padding:6px 0 2px 0;font-size:13px;color:#18181b;">${referer}</td>
+          </tr>
+          <tr>
+            <td style="color:#6366f1;font-weight:500;padding:6px 0 2px 0;font-size:13px;">User Agent:</td>
+            <td style="padding:6px 0 2px 0;font-size:13px;color:#52525b;">${userAgent}</td>
+          </tr>
         </table>
         <div style="margin:22px 0 16px 0;">
           <div style="background:#f3f4f6;border-radius:8px;padding:18px 16px;border:1px solid #e5e7eb;">
@@ -76,24 +93,17 @@ const mailOptions: nodemailer.SendMailOptions = {
       </div>
     </div>
   </body>
-  `,
-};
+      `,
+    };
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const mailResponse = await transporter.sendMail(mailOptions);
-
-    // Log success
-    // console.log("Email sent successfully:", mailResponse);
+    await transporter.sendMail(mailOptions);
 
     return NextResponse.json(
       { success: true, message: "Email sent successfully" },
       { status: 200 }
     );
   } catch (error: unknown) {
-    // Log error
     console.error("Error sending email:", error);
-
-    // Return appropriate error response
     return NextResponse.json(
       { error: "Failed to send email" },
       { status: 500 }
