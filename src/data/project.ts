@@ -8,7 +8,8 @@ export const projects: Project[] = [
     title: "Credify",
     slug: "credify",
     description: "A content verification platform built with nextjs + FastAPI.",
-    longDescription: "Led a team of two to win the Gen AI Exchange Hackathon by Google and Devfolio, developing an innovative media attribution and tampering detection system. Managed team dynamics and effectively delegated tasks, ensuring seamless integration of individual contributions towards a winning solution.",
+    longDescription:
+      "Led a team of two to win the Gen AI Exchange Hackathon by Google and Devfolio, developing an innovative media attribution and tampering detection system. Managed team dynamics and effectively delegated tasks, ensuring seamless integration of individual contributions towards a winning solution.",
     imageSrc: "/images/projects/credify.png",
     tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "FastAPI", "Python"],
     year: "2024",
@@ -18,23 +19,41 @@ export const projects: Project[] = [
     role: "Team Lead",
     client: "Hackathon Project",
     duration: "October 2024",
-    building: false
+    building: false,
+  },
+  {
+    title: "Inquora",
+    slug: "inquora",
+    description: "A RAG platform built with NextJs.",
+    longDescription:
+      "Developed a cutting-edge RAG (Retrieval-Augmented Generation) platform using NextJs, enabling users to upload files, ask questions and receive accurate, context-aware answers. Inquora supports a wide range of file types including images, PDF, Word documents, PowerPoint slides, and even YouTube videos (experimental/unreliable). This versatility allows users to extract information from diverse sources, making it a powerful tool for research and knowledge retrieval.",
+    imageSrc: "/images/projects/inquora.png",
+    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "RAG"],
+    year: "2025",
+    url: "https://inquora.vercel.app/",
+    github: "",
+    featured: true,
+    role: "Full Stack Developer",
+    client: "Personal Project",
+    duration: "July 2025 - Present",
+    building: false,
   },
   {
     title: "Retask",
     slug: "retask",
     description: "A minimal todo app with Jetpack Compose and MAD.",
-    longDescription: "A no-fluff Android to-do app built with Jetpack Compose for clean, distraction-free task management. Focused on minimalist UX and performance, tailored to real-life productivity habits.",
+    longDescription:
+      "A no-fluff Android to-do app built with Jetpack Compose for clean, distraction-free task management. Focused on minimalist UX and performance, tailored to real-life productivity habits.",
     imageSrc: "/images/projects/retask.png",
     tags: ["Jetpack Compose", "Android", "Native", "Room", "Kotlin"],
     year: "2025",
     url: "https://github.com/abhisheksharm-3/retask/releases",
     github: "https://github.com/abhisheksharm-3/retask",
-    featured: true,
+    featured: false,
     role: "Solo Developer",
     client: "Personal Project",
-    duration: "March 2025 - Present",
-    building: false
+    duration: "March 2025 - August 2025",
+    building: false,
   },
   {
     title: "GetResume",
@@ -49,7 +68,7 @@ export const projects: Project[] = [
     role: "Full Stack Developer",
     client: "Personal Project",
     duration: "February 2024",
-    building: false
+    building: false,
   },
   {
     title: "WesternFront",
@@ -64,7 +83,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "January 2024",
-    building: false
+    building: false,
   },
   {
     title: "Resummarize",
@@ -79,7 +98,7 @@ export const projects: Project[] = [
     role: "Full Stack Developer",
     client: "Personal Project",
     duration: "December 2023",
-    building: false
+    building: false,
   },
   {
     title: "Nahmachine",
@@ -94,7 +113,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "November 2023",
-    building: false
+    building: false,
   },
   {
     title: "Votegrity",
@@ -109,15 +128,23 @@ export const projects: Project[] = [
     role: "Blockchain Developer",
     client: "Personal Project",
     duration: "October 2023",
-    building: false
+    building: false,
   },
   {
     title: "Kalendar",
     slug: "kalendar",
     description: "An AI scheduling webapp made with Nextjs + Gemini API.",
-    longDescription: "Engineered Kalendar, an AI-powered scheduling application leveraging the Gemini API to automate daily scheduling and provide personalized insights. Implemented intelligent scheduling algorithms, resulting in an estimated 50% increase in user productivity through optimized time management.",
+    longDescription:
+      "Engineered Kalendar, an AI-powered scheduling application leveraging the Gemini API to automate daily scheduling and provide personalized insights. Implemented intelligent scheduling algorithms, resulting in an estimated 50% increase in user productivity through optimized time management.",
     imageSrc: "/images/projects/kalendar.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "Gemini API", "Appwrite"],
+    tags: [
+      "NextJs",
+      "React",
+      "TailwindCSS",
+      "TypeScript",
+      "Gemini API",
+      "Appwrite",
+    ],
     year: "2024",
     url: "https://kalendarapp.vercel.app/",
     github: "",
@@ -125,7 +152,7 @@ export const projects: Project[] = [
     role: "Solo Developer",
     client: "Personal Project",
     duration: "June 2024 - August 2024",
-    building: false
+    building: false,
   },
   {
     title: "Poetica",
@@ -140,14 +167,21 @@ export const projects: Project[] = [
     role: "Full Stack Developer",
     client: "Personal Project",
     duration: "September 2023",
-    building: false
+    building: false,
   },
   {
     title: "Lexalyze",
     slug: "lexalyze",
     description: "A legal document parser with SvelteKit.",
     imageSrc: "/images/projects/lexalyze.png",
-    tags: ["Svelte", "SvelteKit", "TailwindCSS", "TypeScript", "FastAPI", "Python"],
+    tags: [
+      "Svelte",
+      "SvelteKit",
+      "TailwindCSS",
+      "TypeScript",
+      "FastAPI",
+      "Python",
+    ],
     year: "2023",
     url: "https://lexalyze.vercel.app/",
     github: "",
@@ -155,13 +189,14 @@ export const projects: Project[] = [
     role: "Full Stack Developer",
     client: "Personal Project",
     duration: "August 2023",
-    building: false
+    building: false,
   },
   {
     title: "QuickGist",
     slug: "quickgist",
     description: "A GitHub Gist like website with React + GoLang.",
-    longDescription: "Developed a full-stack code snippet sharing platform with a React frontend and Golang backend, delivering sub-100ms response times and 99.9% uptime. Designed a low-latency, scalable file-sharing backend using Firebase Storage to support real-time collaboration. Adopted by 20+ peers for seamless sharing of code and binary files not suited for version control systems.",
+    longDescription:
+      "Developed a full-stack code snippet sharing platform with a React frontend and Golang backend, delivering sub-100ms response times and 99.9% uptime. Designed a low-latency, scalable file-sharing backend using Firebase Storage to support real-time collaboration. Adopted by 20+ peers for seamless sharing of code and binary files not suited for version control systems.",
     imageSrc: "/images/projects/quickgist.png",
     tags: ["GoLang", "React", "TailwindCSS", "TypeScript"],
     year: "2024",
@@ -171,7 +206,7 @@ export const projects: Project[] = [
     role: "Full Stack Developer",
     client: "Personal Project",
     duration: "August 2024 - November 2024",
-    building: false
+    building: false,
   },
   {
     title: "Nostra",
@@ -186,7 +221,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "July 2023",
-    building: false
+    building: false,
   },
   {
     title: "TripTalkies",
@@ -201,7 +236,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "June 2023",
-    building: false
+    building: false,
   },
   {
     title: "Foodix",
@@ -216,7 +251,7 @@ export const projects: Project[] = [
     role: "Full Stack Developer",
     client: "Personal Project",
     duration: "May 2023",
-    building: false
+    building: false,
   },
   {
     title: "LiveHealthy",
@@ -231,7 +266,7 @@ export const projects: Project[] = [
     role: "ML Engineer",
     client: "Personal Project",
     duration: "April 2023",
-    building: false
+    building: false,
   },
   {
     title: "Aestoti",
@@ -246,7 +281,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "March 2023",
-    building: false
+    building: false,
   },
   {
     title: "Sanklp-Hotel",
@@ -261,7 +296,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "February 2023",
-    building: false
+    building: false,
   },
   {
     title: "TokyoTaste",
@@ -276,7 +311,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "December 2022",
-    building: false
+    building: false,
   },
   {
     title: "VisualAlg",
@@ -291,7 +326,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "November 2022",
-    building: false
+    building: false,
   },
   {
     title: "Overcastly",
@@ -306,7 +341,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "October 2022",
-    building: false
+    building: false,
   },
   {
     title: "REST-Countries",
@@ -321,7 +356,7 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "September 2022",
-    building: false
+    building: false,
   },
   {
     title: "TacTicPlay",
@@ -336,37 +371,40 @@ export const projects: Project[] = [
     role: "Frontend Developer",
     client: "Personal Project",
     duration: "August 2022",
-    building: false
-  }
+    building: false,
+  },
 ];
 
 // Export just the featured projects for quick access
-export const featuredProjects = projects.filter(project => project.featured);
+export const featuredProjects = projects.filter((project) => project.featured);
 
 export const deadProjects = [
   {
     title: "WebList",
-    description: "Useful web tools all in one place - curated & community submitted.",
+    description:
+      "Useful web tools all in one place - curated & community submitted.",
     reason: "Lack of time and proper planning",
-    lessons: "Always acquire domain name first and scope out enough time even for small projects.",
+    lessons:
+      "Always acquire domain name first and scope out enough time even for small projects.",
     progress: "35%",
     technologies: ["Next.js", "Appwrite", "TailwindCSS"],
     year: "2025",
     duration: "2 months",
     imageSrc: "/images/graveyard/weblist.png",
-    epitaph: "WebList: Died before it could list itself. Jan 2025 - Feb 2025"
+    epitaph: "WebList: Died before it could list itself. Jan 2025 - Feb 2025",
   },
   {
     title: "Aventra",
     description: "An AI Powered Trip Planning Platform.",
     reason: "Underestimated complexity and time required",
-    lessons: "Ensure the project scope is well defined and manageable within the available time.",
+    lessons:
+      "Ensure the project scope is well defined and manageable within the available time.",
     progress: "60%",
     technologies: ["Next.js", "Appwrite", "FastAPI", "TailwindCSS"],
     year: "2025",
     duration: "2 months",
     imageSrc: "/images/graveyard/aventra.png",
     epitaph: "Aventra: Planned its own final trip. April 2025 - May 2025",
-    resurrectionPotential: 60
-  }
+    resurrectionPotential: 60,
+  },
 ];
