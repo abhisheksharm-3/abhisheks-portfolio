@@ -1,41 +1,17 @@
+"use client";
+
 import { Card, CardContent } from "@/components/ui/card";
-import { Code, Terminal, Database, Cloud, Smartphone, Globe } from "lucide-react";
+import { SERVICES } from "@/data/skills";
 import { motion } from "framer-motion";
 
-const skillCategories = [
-  {
-    icon: <Code className="h-5 w-5" />,
-    title: "Frontend Development",
-    skills: ["React.js", "Next.js", "SvelteKit", "TailwindCSS", "TypeScript"],
-  },
-  {
-    icon: <Terminal className="h-5 w-5" />,
-    title: "Backend Solutions",
-    skills: ["Node.js", "Express.js", "Flask", "FastAPI", "Go"],
-  },
-  {
-    icon: <Database className="h-5 w-5" />,
-    title: "Database Management",
-    skills: ["MongoDB", "Neo4j", "MySQL", "Firebase", "Appwrite"],
-  },
-  {
-    icon: <Smartphone className="h-5 w-5" />,
-    title: "Mobile Development",
-    skills: ["React Native", "Expo", "Jetpack Compose", "Kotlin"],
-  },
-  {
-    icon: <Cloud className="h-5 w-5" />,
-    title: "Cloud & DevOps",
-    skills: ["AWS", "Docker", "Firebase", "Appwrite", "CI/CD"],
-  },
-  {
-    icon: <Globe className="h-5 w-5" />,
-    title: "Programming Languages",
-    skills: ["JavaScript", "TypeScript", "Python", "C/C++", "Go", "Kotlin"],
-  }
-];
-
-export default function SkillsSection({ isInView }: { isInView: boolean }) {
+/**
+ * Renders the Technical Skills section for the About page.
+ * This component dynamically displays skill categories from a central data source.
+ *
+ * @param {{ isInView: boolean }} props - Props to control animation triggering.
+ * @returns {JSX.Element} The rendered skills section.
+ */
+export const SkillsSection = ({ isInView }: { isInView: boolean }) => {
   return (
     <div>
       <div className="mb-10 relative">
@@ -55,21 +31,19 @@ export default function SkillsSection({ isInView }: { isInView: boolean }) {
           </svg>
         </div>
       </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {skillCategories.map((category, index) => (
+        {SERVICES.map((category) => (
           <Card 
-            key={index} 
+            key={category.title} 
             className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300 group relative overflow-hidden"
           >
             <CardContent className="p-6">
               <div className="flex items-center mb-4">
                 <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5 group-hover:bg-primary/10 transition-colors duration-300">
-                  <motion.div
-                    whileHover={{ rotate: 15 }}
-                    className="text-primary/70"
-                  >
+                  <div className="text-primary/70 scale-90">
                     {category.icon}
-                  </motion.div>
+                  </div>
                 </div>
                 <h4 className="text-base font-medium group-hover:text-primary/90 transition-colors duration-300">{category.title}</h4>
               </div>
@@ -83,7 +57,6 @@ export default function SkillsSection({ isInView }: { isInView: boolean }) {
                   </span>
                 ))}
               </div>
-              {/* Decorative corner element */}
               <div className="absolute bottom-0 right-0 w-12 h-12 overflow-hidden opacity-20 pointer-events-none">
                 <div className="absolute bottom-0 right-0 w-px h-12 bg-gradient-to-t from-primary/20 to-transparent" />
                 <div className="absolute bottom-0 right-0 h-px w-12 bg-gradient-to-l from-primary/20 to-transparent" />
@@ -94,4 +67,6 @@ export default function SkillsSection({ isInView }: { isInView: boolean }) {
       </div>
     </div>
   );
-}
+};
+
+export default SkillsSection;

@@ -6,40 +6,47 @@ const personalInterests = [
   {
     category: "Photography",
     icon: <Camera className="h-5 w-5" />,
-    description: "Capturing city life and nature. My phone gallery is 70% cloud shots!",
-    tags: ["Urban Photography", "Nature", "Golden Hour"]
+    description:
+      "Got into the habit of clicking random city corners and skies. My gallery is basically 70% cloud pics at this point.",
+    tags: ["Street", "Nature", "Golden Hour"]
   },
   {
     category: "Reading",
     icon: <BookOpen className="h-5 w-5" />,
-    description: "Currently reading The Almanack of Naval Ravikant and The Courage to be Disliked.",
-    tags: ["Personal Development", "Popular Science", "Business"]
+    description:
+      "Currently juggling Naval’s Almanack and The Courage to be Disliked. I like books that make you pause mid-page and rethink stuff.",
+    tags: ["Philosophy", "Self-Growth", "Business"]
   },
   {
     category: "Music",
     icon: <Music className="h-5 w-5" />,
-    description: "Soundtrack to my coding sessions. Lo-fi beats for focused coding, rock classics for debugging.",
+    description:
+      "Lo-fi for deep work, rock when I’m stuck debugging, and the occasional classical binge when I need brain reset.",
     tags: ["Lo-fi", "Rock", "Classical"]
   },
   {
     category: "Gaming",
     icon: <Gamepad className="h-5 w-5" />,
-    description: "Perfect way to unwind after debugging sessions. Currently playing Valorant and Red Dead Redemption 2.",
-    tags: ["Valorant", "RDR2", "Far Cry 4", "PC Gaming"]
+    description:
+      "Valorant for the chaos, RDR2 for the escape. Honestly the best way to cool down after a long coding session.",
+    tags: ["Valorant", "RDR2", "Far Cry 4"]
   },
   {
     category: "Sci-Fi Media",
     icon: <Film className="h-5 w-5" />,
-    description: "Love sci-fi that blends technology with imagination. Favorites include Interstellar and The Martian.",
+    description:
+      "Obsessed with sci-fi that feels a little too close to reality. Interstellar and The Martian are on permanent rewatch.",
     tags: ["Interstellar", "The Martian", "Inception"]
   },
   {
     category: "Exploration",
     icon: <Coffee className="h-5 w-5" />,
-    description: "Weekend wanderer & street food enthusiast. Love discovering hidden cafes and quiet spots for reading & coding.",
-    tags: ["Cafes", "Street Food", "City Exploration"]
+    description:
+      "Weekends = wandering streets, chasing food stalls, or finding low-key cafes to sit and code/read for hours.",
+    tags: ["Cafes", "Street Food", "City Walks"]
   }
 ];
+
 
 export default function InterestsSection({ isInView }: { isInView: boolean }) {
   return (

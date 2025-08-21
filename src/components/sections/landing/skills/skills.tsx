@@ -20,7 +20,7 @@ export const Skills = () => {
 
   // Split the services data for different layout treatments
   const mainServices = SERVICES.slice(0, 3);
-  const additionalServices = SERVICES.slice(3);
+  const additionalServices = SERVICES.slice(3, 6);
 
   return (
     <section ref={sectionRef} className="py-36 sm:py-44 relative overflow-hidden">

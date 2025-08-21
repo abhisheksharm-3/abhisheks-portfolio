@@ -5,40 +5,46 @@ const experience = [
   {
     position: "Software Development Intern",
     company: "Stardom",
-    duration: "January 2025 - June 2025",
-    description: "Driving the company's website development and digital infrastructure. Built company website with Next.js and optimized frontend performance. Designed and deployed cloud infrastructure and email systems."
+    duration: "Jan 2025 – Jun 2025",
+    description:
+      "Took charge of building Stardom’s web presence from scratch with Next.js. Tweaked and tuned the frontend till it actually felt fast. Also set up their cloud infra + email systems — basically made sure things didn’t break when people actually started using it."
   },
   {
-    position: "Winner - Network 18 Track",
-    company: "Gen AI Exchange Hackathon by Google",
-    duration: "October 2024",
-    description: "Developed AI-powered media verification system called Credify. Applied cutting-edge techniques in AI media attribution."
-  },
+    position: "Winner – Network18 Track",
+    company: "Gen AI Exchange Hackathon (Google)",
+    duration: "Oct 2024",
+    description:
+      "Built ‘Credify’, an AI-powered media verification tool. We hacked together Machine Learning + attribution logic to fight fake media — ended up winning the track. Intense 1 month, but super worth it."
+  }
 ];
 
 const education = [
   {
-    degree: "Bachelor of Engineering in Computer Science & Engineering",
-    institution: "Chandigarh College of Engineering and Technology (CCET)",
-    year: "2021-2025",
-    description: "Focused on core computer science principles, web development, and software engineering.",
-    cgpa: 8.31
+    degree: "B.E. in Computer Science & Engineering",
+    institution: "CCET, Panjab University",
+    year: "2021–2025",
+    cgpa: "8.31",
+    description:
+      "Graduated with an 8.31 CGPA. Learnt my foundations in CS, but honestly most growth came from side projects and hackathons I kept grinding on."
   },
   {
-    degree: "12th Grade",
+    degree: "12th Grade (CBSE)",
     institution: "Mount Carmel School, Chandigarh",
     year: "2021",
-    description: "Completed senior secondary education with focus on science and mathematics.",
+    description:
+      "Science + Math focus. Scored 92.4% — lots of late-night physics + coding side quests.",
     percentage: "92.4%"
   },
   {
-    degree: "10th Grade",
+    degree: "10th Grade (CBSE)",
     institution: "Mount Carmel School, Chandigarh",
     year: "2019",
-    description: "Completed secondary education with excellent academic performance.",
+    description:
+      "Strong academics (92.2%) but also when I really got hooked on tinkering with computers beyond the classroom.",
     percentage: "92.2%"
   }
 ];
+
 
 export default function ExperienceEducationSection() {
   return (
