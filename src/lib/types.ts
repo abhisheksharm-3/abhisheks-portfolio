@@ -50,3 +50,10 @@ export interface AnimatedPathProps {
   pathD?: string;
   delay?: number;
 }
+
+export interface ContactChannel {
+  readonly icon: React.ReactNode;
+  readonly label: string;
+  readonly value: string;
+  readonly href: string;
+}

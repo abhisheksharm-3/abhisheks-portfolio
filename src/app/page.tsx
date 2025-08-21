@@ -3,9 +3,9 @@
 import PageLayout from "@/components/layout/page-layout";
 import { Hero } from "@/components/sections/landing/hero/hero";
 import { Projects } from "@/components/sections/landing/projects/projects";
-import { Skills } from "@/components/sections/skills";
-import { Philosophy } from "@/components/sections/philosophy";
-import { ContactCTA } from "@/components/sections/contact-cta";
+import { Philosophy } from "@/components/sections/landing/philosophy/philosophy";
+import { ContactCTA } from "@/components/sections/landing/cta/contact-cta";
+import { Skills } from "@/components/sections/landing/skills/skills";
 
 /**
  * The main landing page of the application.

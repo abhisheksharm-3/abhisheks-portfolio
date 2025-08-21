@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import { motion, useTransform } from 'framer-motion';
 import { MousePosition } from '@/lib/types';
 import { ANIMATION_CONFIG } from '@/data/hero';

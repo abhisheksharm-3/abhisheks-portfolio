@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { featuredProjects } from "@/data/project";
 import { ProjectsProps, ProjectCardProps } from "@/lib/types";
 import { PROJECT_ANIMATION_DELAYS, PROJECT_ANIMATION_DURATIONS } from "@/lib/config/projects";
-import { BackgroundDecorations } from "./project-background";
 import { ProjectImageContainer, ProjectContent } from "./project-card";
+import { SharedBackground } from "@/components/shared/SharedBackground";
 
 /** Renders the animated badge for the section header. */
 const SectionBadge = ({ isInView }: { isInView: boolean }) => (
@@ -141,7 +141,7 @@ export const Projects = ({ headline = "Selected Projects", cta = true }: Project
 
   return (
     <section className="py-36 sm:py-44 relative overflow-hidden container mx-auto px-6" ref={sectionRef} id="work-section">
-      <BackgroundDecorations isInView={isInView} />
+      <SharedBackground isInView={isInView} noiseFilterId="preojectsNoiseFilter" /> 
       <SectionHeader headline={headline} isInView={isInView} />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-20">
         {featuredProjects.map((project, index) => (
