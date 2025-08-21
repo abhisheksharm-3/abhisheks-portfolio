@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { Playfair_Display } from "next/font/google";
+import { Geist, Geist_Mono, Newsreader } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 
@@ -14,9 +13,11 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair-display",
+const newsreader = Newsreader({
+  // New font
+  variable: "--font-newsreader",
   subsets: ["latin"],
+  style: ["normal", "italic"], // Important for serifs
 });
 
 export const metadata: Metadata = {
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     title: "Abhishek Sharma — Web Experiences & Mobile Innovation",
     description:
       "Engineering unique web and mobile apps. Discover Abhishek Sharma's work in full stack development, UI/UX, and cross-platform solutions. Connect for bespoke digital craftsmanship.",
-    url: "https://abhisheksharma.tech",
+    url: "https://abhisheksan.com",
     siteName: "Abhishek Sharma Portfolio",
     images: [
       {
@@ -48,7 +49,7 @@ export const metadata: Metadata = {
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },
-  metadataBase: new URL("https://abhisheksharma.tech"),
+  metadataBase: new URL("https://abhisheksan.com"),
   keywords: [
     "Abhishek Sharma",
     "Web Experiences",
@@ -60,9 +61,9 @@ export const metadata: Metadata = {
     "Cross-platform Apps",
     "Digital Product",
     "Next.js",
-    "React Native"
+    "React Native",
   ],
-  authors: [{ name: "Abhishek Sharma", url: "https://abhisheksharma.tech" }],
+  authors: [{ name: "Abhishek Sharma", url: "https://abhisheksan.com" }],
   category: "technology",
   creator: "Abhishek Sharma",
   publisher: "Abhishek Sharma",
@@ -77,7 +78,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head />
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"

@@ -7,14 +7,14 @@ export const projects: Project[] = [
   {
     title: "Credify",
     slug: "credify",
-    description: "A content verification platform built with nextjs + FastAPI.",
+    description: "Hackathon-winning media verification platform.",
     longDescription:
-      "Led a team of two to win the Gen AI Exchange Hackathon by Google and Devfolio, developing an innovative media attribution and tampering detection system. Managed team dynamics and effectively delegated tasks, ensuring seamless integration of individual contributions towards a winning solution.",
+      "Built in 48 hours for Google & Devfolio’s Gen AI Exchange Hackathon. Led a 2-person team to create a tampering detection and attribution system using Next.js + FastAPI. Won by shipping fast, dividing work smartly, and actually finishing a working product.",
     imageSrc: "/images/projects/credify.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "FastAPI", "Python"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2024",
     url: "https://credify.fun/",
-    github: "",
+    github: "https://github.com/abhisheksharm-3/credify",
     featured: true,
     role: "Team Lead",
     client: "Hackathon Project",
@@ -24,43 +24,45 @@ export const projects: Project[] = [
   {
     title: "Inquora",
     slug: "inquora",
-    description: "A RAG platform built with NextJs.",
+    description: "Chat with any file — from PDFs to YouTube videos.",
     longDescription:
-      "Developed a cutting-edge RAG (Retrieval-Augmented Generation) platform using NextJs, enabling users to upload files, ask questions and receive accurate, context-aware answers. Inquora supports a wide range of file types including images, PDF, Word documents, PowerPoint slides, and even YouTube videos (experimental/unreliable). This versatility allows users to extract information from diverse sources, making it a powerful tool for research and knowledge retrieval.",
+      "Personal project exploring Retrieval-Augmented Generation (RAG). Users upload files (PDF, Word, PPT, images, even YouTube links) and query them conversationally. Blends vector search + Next.js for research that actually feels natural.",
     imageSrc: "/images/projects/inquora.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "RAG"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS", "RAG"],
     year: "2025",
     url: "https://inquora.vercel.app/",
-    github: "",
+    github: "https://github.com/abhisheksharm-3/chat-with-anything",
     featured: true,
     role: "Full Stack Developer",
     client: "Personal Project",
-    duration: "July 2025 - Present",
+    duration: "July 2025 – Present",
     building: false,
   },
   {
     title: "Retask",
     slug: "retask",
-    description: "A minimal todo app with Jetpack Compose and MAD.",
+    description: "Minimalist Android to-do app.",
     longDescription:
-      "A no-fluff Android to-do app built with Jetpack Compose for clean, distraction-free task management. Focused on minimalist UX and performance, tailored to real-life productivity habits.",
+      "Stripped-down productivity app built with Jetpack Compose. Focused on speed, clean UI, and zero fluff. A small project to learn MAD + deliver something I’d actually use.",
     imageSrc: "/images/projects/retask.png",
-    tags: ["Jetpack Compose", "Android", "Native", "Room", "Kotlin"],
+    tags: ["Jetpack Compose", "Android", "Room", "Kotlin"],
     year: "2025",
     url: "https://github.com/abhisheksharm-3/retask/releases",
     github: "https://github.com/abhisheksharm-3/retask",
     featured: false,
     role: "Solo Developer",
     client: "Personal Project",
-    duration: "March 2025 - August 2025",
+    duration: "March 2025 – August 2025",
     building: false,
   },
   {
     title: "GetResume",
     slug: "getresume",
-    description: "A resume parsing platform with nextjs + Gemini API.",
+    description: "Gemini-powered resume parsing tool.",
+    longDescription:
+      "Experimented with AI parsing + structured output to simplify resumes. Built with Next.js + Gemini API to test how far LLMs can automate career workflows.",
     imageSrc: "/images/projects/getresume.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "FastAPI", "Python"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2024",
     url: "https://getresumes.vercel.app/",
     github: "",
@@ -73,9 +75,11 @@ export const projects: Project[] = [
   {
     title: "WesternFront",
     slug: "westernfront",
-    description: "An Aggregator from reliable sources on Indi-Pak Conflict.",
+    description: "Conflict news aggregator.",
+    longDescription:
+      "A simple, reliable news aggregator focusing on India–Pakistan conflict updates. Aggregates RSS feeds into one clean UI.",
     imageSrc: "/images/projects/westernfront.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "RSS"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS", "RSS"],
     year: "2024",
     url: "https://western-front.vercel.app",
     github: "",
@@ -88,9 +92,11 @@ export const projects: Project[] = [
   {
     title: "Resummarize",
     slug: "resummarize",
-    description: "An AI powered note taking WebApp with Supabase.",
+    description: "AI-powered note summarizer.",
+    longDescription:
+      "Quick experiment with Supabase + LLMs to condense notes. Built a clean UI for rapid text summarization.",
     imageSrc: "/images/projects/resummarize.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "Supabase"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS", "Supabase"],
     year: "2023",
     url: "https://re-summarize.vercel.app/",
     github: "",
@@ -103,9 +109,11 @@ export const projects: Project[] = [
   {
     title: "Nahmachine",
     slug: "nahmachine",
-    description: "A website that helps saying no.",
+    description: "A site that helps you say 'no'.",
+    longDescription:
+      "Built for fun: type your scenario, get a witty way to decline. A cheeky, quick Next.js project.",
     imageSrc: "/images/projects/nahmachine.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS"],
     year: "2023",
     url: "https://nahmachine.vercel.app/",
     github: "",
@@ -118,9 +126,11 @@ export const projects: Project[] = [
   {
     title: "Votegrity",
     slug: "votegrity",
-    description: "A dApp voting platform made with nextjs + solidity.",
+    description: "Blockchain voting dApp.",
+    longDescription:
+      "Explored Solidity + Next.js to build a prototype decentralized voting platform. Focused on transparency and tamper resistance.",
     imageSrc: "/images/projects/votegrity.png",
-    tags: ["Web3", "Solidity", "NextJs", "React", "TailwindCSS", "TypeScript"],
+    tags: ["Web3", "Solidity", "NextJs", "TypeScript"],
     year: "2023",
     url: "https://votegrity.vercel.app/",
     github: "",
@@ -133,33 +143,28 @@ export const projects: Project[] = [
   {
     title: "Kalendar",
     slug: "kalendar",
-    description: "An AI scheduling webapp made with Nextjs + Gemini API.",
+    description: "AI-native scheduling app.",
     longDescription:
-      "Engineered Kalendar, an AI-powered scheduling application leveraging the Gemini API to automate daily scheduling and provide personalized insights. Implemented intelligent scheduling algorithms, resulting in an estimated 50% increase in user productivity through optimized time management.",
+      "Leveraged Gemini API + Next.js to create a scheduling assistant that understands natural language and auto-builds calendars. Boosted user productivity by optimizing task allocation.",
     imageSrc: "/images/projects/kalendar.png",
-    tags: [
-      "NextJs",
-      "React",
-      "TailwindCSS",
-      "TypeScript",
-      "Gemini API",
-      "Appwrite",
-    ],
+    tags: ["NextJs", "TypeScript", "TailwindCSS", "Gemini API", "Appwrite"],
     year: "2024",
     url: "https://kalendarapp.vercel.app/",
     github: "",
     featured: false,
     role: "Solo Developer",
     client: "Personal Project",
-    duration: "June 2024 - August 2024",
+    duration: "June 2024 – August 2024",
     building: false,
   },
   {
     title: "Poetica",
     slug: "poetica",
-    description: "A LLM based poem generation platform.",
+    description: "LLM-powered poetry generator.",
+    longDescription:
+      "Experiment in AI creativity: generates poems from prompts using FastAPI + Next.js. A fun dive into LLM fine-tuning.",
     imageSrc: "/images/projects/poetica.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript", "FastAPI", "Python"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2023",
     url: "https://poetica-ai.vercel.app/",
     github: "",
@@ -172,16 +177,11 @@ export const projects: Project[] = [
   {
     title: "Lexalyze",
     slug: "lexalyze",
-    description: "A legal document parser with SvelteKit.",
+    description: "AI legal document parser.",
+    longDescription:
+      "Built with SvelteKit + FastAPI, Lexalyze parses Indian legal documents, surfacing relevant clauses and making them accessible to non-lawyers.",
     imageSrc: "/images/projects/lexalyze.png",
-    tags: [
-      "Svelte",
-      "SvelteKit",
-      "TailwindCSS",
-      "TypeScript",
-      "FastAPI",
-      "Python",
-    ],
+    tags: ["SvelteKit", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2023",
     url: "https://lexalyze.vercel.app/",
     github: "",
@@ -194,24 +194,26 @@ export const projects: Project[] = [
   {
     title: "QuickGist",
     slug: "quickgist",
-    description: "A GitHub Gist like website with React + GoLang.",
+    description: "Fast code snippet sharing (React + Go).",
     longDescription:
-      "Developed a full-stack code snippet sharing platform with a React frontend and Golang backend, delivering sub-100ms response times and 99.9% uptime. Designed a low-latency, scalable file-sharing backend using Firebase Storage to support real-time collaboration. Adopted by 20+ peers for seamless sharing of code and binary files not suited for version control systems.",
+      "React + Go platform for sharing snippets and binaries. Focused on speed (sub-100ms response) and uptime. Adopted by 20+ peers for collaboration.",
     imageSrc: "/images/projects/quickgist.png",
-    tags: ["GoLang", "React", "TailwindCSS", "TypeScript"],
+    tags: ["Go", "React", "TypeScript", "TailwindCSS"],
     year: "2024",
     url: "https://quickgist.vercel.app/",
     github: "",
     featured: false,
     role: "Full Stack Developer",
     client: "Personal Project",
-    duration: "August 2024 - November 2024",
+    duration: "August 2024 – November 2024",
     building: false,
   },
   {
     title: "Nostra",
     slug: "nostra",
-    description: "A restaurant website made with react and appwrite.",
+    description: "Restaurant site built with React + Appwrite.",
+    longDescription:
+      "Frontend + backend playground project for a fictional restaurant. Experiment in Appwrite integration.",
     imageSrc: "/images/projects/nostra.png",
     tags: ["React", "TailwindCSS", "JavaScript"],
     year: "2023",
@@ -226,9 +228,11 @@ export const projects: Project[] = [
   {
     title: "TripTalkies",
     slug: "triptalkies",
-    description: "A trip planning platform made with nextjs + typecript.",
+    description: "Trip planning prototype.",
+    longDescription:
+      "Explored travel planning flows in Next.js. Focused on itinerary UX and lightweight design.",
     imageSrc: "/images/projects/triptalkies.png",
-    tags: ["NextJs", "React", "TailwindCSS", "TypeScript"],
+    tags: ["NextJs", "TypeScript", "TailwindCSS"],
     year: "2023",
     url: "https://triptalkies.vercel.app/",
     github: "",
@@ -241,9 +245,11 @@ export const projects: Project[] = [
   {
     title: "Foodix",
     slug: "foodix",
-    description: "A MERN Stack Food Delivery Website with Live Status.",
+    description: "MERN-based food delivery prototype.",
+    longDescription:
+      "A full-stack app simulating Swiggy/Zomato style flows, complete with live order status.",
     imageSrc: "/images/projects/foodix.png",
-    tags: ["ExpressJs", "React", "TailwindCSS", "TypeScript"],
+    tags: ["ExpressJs", "React", "TypeScript", "TailwindCSS"],
     year: "2023",
     url: "https://foodixdelivery.vercel.app/",
     github: "",
@@ -256,7 +262,9 @@ export const projects: Project[] = [
   {
     title: "LiveHealthy",
     slug: "livehealthy",
-    description: "A React + Flask ML project to predict your health.",
+    description: "Health predictor (React + Flask + ML).",
+    longDescription:
+      "Built a ML model + Flask API to predict basic health metrics. Wrapped in a React frontend.",
     imageSrc: "/images/projects/livehealthy.png",
     tags: ["Flask", "React", "Machine Learning"],
     year: "2023",
@@ -271,7 +279,9 @@ export const projects: Project[] = [
   {
     title: "Aestoti",
     slug: "aestoti",
-    description: "A Pomodoro timer built with SvelteKit.",
+    description: "Pomodoro timer built with SvelteKit.",
+    longDescription:
+      "Small project to learn SvelteKit. Clean UI pomodoro timer with Tailwind styling.",
     imageSrc: "/images/projects/aestoti.png",
     tags: ["SvelteKit", "TailwindCSS"],
     year: "2023",
@@ -286,7 +296,9 @@ export const projects: Project[] = [
   {
     title: "Sanklp-Hotel",
     slug: "sanklp-hotel",
-    description: "A frontend UI project based on design from figma community.",
+    description: "Hotel UI clone from Figma design.",
+    longDescription:
+      "Frontend-only implementation of a hotel booking site design. Pure styling + layout practice.",
     imageSrc: "/images/projects/sanklp.png",
     tags: ["React", "TailwindCSS", "JavaScript"],
     year: "2023",
@@ -301,9 +313,11 @@ export const projects: Project[] = [
   {
     title: "TokyoTaste",
     slug: "tokyotaste",
-    description: "A HTML + CSS frontend UI project.",
+    description: "Static restaurant landing page (HTML + CSS).",
+    longDescription:
+      "One of my first frontend projects — a themed restaurant landing page with pure HTML/CSS.",
     imageSrc: "/images/projects/tokyotaste.png",
-    tags: ["HTML"],
+    tags: ["HTML", "CSS"],
     year: "2022",
     url: "https://tokyotaste.netlify.app/",
     github: "",
@@ -316,9 +330,11 @@ export const projects: Project[] = [
   {
     title: "VisualAlg",
     slug: "visualalg",
-    description: "A Website to Visualize BFS and DFS Algorithms.",
+    description: "Graph algorithm visualizer.",
+    longDescription:
+      "Built a tool to visualize BFS and DFS traversals interactively in the browser.",
     imageSrc: "/images/projects/visualalg.png",
-    tags: ["React", "TailwindCSS", "JavaScript"],
+    tags: ["React", "JavaScript", "TailwindCSS"],
     year: "2022",
     url: "https://graphsense.netlify.app/",
     github: "",
@@ -331,7 +347,9 @@ export const projects: Project[] = [
   {
     title: "Overcastly",
     slug: "overcastly",
-    description: "A vanilla js API weather web-app.",
+    description: "Vanilla JS weather app.",
+    longDescription:
+      "Simple weather app built using public APIs + vanilla JS. One of my earliest experiments with APIs.",
     imageSrc: "/images/projects/overcastly.png",
     tags: ["HTML", "JavaScript"],
     year: "2022",
@@ -346,7 +364,9 @@ export const projects: Project[] = [
   {
     title: "REST-Countries",
     slug: "rest-countries",
-    description: "SvelteKit REST Countries API challenge implementation.",
+    description: "REST Countries API challenge (SvelteKit).",
+    longDescription:
+      "Frontend Mentor challenge: consumed REST Countries API with SvelteKit + Tailwind.",
     imageSrc: "/images/projects/restcountries.png",
     tags: ["SvelteKit", "TailwindCSS"],
     year: "2022",
@@ -361,9 +381,11 @@ export const projects: Project[] = [
   {
     title: "TacTicPlay",
     slug: "tacticplay",
-    description: "A MiniMax Algorithm Based Tic Tac Toe Game.",
+    description: "AI Tic Tac Toe (Minimax).",
+    longDescription:
+      "Coded a Tic Tac Toe game using minimax algorithm. Practiced game logic and AI basics.",
     imageSrc: "/images/projects/tacticplay.png",
-    tags: ["React", "TailwindCSS", "JavaScript"],
+    tags: ["React", "JavaScript", "TailwindCSS"],
     year: "2022",
     url: "https://tacticplay.netlify.app/",
     github: "",
@@ -375,36 +397,37 @@ export const projects: Project[] = [
   },
 ];
 
+
 // Export just the featured projects for quick access
 export const featuredProjects = projects.filter((project) => project.featured);
 
 export const deadProjects = [
   {
     title: "WebList",
-    description:
-      "Useful web tools all in one place - curated & community submitted.",
-    reason: "Lack of time and proper planning",
+    description: "All-in-one toolkit hub — never fully launched.",
+    reason: "Didn’t secure domain early, underestimated time.",
     lessons:
-      "Always acquire domain name first and scope out enough time even for small projects.",
+      "Buy domains first, scope properly (even 'tiny' projects take longer).",
     progress: "35%",
     technologies: ["Next.js", "Appwrite", "TailwindCSS"],
     year: "2025",
     duration: "2 months",
     imageSrc: "/images/graveyard/weblist.png",
-    epitaph: "WebList: Died before it could list itself. Jan 2025 - Feb 2025",
+    epitaph: "WebList: Died before it could list itself. Jan–Feb 2025",
   },
   {
     title: "Aventra",
-    description: "An AI Powered Trip Planning Platform.",
-    reason: "Underestimated complexity and time required",
+    description: "AI trip planner that overplanned itself.",
+    reason: "Too much scope + underestimated complexity.",
     lessons:
-      "Ensure the project scope is well defined and manageable within the available time.",
+      "AI + real-time APIs need tighter scope, or they spiral.",
     progress: "60%",
     technologies: ["Next.js", "Appwrite", "FastAPI", "TailwindCSS"],
     year: "2025",
     duration: "2 months",
     imageSrc: "/images/graveyard/aventra.png",
-    epitaph: "Aventra: Planned its own final trip. April 2025 - May 2025",
+    epitaph: "Aventra: Planned its own final trip. Apr–May 2025",
     resurrectionPotential: 60,
   },
 ];
+
