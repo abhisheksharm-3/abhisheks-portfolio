@@ -31,7 +31,7 @@ export const projects: Project[] = [
     tags: ["NextJs", "TypeScript", "TailwindCSS", "RAG"],
     year: "2025",
     url: "https://inquora.vercel.app/",
-    github: "https://github.com/abhisheksharm-3/chat-with-anything",
+    github: "https://github.com/abhisheksharm-3/inquora",
     featured: true,
     role: "Full Stack Developer",
     client: "Personal Project",
