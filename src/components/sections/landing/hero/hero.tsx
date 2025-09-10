@@ -1,8 +1,13 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useScroll, useTransform, useSpring } from "framer-motion";
-import { useMousePosition } from "@/hooks/useMousePosition";
+import { useEffect, useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useSpring,
+  useMotionValue,
+} from "framer-motion";
 
 import {
   NoiseBackground,
@@ -11,6 +16,7 @@ import {
   AnimatedPaths,
   AsymmetricalDecoration,
 } from "./hero-background";
+
 import {
   ExperienceCounter,
   HeroName,
@@ -28,26 +34,50 @@ import {
  */
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mousePosition = useMousePosition();
 
+  // --- Performant Mouse Tracking ---
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!containerRef.current) return;
+      const { clientX, clientY } = e;
+      const { left, top, width, height } =
+        containerRef.current.getBoundingClientRect();
+      // Calculate mouse position relative to the center of the hero section
+      const x = clientX - (left + width / 2);
+      const y = clientY - (top + height / 2);
+      mouseX.set(x);
+      mouseY.set(y);
+    };
+    // Use the containerRef for the event listener for better performance
+    const currentRef = containerRef.current;
+    currentRef?.addEventListener("mousemove", handleMouseMove);
+    return () => currentRef?.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
+
+  // --- Scroll-based Animations (Unchanged) ---
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // Create parallax and fade effects based on scroll progress
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
   const smoothY = useSpring(y, { damping: 15, stiffness: 100 });
   const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
   return (
-    <section ref={containerRef} className="relative min-h-[100vh] w-full overflow-hidden">
-      {/* Layer 1: Background Elements */}
+    <section
+      ref={containerRef}
+      className="relative min-h-[100vh] w-full overflow-hidden"
+    >
+      {/* Layer 1: Background Elements now receive performant MotionValues */}
       <NoiseBackground />
       <AsymmetricalGrid />
-      <AbstractShapes mousePosition={mousePosition} />
+      <AbstractShapes mouseX={mouseX} mouseY={mouseY} />
       <AnimatedPaths />
-      <AsymmetricalDecoration mousePosition={mousePosition} />
+      <AsymmetricalDecoration mouseX={mouseX} mouseY={mouseY} />
 
       {/* Layer 2: Fixed UI Elements */}
       <ExperienceCounter />
@@ -62,7 +92,7 @@ export const Hero = () => {
             <HeroName />
             <HeroDescription />
           </div>
-          <SkillsSection mousePosition={mousePosition} />
+          <SkillsSection mouseX={mouseX} mouseY={mouseY} />
         </motion.div>
       </div>
 
