@@ -15,7 +15,7 @@ import {
   AbstractShapes,
   AnimatedPaths,
   AsymmetricalDecoration,
-} from "./hero-background";
+} from "./HeroBackground";
 
 import {
   ExperienceCounter,
@@ -23,7 +23,7 @@ import {
   HeroDescription,
   SkillsSection,
   ScrollIndicator,
-} from "./hero-content";
+} from "./HeroContent";
 
 /**
  * The main Hero section for the homepage.
@@ -32,7 +32,7 @@ import {
  * a dynamic and interactive hero section with mouse-based parallax and scroll-based animations.
  * @returns {JSX.Element} The rendered Hero component.
  */
-export const Hero = () => {
+const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // --- Performant Mouse Tracking ---
@@ -101,3 +101,4 @@ export const Hero = () => {
     </section>
   );
 };
+export default Hero;
