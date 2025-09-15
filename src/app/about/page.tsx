@@ -1,84 +1,118 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, Variants } from "framer-motion";
+import { SharedBackground } from "@/components/shared/SharedBackground";
 import PageLayout from "@/components/layout/page-layout";
 import BioCard from "@/components/sections/about/BioCard";
 import ContactCard from "@/components/sections/about/ContactCard";
 import ExperienceEducationSection from "@/components/sections/about/ExperienceEducationSection";
 import SkillsSection from "@/components/sections/about/SkillsSection";
 import InterestsSection from "@/components/sections/about/InterestsSection";
-import { SharedBackground } from "@/components/shared/SharedBackground";
-import { AboutPageHeader } from "@/components/sections/about/AboutPageHeader";
-import { AboutPageCTA } from "@/components/sections/about/AboutPageCTA";
+import AboutPageHeader from "@/components/sections/about/AboutPageHeader";
+import AboutPageCTA from "@/components/sections/about/AboutPageCTA";
 
 /**
- * The main "About Me" page component.
- * It orchestrates the layout of various informational sections, animated on scroll.
- *
- * @returns {JSX.Element} The rendered About page.
+ * Defines reusable animation variants for page items.
+ * The `visible` state accepts a custom number to stagger the animation delay.
+ */
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: i * 0.1,
+      duration: 0.8,
+      ease: "easeOut",
+    },
+  }),
+};
+
+/**
+ * Renders the 'About Me' page with performant, staggered animations on scroll.
+ * @returns {JSX.Element} The About page component.
  */
 const AboutPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
     <PageLayout activePage="About">
       <div ref={sectionRef} className="pt-24 px-6 sm:px-8 lg:px-32">
         <section className="py-36 sm:py-44 relative overflow-hidden">
-          {/* Reusable background component for a consistent look and feel */}
-          <SharedBackground isInView={isInView} noiseFilterId="aboutPageNoiseFilter" />
+          <SharedBackground
+            isInView={isInView}
+            noiseFilterId="aboutPageNoiseFilter"
+          />
 
-          <AboutPageHeader isInView={isInView} />
+          <motion.div
+            variants={itemVariants}
+            custom={0}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+          >
+            <AboutPageHeader />
+          </motion.div>
 
-          {/* Bio & Contact Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.4 }}
+              variants={itemVariants}
+              custom={1}
+              initial="hidden"
+              animate={isInView ? "visible" : "hidden"}
               className="md:col-span-2"
             >
               <BioCard />
             </motion.div>
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              variants={itemVariants}
+              custom={2}
+              initial="hidden"
+              animate={isInView ? "visible" : "hidden"}
             >
               <ContactCard />
             </motion.div>
           </div>
-          
-          {/* Experience, Skills, and Interests sections with staggered animations */}
+
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.7 }}
+            variants={itemVariants}
+            custom={3}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
             className="mb-20"
           >
             <ExperienceEducationSection />
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.8 }}
+            variants={itemVariants}
+            custom={4}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
             className="mb-20"
           >
-            <SkillsSection isInView={isInView} />
+            <SkillsSection />
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.9 }}
+            variants={itemVariants}
+            custom={5}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
             className="mb-20"
           >
-            <InterestsSection isInView={isInView} />
+            <InterestsSection />
           </motion.div>
 
-          <AboutPageCTA isInView={isInView} />
+          <motion.div
+            variants={itemVariants}
+            custom={6}
+            initial="hidden"
+            animate={isInView ? "visible" : "hidden"}
+          >
+            <AboutPageCTA />
+          </motion.div>
         </section>
       </div>
     </PageLayout>

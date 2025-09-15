@@ -7,7 +7,6 @@ export interface GitHubStats {
   languages: Record<string, number>;
   topLanguages: string[];
   contributions: number;
-  profileViews?: number;
 }
 
 export interface GitHubRepo {
@@ -26,15 +25,35 @@ const GITHUB_API_BASE = 'https://api.github.com';
 
 export async function fetchGitHubStats(): Promise<GitHubStats> {
   try {
-    // Fetch user data
-    const userResponse = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`);
+    // Fetch user data with no-cache to get fresh data
+    const userResponse = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}`, {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
+    });
+    
+    if (!userResponse.ok) {
+      throw new Error(`GitHub API error: ${userResponse.status}`);
+    }
+    
     const userData = await userResponse.json();
 
-    // Fetch repositories
-    const reposResponse = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`);
+    // Fetch repositories with fresh data
+    const reposResponse = await fetch(`${GITHUB_API_BASE}/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`, {
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Pragma': 'no-cache'
+      }
+    });
+    
+    if (!reposResponse.ok) {
+      throw new Error(`GitHub repos API error: ${reposResponse.status}`);
+    }
+    
     const repos: GitHubRepo[] = await reposResponse.json();
 
-    // Calculate language stats
+    // Calculate stats from actual data
     const languageCounts: Record<string, number> = {};
     let totalStars = 0;
     let totalForks = 0;
@@ -50,39 +69,30 @@ export async function fetchGitHubStats(): Promise<GitHubStats> {
     // Get top languages
     const topLanguages = Object.entries(languageCounts)
       .sort(([, a], [, b]) => b - a)
-      .slice(0, 8)
+      .slice(0, 6)
       .map(([lang]) => lang);
 
+    // Estimate contributions based on repo activity
+    const currentYear = new Date().getFullYear();
+    const thisYearRepos = repos.filter(repo => 
+      new Date(repo.updated_at).getFullYear() === currentYear
+    );
+    const estimatedContributions = Math.min(thisYearRepos.length * 50 + totalStars * 5, 1000);
+
     return {
-      publicRepos: userData.public_repos,
-      followers: userData.followers,
-      following: userData.following,
+      publicRepos: userData.public_repos || 0,
+      followers: userData.followers || 0,
+      following: userData.following || 0,
       totalStars,
       totalForks,
       languages: languageCounts,
       topLanguages,
-      contributions: 0, // Would need GitHub GraphQL API for this
+      contributions: estimatedContributions,
     };
   } catch (error) {
-    console.warn('Failed to fetch GitHub stats:', error);
-    // Return fallback data
-    return {
-      publicRepos: 52,
-      followers: 9,
-      following: 8,
-      totalStars: 25,
-      totalForks: 12,
-      languages: {
-        'TypeScript': 15,
-        'JavaScript': 12,
-        'Python': 8,
-        'Java': 5,
-        'Kotlin': 3,
-        'Go': 2
-      },
-      topLanguages: ['TypeScript', 'JavaScript', 'Python', 'Java', 'Kotlin', 'Go'],
-      contributions: 750,
-    };
+    console.warn('Failed to fetch GitHub stats, using fallback:', error);
+    // Minimal fallback - will show loading state in UI
+    throw error;
   }
 }
 
@@ -97,12 +107,12 @@ export function calculateTechnicalExpertise(projects: Array<{tags: string[]}>, g
 
   // Map technologies to expertise categories
   const expertiseMap = {
-    'Frontend': ['React', 'NextJs', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'TailwindCSS', 'Vue', 'Svelte'],
-    'Backend': ['Node.js', 'Express', 'Python', 'FastAPI', 'Flask', 'Java', 'Spring', 'Go', 'PostgreSQL', 'MongoDB'],
+    'Frontend': ['React', 'NextJs', 'TypeScript', 'JavaScript', 'HTML', 'CSS', 'TailwindCSS', 'Vue'],
+    'Backend': ['Node.js', 'Express', 'Python', 'FastAPI', 'Flask', 'Java', 'Spring', 'Go', 'PostgreSQL'],
     'Mobile': ['React Native', 'Android', 'Kotlin', 'Flutter', 'Swift'],
-    'AI/ML': ['Machine Learning', 'TensorFlow', 'PyTorch', 'Python', 'AI', 'LangChain'],
-    'DevOps': ['Docker', 'AWS', 'Firebase', 'Vercel', 'CI/CD', 'Kubernetes', 'Linux'],
-    'Blockchain': ['Solidity', 'Web3', 'Ethereum', 'Smart Contracts', 'DeFi']
+    'AI/ML': ['Machine Learning', 'TensorFlow', 'PyTorch', 'Python', 'AI'],
+    'DevOps': ['Docker', 'AWS', 'Firebase', 'Vercel', 'CI/CD'],
+    'Blockchain': ['Solidity', 'Web3', 'Ethereum', 'Smart Contracts']
   };
 
   return Object.entries(expertiseMap).map(([category, techs]) => {
@@ -116,15 +126,15 @@ export function calculateTechnicalExpertise(projects: Array<{tags: string[]}>, g
     }, 0);
 
     // Combine and normalize to 100
-    const totalScore = projectScore * 10 + githubScore * 2;
-    const maxPossibleScore = techs.length * 15; // Rough maximum
+    const totalScore = projectScore * 8 + githubScore * 3;
+    const maxPossibleScore = techs.length * 12;
     const normalizedScore = Math.min(Math.round((totalScore / maxPossibleScore) * 100), 100);
 
     return {
       technology: category,
       fullName: getCategoryFullName(category),
-      value: projectScore + githubScore,
-      normalized: Math.max(normalizedScore, 20) // Minimum 20% for categories with any experience
+      value: projectScore + Math.floor(githubScore / 2),
+      normalized: Math.max(normalizedScore, 15) // Minimum 15% for categories with any experience
     };
   });
 }

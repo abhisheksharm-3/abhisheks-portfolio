@@ -1,3 +1,5 @@
+import { LucideIcon } from "lucide-react";
+
 export interface MousePosition {
   x: number;
   y: number;
@@ -37,7 +39,7 @@ export interface ProjectCardProps {
   onLeave: () => void;
 }
 
-export interface Service {
+export interface TypeExpertise {
   icon: React.ReactNode;
   title: string;
   description: string;
@@ -57,3 +59,17 @@ export interface ContactChannel {
   readonly value: string;
   readonly href: string;
 }
+
+export type TypeTimelineItemProps = {
+  title: string;
+  subtitle: string;
+  date: string;
+  description: string;
+  badges?: { label: string; value: string }[];
+};
+
+export type TypeTimelineCardProps = {
+  title: string;
+  Icon: LucideIcon;
+  items: TypeTimelineItemProps[];
+};

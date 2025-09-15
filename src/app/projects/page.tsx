@@ -8,6 +8,9 @@ import AbstractPath from "@/components/shared/AbstractPath";
 import ProjectsHeader from "@/components/sections/projects/ProjectsHeader";
 import { ProjectsFilters } from "@/components/sections/projects/ProjectsFilter";
 import ProjectsCTA from "@/components/sections/projects/ProjectsCTA";
+import { ProjectStatsOverview } from "@/components/sections/projects/ProjectStatsOverview";
+import { ProjectInsights } from "@/components/sections/projects/ProjectInsights";
+
 const allTags = Array.from(
   new Set(projects.flatMap(project => project.tags))
 ).sort();
@@ -56,8 +59,15 @@ export default function ProjectsPage() {
           <AbstractPath className="absolute left-[5%] top-[15%] text-primary/8" pathD="M10,30 C20,50 40,10 50,40 S80,20 90,40" />
           <AbstractPath className="absolute right-[10%] bottom-[20%] rotate-180 text-primary/8" pathD="M10,50 Q40,20 50,50 T90,30" />
         </div>
+        
+        {/* Page Header */}
         <ProjectsHeader isInView={isInView} />
-        <div className="mb-12">
+        
+        {/* Quick Stats Overview - positioned naturally after header */}
+        <ProjectStatsOverview isInView={isInView} />
+        
+        {/* Projects Grid Section */}
+        <div className="mb-20">
           <ProjectsFilters
             allTags={allTags}
             activeFilter={activeFilter}
@@ -65,6 +75,10 @@ export default function ProjectsPage() {
             filteredProjects={filteredProjects}
           />
         </div>
+        
+        {/* Additional Insights - Optional detailed stats after projects */}
+        <ProjectInsights isInView={isInView} />
+        
         <ProjectsCTA isInView={isInView} />
       </div>
     </PageLayout>

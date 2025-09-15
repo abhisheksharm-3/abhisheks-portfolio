@@ -6,6 +6,7 @@ import { Projects } from "@/components/sections/landing/projects/projects";
 import { Philosophy } from "@/components/sections/landing/philosophy/philosophy";
 import { ContactCTA } from "@/components/sections/landing/cta/contact-cta";
 import { Skills } from "@/components/sections/landing/skills/skills";
+import { NewWebsiteBanner } from "@/components/sections/landing/NewWebsiteBanner";
 
 /**
  * The main landing page of the application.
@@ -19,6 +20,7 @@ import { Skills } from "@/components/sections/landing/skills/skills";
 const Home = () => {
   return (
     <PageLayout activePage="Home">
+      <NewWebsiteBanner />
       <main className="pt-24 px-6 sm:px-8 lg:px-32">
         <Hero />
         <Projects />

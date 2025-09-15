@@ -1,10 +1,6 @@
 import { motion } from "framer-motion";
-import { calculateProjectStats } from "@/lib/project-stats";
-import { ProjectStatsCharts } from "./ProjectStatsCharts";
 
 export default function ProjectsHeader({ isInView }: { isInView: boolean }) {
-  const stats = calculateProjectStats();
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 24 }}
@@ -54,14 +50,11 @@ export default function ProjectsHeader({ isInView }: { isInView: boolean }) {
         initial={{ opacity: 0, y: 20 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8, delay: 0.7 }}
-        className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6 mb-16"
+        className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
       >
         Browse my comprehensive collection of projects spanning web development, mobile applications, 
         and design work. Each project represents a journey of learning, experimentation, and craftsmanship.
       </motion.p>
-
-      {/* Project Statistics */}
-      <ProjectStatsCharts stats={stats} isInView={isInView} />
     </motion.div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useInView } from "framer-motion";
-import { SERVICES } from "@/data/skills";
+import { Expertise } from "@/data/skills";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { FeaturedSkillsSection, SecondarySkillsGrid, SectionHeader } from "./skills-components";
 
@@ -19,8 +19,8 @@ export const Skills = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
 
   // Split the services data for different layout treatments
-  const mainServices = SERVICES.slice(0, 3);
-  const additionalServices = SERVICES.slice(3, 6);
+  const mainServices = Expertise.slice(0, 3);
+  const additionalServices = Expertise.slice(3, 6);
 
   return (
     <section ref={sectionRef} className="py-36 sm:py-44 relative overflow-hidden">

@@ -1,6 +1,5 @@
 "use client";
 
-import React from 'react';
 import { motion } from 'framer-motion';
 import { AnimatedPathProps } from '@/lib/types';
 import { SHARED_GRID_CONFIG, SHARED_SVG_PATHS } from '@/lib/config/landing-background';

@@ -1,10 +1,10 @@
 import { Code, Terminal, Database, Cloud, Smartphone, Brain, Globe } from "lucide-react";
-import { Service } from "@/lib/types";
+import { TypeExpertise } from "@/lib/types";
 
 /**
  * The single source of truth for all skills and services data across the application.
  */
-export const SERVICES: Service[] = [
+export const Expertise: TypeExpertise[] = [
   {
     icon: <Code />,
     title: "Frontend Engineering",

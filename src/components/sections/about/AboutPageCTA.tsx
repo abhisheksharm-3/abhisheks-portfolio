@@ -5,20 +5,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 
-
 /**
- * Renders the final call-to-action button for the About page.
- * @param props - The component's props.
- * @returns {JSX.Element} The rendered CTA component.
+ * Renders a call-to-action button with interactive hover effects.
+ * This component is intended to be animated by a parent motion component.
+ * @returns {JSX.Element} The CTA component.
  */
-export const AboutPageCTA = ({ isInView }: { isInView: boolean }) => {
+const AboutPageCTA = () => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ delay: 1.1, duration: 1.2 }}
-      className="flex justify-center"
-    >
+    <div className="flex justify-center">
       <Button
         variant="outline"
         size="lg"
@@ -26,7 +20,7 @@ export const AboutPageCTA = ({ isInView }: { isInView: boolean }) => {
         asChild
       >
         <Link href="/projects" className="flex items-center">
-          <motion.span 
+          <motion.span
             className="font-medium tracking-wide relative z-10"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
@@ -40,7 +34,7 @@ export const AboutPageCTA = ({ isInView }: { isInView: boolean }) => {
           >
             <ArrowRight className="h-3 w-3 text-primary/70 group-hover:text-primary/90 transition-colors duration-300" />
           </motion.div>
-          <motion.div 
+          <motion.div
             className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"
             initial={{ x: "-100%" }}
             whileHover={{ x: 0 }}
@@ -48,6 +42,7 @@ export const AboutPageCTA = ({ isInView }: { isInView: boolean }) => {
           />
         </Link>
       </Button>
-    </motion.div>
+    </div>
   );
 };
+export default AboutPageCTA;

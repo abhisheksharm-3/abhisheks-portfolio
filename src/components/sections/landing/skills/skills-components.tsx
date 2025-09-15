@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Palette, ArrowRight } from "lucide-react";
-import { Service } from "@/lib/types";
+import { TypeExpertise } from "@/lib/types";
 import { SKILLS_ANIMATION_CONFIG } from "@/lib/config/skills";
 
 /**
@@ -78,9 +78,9 @@ export const SectionHeader = ({ isInView }: { isInView: boolean }) => (
 
 /**
  * Renders a single skill card used in the 'FeaturedSkillsSection'.
- * @param {{ service: Service; index: number }} props - Component props.
+ * @param {{ service: TypeExpertise; index: number }} props - Component props.
  */
-const SkillCard = ({ service }: { service: Service }) => (
+const SkillCard = ({ service }: { service: TypeExpertise }) => (
   <motion.div
     variants={SKILLS_ANIMATION_CONFIG.item}
     className="group flex flex-col"
@@ -124,13 +124,13 @@ const SkillCard = ({ service }: { service: Service }) => (
 
 /**
  * Renders the main featured skills area, combining a description with a grid of core skills.
- * @param {{ mainServices: Service[]; isInView: boolean }} props - Component props.
+ * @param {{ mainServices: TypeExpertise[]; isInView: boolean }} props - Component props.
  */
 export const FeaturedSkillsSection = ({
   mainServices,
   isInView,
 }: {
-  mainServices: Service[];
+  mainServices: TypeExpertise[];
   isInView: boolean;
 }) => (
   <Card className="border-primary/10 backdrop-blur-sm overflow-hidden py-0 mb-12 relative">
@@ -211,13 +211,13 @@ export const FeaturedSkillsSection = ({
 
 /**
  * Renders a grid of cards for secondary or additional skills.
- * @param {{ additionalServices: Service[]; isInView: boolean }} props - Component props.
+ * @param {{ additionalServices: TypeExpertise[]; isInView: boolean }} props - Component props.
  */
 export const SecondarySkillsGrid = ({
   additionalServices,
   isInView,
 }: {
-  additionalServices: Service[];
+  additionalServices: TypeExpertise[];
   isInView: boolean;
 }) => (
   <motion.div
