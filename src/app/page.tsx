@@ -13,7 +13,7 @@ import { Skills } from "@/components/sections/landing/skills/skills";
  */
 const Home = () => {
   return (
-    <PageLayout activePage="Home">
+    <PageLayout>
       <main className="pt-24 px-6 sm:px-8 lg:px-32">
         <Hero />
         <Projects />

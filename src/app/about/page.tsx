@@ -38,7 +38,7 @@ const AboutPage = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
-    <PageLayout activePage="About">
+    <PageLayout>
       <div ref={sectionRef} className="pt-24 px-6 sm:px-8 lg:px-32">
         <section className="py-36 sm:py-44 relative overflow-hidden">
           <SharedBackground

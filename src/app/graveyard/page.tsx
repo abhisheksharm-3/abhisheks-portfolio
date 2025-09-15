@@ -1,6 +1,7 @@
 "use client";
-import { useRef } from "react";
-import { useInView } from "framer-motion";
+
+import { useMemo } from "react";
+import { motion, Variants } from "framer-motion";
 import PageLayout from "@/components/layout/page-layout";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -11,7 +12,6 @@ import { GraveyardIntroCard } from "@/components/sections/graveyard/GraveyardInt
 import { deadProjects } from "@/data/project";
 import { GraveyardProjectCard } from "@/components/sections/graveyard/GraveyardProjectCard";
 
-// Quotes and data
 const inspirationalQuotes = [
   "Every dead project is a stepping stone to success.",
   "Failure is just success in progress.",
@@ -20,23 +20,51 @@ const inspirationalQuotes = [
   "Every abandoned project brings you one step closer to the one that will succeed.",
 ];
 
-export default function GraveyardPage() {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 },
+  },
+};
 
-  // Pick a random quote only once per render
-  const quote = inspirationalQuotes[0]; // deterministic, or use memo/random if you want it to change per page load
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+/**
+ * Renders the Graveyard page, showcasing abandoned projects as learning experiences.
+ * Features orchestrated animations and a random inspirational quote.
+ * @returns {JSX.Element} The GraveyardPage component.
+ */
+export default function GraveyardPage() {
+  const quote = useMemo(
+    () => inspirationalQuotes[Math.floor(Math.random() * inspirationalQuotes.length)],
+    []
+  );
 
   return (
-    <PageLayout activePage="Graveyard">
-      <div
-        ref={sectionRef}
+    <PageLayout>
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.05 }}
         className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
       >
-        <GraveyardBackground isInView={isInView} />
-        <GraveyardSectionHeader isInView={isInView} quote={quote} />
-        <GraveyardIntroCard isInView={isInView} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <GraveyardBackground />
+        <motion.div variants={itemVariants}>
+          <GraveyardSectionHeader quote={quote} />
+        </motion.div>
+        <motion.div variants={itemVariants}>
+          <GraveyardIntroCard />
+        </motion.div>
+
+        <motion.div
+          variants={containerVariants}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
+        >
           {deadProjects.map((project, index) => (
             <GraveyardProjectCard
               key={project.title}
@@ -44,14 +72,14 @@ export default function GraveyardPage() {
               index={index}
             />
           ))}
-        </div>
-        <div className="text-center mt-16">
+        </motion.div>
+
+        <motion.div variants={itemVariants} className="text-center mt-16">
           <h3 className="text-2xl font-serif italic mb-4">
             Prefer the land of the living?
           </h3>
           <div
-            className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto mb-8"
-            style={{ width: "8rem" }}
+            className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto mb-8 w-32"
           />
           <Button
             size="lg"
@@ -60,11 +88,11 @@ export default function GraveyardPage() {
           >
             <Link href="/projects" className="flex items-center">
               Escape the Graveyard
-              <ArrowRight className="h-4 w-4 ml-2" />
+              <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </PageLayout>
   );
 }

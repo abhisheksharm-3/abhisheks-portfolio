@@ -5,22 +5,18 @@ import { ReactNode } from "react";
 import { Header } from "./header";
 import { Footer } from "./footer";
 import { Background } from "./background";
-import { useScrollPosition } from "@/hooks/use-scroll-position";
 
 interface PageLayoutProps {
   className?: string;
   children: ReactNode;
-  activePage?: string;
   showBackground?: boolean;
 }
 
 export function PageLayout({
   className,
   children,
-  activePage,
   showBackground = true,
 }: PageLayoutProps) {
-  const scrollPosition = useScrollPosition();
 
   return (
     <div
@@ -34,7 +30,7 @@ export function PageLayout({
           <Background />
         </div>
       )}
-      <Header scrollPosition={scrollPosition} activePage={activePage} />
+      <Header />
       <main className="flex-1 relative z-10">{children}</main>
       <Footer />
     </div>

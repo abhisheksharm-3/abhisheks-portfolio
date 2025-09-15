@@ -24,7 +24,7 @@ export default function ProjectDetailPage() {
   if (!project) notFound();
 
   return (
-    <PageLayout activePage="Projects">
+    <PageLayout>
       <div ref={sectionRef} className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 pointer-events-none">

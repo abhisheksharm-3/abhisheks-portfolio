@@ -73,3 +73,13 @@ export type TypeTimelineCardProps = {
   Icon: LucideIcon;
   items: TypeTimelineItemProps[];
 };
+
+export interface TypeContactEmailProps {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  submittedAt: string;
+  userAgent: string;
+  referer: string;
+}
