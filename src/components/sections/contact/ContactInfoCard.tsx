@@ -11,8 +11,8 @@ const CONTACTS = [
   {
     label: "Email",
     Icon: Mail,
-    link: "mailto:abhitiku2003@gmail.com",
-    display: "abhitiku2003@gmail.com",
+    link: "mailto:abhishek@abhisheksan.com",
+    display: "abhishek@abhisheksan.com",
   },
   {
     label: "GitHub",

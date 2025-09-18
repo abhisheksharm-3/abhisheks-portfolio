@@ -11,7 +11,6 @@ import {
   ContactChannels,
 } from "./cta-components";
 import { SharedBackground } from "@/components/shared/SharedBackground";
-import Prism from "@/components/shared/Prism/Prism";
 
 /**
  * Sophisticated floating orbs for ambient decoration
@@ -224,7 +223,8 @@ export const ContactCTA = () => {
             onMouseLeave={() => setIsHovering(false)}
           >
             {/* Enhanced Prism Background */}
-            <div className="absolute inset-0 rounded-3xl overflow-hidden opacity-40">
+            {/* TODO:Fix the performance issues due to this bg */}
+            {/* <div className="absolute inset-0 rounded-3xl overflow-hidden opacity-40">
               <Prism 
                 animationType="rotate" 
                 timeScale={0.2} 
@@ -236,7 +236,7 @@ export const ContactCTA = () => {
                 noise={0.2} 
                 glow={0.8}
               />
-            </div>
+            </div> */}
 
             <FloatingOrbs isInView={isInView} />
             <MeshGradient isHovering={isHovering} />
