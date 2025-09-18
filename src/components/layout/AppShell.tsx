@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { Footer } from "./footer";
-import { Background } from "./Background";
+import { ConstellationBackground } from "./ConstellationBackground";
 import { Navbar } from "./navbar";
 import { AppShellProps } from "@/lib/types";
 
@@ -29,7 +29,7 @@ export const AppShell: React.FC<AppShellProps> = ({
     >
       {showBackground && (
         <div className="absolute inset-0 z-0 overflow-hidden">
-          <Background />
+          <ConstellationBackground />
         </div>
       )}
       <Navbar />

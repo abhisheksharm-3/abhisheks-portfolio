@@ -4,13 +4,13 @@ import { useState } from "react";
 import { motion, Variants, AnimatePresence } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { projects } from "@/data/project";
-import { 
+import {
   ProjectsHeader,
   ProjectsFilters,
   ProjectsCTA,
   ProjectCard,
   ProjectsPageBackground,
-  ProjectAnalytics
+  ProjectAnalytics,
 } from "@/components/sections/projects";
 
 /**
@@ -66,7 +66,9 @@ const ProjectsPage = () => {
           <ProjectAnalytics />
         </motion.div>
 
-        <motion.div variants={itemVariants} className="my-20">\n          <ProjectsFilters
+        <motion.div variants={itemVariants} className="my-20">
+          {" "}
+          <ProjectsFilters
             allTags={allTags}
             activeFilter={activeFilter}
             setActiveFilter={setActiveFilter}

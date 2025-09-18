@@ -1,4 +1,4 @@
-export { Hero } from "./Hero";
+export { Hero } from "./HeroComponent";
 export { 
   NoiseBackground,
   AsymmetricalGrid,

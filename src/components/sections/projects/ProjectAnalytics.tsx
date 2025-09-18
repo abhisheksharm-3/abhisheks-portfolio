@@ -202,7 +202,7 @@ export const ProjectAnalytics = () => {
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
-      className="relative py-24"
+      className="relative"
     >
       {/* Section Header */}
       <motion.div variants={itemVariants} className="text-center mb-20">

@@ -3,9 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { TypeMobileMenuProps } from "@/lib/types";
-import { mobileMenuVariants } from "@/lib/config/nav-config";
+import { mobileMenuVariants, mobileNavItemVariants } from "@/lib/config/nav-config";
 import { MobileNavLink } from "./MobileNavLink";
 import { MobileMenuFooter } from "../footer";
+import { Button } from "@/components/ui/button";
+import { History } from "lucide-react";
+import Link from "next/link";
 
 /**
  * Renders the full-screen mobile navigation menu.
@@ -43,6 +46,24 @@ export const MobileMenu: React.FC<TypeMobileMenuProps> = ({
               onClick={onClose}
             />
           ))}
+          
+          <motion.div
+            variants={mobileNavItemVariants}
+            className="mt-4"
+          >
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-sm text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 group"
+              onClick={onClose}
+            >
+              <Link href="https://old.abhisheksan.com" target="_blank" rel="noopener noreferrer">
+                <History className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
+                Old Portfolio
+              </Link>
+            </Button>
+          </motion.div>
         </motion.div>
 
         <MobileMenuFooter />

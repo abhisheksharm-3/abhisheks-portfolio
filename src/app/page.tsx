@@ -1,7 +1,7 @@
 "use client";
 
 import { AppShell } from "@/components/layout/AppShell";
-import { Hero } from "@/components/sections/landing/hero/Hero";
+import { Hero } from "@/components/sections/landing/hero/HeroComponent";
 import { Projects } from "@/components/sections/landing/projects/projects";
 import { Philosophy } from "@/components/sections/landing/philosophy/philosophy";
 import { ContactCTA } from "@/components/sections/landing/cta/contact-cta";
