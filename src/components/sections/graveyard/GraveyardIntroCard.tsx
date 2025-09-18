@@ -2,7 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { GhostIcon } from "./icons";
+import { RiGhostFill } from "@remixicon/react";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -19,7 +19,7 @@ const itemVariants: Variants = {
  * Features a multi-level staggered animation for its content.
  * @returns {JSX.Element} The GraveyardIntroCard component.
  */
-export function GraveyardIntroCard() {
+export const GraveyardIntroCard = () => {
   return (
     <div className="mb-16">
       <Card className="border-red-500/10 backdrop-blur-sm overflow-hidden py-0 relative">
@@ -31,7 +31,7 @@ export function GraveyardIntroCard() {
             {/* Left Column */}
             <motion.div variants={containerVariants} className="w-full sm:w-1/3">
               <motion.div variants={itemVariants} className="w-16 h-16 rounded-md border border-red-500/10 flex items-center justify-center mb-8">
-                <GhostIcon className="h-8 w-8 text-amber-500/70" strokeWidth={1.25} />
+                <RiGhostFill className="h-8 w-8 text-amber-500/70" strokeWidth={1.25} />
               </motion.div>
               <motion.h3 variants={itemVariants} className="text-2xl sm:text-3xl font-serif italic mb-6">
                 Digital Afterlife
@@ -48,14 +48,13 @@ export function GraveyardIntroCard() {
             {/* Right Column */}
             <motion.div variants={containerVariants} className="w-full sm:w-2/3">
               <motion.p variants={itemVariants} className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-6">
-                Every developer has a collection of projects that never saw the light of day.
-                Some were killed by technical challenges, others by shifting priorities, and a few
-                simply ran out of runway.
+                Like every dev, I’ve got my fair share of projects that never made it out alive.
+                Some broke under tech challenges, some lost relevance, and some just ran out of steam.
               </motion.p>
               <motion.p variants={itemVariants} className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed">
-                But even in death, these projects have value. Each tombstone represents a lesson learned,
-                a skill gained, or an insight that informed future work. So pour one out for the fallen
-                projects — they died so that others might live.
+                Still, none of them were wasted. Each one left me with lessons, skills, or insights
+                that shaped the projects I shipped later. So here’s to the ones that didn’t make it —
+                they paved the way for everything that did.
               </motion.p>
             </motion.div>
           </div>

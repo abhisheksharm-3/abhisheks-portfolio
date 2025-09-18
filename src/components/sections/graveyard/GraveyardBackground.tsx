@@ -2,8 +2,8 @@
 
 import { useMemo } from "react";
 import { motion, Variants } from "framer-motion";
-import { GhostIcon } from "./icons";
-import AbstractPath from "@/components/shared/AbstractPath";
+import { AbstractPath } from "@/components/shared/AbstractPath";
+import { RiGhostFill } from "@remixicon/react";
 
 // --- CONFIG & VARIANTS ---
 
@@ -58,7 +58,7 @@ const FloatingGhost = () => {
         repeatType: "mirror",
       }}
     >
-      <GhostIcon className="text-white/10" style={{ width: randomValues.size, height: randomValues.size }} />
+      <RiGhostFill className="text-white/10" style={{ width: randomValues.size, height: randomValues.size }} />
     </motion.div>
   );
 };
@@ -67,7 +67,7 @@ const FloatingGhost = () => {
  * Renders the animated background for the Graveyard page.
  * @returns {JSX.Element} The GraveyardBackground component.
  */
-export function GraveyardBackground() {
+export const GraveyardBackground = () => {
   return (
     <div className="absolute inset-0 pointer-events-none -z-10">
       {/* Noise Texture */}

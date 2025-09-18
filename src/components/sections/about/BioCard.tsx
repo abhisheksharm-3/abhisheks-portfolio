@@ -81,5 +81,3 @@ export const BioCard = () => {
     </Card>
   );
 };
-
-export default BioCard;

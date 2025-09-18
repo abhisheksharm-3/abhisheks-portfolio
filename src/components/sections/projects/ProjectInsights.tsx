@@ -69,22 +69,32 @@ const TimelineChart = ({ yearlyBreakdown }: { yearlyBreakdown: { year: string, c
 export function ProjectInsights() {
   const { theme } = useTheme();
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
+  const [radarData, setRadarData] = useState<Array<{
+    technology: string;
+    fullName: string;
+    value: number;
+    normalized: number;
+  }>>([]);
   const localStats = useMemo(() => calculateProjectStats(), []);
 
   useEffect(() => {
-    const loadGitHubStats = async () => {
+    const loadData = async () => {
       try {
-        setGithubStats(await fetchGitHubStats());
+        const githubData = await fetchGitHubStats();
+        setGithubStats(githubData);
+        
+        // Calculate technical expertise with real data
+        const expertise = await calculateTechnicalExpertise(projects, githubData);
+        setRadarData(expertise);
       } catch (error) {
         console.warn('Failed to load GitHub stats:', error);
+        // Set empty array as fallback - component will handle gracefully
+        setRadarData([]);
       }
     };
-    loadGitHubStats();
-  }, []);
 
-  const radarData = useMemo(() => 
-    githubStats ? calculateTechnicalExpertise(projects, githubStats) : [],
-  [githubStats]);
+    loadData();
+  }, []);
   
   const colors = useMemo(() => ({
     grid: theme === 'dark' ? 'rgba(100, 116, 139, 0.2)' : 'rgba(148, 163, 184, 0.4)',

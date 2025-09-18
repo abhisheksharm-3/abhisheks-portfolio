@@ -22,11 +22,13 @@ const itemVariants: Variants = {
 };
 
 /**
- * Renders the main header for the Projects page.
- * This component is designed to be part of a larger staggered animation sequence.
- * @returns {JSX.Element} The ProjectsHeader component.
+ * ProjectsHeader - Main header component for the Projects page
+ * Features staggered animation sequence with gradient text and decorative elements.
+ * Displays page title, description, and animated accent line.
+ * 
+ * @returns JSX.Element representing the projects page header
  */
-export default function ProjectsHeader() {
+export const ProjectsHeader = () => {
   return (
     <motion.div
       variants={containerVariants}
@@ -75,4 +77,4 @@ export default function ProjectsHeader() {
       </motion.p>
     </motion.div>
   );
-}
+};

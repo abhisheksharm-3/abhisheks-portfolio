@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-export function ResurrectionMeter({ potential = 0 }: { potential: number }) {
+export const ResurrectionMeter = ({ potential = 0 }: { potential: number }) => {
   const color =
     potential > 50
       ? "text-green-500"

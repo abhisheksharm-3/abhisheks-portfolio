@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
 import { ResurrectionMeter } from "./ResurrectionMeter";
-import { TombstoneIcon, GhostIcon } from "./icons";
+import { RiCrossFill, RiGhostFill } from "@remixicon/react";
 
 const causeOfDeath = [
   "Died of scope creep",
@@ -18,7 +18,7 @@ const causeOfDeath = [
   "Victim of budget cuts"
 ];
 
-export function GraveyardProjectCard({ project, index }: {
+export const GraveyardProjectCard = ({ project, index }: {
   project: {
     title: string;
     description: string;
@@ -33,7 +33,7 @@ export function GraveyardProjectCard({ project, index }: {
     resurrectionPotential?: number;
   };
   index: number;
-}) {
+}) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isFlipped, setIsFlipped] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -74,7 +74,7 @@ export function GraveyardProjectCard({ project, index }: {
         <div className="p-6 pb-0 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-md border border-red-500/20 bg-red-500/5">
-              <TombstoneIcon className="h-4 w-4 text-red-500/70" strokeWidth={1.5} />
+              <RiCrossFill className="h-4 w-4 text-red-500/70" strokeWidth={1.5} />
             </div>
             <span className="text-xs text-red-500/70 font-light">Abandoned at {project.progress}</span>
           </div>
@@ -110,7 +110,7 @@ export function GraveyardProjectCard({ project, index }: {
                 }}
                 className="flex flex-col items-center"
               >
-                <GhostIcon className="h-14 w-14 text-white/60" strokeWidth={1.5} />
+                <RiGhostFill className="h-14 w-14 text-white/60" strokeWidth={1.5} />
               </motion.div>
             </motion.div>
             {/* Gradient overlay & title */}
@@ -180,7 +180,7 @@ export function GraveyardProjectCard({ project, index }: {
             <>
               <div className="mb-6 p-3 bg-red-500/5 border border-red-500/10 rounded-md relative">
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-background px-3">
-                  <TombstoneIcon className="h-4 w-4 text-red-500/70 mx-auto" strokeWidth={1.5} />
+                  <RiCrossFill className="h-4 w-4 text-red-500/70 mx-auto" strokeWidth={1.5} />
                 </div>
                 <p className="text-center text-xs italic text-foreground/60 pt-1">
                   &quot;{project.epitaph}&quot;

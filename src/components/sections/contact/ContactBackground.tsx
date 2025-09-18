@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import AbstractPath from "../../shared/AbstractPath";
+import { AbstractPath } from "../../shared/AbstractPath";
 
 // --- CONFIG & VARIANTS ---
 
@@ -32,7 +32,7 @@ const pathContainerVariants: Variants = {
  * including a noise texture, grid, and decorative SVG paths.
  * @returns {JSX.Element} The ContactBackground component.
  */
-export default function ContactBackground() {
+export const ContactBackground = () => {
   return (
     <div className="absolute inset-0 pointer-events-none -z-10">
       {/* Noise Texture */}
@@ -85,4 +85,4 @@ export default function ContactBackground() {
       </motion.div>
     </div>
   );
-}
+};

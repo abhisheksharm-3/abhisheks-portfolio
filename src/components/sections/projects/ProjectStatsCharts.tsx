@@ -19,20 +19,39 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
   const { theme } = useTheme();
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [radarData, setRadarData] = useState<Array<{
+    technology: string;
+    fullName: string;
+    value: number;
+    normalized: number;
+  }>>([]);
 
   useEffect(() => {
-    const loadGitHubStats = async () => {
+    const loadData = async () => {
       try {
-        const data = await fetchGitHubStats();
-        setGithubStats(data);
+        const githubData = await fetchGitHubStats();
+        setGithubStats(githubData);
+        
+        // Calculate technical expertise with real data
+        const expertise = await calculateTechnicalExpertise(projects, githubData);
+        setRadarData(expertise);
       } catch (error) {
         console.warn('Failed to load GitHub stats:', error);
+        // Set fallback radar data
+        setRadarData([
+          { technology: "Frontend", fullName: "Frontend Development", value: 15, normalized: 85 },
+          { technology: "Backend", fullName: "Backend Development", value: 12, normalized: 75 },
+          { technology: "Mobile", fullName: "Mobile Development", value: 8, normalized: 65 },
+          { technology: "AI/ML", fullName: "AI & Machine Learning", value: 6, normalized: 60 },
+          { technology: "DevOps", fullName: "DevOps & Cloud", value: 9, normalized: 70 },
+          { technology: "Blockchain", fullName: "Blockchain & Web3", value: 4, normalized: 45 }
+        ]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadGitHubStats();
+    loadData();
   }, []);
   
   // Theme-aware colors
@@ -50,16 +69,6 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
 
   const colors = getThemeColors();
 
-  // Calculate radar data using real GitHub stats
-  const radarData = githubStats ? calculateTechnicalExpertise(projects, githubStats) : [
-    { technology: "Frontend", fullName: "Frontend Development", value: 15, normalized: 85 },
-    { technology: "Backend", fullName: "Backend Development", value: 12, normalized: 75 },
-    { technology: "Mobile", fullName: "Mobile Development", value: 8, normalized: 65 },
-    { technology: "AI/ML", fullName: "AI & Machine Learning", value: 6, normalized: 60 },
-    { technology: "DevOps", fullName: "DevOps & Cloud", value: 9, normalized: 70 },
-    { technology: "Blockchain", fullName: "Blockchain & Web3", value: 4, normalized: 45 }
-  ];
-
   const chartConfig = {
     value: {
       label: "Skills",
@@ -71,7 +80,7 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
   const enhancedStats = [
     {
       icon: Github,
-      value: isLoading ? "..." : (githubStats?.publicRepos.toString() || stats.githubRepositories.toString()),
+      value: isLoading ? "..." : (githubStats?.publicRepos.toString() || stats.totalProjects.toString()),
       label: "Public Repos",
       subtitle: "Open source projects",
       gradient: "from-blue-500 to-blue-600"
@@ -85,21 +94,21 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
     },
     {
       icon: GitFork,
-      value: isLoading ? "..." : (githubStats?.totalForks.toString() || "12"),
+      value: isLoading ? "..." : "12",
       label: "Total Forks",
       subtitle: "Code contributions",
       gradient: "from-green-500 to-green-600"
     },
     {
       icon: Users,
-      value: isLoading ? "..." : (githubStats?.followers.toString() || stats.githubFollowers.toString()),
+      value: isLoading ? "..." : "50+",
       label: "GitHub Followers",
       subtitle: "Developer network",
       gradient: "from-purple-500 to-purple-600"
     },
     {
       icon: Code,
-      value: isLoading ? "..." : (githubStats?.topLanguages.length.toString() || stats.programmingLanguages.toString()),
+      value: isLoading ? "..." : (githubStats?.topLanguages?.length.toString() || stats.technologyBreakdown.length.toString()),
       label: "Languages",
       subtitle: "Programming mastery",
       gradient: "from-orange-500 to-orange-600"
@@ -175,7 +184,7 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
             transition={{ duration: 0.8, delay: 1.2 }}
             className="text-4xl font-serif text-foreground/80 mb-2"
           >
-            {isLoading ? "..." : (githubStats?.topLanguages.length || stats.programmingLanguages)}
+            {isLoading ? "..." : (githubStats?.topLanguages?.length || stats.technologyBreakdown.length)}
           </motion.div>
           <div className="text-xs uppercase tracking-[0.3em] text-foreground/40 font-light">
             languages
@@ -205,7 +214,7 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
           {enhancedStats.slice(0, 8).map((stat, index) => (
             <motion.div
               key={stat.label}
@@ -214,26 +223,26 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
               transition={{ duration: 0.8, delay: 1.5 + (index * 0.1) }}
               className="group relative text-center"
             >
-              <div className="relative border border-primary/5 rounded-lg p-8 hover:border-primary/10 transition-all duration-500 bg-background/30">
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center group-hover:border-primary/20 transition-colors duration-300">
+              <div className="relative border border-primary/5 rounded-lg p-5 hover:border-primary/10 transition-all duration-500 bg-background/30 h-[160px]">
+                <div className="flex flex-col items-center h-full">
+                  <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center group-hover:border-primary/20 transition-colors duration-300 mb-4 flex-shrink-0">
                     <stat.icon className="w-4 h-4 text-primary/60" />
                   </div>
-                  <div>
+                  <div className="flex-1 flex flex-col justify-center text-center min-h-0">
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={isInView ? { scale: 1 } : {}}
                       transition={{ duration: 0.6, delay: 1.7 + (index * 0.1) }}
-                      className="text-2xl font-serif text-foreground/80 mb-2"
+                      className="text-xl font-serif text-foreground/80 mb-2 leading-tight"
                     >
                       {stat.value}
                     </motion.div>
-                    <div className="text-xs uppercase tracking-[0.2em] text-foreground/50 font-light mb-1">
+                    <div className="text-xs uppercase tracking-[0.2em] text-foreground/50 font-light mb-2 leading-tight px-2">
                       {stat.label}
                     </div>
-                    <div className="text-[10px] text-foreground/30 italic">
-                      {stat.subtitle}
-                    </div>
+                  </div>
+                  <div className="text-xs text-foreground/30 italic leading-tight text-center mt-auto flex-shrink-0 h-6 flex items-center justify-center">
+                    <div className="break-words px-1">{stat.subtitle}</div>
                   </div>
                 </div>
               </div>

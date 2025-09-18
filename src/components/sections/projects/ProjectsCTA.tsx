@@ -17,11 +17,13 @@ const itemVariants: Variants = {
 };
 
 /**
- * Renders a call-to-action card, prompting users to get in touch.
- * Features a continuous background glow and staggered content animation.
- * @returns {JSX.Element} The ProjectsCTA component.
+ * ProjectsCTA - Call-to-action component for projects section
+ * Renders a card prompting users to get in touch with continuous background glow
+ * and staggered content animation.
+ * 
+ * @returns JSX.Element representing the projects CTA section
  */
-export default function ProjectsCTA() {
+export const ProjectsCTA = () => {
   return (
     <div className="mt-24 text-center">
       <Card className="border-primary/10 backdrop-blur-sm overflow-hidden py-0 mb-12 relative max-w-3xl mx-auto">
@@ -74,4 +76,4 @@ export default function ProjectsCTA() {
       </Card>
     </div>
   );
-}
+};

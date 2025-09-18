@@ -6,8 +6,23 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Construction, Sparkles } from "lucide-react";
 import Link from "next/link";
 
-// Abstract SVG paths for decorative elements
-function AbstractPath({ className, pathD }: { className?: string; pathD?: string }) {
+/**
+ * Props for AbstractPath component
+ */
+interface AbstractPathProps {
+  className?: string;
+  pathD?: string;
+}
+
+/**
+ * AbstractPath - Decorative animated SVG path component
+ * Renders an animated SVG path with motion effects for visual enhancement.
+ * 
+ * @param className - Optional CSS classes for styling
+ * @param pathD - SVG path data string (defaults to a curve if not provided)
+ * @returns JSX.Element representing an animated SVG path
+ */
+const AbstractPath = ({ className, pathD }: AbstractPathProps) => {
   return (
     <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className={className}>
       <motion.path
@@ -20,14 +35,26 @@ function AbstractPath({ className, pathD }: { className?: string; pathD?: string
       />
     </svg>
   );
-}
+};
 
+/**
+ * Props for ComingSoon component
+ */
 interface ComingSoonProps {
   title: string;
   description?: string;
 }
 
-export function ComingSoon({ title, description }: ComingSoonProps) {
+/**
+ * ComingSoon - Under construction page component
+ * Displays a centered card with construction theme, animated elements, and navigation.
+ * Features background noise texture, grid lines, and decorative SVG paths.
+ * 
+ * @param title - Main heading text to display
+ * @param description - Optional description text (defaults to standard message)
+ * @returns JSX.Element representing the coming soon page section
+ */
+export const ComingSoon = ({ title, description }: ComingSoonProps) => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.3 });
 
@@ -36,48 +63,48 @@ export function ComingSoon({ title, description }: ComingSoonProps) {
       ref={sectionRef}
       className="py-28 sm:py-36 min-h-[80vh] flex items-center justify-center relative overflow-hidden"
     >
-      {/* Background elements */}
-      <div className="absolute inset-0 pointer-events-none">
-        {/* Noise texture matching hero component */}
-        <div className="absolute inset-0 z-0 mix-blend-overlay opacity-10">
-          <svg className="w-full h-full opacity-20" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <filter id="comingSoonNoiseFilter">
-              <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
-            </filter>
-            <rect width="100%" height="100%" filter="url(#comingSoonNoiseFilter)" />
-          </svg>
-        </div>
-        
-        {/* Asymmetrical grid lines matching hero component */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/30" style={{ left: '13%' }} />
-          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/10" style={{ left: '28%' }} />
-          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/20" style={{ left: '67%' }} />
-          <div className="absolute top-0 bottom-0 w-[1px] bg-primary/15" style={{ left: '89%' }} />
+        {/* Background elements */}
+        <div className="absolute inset-0 pointer-events-none">
+          {/* Noise texture */}
+          <div className="absolute inset-0 z-0 mix-blend-overlay opacity-10">
+            <svg className="w-full h-full opacity-20" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <filter id="comingSoonNoiseFilter">
+                <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+              </filter>
+              <rect width="100%" height="100%" filter="url(#comingSoonNoiseFilter)" />
+            </svg>
+          </div>
           
-          <div className="absolute left-0 right-0 h-[1px] bg-primary/25" style={{ top: '22%' }} />
-          <div className="absolute left-0 right-0 h-[1px] bg-primary/10" style={{ top: '58%' }} />
-          <div className="absolute left-0 right-0 h-[1px] bg-primary/20" style={{ top: '81%' }} />
-        </div>
+          {/* Grid lines */}
+          <div className="absolute inset-0 opacity-5">
+            <div className="absolute top-0 bottom-0 w-[1px] bg-primary/30" style={{ left: '13%' }} />
+            <div className="absolute top-0 bottom-0 w-[1px] bg-primary/10" style={{ left: '28%' }} />
+            <div className="absolute top-0 bottom-0 w-[1px] bg-primary/20" style={{ left: '67%' }} />
+            <div className="absolute top-0 bottom-0 w-[1px] bg-primary/15" style={{ left: '89%' }} />
+            
+            <div className="absolute left-0 right-0 h-[1px] bg-primary/25" style={{ top: '22%' }} />
+            <div className="absolute left-0 right-0 h-[1px] bg-primary/10" style={{ top: '58%' }} />
+            <div className="absolute left-0 right-0 h-[1px] bg-primary/20" style={{ top: '81%' }} />
+          </div>
 
-        {/* Abstract SVG paths */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="absolute left-[5%] top-[15%] text-primary/8"
-        >
-          <AbstractPath pathD="M10,30 C20,50 40,10 50,40 S80,20 90,40" />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 1, delay: 0.8 }}
-          className="absolute right-[10%] bottom-[20%] rotate-180 text-primary/8"
-        >
-          <AbstractPath pathD="M10,50 Q40,20 50,50 T90,30" />
-        </motion.div>
-      </div>
+          {/* Decorative SVG paths */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+            className="absolute left-[5%] top-[15%] text-primary/8"
+          >
+            <AbstractPath pathD="M10,30 C20,50 40,10 50,40 S80,20 90,40" />
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 1, delay: 0.8 }}
+            className="absolute right-[10%] bottom-[20%] rotate-180 text-primary/8"
+          >
+            <AbstractPath pathD="M10,50 Q40,20 50,50 T90,30" />
+          </motion.div>
+        </div>
 
       <div className="container mx-auto px-6 relative z-10">
         <Card className="border-primary/10 backdrop-blur-sm overflow-hidden py-0 mb-12 relative max-w-2xl mx-auto">
@@ -179,4 +206,4 @@ export function ComingSoon({ title, description }: ComingSoonProps) {
       </div>
     </section>
   );
-} 
+};

@@ -48,7 +48,7 @@ const itemVariants: Variants = {
  * A card component displaying a list of contact details and social media links.
  * @returns {JSX.Element} The ContactInfoCard component.
  */
-export default function ContactInfoCard() {
+export const ContactInfoCard: React.FC = () => {
   return (
     <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative">
       <motion.div

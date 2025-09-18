@@ -26,7 +26,7 @@ const itemVariants: Variants = {
  * This component is designed to be part of a larger staggered animation sequence.
  * @returns {JSX.Element} The ContactHeader component.
  */
-export default function ContactHeader() {
+export const ContactHeader = () => {
   return (
     <motion.div
       variants={containerVariants}
@@ -75,4 +75,4 @@ export default function ContactHeader() {
       </motion.p>
     </motion.div>
   );
-}
+};

@@ -112,5 +112,3 @@ export const SkillsSection = () => {
     </div>
   );
 };
-
-export default SkillsSection;

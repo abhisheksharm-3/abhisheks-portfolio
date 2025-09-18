@@ -19,7 +19,7 @@ const itemVariants: Variants = {
  * A card component with a call-to-action to schedule a meeting via an external link.
  * @returns {JSX.Element} The ScheduleMeetingCard component.
  */
-export default function ScheduleMeetingCard() {
+export const ScheduleMeetingCard = () => {
   return (
     <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative">
       <motion.div

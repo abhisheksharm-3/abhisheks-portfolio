@@ -11,29 +11,47 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function ModeToggle() {
+/**
+ * ModeToggle - Theme switching component
+ * Provides dropdown menu to switch between light, dark, and system themes.
+ * Handles hydration mismatch by rendering placeholder until client-side.
+ * 
+ * @returns JSX.Element representing the theme toggle dropdown
+ */
+export const ModeToggle = () => {
   const { setTheme, theme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Avoid hydration mismatch by rendering only client-side
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
     return (
-      <Button variant="ghost" size="icon" className="rounded-full h-9 w-9 border border-primary/5 bg-background/30 cursor-pointer">
+      <Button 
+        variant="ghost" 
+        size="icon" 
+        className="rounded-full h-9 w-9 border border-primary/5 bg-background/30 cursor-pointer"
+      >
         <span className="sr-only">Toggle theme</span>
       </Button>
     );
   }
 
+  /**
+   * Gets the appropriate icon based on current theme
+   * @returns JSX.Element representing the theme icon
+   */
   const getIconByTheme = () => {
     if (theme === "dark") return <MoonIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
     if (theme === "light") return <SunIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
     return <MonitorIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
   };
 
+  /**
+   * Gets the readable theme name for accessibility
+   * @returns string representing the current theme name
+   */
   const getThemeName = () => {
     if (theme === "dark") return "Dark";
     if (theme === "light") return "Light";
@@ -85,4 +103,4 @@ export function ModeToggle() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-}
+};

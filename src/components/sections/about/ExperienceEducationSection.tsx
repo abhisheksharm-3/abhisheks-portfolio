@@ -6,7 +6,7 @@ import { Briefcase, GraduationCap } from "lucide-react";
 /**
  * A reusable card component for displaying a list of timeline events.
  */
-const TimelineCard = ({ title, Icon, items }: TypeTimelineCardProps) => (
+export const TimelineCard = ({ title, Icon, items }: TypeTimelineCardProps) => (
   <Card className="border-primary/10 backdrop-blur-sm relative">
     <CardContent className="p-8">
       <div className="flex items-center mb-6">
@@ -75,5 +75,3 @@ export const ExperienceEducationSection = () => {
     </div>
   );
 };
-
-export default ExperienceEducationSection;

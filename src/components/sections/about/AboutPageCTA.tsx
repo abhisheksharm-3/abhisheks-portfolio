@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
  * This component is intended to be animated by a parent motion component.
  * @returns {JSX.Element} The CTA component.
  */
-const AboutPageCTA = () => {
+export const AboutPageCTA = () => {
   return (
     <div className="flex justify-center">
       <Button
@@ -45,4 +45,3 @@ const AboutPageCTA = () => {
     </div>
   );
 };
-export default AboutPageCTA;

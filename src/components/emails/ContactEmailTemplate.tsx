@@ -1,101 +1,87 @@
-import { TypeContactEmailProps } from "@/lib/types";
 import {
-  Body,
-  Container,
-  Head,
-  Html,
-  Preview,
-  Text,
-  Section,
-  Row,
-  Column,
-  Link,
+  Body, Container, Head, Html, Preview, Text, Section, Row, Column, Link, Font, Hr
 } from "@react-email/components";
 import * as React from "react";
 
-const main = {
-  backgroundColor: "#f6f8fa",
-  fontFamily: "'Inter', system-ui, sans-serif",
+// --- THEME ---
+const theme = {
+  colors: {
+    primary: "#0969da", // A professional blue, similar to GitHub's
+    text: "#1f2328",
+    textSecondary: "#656d76",
+    background: "#ffffff",
+    backgroundSecondary: "#f6f8fa",
+    border: "#d0d7de",
+  },
+  fonts: {
+    sans: "Inter, sans-serif",
+    serif: "Lora, serif",
+  },
 };
 
-const container = {
-  maxWidth: "480px",
-  margin: "0 auto",
-  backgroundColor: "#ffffff",
-  borderRadius: "16px",
-  border: "1px solid #e5e7eb",
-  boxShadow: "0 8px 32px 0 rgba(0,0,0,0.08)",
-};
+// --- STYLES ---
+const main = { backgroundColor: theme.colors.backgroundSecondary, fontFamily: theme.fonts.sans };
+const container = { maxWidth: "520px", margin: "0 auto", backgroundColor: theme.colors.background, borderRadius: "8px", border: `1px solid ${theme.colors.border}` };
+const content = { padding: "32px" };
+const title = { margin: "0 0 12px 0", fontSize: "24px", fontWeight: 600, color: theme.colors.text, fontFamily: theme.fonts.serif, fontStyle: 'italic' };
+const paragraph = { color: theme.colors.textSecondary, fontSize: "15px", margin: "0 0 24px 0", lineHeight: 1.6 };
+const tableLabel = { width: "100px", color: theme.colors.text, fontWeight: 500, padding: "4px 0", fontSize: "13px" };
+const tableValue = { padding: "4px 0", fontSize: "14px", color: theme.colors.textSecondary };
+const link = { color: theme.colors.primary, textDecoration: "none" };
+const messageBox = { background: theme.colors.backgroundSecondary, borderRadius: "6px", padding: "20px", border: `1px solid ${theme.colors.border}`, margin: "24px 0" };
+const footerText = { textAlign: "center" as const, fontSize: "12px", color: "#999999" };
+const hr = { borderColor: theme.colors.border, margin: "20px 0" };
 
-const content = { padding: "36px 32px 28px 32px" };
-const title = { margin: "0 0 4px 0", fontSize: "1.45rem", fontWeight: 600, color: "#18181b" };
-const paragraph = { color: "#52525b", fontSize: "15px", margin: "0 0 20px 0" };
-const tableLabel = { color: "#6366f1", fontWeight: 500, padding: "4px 0", fontSize: "13px" };
-const tableValue = { padding: "4px 0", fontSize: "13px", color: "#18181b" };
-const messageBox = {
-  background: "#f3f4f6",
-  borderRadius: "8px",
-  padding: "18px 16px",
-  border: "1px solid #e5e7eb",
-  margin: "22px 0 16px 0",
-};
+// --- PROPS TYPE ---
+interface ContactEmailProps {
+  name: string; email: string; subject: string; message: string;
+  submittedAt: string; userAgent: string; referer: string;
+}
 
-export const ContactEmailTemplate = ({
-  name,
-  email,
-  subject,
-  message,
-  submittedAt,
-  userAgent,
-  referer,
-}: TypeContactEmailProps) => {
+/**
+ * Renders a branded, theme-aligned email template for contact form submissions.
+ * @returns {JSX.Element} The rendered email component.
+ */
+export const ContactEmailTemplate = ({ name, email, subject, message, submittedAt, userAgent, referer }: ContactEmailProps) => {
   const previewText = `New message from ${name}: ${subject}`;
+
+  const details = [
+    { label: "Name", value: name },
+    { label: "Email", value: <Link href={`mailto:${email}`} style={link}>{email}</Link> },
+    { label: "Subject", value: subject },
+    { label: "Submitted", value: submittedAt },
+    { label: "Referrer", value: referer },
+  ];
 
   return (
     <Html>
-      <Head />
+      <Head>
+        <Font fontFamily="Inter" fallbackFontFamily="sans-serif" webFont={{ url: "https://rsms.me/inter/inter.css", format: "woff2" }} />
+        <Font fontFamily="Lora" fallbackFontFamily="serif" webFont={{ url: "https://fonts.gstatic.com/s/lora/v26/0QI6MX1D_JOuGQbT0g.woff2", format: "woff2" }} />
+      </Head>
       <Preview>{previewText}</Preview>
       <Body style={main}>
         <Container style={container}>
           <Section style={content}>
-            <Text style={title}>You&apos;ve got a new message</Text>
-            <Text style={paragraph}>A new message was submitted via your portfolio&apos;s contact form.</Text>
-
+            <Text style={title}>New Portfolio Message</Text>
+            <Text style={paragraph}>A new message was submitted via your portfolio&apos;s contact form. Here are the details:</Text>
+            
             {/* --- Details Table --- */}
-            <Row>
-              <Column style={tableLabel}>Name:</Column>
-              <Column style={tableValue}>{name}</Column>
-            </Row>
-            <Row>
-              <Column style={tableLabel}>Email:</Column>
-              <Column style={tableValue}>
-                <Link href={`mailto:${email}`} style={{ color: "#6366f1", textDecoration: "none" }}>
-                  {email}
-                </Link>
-              </Column>
-            </Row>
-            <Row>
-              <Column style={tableLabel}>Subject:</Column>
-              <Column style={tableValue}>{subject}</Column>
-            </Row>
-            <Row>
-              <Column style={tableLabel}>Submitted:</Column>
-              <Column style={tableValue}>{submittedAt}</Column>
-            </Row>
-            <Row>
-              <Column style={tableLabel}>Referrer:</Column>
-              <Column style={tableValue}>{referer}</Column>
-            </Row>
+            {details.map(({ label, value }) => (
+              <Row key={label}>
+                <Column style={tableLabel}>{label}</Column>
+                <Column style={tableValue}>{value}</Column>
+              </Row>
+            ))}
 
             {/* --- Message Box --- */}
             <Section style={messageBox}>
-              <Text style={{ ...tableLabel, marginBottom: '6px' }}>Message:</Text>
-              <Text style={{ ...tableValue, whiteSpace: 'pre-line', lineHeight: 1.7 }}>{message}</Text>
+              <Text style={{ ...tableValue, whiteSpace: 'pre-line' }}>{message}</Text>
             </Section>
 
-            <Text style={{ marginTop: '28px', textAlign: 'center', fontSize: '11px', color: '#a1a1aa' }}>
-              User Agent: {userAgent}
-            </Text>
+            <Hr style={hr} />
+            <Text style={footerText}>This message was sent from abhisheksan.com</Text>
+            <Text style={{...footerText, color: '#b2b2b2', fontSize: '11px'}}>User Agent: {userAgent}</Text>
           </Section>
         </Container>
       </Body>

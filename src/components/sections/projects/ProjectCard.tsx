@@ -6,10 +6,10 @@ import { ArrowUpRight, ExternalLink, Github, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
-export function ProjectCard({
-  project,
-  delay = 0
-}: {
+/**
+ * Props for the ProjectCard component
+ */
+interface ProjectCardProps {
   project: {
     title: string;
     description: string;
@@ -24,7 +24,20 @@ export function ProjectCard({
     slug: string;
   };
   delay?: number;
-}) {
+}
+
+/**
+ * ProjectCard component displays a project with image, details, and action buttons.
+ * Features hover animations, tags display, and metadata like role/client/duration.
+ * 
+ * @param project - Project data including title, description, tags, and links
+ * @param delay - Animation delay for staggered loading (default: 0)
+ * @returns JSX.Element representing the project card
+ */
+export const ProjectCard = ({
+  project,
+  delay = 0
+}: ProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.01 });
@@ -33,7 +46,7 @@ export function ProjectCard({
     <motion.div
       ref={cardRef}
       initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{
         duration: 0.8,
         delay: 0.1 + delay,
@@ -53,7 +66,7 @@ export function ProjectCard({
         <div className="relative w-full h-48 overflow-hidden">
           <motion.div
             className="w-full h-full"
-            animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
+            animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <Image
@@ -102,7 +115,7 @@ export function ProjectCard({
           
           <motion.div
             initial={{ width: 0 }}
-            animate={isInView ? { width: "2.5rem" } : {}}
+            animate={isInView ? { width: "2.5rem" } : { width: 0 }}
             transition={{ duration: 0.5, delay: 0.2 + delay }}
             className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-4"
           />
@@ -144,7 +157,12 @@ export function ProjectCard({
                 className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
                 asChild
               >
-                <a href={project.url} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                <a 
+                  href={project.url} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center"
+                >
                   <span className="text-xs font-light">Live Site</span>
                   <ExternalLink className="ml-1.5 h-3 w-3 text-primary/70 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                 </a>
@@ -157,7 +175,12 @@ export function ProjectCard({
                 className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
                 asChild
               >
-                <a href={project.github} target="_blank" rel="noopener noreferrer" className="flex items-center">
+                <a 
+                  href={project.github} 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="flex items-center"
+                >
                   <span className="text-xs font-light">Code</span>
                   <Github className="ml-1.5 h-3 w-3 text-primary/70" />
                 </a>
@@ -177,7 +200,7 @@ export function ProjectCard({
           </div>
         </div>
         
-        {/* Enhanced decorative corner */}
+        {/* Decorative corner */}
         <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden opacity-60">
           <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />
           <div className="absolute top-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
@@ -186,4 +209,4 @@ export function ProjectCard({
       </Card>
     </motion.div>
   );
-}
+};

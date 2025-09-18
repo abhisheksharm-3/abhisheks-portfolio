@@ -110,5 +110,3 @@ export const InterestsSection = () => {
     </div>
   );
 };
-
-export default InterestsSection;

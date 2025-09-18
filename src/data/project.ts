@@ -13,7 +13,7 @@ export const projects: Project[] = [
     imageSrc: "/images/projects/credify.png",
     tags: ["NextJs", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2024",
-    url: "https://credify.fun/",
+    url: "https://verifiedbycredify.vercel.app/",
     github: "https://github.com/abhisheksharm-3/credify",
     featured: true,
     role: "Team Lead",

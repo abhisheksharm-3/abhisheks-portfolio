@@ -1,0 +1,37 @@
+import { footerContainerVariants, footerItemVariants } from "@/lib/config/footer-config";
+import { socialLinks } from "@/data/contact";
+import { motion } from "framer-motion";
+import Link from "next/link";
+
+/** Renders the first column of the footer containing brand info and social links. */
+export const FooterBrandColumn = () => (
+  <motion.div variants={footerItemVariants} className="flex flex-col">
+    <Link href="/" className="mb-5 inline-block">
+      <h2 className="text-2xl sm:text-3xl font-light tracking-tighter">
+        <span className="text-primary font-serif italic">A</span>
+        <span className="font-extralight tracking-tight">BHK</span>
+        <span className="text-primary/70 align-super text-[10px]">®</span>
+      </h2>
+    </Link>
+    <p className="text-sm text-foreground/60 font-light leading-relaxed mb-6 max-w-xs">
+      Crafting digital experiences where clean code meets real impact.
+    </p>
+    <motion.div variants={footerContainerVariants} className="flex space-x-3">
+      {socialLinks.map((platform) => (
+        <motion.a
+          key={platform.label}
+          href={platform.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-8 h-8 rounded-full border border-primary/10 bg-primary/5 text-foreground/60 hover:text-primary hover:border-primary/30 transition-colors"
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          aria-label={platform.label}
+          variants={footerItemVariants}
+        >
+          {platform.icon}
+        </motion.a>
+      ))}
+    </motion.div>
+  </motion.div>
+);

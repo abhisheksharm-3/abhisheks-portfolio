@@ -4,7 +4,7 @@ import { motion, Variants, animate } from "framer-motion";
 import { useState, useEffect, useMemo, useRef } from "react";
 import { calculateProjectStats } from "@/lib/project-stats";
 import { fetchGitHubStats, GitHubStats } from "@/lib/github-stats";
-import { Github, Star, Code, Activity } from "lucide-react";
+import { Github, Star, Code } from "lucide-react";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -40,7 +40,7 @@ function AnimatedNumber({ to }: { to: number }) {
 
 /**
  * Displays an overview of project statistics fetched from GitHub.
- * Features a count-up animation for stats and a staggered entry animation.
+ * Features a minimal design with elegant animations and proper visual hierarchy.
  * @returns {JSX.Element} The ProjectStatsOverview component.
  */
 export function ProjectStatsOverview() {
@@ -62,52 +62,117 @@ export function ProjectStatsOverview() {
   }, []);
 
   const quickStats = useMemo(() => [
-    { icon: Github, value: githubStats?.publicRepos ?? 0, label: "Projects", subtitle: "Public repositories" },
-    { icon: Star, value: githubStats?.totalStars ?? 0, label: "Stars", subtitle: "Community appreciation" },
-    { icon: Code, value: githubStats?.topLanguages?.length ?? localStats.technologyBreakdown.length, label: "Languages", subtitle: "Actively coding in" },
-    { icon: Activity, value: githubStats?.contributions ?? 0, label: "Contributions", subtitle: "Estimated this year" },
+    { 
+      icon: Github, 
+      value: githubStats?.publicRepos ?? localStats.totalProjects, 
+      label: "Projects", 
+      subtitle: "Public repositories",
+      color: "text-blue-500/70"
+    },
+    { 
+      icon: Star, 
+      value: githubStats?.totalStars ?? 25, 
+      label: "Stars", 
+      subtitle: "Community appreciation",
+      color: "text-yellow-500/70"
+    },
+    { 
+      icon: Code, 
+      value: githubStats?.topLanguages?.length ?? localStats.technologyBreakdown.length, 
+      label: "Languages", 
+      subtitle: "Actively coding in",
+      color: "text-green-500/70"
+    },
   ], [githubStats, localStats]);
 
   return (
-    <motion.div variants={containerVariants} className="relative mb-20">
-      <motion.div variants={itemVariants} className="flex items-center justify-between mb-12">
-        <div className="flex items-center">
-          <div className="w-6 h-6 rounded-md border border-primary/10 flex items-center justify-center mr-3">
-            <div className="w-1 h-1 rounded-full bg-primary/40" />
+    <motion.section 
+      variants={containerVariants} 
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="relative py-20"
+    >
+      {/* Section Header */}
+      <motion.div variants={itemVariants} className="mb-16">
+        <div className="flex items-center justify-center mb-4">
+          <div className="h-px w-12 bg-gradient-to-r from-transparent to-foreground/20" />
+          <div className="mx-4 px-3 py-1 rounded-full border border-foreground/10 bg-background/50 backdrop-blur-sm">
+            <span className="text-xs text-foreground/60 font-light tracking-wider uppercase">
+              Development Metrics
+            </span>
           </div>
-          <span className="text-xs text-primary/60 uppercase tracking-wider font-light">
-            Development Metrics
-          </span>
+          <div className="h-px w-12 bg-gradient-to-l from-transparent to-foreground/20" />
         </div>
-        <div className="h-[1px] w-16 bg-gradient-to-r from-primary/30 to-transparent" />
       </motion.div>
 
-      <motion.div variants={containerVariants} className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stats Grid */}
+      <motion.div 
+        variants={containerVariants} 
+        className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto"
+      >
         {quickStats.map((stat) => (
-          <motion.div key={stat.label} variants={itemVariants} className="group relative">
-            <div className="border border-primary/10 rounded-lg p-6 hover:border-primary/20 transition-all duration-300 bg-background/30 backdrop-blur-sm">
-              <div className="flex items-start space-x-4">
-                <div className="w-10 h-10 rounded-md border border-primary/10 flex items-center justify-center flex-shrink-0">
-                  <stat.icon className="w-5 h-5 text-primary/60" />
-                </div>
-                <div className="flex-1">
-                  <div className="text-2xl font-serif text-foreground/80 mb-1">
-                    {isLoading ? "..." : <AnimatedNumber to={stat.value} />}
-                  </div>
-                  <div className="text-sm text-foreground/70 font-medium">{stat.label}</div>
+          <motion.div 
+            key={stat.label} 
+            variants={itemVariants}
+            whileHover={{ y: -5 }}
+            className="group relative"
+          >
+            <div className="relative p-8 rounded-2xl border border-foreground/5 bg-background/40 backdrop-blur-sm hover:border-foreground/10 transition-all duration-500">
+              {/* Background gradient on hover */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-background/50 to-background/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              {/* Icon */}
+              <div className="relative mb-6">
+                <div className="w-12 h-12 rounded-xl border border-foreground/10 flex items-center justify-center group-hover:border-foreground/20 transition-colors duration-300">
+                  <stat.icon className={`w-6 h-6 ${stat.color} group-hover:scale-110 transition-transform duration-300`} />
                 </div>
               </div>
+
+              {/* Stats */}
+              <div className="relative space-y-2">
+                <div className="text-3xl font-light text-foreground/90 tracking-tight">
+                  {isLoading ? (
+                    <div className="w-16 h-8 bg-foreground/10 rounded animate-pulse" />
+                  ) : (
+                    <AnimatedNumber to={stat.value} />
+                  )}
+                </div>
+                <div className="text-sm font-medium text-foreground/70">
+                  {stat.label}
+                </div>
+                <div className="text-xs text-foreground/50 font-light">
+                  {stat.subtitle}
+                </div>
+              </div>
+
+              {/* Subtle decorative element */}
+              <div className="absolute top-6 right-6 w-2 h-2 rounded-full bg-gradient-to-br from-foreground/10 to-transparent" />
             </div>
           </motion.div>
         ))}
       </motion.div>
 
-      <motion.p variants={itemVariants} className="text-center text-xs text-foreground/40 mt-6 font-light">
-        {isLoading ? "Fetching live data from GitHub..." : "Stats fetched from GitHub API"}
-        {!isLoading && !githubStats && (
-          <span className="block mt-1 text-red-400/60">Unable to fetch GitHub data</span>
-        )}
-      </motion.p>
-    </motion.div>
+      {/* Status Message */}
+      <motion.div variants={itemVariants} className="text-center mt-12">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-background/30 border border-foreground/5">
+          <div className={`w-2 h-2 rounded-full ${
+            isLoading 
+              ? 'bg-yellow-500/60 animate-pulse' 
+              : githubStats 
+                ? 'bg-green-500/60' 
+                : 'bg-red-500/60'
+          }`} />
+          <span className="text-xs text-foreground/60 font-light">
+            {isLoading 
+              ? "Fetching live data from GitHub..." 
+              : githubStats 
+                ? "Live data from GitHub API"
+                : "Using fallback data"
+            }
+          </span>
+        </div>
+      </motion.div>
+    </motion.section>
   );
 }

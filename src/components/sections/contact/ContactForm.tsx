@@ -15,8 +15,8 @@ import * as z from "zod";
 // --- FORM SCHEMA (Synced with backend) ---
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email address." }),
-  subject: z.string().min(5, { message: "Subject must be at least 5 characters." }),
+  email: z.email({ message: "Please enter a valid email address." }),
+  subject: z.string().min(3, { message: "Subject must be at least 3 characters." }),
   message: z.string().min(10, { message: "Message must be at least 10 characters." }),
 });
 type FormValues = z.infer<typeof formSchema>;
@@ -35,7 +35,7 @@ const formItemVariants: Variants = {
  * A card component containing a contact form with validation and submission handling.
  * @returns {JSX.Element} The SendMessageCard component.
  */
-export default function SendMessageCard() {
+export const SendMessageCard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
 

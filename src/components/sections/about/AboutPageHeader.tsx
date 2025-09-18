@@ -33,7 +33,7 @@ const itemVariants: Variants = {
  * This component is designed to be part of a larger staggered animation sequence.
  * @returns {JSX.Element} The About page header.
  */
-const AboutPageHeader = () => {
+export const AboutPageHeader = () => {
   return (
     <motion.div
       variants={containerVariants}
@@ -82,4 +82,3 @@ const AboutPageHeader = () => {
     </motion.div>
   );
 };
-export default AboutPageHeader;

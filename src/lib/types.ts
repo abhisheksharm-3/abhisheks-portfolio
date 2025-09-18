@@ -1,4 +1,5 @@
 import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 export interface MousePosition {
   x: number;
@@ -82,4 +83,27 @@ export interface TypeContactEmailProps {
   submittedAt: string;
   userAgent: string;
   referer: string;
+}
+
+export type TypeNavItem = { name: string; href: string };
+
+export interface TypeMobileMenuProps {
+  onClose: () => void;
+  navigationItems: TypeNavItem[];
+  activeItem: string | null;
+}
+
+/**
+ * Defines the props for the AppShell component.
+ */
+export interface AppShellProps {
+  /** Optional classes to apply to the main container for custom styling. */
+  className?: string;
+  /** The main content of the page to be rendered within the layout. */
+  children: ReactNode;
+  /**
+   * If `true`, renders the animated background component.
+   * @default true
+   */
+  showBackground?: boolean;
 }
