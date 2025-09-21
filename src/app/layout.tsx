@@ -22,21 +22,21 @@ const newsreader = Newsreader({
 });
 
 export const metadata: Metadata = {
-  title: "Abhishek Sharma — Web Experiences & Mobile Innovation",
+  title: "Abhishek Sharma | Developer",
   description:
-    "Explore the digital portfolio of Abhishek Sharma—crafting next-gen web and mobile solutions with precision and clarity. Contact for collaborations in impactful digital product engineering.",
+    "I’m Abhishek Sharma. I design and build for the web and mobile. This is my corner of the internet to share what I work on.",
   openGraph: {
-    title: "Abhishek Sharma — Web Experiences & Mobile Innovation",
+    title: "Abhishek Sharma | Developer",
     description:
-      "Engineering unique web and mobile apps. Discover Abhishek Sharma's work in full stack development, UI/UX, and cross-platform solutions. Connect for bespoke digital craftsmanship.",
+      "I make web and mobile apps. Here’s my portfolio—projects, ideas, and ways to connect.",
     url: "https://abhisheksan.com",
-    siteName: "Abhishek Sharma Portfolio",
+    siteName: "Abhishek Sharma",
     images: [
       {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Abhishek Sharma — Web & Mobile Developer | Portfolio",
+        alt: "Abhishek Sharma | Developer",
       },
     ],
     locale: "en_US",
@@ -44,31 +44,19 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Abhishek Sharma — Web Experiences & Mobile Innovation",
+    title: "Abhishek Sharma | Developer",
     description:
-      "Bespoke web and mobile solutions by Abhishek Sharma. Discover projects, skills, and contact for custom development.",
+      "I build for web and mobile. This site is where I share my work.",
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },
   metadataBase: new URL("https://abhisheksan.com"),
-  keywords: [
-    "Abhishek Sharma",
-    "Web Experiences",
-    "Mobile Innovation",
-    "Full Stack",
-    "Software Engineer",
-    "Developer Portfolio",
-    "UI/UX",
-    "Cross-platform Apps",
-    "Digital Product",
-    "Next.js",
-    "React Native",
-  ],
   authors: [{ name: "Abhishek Sharma", url: "https://abhisheksan.com" }],
-  category: "technology",
+  category: "personal",
   creator: "Abhishek Sharma",
   publisher: "Abhishek Sharma",
 };
+
 
 export default function RootLayout({
   children,

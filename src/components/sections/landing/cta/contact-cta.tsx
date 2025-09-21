@@ -261,7 +261,7 @@ export const ContactCTA = () => {
                     }}
                     className="space-y-8 mb-20"
                   >
-                    <motion.p 
+                    <motion.div 
                       className="text-foreground/85 text-lg sm:text-xl font-light leading-relaxed tracking-wide max-w-3xl mx-auto"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.2 }}
@@ -284,7 +284,7 @@ export const ContactCTA = () => {
                       </motion.span>
                       . If you&apos;ve got an idea to build, a product to scale, or a
                       problem that needs solving — let&apos;s make it happen together.
-                    </motion.p>
+                    </motion.div>
                   </motion.div>
 
                   <CallToActionButtons isInView={isInView} />
