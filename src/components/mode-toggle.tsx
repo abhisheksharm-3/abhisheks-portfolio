@@ -31,7 +31,12 @@ export const ModeToggle = () => {
       <Button
         variant="ghost"
         size="icon"
-        className="rounded-full h-9 w-9 border border-primary/5 bg-background/30 cursor-pointer"
+        className="
+          h-8 w-8 rounded-lg
+          bg-transparent hover:bg-foreground/5 
+          border border-transparent hover:border-primary/10
+          transition-all duration-200
+        "
       >
         <span className="sr-only">Toggle theme</span>
       </Button>
@@ -44,10 +49,10 @@ export const ModeToggle = () => {
    */
   const getIconByTheme = () => {
     if (theme === "dark")
-      return <MoonIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
+      return <MoonIcon className="h-4 w-4" strokeWidth={1.5} />;
     if (theme === "light")
-      return <SunIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
-    return <MonitorIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
+      return <SunIcon className="h-4 w-4" strokeWidth={1.5} />;
+    return <MonitorIcon className="h-4 w-4" strokeWidth={1.5} />;
   };
 
   /**
@@ -66,11 +71,17 @@ export const ModeToggle = () => {
         <Button
           variant="ghost"
           size="icon"
-          className="rounded-full h-9 w-9 border border-primary/5 bg-foreground/3 backdrop-blur-sm hover:bg-primary/3 transition-all duration-500"
+          className="
+            h-8 w-8 rounded-lg
+            bg-transparent hover:bg-foreground/5 
+            border border-transparent hover:border-primary/10
+            transition-all duration-200
+            text-foreground/70 hover:text-foreground cursor-pointer
+          "
           aria-label={`Change theme, current theme is ${getThemeName()}`}
         >
-          <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-in-out opacity-70">
+          <div className="relative w-full h-full flex items-center justify-center">
+            <div className="transition-all duration-200">
               {getIconByTheme()}
             </div>
           </div>
@@ -78,28 +89,56 @@ export const ModeToggle = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="min-w-[7rem] overflow-hidden border border-primary/5 bg-background/60 backdrop-blur-md rounded-xl"
+        className="
+          min-w-[8rem] border border-primary/10 
+          bg-background/95 backdrop-blur-xl 
+          rounded-lg shadow-lg shadow-primary/5
+        "
         sideOffset={8}
       >
         <DropdownMenuItem
           onClick={() => setTheme("light")}
-          className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 py-1.5 px-3 text-xs font-extralight ${theme === "light" ? "bg-primary/3 text-primary/90" : "text-foreground/70 hover:text-foreground/90"}`}
+          className={`
+            flex items-center gap-2 cursor-pointer 
+            transition-all duration-200 py-2 px-3 text-sm
+            rounded-md mx-1 my-0.5
+            ${theme === "light" 
+              ? "bg-primary/10 text-primary" 
+              : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+            }
+          `}
         >
-          <SunIcon className="h-3.5 w-3.5" strokeWidth={1.25} />
+          <SunIcon className="h-4 w-4" strokeWidth={1.5} />
           <span>Light</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("dark")}
-          className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 py-1.5 px-3 text-xs font-extralight ${theme === "dark" ? "bg-primary/3 text-primary/90" : "text-foreground/70 hover:text-foreground/90"}`}
+          className={`
+            flex items-center gap-2 cursor-pointer 
+            transition-all duration-200 py-2 px-3 text-sm
+            rounded-md mx-1 my-0.5
+            ${theme === "dark" 
+              ? "bg-primary/10 text-primary" 
+              : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+            }
+          `}
         >
-          <MoonIcon className="h-3.5 w-3.5" strokeWidth={1.25} />
+          <MoonIcon className="h-4 w-4" strokeWidth={1.5} />
           <span>Dark</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTheme("system")}
-          className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 py-1.5 px-3 text-xs font-extralight ${theme === "system" ? "bg-primary/3 text-primary/90" : "text-foreground/70 hover:text-foreground/90"}`}
+          className={`
+            flex items-center gap-2 cursor-pointer 
+            transition-all duration-200 py-2 px-3 text-sm
+            rounded-md mx-1 my-0.5
+            ${theme === "system" 
+              ? "bg-primary/10 text-primary" 
+              : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+            }
+          `}
         >
-          <MonitorIcon className="h-3.5 w-3.5" strokeWidth={1.25} />
+          <MonitorIcon className="h-4 w-4" strokeWidth={1.5} />
           <span>System</span>
         </DropdownMenuItem>
       </DropdownMenuContent>

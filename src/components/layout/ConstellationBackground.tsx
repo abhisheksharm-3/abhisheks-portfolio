@@ -3,10 +3,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 
-// =================================================================================================
-// #region ANIMATION LOGIC & CLASSES (Preserved from original)
-// =================================================================================================
-
 class Particle {
   x: number;
   y: number;
@@ -247,12 +243,6 @@ function drawGridSystem(
   ctx.stroke();
 }
 
-// #endregion
-
-// =================================================================================================
-// #region HELPER COMPONENTS (Declarative Layers)
-// =================================================================================================
-
 const NoiseTexture = () => (
   <motion.div
     initial={{ opacity: 0 }}
@@ -388,13 +378,7 @@ const LightBeams = ({
   );
 };
 
-// #endregion
-
-// =================================================================================================
-// #region MAIN COMPONENT
-// =================================================================================================
-
-export function ConstellationBackground() {
+export const ConstellationBackground: React.FC = () => {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
@@ -524,6 +508,4 @@ export function ConstellationBackground() {
       <LightBeams mousePosition={mousePosition} windowSize={windowSize} />
     </div>
   );
-}
-
-// #endregion
+};

@@ -111,3 +111,16 @@ export interface AppShellPropsType {
 }
 
 export type ContactFormDataType = z.infer<typeof contactFormSchema>;
+
+/**
+ * Props for the ContactEmailTemplate component.
+ */
+export interface ContactEmailPropsType {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  submittedAt: string;
+  userAgent: string;
+  referer: string;
+}
