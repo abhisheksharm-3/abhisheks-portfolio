@@ -105,6 +105,13 @@ export interface MobileMenuPropsType {
   activeItem: string | null;
 }
 
+export interface SectionHeaderPropsType {
+  subtitle: string;
+  children: React.ReactNode;
+  isInView: boolean;
+  className?: string;
+}
+
 /**
  * Defines the props for the AppShell component.
  */
