@@ -6,7 +6,10 @@ import { socialLinks } from "@/data/contact";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-/** Renders the first column of the footer containing brand info and social links. */
+/**
+ * Renders the brand column for the site footer.
+ * Includes the logo, a brief tagline, and animated social media links.
+ */
 export const FooterBrandColumn = () => (
   <motion.div variants={footerItemVariants} className="flex flex-col">
     <Link href="/" className="mb-5 inline-block">
@@ -17,7 +20,7 @@ export const FooterBrandColumn = () => (
       </h2>
     </Link>
     <p className="text-sm text-foreground/60 font-light leading-relaxed mb-6 max-w-xs">
-      Crafting digital experiences where clean code meets real impact.
+      building things on the web that actually feel good to use.
     </p>
     <motion.div variants={footerContainerVariants} className="flex space-x-3">
       {socialLinks.map((platform) => (

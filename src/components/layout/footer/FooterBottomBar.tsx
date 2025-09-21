@@ -1,7 +1,6 @@
 import { footerItemVariants } from "@/lib/config/footer-config";
 import { motion } from "framer-motion";
 
-/** Renders the bottom bar of the footer with copyright and location info. */
 export const FooterBottomBar = () => (
   <motion.div
     variants={footerItemVariants}
@@ -9,11 +8,10 @@ export const FooterBottomBar = () => (
   >
     <p className="text-xs text-foreground/40 font-light">
       © {new Date().getFullYear()}{" "}
-      <span className="text-primary/80">Abhishek Sharma</span>. All Rights
-      Reserved.
+      <span className="text-primary/80">Abhishek Sharma</span>. all mine.
     </p>
     <p className="text-[10px] text-foreground/30 tracking-wider uppercase max-w-sm">
-      Based in Chandigarh, India. Available for projects worldwide.
+      Chandigarh, India · working with anyone, anywhere.
     </p>
   </motion.div>
 );

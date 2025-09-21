@@ -7,7 +7,17 @@ export interface MousePosition {
   x: number;
   y: number;
 }
-
+/**
+ * Defines the props for the MobileNavLink component.
+ */
+export interface MobileNavLinkPropsType {
+  item: TypeNavItem;
+  isActive: boolean;
+  isHovered: boolean;
+  onHoverStart: () => void;
+  onHoverEnd: () => void;
+  onClick: () => void;
+}
 export interface SkillItemProps {
   skill: string;
   index: number;
@@ -89,7 +99,7 @@ export interface TypeContactEmailProps {
 
 export type TypeNavItem = { name: string; href: string };
 
-export interface TypeMobileMenuProps {
+export interface MobileMenuPropsType {
   onClose: () => void;
   navigationItems: TypeNavItem[];
   activeItem: string | null;

@@ -1,9 +1,14 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { socialLinks } from "@/data/contact";
 import { motion } from "framer-motion";
+import { Logo } from "../navbar";
 
 /**
- * Renders the footer section of the mobile menu with social links and signature.
+ * Renders the footer section for the mobile menu.
+ * It includes a decorative divider, social media links, and a signature,
+ * all with staggered entrance animations.
  */
 export const MobileMenuFooter = () => (
   <motion.div
@@ -54,8 +59,8 @@ export const MobileMenuFooter = () => (
       transition={{ delay: 0.7 }}
       className="mt-10 text-xs text-foreground/50 text-center"
     >
-      <span className="font-medium">ABHK ®</span>
-      <p className="mt-1">Designed & Developed with passion</p>
+      <Logo />
+      <p className="mt-1">made this. with love, with code.</p>
     </motion.div>
   </motion.div>
 );

@@ -1,4 +1,4 @@
-"use client";
+"use in client";
 
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -14,8 +14,7 @@ import { FooterBottomBar } from "./FooterBottomBar";
 
 /**
  * Renders the main site footer with navigation, social links, and contact information.
- * Features a standout card design and orchestrated animations.
- * @returns {JSX.Element} The Footer component.
+ * Features a distinct card design and orchestrated animations that trigger on scroll.
  */
 export const Footer = () => {
   return (

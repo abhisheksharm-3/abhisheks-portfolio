@@ -1,7 +1,10 @@
 import { footerPathVariants } from "@/lib/config/footer-config";
 import { motion } from "framer-motion";
 
-/** Renders the decorative, animated background elements for the footer. */
+/**
+ * Renders the decorative, animated background elements for the site footer,
+ * including a noise texture and animated SVG paths that draw on scroll.
+ */
 export const FooterBackground = () => (
   <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
     <div className="absolute inset-0 mix-blend-overlay opacity-10">

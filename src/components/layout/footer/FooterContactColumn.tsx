@@ -7,14 +7,18 @@ import { motion } from "framer-motion";
 import { ArrowUpRight, Mail } from "lucide-react";
 import Link from "next/link";
 
-/** Renders the contact column with email and a call-to-action button. */
+/**
+ * Renders the contact column for the site footer.
+ * Includes a heading, a direct mailto link, and a call-to-action button
+ * that links to the contact page, all with staggered animations.
+ */
 export const FooterContactColumn = () => (
   <motion.div
     variants={footerItemVariants}
     className="md:text-right flex flex-col items-start md:items-end"
   >
     <h3 className="text-sm font-medium text-foreground/70 mb-5">
-      Let’s Connect
+      hit me up
     </h3>
     <motion.div
       variants={footerContainerVariants}
@@ -36,7 +40,7 @@ export const FooterContactColumn = () => (
           asChild
         >
           <Link href="/contact">
-            Let’s build together
+            let’s make something cool
             <ArrowUpRight className="ml-1 h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
           </Link>
         </Button>

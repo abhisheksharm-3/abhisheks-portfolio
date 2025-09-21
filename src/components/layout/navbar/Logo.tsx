@@ -1,7 +1,11 @@
+"use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-/** Renders the site logo. */
+/**
+ * Renders the site logo as a clickable link to the homepage.
+ * Features a subtle hover animation for interactivity.
+ */
 export const Logo = () => (
   <Link href="/" className="group relative z-50">
     <motion.div
