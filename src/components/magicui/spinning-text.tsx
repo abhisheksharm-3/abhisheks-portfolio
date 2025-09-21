@@ -1,16 +1,19 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { motion, Transition, Variants } from "motion/react";
+import { motion, Transition, Variants } from "framer-motion";
 import React, { CSSProperties } from "react";
 
+/**
+ * Defines the props for the SpinningText component.
+ */
 type SpinningTextProps = {
   children: string | string[];
   style?: CSSProperties;
   duration?: number;
   className?: string;
   reverse?: boolean;
-  fontSize?: number;
   radius?: number;
+  zIndex?: number;
   transition?: Transition;
   variants?: {
     container?: Variants;
@@ -18,20 +21,12 @@ type SpinningTextProps = {
   };
 };
 
-const BASE_TRANSITION = {
-  repeat: Infinity,
-  ease: (t: number) => t, // linear easing function
-};
-
-const BASE_ITEM_VARIANTS = {
-  hidden: {
-    opacity: 1,
-  },
-  visible: {
-    opacity: 1,
-  },
-};
-
+/**
+ * A reusable component that arranges text in a circle and animates it to spin.
+ * It is accessible, using aria-hidden for decorative text and providing a screen-reader-only element.
+ *
+ * @param {SpinningTextProps} props The component props.
+ */
 export function SpinningText({
   children,
   duration = 10,
@@ -39,37 +34,33 @@ export function SpinningText({
   className,
   reverse = false,
   radius = 5,
+  zIndex = 50,
   transition,
   variants,
 }: SpinningTextProps) {
   if (typeof children !== "string" && !Array.isArray(children)) {
-    throw new Error("children must be a string or an array of strings");
+    throw new Error("SpinningText children must be a string or an array of strings");
   }
 
-  if (Array.isArray(children)) {
-    // Validate all elements are strings
-    if (!children.every((child) => typeof child === "string")) {
-      throw new Error("all elements in children array must be strings");
-    }
-    children = children.join("");
-  }
+  const text = Array.isArray(children) ? children.join("") : children;
+  const letters = text.split("");
+  letters.push(" "); // Adds a character's width of spacing
 
-  const letters = children.split("");
-  letters.push(" ");
-
-  const finalTransition = {
-    ...BASE_TRANSITION,
+  const finalTransition: Transition = {
+    repeat: Infinity,
+    ease: "linear",
+    duration,
     ...transition,
-    duration: (transition as { duration?: number })?.duration ?? duration,
   };
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     visible: { rotate: reverse ? -360 : 360 },
     ...variants?.container,
   };
 
-  const itemVariants = {
-    ...BASE_ITEM_VARIANTS,
+  const itemVariants: Variants = {
+    hidden: { opacity: 1 },
+    visible: { opacity: 1 },
     ...variants?.item,
   };
 
@@ -77,6 +68,7 @@ export function SpinningText({
     <motion.div
       className={cn("relative", className)}
       style={{
+        zIndex,
         ...style,
       }}
       initial="hidden"
@@ -96,18 +88,18 @@ export function SpinningText({
               "--total": letters.length,
               "--radius": radius,
               transform: `
-                  translate(-50%, -50%)
-                  rotate(calc(360deg / var(--total) * var(--index)))
-                  translateY(calc(var(--radius, 5) * -1ch))
-                `,
+                translate(-50%, -50%)
+                rotate(calc(360deg / var(--total) * var(--index)))
+                translateY(calc(var(--radius, 5) * -1ch))
+              `,
               transformOrigin: "center",
-            } as React.CSSProperties
+            } as CSSProperties
           }
         >
           {letter}
         </motion.span>
       ))}
-      <span className="sr-only">{children}</span>
+      <span className="sr-only">{text}</span>
     </motion.div>
   );
 }

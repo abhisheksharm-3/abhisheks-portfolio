@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/ModeToggle";
 import { MobileMenu } from "./MobileMenu";
 import { TypeNavItem } from "@/lib/types";
 import { navigationItems } from "@/lib/config/nav-config";

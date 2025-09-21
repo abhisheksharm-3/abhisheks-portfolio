@@ -10,7 +10,7 @@ import {
   navbarItemVariants,
   navigationItems,
 } from "@/lib/config/nav-config";
-import { ModeToggle } from "@/components/mode-toggle";
+import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 
 /**
