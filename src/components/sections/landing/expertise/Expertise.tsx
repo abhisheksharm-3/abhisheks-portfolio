@@ -7,20 +7,17 @@ import { SharedBackground } from "@/components/shared/SharedBackground";
 import {
   FeaturedSkillsSection,
   SecondarySkillsGrid,
-  SectionHeader,
-} from "./skills-components";
+} from "./ExpertiseComponents";
+import { SectionHeader } from "@/components/shared/SectionHeader";
 
 /**
  * The main component for the Skills/Expertise section.
- * It orchestrates the display of background elements, a header, a featured skills section,
- * and a grid of additional skills, all animated on scroll.
- *
- * @returns {JSX.Element} The rendered Skills section.
+ * It orchestrates the display of a header, featured skills, and a grid of
+ * additional skills, all animated on scroll.
  */
 export const Skills = () => {
   const sectionRef = useRef<HTMLElement>(null);
-  // Trigger animation when the top of the section is 1% visible
-  const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   // Split the services data for different layout treatments
   const mainServices = Expertise.slice(0, 3);
@@ -30,11 +27,17 @@ export const Skills = () => {
     <section
       ref={sectionRef}
       className="py-36 sm:py-44 relative overflow-hidden"
+      id="skills"
     >
       <SharedBackground isInView={isInView} noiseFilterId="skillsNoiseFilter" />
 
       <div className="container mx-auto px-6">
-        <SectionHeader isInView={isInView} />
+        <SectionHeader subtitle="Expertise" isInView={isInView}>
+          <span className="font-serif italic bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none pr-4">
+            what i do best
+          </span>
+        </SectionHeader>
+        
         <FeaturedSkillsSection
           mainServices={mainServices}
           isInView={isInView}

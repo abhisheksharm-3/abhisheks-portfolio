@@ -3,9 +3,9 @@
 import { AppShell } from "@/components/layout/AppShell";
 import { ContactCTA } from "@/components/sections/landing/cta/ContactCTA";
 import { Hero } from "@/components/sections/landing/hero/HeroComponent";
-import { Philosophy } from "@/components/sections/landing/philosophy/philosophy";
+import { Philosophy } from "@/components/sections/landing/philosophy/Philosophy";
 import { Projects } from "@/components/sections/landing/projects/projects";
-import { Skills } from "@/components/sections/landing/skills/skills";
+import { Skills } from "@/components/sections/landing/expertise/Expertise";
 
 /**
  * The main landing page component for the application.
