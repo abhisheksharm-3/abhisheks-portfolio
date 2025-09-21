@@ -232,11 +232,11 @@ export const SkillsSection: React.FC<MouseMotionValues> = ({
 }) => {
   const x = useTransform(
     mouseX,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
   );
   const y = useTransform(
     mouseY,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
   );
 
   return (

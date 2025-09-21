@@ -29,15 +29,12 @@ interface ProjectCardProps {
 /**
  * ProjectCard component displays a project with image, details, and action buttons.
  * Features hover animations, tags display, and metadata like role/client/duration.
- * 
+ *
  * @param project - Project data including title, description, tags, and links
  * @param delay - Animation delay for staggered loading (default: 0)
  * @returns JSX.Element representing the project card
  */
-export const ProjectCard = ({
-  project,
-  delay = 0
-}: ProjectCardProps) => {
+export const ProjectCard = ({ project, delay = 0 }: ProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.01 });
@@ -50,7 +47,7 @@ export const ProjectCard = ({
       transition={{
         duration: 0.8,
         delay: 0.1 + delay,
-        ease: [0.22, 1, 0.36, 1]
+        ease: [0.22, 1, 0.36, 1],
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -78,7 +75,7 @@ export const ProjectCard = ({
             />
           </motion.div>
           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80" />
-          
+
           {/* Year badge */}
           <div className="absolute top-4 right-4">
             <div className="flex items-center space-x-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md px-2 py-1">
@@ -86,7 +83,7 @@ export const ProjectCard = ({
               <span className="text-xs font-medium">{project.year}</span>
             </div>
           </div>
-          
+
           {/* Tags overlay */}
           <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
             {project.tags.slice(0, 3).map((tag) => (
@@ -104,7 +101,7 @@ export const ProjectCard = ({
             )}
           </div>
         </div>
-        
+
         {/* Content */}
         <div className="p-6">
           <div className="flex items-start justify-between mb-3">
@@ -112,42 +109,48 @@ export const ProjectCard = ({
               {project.title}
             </h3>
           </div>
-          
+
           <motion.div
             initial={{ width: 0 }}
             animate={isInView ? { width: "2.5rem" } : { width: 0 }}
             transition={{ duration: 0.5, delay: 0.2 + delay }}
             className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-4"
           />
-          
+
           <p className="text-foreground/60 text-sm font-light leading-relaxed mb-6 line-clamp-3">
             {project.description}
           </p>
-          
+
           {/* Project metadata */}
           {(project.role || project.client || project.duration) && (
             <div className="space-y-2 mb-6 border-l-2 border-primary/10 pl-4">
               {project.role && (
                 <div className="flex items-center text-xs">
-                  <span className="w-12 text-foreground/40 font-light">Role</span>
+                  <span className="w-12 text-foreground/40 font-light">
+                    Role
+                  </span>
                   <span className="text-foreground/70">{project.role}</span>
                 </div>
               )}
               {project.client && (
                 <div className="flex items-center text-xs">
-                  <span className="w-12 text-foreground/40 font-light">Client</span>
+                  <span className="w-12 text-foreground/40 font-light">
+                    Client
+                  </span>
                   <span className="text-foreground/70">{project.client}</span>
                 </div>
               )}
               {project.duration && (
                 <div className="flex items-center text-xs">
-                  <span className="w-12 text-foreground/40 font-light">Time</span>
+                  <span className="w-12 text-foreground/40 font-light">
+                    Time
+                  </span>
                   <span className="text-foreground/70">{project.duration}</span>
                 </div>
               )}
             </div>
           )}
-          
+
           {/* Action buttons */}
           <div className="flex items-center gap-3 mt-auto pt-2">
             {project.url && (
@@ -157,10 +160,10 @@ export const ProjectCard = ({
                 className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
                 asChild
               >
-                <a 
-                  href={project.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href={project.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center"
                 >
                   <span className="text-xs font-light">Live Site</span>
@@ -175,10 +178,10 @@ export const ProjectCard = ({
                 className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
                 asChild
               >
-                <a 
-                  href={project.github} 
-                  target="_blank" 
-                  rel="noopener noreferrer" 
+                <a
+                  href={project.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="flex items-center"
                 >
                   <span className="text-xs font-light">Code</span>
@@ -192,14 +195,17 @@ export const ProjectCard = ({
               className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 ml-auto transition-all duration-300"
               asChild
             >
-              <Link href={`/projects/${project.slug}`} className="flex items-center">
+              <Link
+                href={`/projects/${project.slug}`}
+                className="flex items-center"
+              >
                 <span className="text-xs font-light">View Details</span>
                 <ArrowUpRight className="ml-1.5 h-3 w-3 text-primary/70 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
               </Link>
             </Button>
           </div>
         </div>
-        
+
         {/* Decorative corner */}
         <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden opacity-60">
           <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />

@@ -1,5 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
+import { contactFormSchema } from "./config/contact";
+import z from "zod";
 
 export interface MousePosition {
   x: number;
@@ -107,3 +109,5 @@ export interface AppShellPropsType {
    */
   showBackground?: boolean;
 }
+
+export type ContactFormDataType = z.infer<typeof contactFormSchema>;

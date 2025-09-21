@@ -1,10 +1,10 @@
 export { Hero } from "./HeroComponent";
-export { 
+export {
   NoiseBackground,
   AsymmetricalGrid,
   AnimatedPaths,
   AbstractShapes,
-  AsymmetricalDecoration
+  AsymmetricalDecoration,
 } from "./HeroBackground";
 export {
   ExperienceCounter,
@@ -12,5 +12,5 @@ export {
   ScrollIndicator,
   HeroName,
   HeroDescription,
-  SkillsSection as HeroSkillsSection
+  SkillsSection as HeroSkillsSection,
 } from "./HeroContent";

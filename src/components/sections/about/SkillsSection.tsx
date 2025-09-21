@@ -55,7 +55,13 @@ export const SkillsSection = () => {
               strokeWidth="1"
               strokeDasharray="2 2"
             />
-            <circle cx="70" cy="30" r="10" stroke="currentColor" strokeWidth="1" />
+            <circle
+              cx="70"
+              cy="30"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="1"
+            />
             <circle
               cx="70"
               cy="30"

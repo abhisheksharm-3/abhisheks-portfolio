@@ -70,8 +70,9 @@ export const ContactHeader = () => {
         variants={itemVariants}
         className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
       >
-        I&apos;m available for freelance projects, collaborations, and full-time opportunities. 
-        Feel free to reach out through the form below or schedule a meeting directly.
+        I&apos;m available for freelance projects, collaborations, and full-time
+        opportunities. Feel free to reach out through the form below or schedule
+        a meeting directly.
       </motion.p>
     </motion.div>
   );

@@ -49,7 +49,10 @@ export const AboutPageHeader = () => {
       </motion.div>
 
       <div className="overflow-visible mb-4">
-        <motion.h2 variants={itemVariants} className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2">
+        <motion.h2
+          variants={itemVariants}
+          className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"
+        >
           <div className="py-1">
             <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
               Abhishek Sharma

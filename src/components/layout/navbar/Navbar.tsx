@@ -39,7 +39,7 @@ const useScrollEffect = (threshold: number) => {
 const useActivePath = (items: TypeNavItem[]): string | null => {
   const pathname = usePathname();
   const activeItem = items.find((item) =>
-    item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+    item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),
   );
   return activeItem?.name || null;
 };

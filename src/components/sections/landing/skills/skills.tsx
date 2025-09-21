@@ -4,7 +4,11 @@ import { useRef } from "react";
 import { useInView } from "framer-motion";
 import { Expertise } from "@/data/skills";
 import { SharedBackground } from "@/components/shared/SharedBackground";
-import { FeaturedSkillsSection, SecondarySkillsGrid, SectionHeader } from "./skills-components";
+import {
+  FeaturedSkillsSection,
+  SecondarySkillsGrid,
+  SectionHeader,
+} from "./skills-components";
 
 /**
  * The main component for the Skills/Expertise section.
@@ -23,13 +27,22 @@ export const Skills = () => {
   const additionalServices = Expertise.slice(3, 6);
 
   return (
-    <section ref={sectionRef} className="py-36 sm:py-44 relative overflow-hidden">
-      <SharedBackground isInView={isInView} noiseFilterId="skillsNoiseFilter" /> 
+    <section
+      ref={sectionRef}
+      className="py-36 sm:py-44 relative overflow-hidden"
+    >
+      <SharedBackground isInView={isInView} noiseFilterId="skillsNoiseFilter" />
 
       <div className="container mx-auto px-6">
         <SectionHeader isInView={isInView} />
-        <FeaturedSkillsSection mainServices={mainServices} isInView={isInView} />
-        <SecondarySkillsGrid additionalServices={additionalServices} isInView={isInView} />
+        <FeaturedSkillsSection
+          mainServices={mainServices}
+          isInView={isInView}
+        />
+        <SecondarySkillsGrid
+          additionalServices={additionalServices}
+          isInView={isInView}
+        />
       </div>
     </section>
   );

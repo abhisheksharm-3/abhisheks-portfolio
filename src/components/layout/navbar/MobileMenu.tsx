@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { TypeMobileMenuProps } from "@/lib/types";
-import { mobileMenuVariants, mobileNavItemVariants } from "@/lib/config/nav-config";
+import {
+  mobileMenuVariants,
+  mobileNavItemVariants,
+} from "@/lib/config/nav-config";
 import { MobileNavLink } from "./MobileNavLink";
 import { MobileMenuFooter } from "../footer";
 import { Button } from "@/components/ui/button";
@@ -46,11 +49,8 @@ export const MobileMenu: React.FC<TypeMobileMenuProps> = ({
               onClick={onClose}
             />
           ))}
-          
-          <motion.div
-            variants={mobileNavItemVariants}
-            className="mt-4"
-          >
+
+          <motion.div variants={mobileNavItemVariants} className="mt-4">
             <Button
               variant="ghost"
               size="sm"
@@ -58,7 +58,11 @@ export const MobileMenu: React.FC<TypeMobileMenuProps> = ({
               className="text-sm text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 group"
               onClick={onClose}
             >
-              <Link href="https://old.abhisheksan.com" target="_blank" rel="noopener noreferrer">
+              <Link
+                href="https://old.abhisheksan.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <History className="mr-2 h-4 w-4 group-hover:scale-110 transition-transform" />
                 Old Portfolio
               </Link>

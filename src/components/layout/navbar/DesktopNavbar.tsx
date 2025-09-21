@@ -11,7 +11,11 @@ import Link from "next/link";
 import { useState } from "react";
 
 /** Renders the navigation links and actions for desktop view. */
-export const DesktopNavbar = ({ activeItem }: { activeItem: string | null }) => {
+export const DesktopNavbar = ({
+  activeItem,
+}: {
+  activeItem: string | null;
+}) => {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   return (
@@ -61,7 +65,11 @@ export const DesktopNavbar = ({ activeItem }: { activeItem: string | null }) => 
           asChild
           className="text-xs text-foreground/60 hover:text-foreground/80 hover:bg-foreground/5 group"
         >
-          <Link href="https://old.abhisheksan.com" target="_blank" rel="noopener noreferrer">
+          <Link
+            href="https://old.abhisheksan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <History className="mr-1.5 h-3 w-3 group-hover:scale-110 transition-transform" />
             Old Portfolio
           </Link>

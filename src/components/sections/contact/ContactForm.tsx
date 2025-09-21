@@ -4,10 +4,23 @@ import { useState } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { MessageCircle, Send, Loader2, CheckCircle, AlertTriangle } from "lucide-react";
+import {
+  MessageCircle,
+  Send,
+  Loader2,
+  CheckCircle,
+  AlertTriangle,
+} from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -16,8 +29,12 @@ import * as z from "zod";
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
   email: z.email({ message: "Please enter a valid email address." }),
-  subject: z.string().min(3, { message: "Subject must be at least 3 characters." }),
-  message: z.string().min(10, { message: "Message must be at least 10 characters." }),
+  subject: z
+    .string()
+    .min(3, { message: "Subject must be at least 3 characters." }),
+  message: z
+    .string()
+    .min(10, { message: "Message must be at least 10 characters." }),
 });
 type FormValues = z.infer<typeof formSchema>;
 
@@ -28,7 +45,7 @@ const formContainerVariants: Variants = {
 };
 const formItemVariants: Variants = {
   hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: 'easeOut' } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 
 /**
@@ -37,7 +54,9 @@ const formItemVariants: Variants = {
  */
 export const SendMessageCard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
+    null,
+  );
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -72,7 +91,10 @@ export const SendMessageCard = () => {
       <div className="p-8 sm:p-10">
         <div className="flex items-center gap-3 mb-6">
           <div className="p-2 rounded-md border border-primary/10 bg-primary/5">
-            <MessageCircle className="h-5 w-5 text-primary/70" strokeWidth={1.5} />
+            <MessageCircle
+              className="h-5 w-5 text-primary/70"
+              strokeWidth={1.5}
+            />
           </div>
           <h2 className="text-2xl font-serif italic">Send a Message</h2>
         </div>
@@ -94,62 +116,125 @@ export const SendMessageCard = () => {
             className="space-y-6"
           >
             <motion.div variants={formItemVariants}>
-              <FormField control={form.control} name="name" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-light text-foreground/70">Your Name</FormLabel>
-                  <FormControl><Input placeholder="What should I call you?" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-light text-foreground/70">
+                      Your Name
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="What should I call you?" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </motion.div>
             <motion.div variants={formItemVariants}>
-              <FormField control={form.control} name="email" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-light text-foreground/70">Your Email</FormLabel>
-                  <FormControl><Input type="email" placeholder="Where can I reach you?" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-light text-foreground/70">
+                      Your Email
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder="Where can I reach you?"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </motion.div>
             <motion.div variants={formItemVariants}>
-              <FormField control={form.control} name="subject" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-light text-foreground/70">Subject</FormLabel>
-                  <FormControl><Input placeholder="What's this about?" {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+              <FormField
+                control={form.control}
+                name="subject"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-light text-foreground/70">
+                      Subject
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="What's this about?" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </motion.div>
             <motion.div variants={formItemVariants}>
-              <FormField control={form.control} name="message" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-light text-foreground/70">Message</FormLabel>
-                  <FormControl><Textarea placeholder="Tell me about your project or inquiry..." rows={5} {...field} /></FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-light text-foreground/70">
+                      Message
+                    </FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Tell me about your project or inquiry..."
+                        rows={5}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </motion.div>
             <motion.div variants={formItemVariants} className="pt-2">
-              <Button type="submit" disabled={isSubmitting} className="group w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300">
+              <Button
+                type="submit"
+                disabled={isSubmitting}
+                className="group w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300"
+              >
                 {isSubmitting ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...</>
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
+                  </>
                 ) : (
-                  <>Send Message<Send className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" /></>
+                  <>
+                    Send Message
+                    <Send className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </>
                 )}
               </Button>
             </motion.div>
 
             <AnimatePresence>
               {submitStatus === "success" && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-md text-sm text-green-500 flex items-center gap-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-4 p-3 bg-green-500/10 border border-green-500/30 rounded-md text-sm text-green-500 flex items-center gap-2"
+                >
                   <CheckCircle className="h-4 w-4" />
-                  <span>Message sent successfully. I&apos;ll get back to you soon!</span>
+                  <span>
+                    Message sent successfully. I&apos;ll get back to you soon!
+                  </span>
                 </motion.div>
               )}
               {submitStatus === "error" && (
-                <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-md text-sm text-red-500 flex items-center gap-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-md text-sm text-red-500 flex items-center gap-2"
+                >
                   <AlertTriangle className="h-4 w-4" />
-                  <span>Oops! Something went wrong. Please try again later.</span>
+                  <span>
+                    Oops! Something went wrong. Please try again later.
+                  </span>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -163,4 +248,4 @@ export const SendMessageCard = () => {
       </div>
     </Card>
   );
-}
+};

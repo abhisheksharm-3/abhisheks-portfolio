@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  motion,
-  useTransform,
-  MotionValue,
-} from "framer-motion";
+import { motion, useTransform, MotionValue } from "framer-motion";
 
 // A mock config, replace with your actual data
 const ANIMATION_CONFIG = {
@@ -131,14 +127,35 @@ export const AnimatedPaths: React.FC = () => (
 /**
  * REFACTORED: Renders abstract shapes with mouse-interactive parallax.
  */
-export const AbstractShapes: React.FC<MouseMotionValues> = ({ mouseX, mouseY }) => {
+export const AbstractShapes: React.FC<MouseMotionValues> = ({
+  mouseX,
+  mouseY,
+}) => {
   // Create transformed motion values. These hooks now run only once and are very efficient.
-  const lightX = useTransform(mouseX, (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE);
-  const lightY = useTransform(mouseY, (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE);
-  const accent1X = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM);
-  const accent1Y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM);
-  const accent2X = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
-  const accent2Y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
+  const lightX = useTransform(
+    mouseX,
+    (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE,
+  );
+  const lightY = useTransform(
+    mouseY,
+    (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE,
+  );
+  const accent1X = useTransform(
+    mouseX,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM,
+  );
+  const accent1Y = useTransform(
+    mouseY,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM,
+  );
+  const accent2X = useTransform(
+    mouseX,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
+  );
+  const accent2Y = useTransform(
+    mouseY,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
+  );
 
   return (
     <>
@@ -174,9 +191,18 @@ export const AbstractShapes: React.FC<MouseMotionValues> = ({ mouseX, mouseY }) 
 /**
  * REFACTORED: Renders an asymmetrical decorative shape with a subtle mouse parallax effect.
  */
-export const AsymmetricalDecoration: React.FC<MouseMotionValues> = ({ mouseX, mouseY }) => {
-  const x = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL);
-  const y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL);
+export const AsymmetricalDecoration: React.FC<MouseMotionValues> = ({
+  mouseX,
+  mouseY,
+}) => {
+  const x = useTransform(
+    mouseX,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL,
+  );
+  const y = useTransform(
+    mouseY,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL,
+  );
 
   return (
     <motion.div

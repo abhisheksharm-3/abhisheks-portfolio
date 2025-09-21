@@ -6,24 +6,24 @@ import { RiGithubFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
  * A centralized array of contact channels for the contact CTA section.
  */
 export const CONTACT_CHANNELS: readonly ContactChannel[] = [
-  { 
-    icon: <Mail className="h-4 w-4" />, 
-    label: "Email", 
+  {
+    icon: <Mail className="h-4 w-4" />,
+    label: "Email",
     value: "abhishek@abhisheksan.com",
-    href: "mailto:abhishek@abhisheksan.com"
+    href: "mailto:abhishek@abhisheksan.com",
   },
-  { 
-    icon: <Code className="h-4 w-4" />, 
-    label: "GitHub", 
+  {
+    icon: <Code className="h-4 w-4" />,
+    label: "GitHub",
     value: "abhisheksharm-3",
-    href: "https://github.com/abhisheksharm-3"
+    href: "https://github.com/abhisheksharm-3",
   },
-  { 
-    icon: <ExternalLink className="h-4 w-4" />, 
-    label: "Website", 
+  {
+    icon: <ExternalLink className="h-4 w-4" />,
+    label: "Website",
     value: "abhisheksan.com",
-    href: "https://abhisheksan.com"
-  }
+    href: "https://abhisheksan.com",
+  },
 ];
 
 export const socialLinks = [

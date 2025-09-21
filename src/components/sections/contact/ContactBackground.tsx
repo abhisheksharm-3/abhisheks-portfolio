@@ -39,9 +39,18 @@ export const ContactBackground = () => {
       <div className="absolute inset-0 mix-blend-overlay opacity-10">
         <svg className="w-full h-full opacity-20" viewBox="0 0 200 200">
           <filter id="contactPageNoiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch" />
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.65"
+              numOctaves="3"
+              stitchTiles="stitch"
+            />
           </filter>
-          <rect width="100%" height="100%" filter="url(#contactPageNoiseFilter)" />
+          <rect
+            width="100%"
+            height="100%"
+            filter="url(#contactPageNoiseFilter)"
+          />
         </svg>
       </div>
 

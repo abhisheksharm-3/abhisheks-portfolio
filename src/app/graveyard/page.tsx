@@ -1,13 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { motion, Variants } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { GraveyardBackground, GraveyardIntroCard, GraveyardProjectCard, GraveyardSectionHeader } from "@/components/sections/graveyard";
+import {
+  GraveyardBackground,
+  GraveyardIntroCard,
+  GraveyardProjectCard,
+  GraveyardSectionHeader,
+} from "@/components/sections/graveyard";
 import { deadProjects } from "@/data/project";
 import { ArrowRight } from "lucide-react";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 
 /**
  * A collection of inspirational quotes about learning from failure.
@@ -21,27 +27,6 @@ const inspirationalQuotes = [
 ];
 
 /**
- * Animation variants for the main page container.
- * Orchestrates a staggered animation for its children.
- */
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 },
-  },
-};
-
-/**
- * Animation variants for individual items within the container.
- * Each item fades and slides into view.
- */
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
-
-/**
  * Renders the Graveyard page, showcasing abandoned projects as learning experiences.
  * Features orchestrated animations and a random inspirational quote.
  * @returns {JSX.Element} The GraveyardPage component.
@@ -52,14 +37,16 @@ const GraveyardPage = () => {
     const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
     return inspirationalQuotes[randomIndex];
   });
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
     <AppShell>
       <motion.div
+        ref={sectionRef}
         variants={containerVariants}
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.05 }}
+        animate={isInView ? "visible" : "hidden"}
         className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
       >
         <GraveyardBackground />

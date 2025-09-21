@@ -3,11 +3,30 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { ProjectStats } from "@/lib/project-stats";
-import { fetchGitHubStats, calculateTechnicalExpertise, GitHubStats } from "@/lib/github-stats";
+import {
+  fetchGitHubStats,
+  calculateTechnicalExpertise,
+  GitHubStats,
+} from "@/lib/github-stats";
 import { projects } from "@/data/project";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
-import { RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts";
-import { Github, Star, Users, Code, Trophy, Target, GitFork, Activity } from "lucide-react";
+import {
+  RadarChart,
+  Radar,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+} from "recharts";
+import {
+  Github,
+  Star,
+  Users,
+  Code,
+  Trophy,
+  Target,
+  GitFork,
+  Activity,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 
 interface ProjectStatsChartsProps {
@@ -15,36 +34,74 @@ interface ProjectStatsChartsProps {
   isInView: boolean;
 }
 
-export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps) {
+export function ProjectStatsCharts({
+  stats,
+  isInView,
+}: ProjectStatsChartsProps) {
   const { theme } = useTheme();
   const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [radarData, setRadarData] = useState<Array<{
-    technology: string;
-    fullName: string;
-    value: number;
-    normalized: number;
-  }>>([]);
+  const [radarData, setRadarData] = useState<
+    Array<{
+      technology: string;
+      fullName: string;
+      value: number;
+      normalized: number;
+    }>
+  >([]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const githubData = await fetchGitHubStats();
         setGithubStats(githubData);
-        
+
         // Calculate technical expertise with real data
-        const expertise = await calculateTechnicalExpertise(projects, githubData);
+        const expertise = await calculateTechnicalExpertise(
+          projects,
+          githubData,
+        );
         setRadarData(expertise);
       } catch (error) {
-        console.warn('Failed to load GitHub stats:', error);
+        console.warn("Failed to load GitHub stats:", error);
         // Set fallback radar data
         setRadarData([
-          { technology: "Frontend", fullName: "Frontend Development", value: 15, normalized: 85 },
-          { technology: "Backend", fullName: "Backend Development", value: 12, normalized: 75 },
-          { technology: "Mobile", fullName: "Mobile Development", value: 8, normalized: 65 },
-          { technology: "AI/ML", fullName: "AI & Machine Learning", value: 6, normalized: 60 },
-          { technology: "DevOps", fullName: "DevOps & Cloud", value: 9, normalized: 70 },
-          { technology: "Blockchain", fullName: "Blockchain & Web3", value: 4, normalized: 45 }
+          {
+            technology: "Frontend",
+            fullName: "Frontend Development",
+            value: 15,
+            normalized: 85,
+          },
+          {
+            technology: "Backend",
+            fullName: "Backend Development",
+            value: 12,
+            normalized: 75,
+          },
+          {
+            technology: "Mobile",
+            fullName: "Mobile Development",
+            value: 8,
+            normalized: 65,
+          },
+          {
+            technology: "AI/ML",
+            fullName: "AI & Machine Learning",
+            value: 6,
+            normalized: 60,
+          },
+          {
+            technology: "DevOps",
+            fullName: "DevOps & Cloud",
+            value: 9,
+            normalized: 70,
+          },
+          {
+            technology: "Blockchain",
+            fullName: "Blockchain & Web3",
+            value: 4,
+            normalized: 45,
+          },
         ]);
       } finally {
         setIsLoading(false);
@@ -53,17 +110,17 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
 
     loadData();
   }, []);
-  
+
   // Theme-aware colors
   const getThemeColors = () => {
-    const isDark = theme === 'dark';
+    const isDark = theme === "dark";
     return {
-      primary: isDark ? 'rgb(148 163 184)' : 'rgb(59 130 246)',
-      grid: isDark ? 'rgb(71 85 105)' : 'rgb(148 163 184)',
-      text: isDark ? 'rgb(203 213 225)' : 'rgb(71 85 105)',
-      fill: isDark ? 'rgb(148 163 184)' : 'rgb(59 130 246)',
-      dot: isDark ? 'rgb(148 163 184)' : 'rgb(59 130 246)',
-      dotStroke: isDark ? 'rgb(15 23 42)' : 'rgb(255 255 255)',
+      primary: isDark ? "rgb(148 163 184)" : "rgb(59 130 246)",
+      grid: isDark ? "rgb(71 85 105)" : "rgb(148 163 184)",
+      text: isDark ? "rgb(203 213 225)" : "rgb(71 85 105)",
+      fill: isDark ? "rgb(148 163 184)" : "rgb(59 130 246)",
+      dot: isDark ? "rgb(148 163 184)" : "rgb(59 130 246)",
+      dotStroke: isDark ? "rgb(15 23 42)" : "rgb(255 255 255)",
     };
   };
 
@@ -80,60 +137,65 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
   const enhancedStats = [
     {
       icon: Github,
-      value: isLoading ? "..." : (githubStats?.publicRepos.toString() || stats.totalProjects.toString()),
+      value: isLoading
+        ? "..."
+        : githubStats?.publicRepos.toString() || stats.totalProjects.toString(),
       label: "Public Repos",
       subtitle: "Open source projects",
-      gradient: "from-blue-500 to-blue-600"
+      gradient: "from-blue-500 to-blue-600",
     },
     {
       icon: Star,
-      value: isLoading ? "..." : (githubStats?.totalStars.toString() || "25"),
+      value: isLoading ? "..." : githubStats?.totalStars.toString() || "25",
       label: "Total Stars",
       subtitle: "Community appreciation",
-      gradient: "from-yellow-500 to-yellow-600"
+      gradient: "from-yellow-500 to-yellow-600",
     },
     {
       icon: GitFork,
       value: isLoading ? "..." : "12",
       label: "Total Forks",
       subtitle: "Code contributions",
-      gradient: "from-green-500 to-green-600"
+      gradient: "from-green-500 to-green-600",
     },
     {
       icon: Users,
       value: isLoading ? "..." : "50+",
       label: "GitHub Followers",
       subtitle: "Developer network",
-      gradient: "from-purple-500 to-purple-600"
+      gradient: "from-purple-500 to-purple-600",
     },
     {
       icon: Code,
-      value: isLoading ? "..." : (githubStats?.topLanguages?.length.toString() || stats.technologyBreakdown.length.toString()),
+      value: isLoading
+        ? "..."
+        : githubStats?.topLanguages?.length.toString() ||
+          stats.technologyBreakdown.length.toString(),
       label: "Languages",
       subtitle: "Programming mastery",
-      gradient: "from-orange-500 to-orange-600"
+      gradient: "from-orange-500 to-orange-600",
     },
     {
       icon: Activity,
-      value: isLoading ? "..." : (githubStats?.contributions.toString() || "750"),
+      value: isLoading ? "..." : githubStats?.contributions.toString() || "750",
       label: "Contributions",
       subtitle: "This year",
-      gradient: "from-pink-500 to-pink-600"
+      gradient: "from-pink-500 to-pink-600",
     },
     {
       icon: Trophy,
       value: `${stats.diversityScore}%`,
       label: "Diversity Score",
       subtitle: "Project variety",
-      gradient: "from-indigo-500 to-indigo-600"
+      gradient: "from-indigo-500 to-indigo-600",
     },
     {
       icon: Target,
       value: stats.activeProjects.toString(),
       label: "Active Projects",
       subtitle: "Currently building",
-      gradient: "from-teal-500 to-teal-600"
-    }
+      gradient: "from-teal-500 to-teal-600",
+    },
   ];
 
   return (
@@ -152,15 +214,17 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
             transition={{ duration: 0.8, delay: 1.0 }}
             className="text-4xl font-serif text-foreground/80 mb-2"
           >
-            {isLoading ? "..." : (githubStats?.publicRepos || stats.totalProjects)}
+            {isLoading
+              ? "..."
+              : githubStats?.publicRepos || stats.totalProjects}
           </motion.div>
           <div className="text-xs uppercase tracking-[0.3em] text-foreground/40 font-light">
             repositories
           </div>
         </div>
-        
+
         <div className="w-px h-12 bg-primary/10" />
-        
+
         <div className="group">
           <motion.div
             initial={{ scale: 0 }}
@@ -168,15 +232,15 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
             transition={{ duration: 0.8, delay: 1.1 }}
             className="text-4xl font-serif text-foreground/80 mb-2"
           >
-            {isLoading ? "..." : (githubStats?.totalStars || "25")}
+            {isLoading ? "..." : githubStats?.totalStars || "25"}
           </motion.div>
           <div className="text-xs uppercase tracking-[0.3em] text-foreground/40 font-light">
             stars earned
           </div>
         </div>
-        
+
         <div className="w-px h-12 bg-primary/10" />
-        
+
         <div className="group">
           <motion.div
             initial={{ scale: 0 }}
@@ -184,7 +248,10 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
             transition={{ duration: 0.8, delay: 1.2 }}
             className="text-4xl font-serif text-foreground/80 mb-2"
           >
-            {isLoading ? "..." : (githubStats?.topLanguages?.length || stats.technologyBreakdown.length)}
+            {isLoading
+              ? "..."
+              : githubStats?.topLanguages?.length ||
+                stats.technologyBreakdown.length}
           </motion.div>
           <div className="text-xs uppercase tracking-[0.3em] text-foreground/40 font-light">
             languages
@@ -220,7 +287,7 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
               key={stat.label}
               initial={{ opacity: 0, y: 30 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 1.5 + (index * 0.1) }}
+              transition={{ duration: 0.8, delay: 1.5 + index * 0.1 }}
               className="group relative text-center"
             >
               <div className="relative border border-primary/5 rounded-lg p-5 hover:border-primary/10 transition-all duration-500 bg-background/30 h-[160px]">
@@ -232,7 +299,7 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
                     <motion.div
                       initial={{ scale: 0 }}
                       animate={isInView ? { scale: 1 } : {}}
-                      transition={{ duration: 0.6, delay: 1.7 + (index * 0.1) }}
+                      transition={{ duration: 0.6, delay: 1.7 + index * 0.1 }}
                       className="text-xl font-serif text-foreground/80 mb-2 leading-tight"
                     >
                       {stat.value}
@@ -274,8 +341,14 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
         </div>
 
         <div className="relative border border-primary/5 rounded-lg p-12 bg-background/30">
-          <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[400px]">
-            <RadarChart data={radarData} margin={{ top: 30, right: 50, bottom: 30, left: 50 }}>
+          <ChartContainer
+            config={chartConfig}
+            className="mx-auto aspect-square max-h-[400px]"
+          >
+            <RadarChart
+              data={radarData}
+              margin={{ top: 30, right: 50, bottom: 30, left: 50 }}
+            >
               <ChartTooltip
                 cursor={false}
                 content={({ active, payload }) => {
@@ -287,29 +360,30 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
                         {data?.fullName}
                       </div>
                       <div className="text-xs text-foreground/50 font-mono">
-                        {data?.value} projects • {Math.round(data?.normalized)}% proficiency
+                        {data?.value} projects • {Math.round(data?.normalized)}%
+                        proficiency
                       </div>
                     </div>
                   );
                 }}
               />
-              <PolarGrid 
+              <PolarGrid
                 stroke={colors.grid}
                 strokeOpacity={0.2}
                 strokeWidth={1}
                 radialLines={true}
               />
-              <PolarAngleAxis 
-                dataKey="technology" 
-                tick={{ 
-                  fontSize: 11, 
+              <PolarAngleAxis
+                dataKey="technology"
+                tick={{
+                  fontSize: 11,
                   fill: colors.text,
-                  fontWeight: 400
+                  fontWeight: 400,
                 }}
                 className="text-xs text-foreground/60"
               />
-              <PolarRadiusAxis 
-                domain={[0, 100]} 
+              <PolarRadiusAxis
+                domain={[0, 100]}
                 tick={false}
                 axisLine={false}
               />
@@ -324,12 +398,12 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
                   strokeWidth={2}
                   fill={colors.fill}
                   fillOpacity={0.1}
-                  dot={{ 
-                    fill: colors.dot, 
+                  dot={{
+                    fill: colors.dot,
                     stroke: colors.dotStroke,
-                    strokeWidth: 2, 
+                    strokeWidth: 2,
                     r: 3,
-                    opacity: 0.8
+                    opacity: 0.8,
                   }}
                 />
               </motion.g>
@@ -362,31 +436,38 @@ export function ProjectStatsCharts({ stats, isInView }: ProjectStatsChartsProps)
 
         <div className="flex items-end justify-center gap-6 h-32">
           {stats.yearlyBreakdown.slice(0, 6).map((year, index) => {
-            const maxCount = Math.max(...stats.yearlyBreakdown.map(y => y.count));
+            const maxCount = Math.max(
+              ...stats.yearlyBreakdown.map((y) => y.count),
+            );
             const height = (year.count / maxCount) * 100;
-            const isCurrentYear = year.year === new Date().getFullYear().toString();
-            
+            const isCurrentYear =
+              year.year === new Date().getFullYear().toString();
+
             return (
               <motion.div
                 key={year.year}
                 initial={{ height: 0, opacity: 0 }}
                 animate={isInView ? { height: `${height}%`, opacity: 1 } : {}}
-                transition={{ duration: 1.2, delay: 2.8 + (index * 0.1), ease: "easeOut" }}
+                transition={{
+                  duration: 1.2,
+                  delay: 2.8 + index * 0.1,
+                  ease: "easeOut",
+                }}
                 className="group relative flex flex-col items-center"
               >
-                <div 
+                <div
                   className={`w-8 rounded-sm mb-4 min-h-[8px] transition-all duration-300 ${
-                    isCurrentYear 
-                      ? 'bg-primary/30' 
-                      : 'bg-primary/15'
+                    isCurrentYear ? "bg-primary/30" : "bg-primary/15"
                   }`}
                 />
                 <div className="text-xs text-foreground/50 font-mono tracking-wide mb-1">
                   {year.year}
                 </div>
-                <div className={`text-xs font-light ${
-                  isCurrentYear ? 'text-foreground/70' : 'text-foreground/40'
-                }`}>
+                <div
+                  className={`text-xs font-light ${
+                    isCurrentYear ? "text-foreground/70" : "text-foreground/40"
+                  }`}
+                >
                   {year.count}
                 </div>
               </motion.div>

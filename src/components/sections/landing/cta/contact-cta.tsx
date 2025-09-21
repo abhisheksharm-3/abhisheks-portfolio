@@ -21,22 +21,28 @@ const FloatingOrbs = ({ isInView }: { isInView: boolean }) => (
       <motion.div
         key={i}
         initial={{ opacity: 0, scale: 0 }}
-        animate={isInView ? { 
-          opacity: [0, 0.4, 0.2, 0.6, 0.3],
-          scale: [0, 1.2, 0.8, 1.4, 1],
-          x: [0, 30, -20, 40, -10],
-          y: [0, -40, 20, -30, 10]
-        } : {}}
+        animate={
+          isInView
+            ? {
+                opacity: [0, 0.4, 0.2, 0.6, 0.3],
+                scale: [0, 1.2, 0.8, 1.4, 1],
+                x: [0, 30, -20, 40, -10],
+                y: [0, -40, 20, -30, 10],
+              }
+            : {}
+        }
         transition={{
           duration: 8,
           delay: i * 1.5,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: "easeInOut",
         }}
         className={`absolute w-32 h-32 rounded-full blur-3xl ${
-          i === 0 ? 'bg-primary/20 top-1/4 left-1/4' :
-          i === 1 ? 'bg-primary/15 top-3/4 right-1/4' :
-          'bg-primary/10 bottom-1/4 left-3/4'
+          i === 0
+            ? "bg-primary/20 top-1/4 left-1/4"
+            : i === 1
+              ? "bg-primary/15 top-3/4 right-1/4"
+              : "bg-primary/10 bottom-1/4 left-3/4"
         }`}
       />
     ))}
@@ -80,10 +86,10 @@ const SuperiorGlass = ({ isHovering }: { isHovering: boolean }) => (
       transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
       className="absolute inset-0 bg-background/60 backdrop-blur-2xl rounded-3xl border border-primary/[0.12] shadow-2xl shadow-primary/[0.08]"
     />
-    
+
     {/* Inner glass highlight */}
     <div className="absolute inset-[1px] bg-gradient-to-b from-primary/[0.08] via-transparent to-transparent rounded-[23px] pointer-events-none" />
-    
+
     {/* Edge glow */}
     <motion.div
       animate={{
@@ -100,14 +106,14 @@ const SuperiorGlass = ({ isHovering }: { isHovering: boolean }) => (
  */
 const ShimmerEffect = ({ isInView }: { isInView: boolean }) => (
   <motion.div
-    initial={{ x: '-100%', opacity: 0 }}
-    animate={isInView ? { x: '200%', opacity: [0, 1, 0] } : {}}
+    initial={{ x: "-100%", opacity: 0 }}
+    animate={isInView ? { x: "200%", opacity: [0, 1, 0] } : {}}
     transition={{
       duration: 3,
       delay: 2,
       ease: "easeInOut",
       repeat: Infinity,
-      repeatDelay: 8
+      repeatDelay: 8,
     }}
     className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent skew-x-12 pointer-events-none"
   />
@@ -121,22 +127,22 @@ const PremiumCornerAccent = () => (
     {/* Main accent lines */}
     <div className="absolute top-0 right-0 w-px h-24 bg-gradient-to-b from-primary/40 via-primary/20 to-transparent" />
     <div className="absolute top-0 right-0 h-px w-24 bg-gradient-to-l from-primary/40 via-primary/20 to-transparent" />
-    
+
     {/* Decorative elements */}
-    <motion.div 
-      animate={{ 
+    <motion.div
+      animate={{
         scale: [1, 1.2, 1],
-        opacity: [0.3, 0.6, 0.3]
+        opacity: [0.3, 0.6, 0.3],
       }}
       transition={{
         duration: 4,
         repeat: Infinity,
-        ease: "easeInOut"
+        ease: "easeInOut",
       }}
       className="absolute top-3 right-3 w-6 h-6 rounded-full bg-primary/20 blur-md"
     />
     <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-primary/30" />
-    
+
     {/* Corner gradient */}
     <div className="absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl from-primary/10 via-primary/5 to-transparent" />
   </div>
@@ -152,7 +158,7 @@ const PremiumEmailLink = ({ isInView }: { isInView: boolean }) => (
     transition={{
       duration: 0.6,
       delay: 1.4,
-      ease: "easeOut"
+      ease: "easeOut",
     }}
     className="mt-20 relative"
   >
@@ -168,18 +174,18 @@ const PremiumEmailLink = ({ isInView }: { isInView: boolean }) => (
           whileTap={{ scale: 0.98 }}
         >
           <span className="relative z-10">abhishek@abhisheksan.com</span>
-          
+
           {/* Hover background */}
           <div className="absolute inset-0 bg-primary/5 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          
+
           {/* Animated underline */}
           <motion.div
             className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent"
-            initial={{ width: '0%' }}
-            whileHover={{ width: '100%' }}
+            initial={{ width: "0%" }}
+            whileHover={{ width: "100%" }}
             transition={{ duration: 0.3 }}
           />
-          
+
           {/* Glow effect */}
           <div className="absolute inset-0 bg-primary/10 rounded-xl blur-lg opacity-0 group-hover:opacity-70 transition-opacity duration-300 -z-10" />
         </motion.a>
@@ -202,7 +208,10 @@ export const ContactCTA = () => {
       ref={sectionRef}
       className="py-36 sm:py-44 relative overflow-hidden"
     >
-      <SharedBackground isInView={isInView} noiseFilterId="contactCTANoiseFilter" />
+      <SharedBackground
+        isInView={isInView}
+        noiseFilterId="contactCTANoiseFilter"
+      />
 
       <div className="container mx-auto px-8 relative z-10">
         <SectionHeader isInView={isInView} />
@@ -210,14 +219,14 @@ export const ContactCTA = () => {
         <motion.div
           initial={{ opacity: 0, y: 60, scale: 0.95 }}
           animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
-          transition={{ 
+          transition={{
             duration: 1,
             delay: 0.3,
-            ease: [0.21, 0.47, 0.32, 0.98]
+            ease: [0.21, 0.47, 0.32, 0.98],
           }}
           className="max-w-6xl mx-auto"
         >
-          <div 
+          <div
             className="relative group perspective-1000"
             onMouseEnter={() => setIsHovering(true)}
             onMouseLeave={() => setIsHovering(false)}
@@ -245,7 +254,7 @@ export const ContactCTA = () => {
             <Card className="border-0 bg-transparent shadow-none relative overflow-hidden">
               <SuperiorGlass isHovering={isHovering} />
               <ShimmerEffect isInView={isInView} />
-              
+
               <div className="relative z-30 p-16 sm:p-20 md:p-24 text-center">
                 <BackgroundIcons isHovering={isHovering} />
 
@@ -257,33 +266,33 @@ export const ContactCTA = () => {
                     transition={{
                       duration: 0.8,
                       delay: 0.7,
-                      ease: "easeOut"
+                      ease: "easeOut",
                     }}
                     className="space-y-8 mb-20"
                   >
-                    <motion.div 
+                    <motion.div
                       className="text-foreground/85 text-lg sm:text-xl font-light leading-relaxed tracking-wide max-w-3xl mx-auto"
                       whileHover={{ scale: 1.02 }}
                       transition={{ duration: 0.2 }}
                     >
                       I&apos;m open to select projects and exciting{" "}
-                      <motion.span 
+                      <motion.span
                         className="relative inline-flex items-center gap-3 px-5 py-2 rounded-2xl bg-primary/8 border border-primary/20 text-primary font-medium backdrop-blur-sm"
-                        whileHover={{ 
+                        whileHover={{
                           scale: 1.05,
                           backgroundColor: "hsl(var(--primary) / 0.12)",
-                          y: -2
+                          y: -2,
                         }}
                         transition={{ duration: 0.2 }}
                       >
-                        <Briefcase className="h-4 w-4" /> 
+                        <Briefcase className="h-4 w-4" />
                         full-time opportunities
-                        
                         {/* Subtle glow */}
                         <div className="absolute inset-0 bg-primary/5 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
                       </motion.span>
-                      . If you&apos;ve got an idea to build, a product to scale, or a
-                      problem that needs solving — let&apos;s make it happen together.
+                      . If you&apos;ve got an idea to build, a product to scale,
+                      or a problem that needs solving — let&apos;s make it
+                      happen together.
                     </motion.div>
                   </motion.div>
 
@@ -293,7 +302,7 @@ export const ContactCTA = () => {
 
                 <ContactChannels isInView={isInView} />
               </div>
-              
+
               <PremiumCornerAccent />
             </Card>
           </div>

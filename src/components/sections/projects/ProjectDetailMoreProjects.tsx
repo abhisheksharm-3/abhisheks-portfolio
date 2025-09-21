@@ -23,18 +23,24 @@ const itemVariants: Variants = {
 export function ProjectDetailMoreProjects() {
   return (
     <motion.div variants={containerVariants} className="mt-24 text-center">
-      <motion.h3 variants={itemVariants} className="text-2xl font-serif italic mb-4">
+      <motion.h3
+        variants={itemVariants}
+        className="text-2xl font-serif italic mb-4"
+      >
         Explore More Projects
       </motion.h3>
-      
+
       <motion.div
         variants={{
           hidden: { width: 0 },
-          visible: { width: "8rem", transition: { duration: 1, ease: "easeOut" } },
+          visible: {
+            width: "8rem",
+            transition: { duration: 1, ease: "easeOut" },
+          },
         }}
         className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto mb-8"
       />
-      
+
       <motion.div variants={itemVariants}>
         <Button
           size="lg"

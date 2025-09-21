@@ -33,7 +33,9 @@ export function ProjectsFilters({
   const tagCounts = useMemo(() => {
     const counts: { [key: string]: number } = { all: projects.length };
     for (const tag of allTags) {
-      counts[tag] = projects.filter((project) => project.tags.includes(tag)).length;
+      counts[tag] = projects.filter((project) =>
+        project.tags.includes(tag),
+      ).length;
     }
     return counts;
   }, [allTags, projects]);
@@ -56,20 +58,38 @@ export function ProjectsFilters({
         </div>
       </div>
 
-      <Tabs defaultValue="all" onValueChange={setActiveFilter} value={activeFilter}>
-        <motion.div variants={containerVariants} initial="hidden" animate="visible">
+      <Tabs
+        defaultValue="all"
+        onValueChange={setActiveFilter}
+        value={activeFilter}
+      >
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+        >
           <TabsList className="flex flex-wrap gap-2 bg-transparent h-auto p-0">
             <motion.div variants={itemVariants}>
-              <TabsTrigger value="all" className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 border border-primary/10 bg-transparent hover:bg-primary/5 rounded-md px-4 py-2 text-xs font-light transition-all duration-300">
+              <TabsTrigger
+                value="all"
+                className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 border border-primary/10 bg-transparent hover:bg-primary/5 rounded-md px-4 py-2 text-xs font-light transition-all duration-300"
+              >
                 All Projects
-                <span className="ml-2 text-[10px] text-foreground/40 bg-primary/5 px-1.5 py-0.5 rounded">{tagCounts.all}</span>
+                <span className="ml-2 text-[10px] text-foreground/40 bg-primary/5 px-1.5 py-0.5 rounded">
+                  {tagCounts.all}
+                </span>
               </TabsTrigger>
             </motion.div>
             {allTags.map((tag) => (
               <motion.div variants={itemVariants} key={tag}>
-                <TabsTrigger value={tag} className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 border border-primary/10 bg-transparent hover:bg-primary/5 rounded-md px-4 py-2 text-xs font-light transition-all duration-300">
+                <TabsTrigger
+                  value={tag}
+                  className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 border border-primary/10 bg-transparent hover:bg-primary/5 rounded-md px-4 py-2 text-xs font-light transition-all duration-300"
+                >
                   {tag}
-                  <span className="ml-2 text-[10px] text-foreground/40 bg-primary/5 px-1.5 py-0.5 rounded">{tagCounts[tag] || 0}</span>
+                  <span className="ml-2 text-[10px] text-foreground/40 bg-primary/5 px-1.5 py-0.5 rounded">
+                    {tagCounts[tag] || 0}
+                  </span>
                 </TabsTrigger>
               </motion.div>
             ))}

@@ -25,23 +25,29 @@ export function ProjectDetailOverview({ project }: { project: Project }) {
   return (
     <div className="mb-16">
       <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative">
-        <motion.div
-          variants={containerVariants}
-          className="p-8 sm:p-10"
-        >
-          <motion.h2 variants={itemVariants} className="text-2xl font-serif italic mb-6">
+        <motion.div variants={containerVariants} className="p-8 sm:p-10">
+          <motion.h2
+            variants={itemVariants}
+            className="text-2xl font-serif italic mb-6"
+          >
             Project Overview
           </motion.h2>
 
           <motion.div
             variants={{
               hidden: { width: 0 },
-              visible: { width: "3rem", transition: { duration: 0.8, ease: "easeOut" } },
+              visible: {
+                width: "3rem",
+                transition: { duration: 0.8, ease: "easeOut" },
+              },
             }}
             className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-6"
           />
-          
-          <motion.div variants={itemVariants} className="prose prose-sm dark:prose-invert max-w-none">
+
+          <motion.div
+            variants={itemVariants}
+            className="prose prose-sm dark:prose-invert max-w-none"
+          >
             <p className="text-foreground/70 text-base font-light leading-relaxed">
               {project.longDescription ||
                 `${project.description} This project showcases my skills in ${project.tags.join(", ")}. 
@@ -49,8 +55,10 @@ export function ProjectDetailOverview({ project }: { project: Project }) {
                 from concept to deployment.`}
             </p>
             <p className="text-foreground/70 text-base font-light leading-relaxed mt-4">
-              The project was completed {project.duration || `in ${project.year}`} and demonstrates my ability to 
-              deliver high-quality solutions that meet client requirements and user needs.
+              The project was completed{" "}
+              {project.duration || `in ${project.year}`} and demonstrates my
+              ability to deliver high-quality solutions that meet client
+              requirements and user needs.
             </p>
           </motion.div>
         </motion.div>

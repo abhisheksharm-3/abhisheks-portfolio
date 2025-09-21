@@ -5,13 +5,15 @@ export const ResurrectionMeter = ({ potential = 0 }: { potential: number }) => {
     potential > 50
       ? "text-green-500"
       : potential > 25
-      ? "text-amber-500"
-      : "text-red-500";
+        ? "text-amber-500"
+        : "text-red-500";
 
   return (
     <div className="flex flex-col items-start">
       <div className="flex items-center justify-between w-full mb-1">
-        <span className="text-xs font-light text-foreground/60">Resurrection Potential</span>
+        <span className="text-xs font-light text-foreground/60">
+          Resurrection Potential
+        </span>
         <span className={`text-xs font-medium ${color}`}>{potential}%</span>
       </div>
       <div className="w-full h-1.5 bg-primary/5 rounded-full overflow-hidden">
@@ -24,4 +26,4 @@ export const ResurrectionMeter = ({ potential = 0 }: { potential: number }) => {
       </div>
     </div>
   );
-}
+};

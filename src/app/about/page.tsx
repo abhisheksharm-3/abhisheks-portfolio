@@ -1,39 +1,19 @@
 "use client";
 
 import { useRef } from "react";
-import { motion, useInView, Variants } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { AppShell } from "@/components/layout/AppShell";
-import { AboutPageCTA, AboutPageHeader, BioCard, ContactCard, ExperienceEducationSection, InterestsSection, SkillsSection } from "@/components/sections/about";
-
-/**
- * Defines the animation variants for the main section container.
- * It orchestrates the staggering of its children's animations.
- */
-const containerVariants: Variants = {
-  hidden: {},
-  visible: {
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-/**
- * Defines the animation for individual child elements within the container.
- * Each child fades and slides in, orchestrated by the parent's stagger effect.
- */
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: "easeOut",
-    },
-  },
-};
+import {
+  AboutPageCTA,
+  AboutPageHeader,
+  BioCard,
+  ContactCard,
+  ExperienceEducationSection,
+  InterestsSection,
+  SkillsSection,
+} from "@/components/sections/about";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 
 /**
  * Renders the "About Me" page, featuring sections that animate into view on scroll.

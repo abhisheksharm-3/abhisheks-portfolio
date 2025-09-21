@@ -13,7 +13,7 @@ const slugToTitleCase = (slug: string): string => {
     .replace(/-/g, " ")
     .replace(
       /\w\S*/g,
-      (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase()
+      (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(),
     );
 };
 
@@ -33,7 +33,7 @@ export async function generateMetadata({
   const formattedTitle = slugToTitleCase(slug);
 
   return {
-    title: `${formattedTitle} | Projects | Abhishek Sharma`,
+    title: `${formattedTitle} | Abhishek Sharma`,
     description: `A closer look at my project "${formattedTitle}" — what I built, learned, and explored along the way.`,
   };
 }
@@ -49,8 +49,8 @@ export async function generateMetadata({
  * @param {ReactNode} props.children - The page component to be rendered within this layout.
  * @returns {ReactNode} The rendered children.
  */
-const ProjectsLayout = ({ children }: { children: ReactNode }): ReactNode => {
+const DetailedProjectPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
   return children;
 };
 
-export default ProjectsLayout;
+export default DetailedProjectPageLayout;

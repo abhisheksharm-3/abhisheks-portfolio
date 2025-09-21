@@ -166,8 +166,8 @@ export const FeaturedSkillsSection = ({
             className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8"
           >
             My process is pragmatic: build small, ship fast, refine
-            continuously. Whether it&apos;s prototyping an AI agent in 48 hours or
-            deploying a scalable backend with Appwrite, I value momentum and
+            continuously. Whether it&apos;s prototyping an AI agent in 48 hours
+            or deploying a scalable backend with Appwrite, I value momentum and
             clarity — without losing sight of design and usability.
           </motion.p>
 

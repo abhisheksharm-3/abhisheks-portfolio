@@ -26,8 +26,14 @@ export const Philosophy = () => {
   const isInView = useInView(sectionRef, { once: true, amount: 0.01 });
 
   return (
-    <section ref={sectionRef} className="py-28 sm:py-36 relative overflow-hidden">
-      <SharedBackground isInView={isInView} noiseFilterId="philosophyNoiseFilter" /> 
+    <section
+      ref={sectionRef}
+      className="py-28 sm:py-36 relative overflow-hidden"
+    >
+      <SharedBackground
+        isInView={isInView}
+        noiseFilterId="philosophyNoiseFilter"
+      />
 
       <div className="container mx-auto px-6 relative z-10">
         <SectionHeader isInView={isInView} />

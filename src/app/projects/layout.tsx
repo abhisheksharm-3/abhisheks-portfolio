@@ -22,8 +22,8 @@ export const metadata: Metadata = {
  * @param {ReactNode} props.children - The child pages or components to render.
  * @returns {ReactNode} The rendered children.
  */
-const ProjectsLayout = ({ children }: { children: ReactNode }): ReactNode => {
+const ProjectsPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
   return children;
 };
 
-export default ProjectsLayout;
+export default ProjectsPageLayout;

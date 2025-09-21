@@ -9,12 +9,12 @@ export const SKILLS_ANIMATION_CONFIG = {
       opacity: 1,
       transition: {
         staggerChildren: 0.1,
-        delayChildren: 0.2
-      }
-    }
+        delayChildren: 0.2,
+      },
+    },
   },
   item: {
     hidden: { y: 20, opacity: 0 },
-    show: { y: 0, opacity: 1, transition: { duration: 0.5 } }
-  }
+    show: { y: 0, opacity: 1, transition: { duration: 0.5 } },
+  },
 };

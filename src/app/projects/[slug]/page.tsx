@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
@@ -13,29 +13,14 @@ import { ProjectDetailImage } from "@/components/sections/projects/ProjectDetail
 import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDetailOverview";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
-
-/**
- * Animation variants for container elements to orchestrate staggering children.
- */
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-/**
- * Animation variants for individual items to fade and slide in.
- */
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 
 /**
  * Renders the detailed view for a single project based on the URL slug.
  * Features an orchestrated entry animation for all page sections.
  * @returns {JSX.Element} The ProjectDetailPage component.
  */
-const ProjectDetailPage = () => {
+const DetailedProjectPage = () => {
   const params = useParams();
   const project = projects.find((p) => p.slug === params?.slug);
 
@@ -95,4 +80,4 @@ const ProjectDetailPage = () => {
   );
 };
 
-export default ProjectDetailPage;
+export default DetailedProjectPage;

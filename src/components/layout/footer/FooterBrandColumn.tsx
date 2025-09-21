@@ -1,4 +1,7 @@
-import { footerContainerVariants, footerItemVariants } from "@/lib/config/footer-config";
+import {
+  footerContainerVariants,
+  footerItemVariants,
+} from "@/lib/config/footer-config";
 import { socialLinks } from "@/data/contact";
 import { motion } from "framer-motion";
 import Link from "next/link";

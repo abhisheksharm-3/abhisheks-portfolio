@@ -1,7 +1,7 @@
 "use client";
 
-import { ANIMATION_CONFIG } from '@/data/hero';
-import { useState, useEffect } from 'react';
+import { ANIMATION_CONFIG } from "@/data/hero";
+import { useState, useEffect } from "react";
 
 /**
  * A custom React hook that animates a counter from "00" up to a target value.
@@ -16,13 +16,13 @@ export const useExperienceCounter = (targetCount: number = 1): string => {
       let count = 0;
       const interval = setInterval(() => {
         count++;
-        setCounter(count.toString().padStart(2, '0'));
+        setCounter(count.toString().padStart(2, "0"));
         if (count >= targetCount) clearInterval(interval);
       }, ANIMATION_CONFIG.COUNTER_INCREMENT_INTERVAL);
-      
+
       return () => clearInterval(interval);
     }, ANIMATION_CONFIG.EXPERIENCE_COUNTER_DELAY);
-    
+
     return () => clearTimeout(timer);
   }, [targetCount]);
 

@@ -397,7 +397,6 @@ export const projects: Project[] = [
   },
 ];
 
-
 // Export just the featured projects for quick access
 export const featuredProjects = projects.filter((project) => project.featured);
 
@@ -419,8 +418,7 @@ export const deadProjects = [
     title: "Aventra",
     description: "AI trip planner that overplanned itself.",
     reason: "Too much scope + underestimated complexity.",
-    lessons:
-      "AI + real-time APIs need tighter scope, or they spiral.",
+    lessons: "AI + real-time APIs need tighter scope, or they spiral.",
     progress: "60%",
     technologies: ["Next.js", "Appwrite", "FastAPI", "TailwindCSS"],
     year: "2025",
@@ -430,4 +428,3 @@ export const deadProjects = [
     resurrectionPotential: 60,
   },
 ];
-

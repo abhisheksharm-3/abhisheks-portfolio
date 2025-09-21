@@ -1,4 +1,8 @@
-import { footerContainerVariants, footerItemVariants, FooterNavLinks } from "@/lib/config/footer-config";
+import {
+  footerContainerVariants,
+  footerItemVariants,
+  FooterNavLinks,
+} from "@/lib/config/footer-config";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";

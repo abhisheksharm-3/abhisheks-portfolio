@@ -25,7 +25,7 @@ const itemVariants: Variants = {
  * ProjectsHeader - Main header component for the Projects page
  * Features staggered animation sequence with gradient text and decorative elements.
  * Displays page title, description, and animated accent line.
- * 
+ *
  * @returns JSX.Element representing the projects page header
  */
 export const ProjectsHeader = () => {
@@ -67,13 +67,14 @@ export const ProjectsHeader = () => {
         }}
         className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent mt-4"
       />
-      
+
       <motion.p
         variants={itemVariants}
         className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
       >
-        Browse my comprehensive collection of projects spanning web development, mobile applications, 
-        and design work. Each project represents a journey of learning, experimentation, and craftsmanship.
+        Browse my comprehensive collection of projects spanning web development,
+        mobile applications, and design work. Each project represents a journey
+        of learning, experimentation, and craftsmanship.
       </motion.p>
     </motion.div>
   );

@@ -1,48 +1,31 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
-import {AppShell} from "@/components/layout/AppShell";
-import { ContactBackground, ContactHeader, ContactInfoCard, ScheduleMeetingCard, SendMessageCard } from "@/components/sections/contact";
-
-/**
- * Animation variants for the main page container.
- * Orchestrates a staggered animation for its children.
- */
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2,
-    },
-  },
-};
-
-/**
- * Animation variants for individual items within the container.
- * Each item fades and slides into view.
- */
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.8, ease: "easeOut" },
-  },
-};
+import { motion, useInView } from "framer-motion";
+import { AppShell } from "@/components/layout/AppShell";
+import {
+  ContactBackground,
+  ContactHeader,
+  ContactInfoCard,
+  ScheduleMeetingCard,
+  SendMessageCard,
+} from "@/components/sections/contact";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { useRef } from "react";
 
 /**
  * Renders the main contact page, orchestrating the animated entry of its sections.
  * @returns {JSX.Element} The ContactPage component.
  */
 const ContactPage = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   return (
     <AppShell>
       <motion.div
+        ref={sectionRef}
         variants={containerVariants}
         initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.1 }}
+        animate={isInView ? "visible" : "hidden"}
         className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
       >
         <ContactBackground />

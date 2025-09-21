@@ -9,10 +9,10 @@ export function useScrollPosition() {
       const handleScroll = () => {
         setScrollPosition(window.scrollY);
       };
-      
+
       // Initial position
       setScrollPosition(window.scrollY);
-      
+
       window.addEventListener("scroll", handleScroll);
       return () => window.removeEventListener("scroll", handleScroll);
     }

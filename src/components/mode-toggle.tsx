@@ -15,7 +15,7 @@ import {
  * ModeToggle - Theme switching component
  * Provides dropdown menu to switch between light, dark, and system themes.
  * Handles hydration mismatch by rendering placeholder until client-side.
- * 
+ *
  * @returns JSX.Element representing the theme toggle dropdown
  */
 export const ModeToggle = () => {
@@ -28,9 +28,9 @@ export const ModeToggle = () => {
 
   if (!mounted) {
     return (
-      <Button 
-        variant="ghost" 
-        size="icon" 
+      <Button
+        variant="ghost"
+        size="icon"
         className="rounded-full h-9 w-9 border border-primary/5 bg-background/30 cursor-pointer"
       >
         <span className="sr-only">Toggle theme</span>
@@ -43,8 +43,10 @@ export const ModeToggle = () => {
    * @returns JSX.Element representing the theme icon
    */
   const getIconByTheme = () => {
-    if (theme === "dark") return <MoonIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
-    if (theme === "light") return <SunIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
+    if (theme === "dark")
+      return <MoonIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
+    if (theme === "light")
+      return <SunIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
     return <MonitorIcon className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.25} />;
   };
 
@@ -74,26 +76,26 @@ export const ModeToggle = () => {
           </div>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent 
-        align="end" 
+      <DropdownMenuContent
+        align="end"
         className="min-w-[7rem] overflow-hidden border border-primary/5 bg-background/60 backdrop-blur-md rounded-xl"
         sideOffset={8}
       >
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => setTheme("light")}
           className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 py-1.5 px-3 text-xs font-extralight ${theme === "light" ? "bg-primary/3 text-primary/90" : "text-foreground/70 hover:text-foreground/90"}`}
         >
           <SunIcon className="h-3.5 w-3.5" strokeWidth={1.25} />
           <span>Light</span>
         </DropdownMenuItem>
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => setTheme("dark")}
           className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 py-1.5 px-3 text-xs font-extralight ${theme === "dark" ? "bg-primary/3 text-primary/90" : "text-foreground/70 hover:text-foreground/90"}`}
         >
           <MoonIcon className="h-3.5 w-3.5" strokeWidth={1.25} />
           <span>Dark</span>
         </DropdownMenuItem>
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => setTheme("system")}
           className={`flex items-center gap-2 cursor-pointer transition-colors duration-300 py-1.5 px-3 text-xs font-extralight ${theme === "system" ? "bg-primary/3 text-primary/90" : "text-foreground/70 hover:text-foreground/90"}`}
         >

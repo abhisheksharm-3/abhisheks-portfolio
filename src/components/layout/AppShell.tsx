@@ -24,7 +24,7 @@ export const AppShell: React.FC<AppShellPropsType> = ({
     <div
       className={cn(
         "relative flex min-h-screen w-full flex-col justify-between bg-background",
-        className
+        className,
       )}
     >
       {showBackground && (

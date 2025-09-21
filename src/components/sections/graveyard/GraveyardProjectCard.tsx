@@ -15,10 +15,13 @@ const causeOfDeath = [
   "Starved of resources",
   "Crushed by competing priorities",
   "Expired due to market changes",
-  "Victim of budget cuts"
+  "Victim of budget cuts",
 ];
 
-export const GraveyardProjectCard = ({ project, index }: {
+export const GraveyardProjectCard = ({
+  project,
+  index,
+}: {
   project: {
     title: string;
     description: string;
@@ -51,13 +54,13 @@ export const GraveyardProjectCard = ({ project, index }: {
       transition={{
         duration: 0.8,
         delay: 0.1 + index * 0.1,
-        ease: [0.22, 1, 0.36, 1]
+        ease: [0.22, 1, 0.36, 1],
       }}
       className="h-full"
     >
       <Card
         className={`h-full overflow-hidden border-primary/10 backdrop-blur-sm transition-all duration-300 py-0 relative
-            ${isHovered ? 'shadow-xl border-red-500/20' : 'shadow-md'}`}
+            ${isHovered ? "shadow-xl border-red-500/20" : "shadow-md"}`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
@@ -74,11 +77,18 @@ export const GraveyardProjectCard = ({ project, index }: {
         <div className="p-6 pb-0 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-md border border-red-500/20 bg-red-500/5">
-              <RiCrossFill className="h-4 w-4 text-red-500/70" strokeWidth={1.5} />
+              <RiCrossFill
+                className="h-4 w-4 text-red-500/70"
+                strokeWidth={1.5}
+              />
             </div>
-            <span className="text-xs text-red-500/70 font-light">Abandoned at {project.progress}</span>
+            <span className="text-xs text-red-500/70 font-light">
+              Abandoned at {project.progress}
+            </span>
           </div>
-          <span className="text-xs text-primary/60 px-2 py-1 border border-primary/10 rounded-md">{project.year}</span>
+          <span className="text-xs text-primary/60 px-2 py-1 border border-primary/10 rounded-md">
+            {project.year}
+          </span>
         </div>
         {/* Image */}
         <div className="relative w-full h-52 overflow-hidden mt-6">
@@ -100,24 +110,32 @@ export const GraveyardProjectCard = ({ project, index }: {
               animate={isHovered ? { opacity: 1 } : { opacity: 0.9 }}
             >
               <motion.div
-                animate={isHovered ?
-                  { y: [0, -10, 0], opacity: 1 } :
-                  { y: 0, opacity: 0.7 }
+                animate={
+                  isHovered
+                    ? { y: [0, -10, 0], opacity: 1 }
+                    : { y: 0, opacity: 0.7 }
                 }
                 transition={{
                   y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                  opacity: { duration: 0.3 }
+                  opacity: { duration: 0.3 },
                 }}
                 className="flex flex-col items-center"
               >
-                <RiGhostFill className="h-14 w-14 text-white/60" strokeWidth={1.5} />
+                <RiGhostFill
+                  className="h-14 w-14 text-white/60"
+                  strokeWidth={1.5}
+                />
               </motion.div>
             </motion.div>
             {/* Gradient overlay & title */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <h3 className="text-2xl font-serif italic text-white mb-1">{project.title}</h3>
-              <p className="text-white/70 text-sm line-clamp-2">{project.description}</p>
+              <h3 className="text-2xl font-serif italic text-white mb-1">
+                {project.title}
+              </h3>
+              <p className="text-white/70 text-sm line-clamp-2">
+                {project.description}
+              </p>
             </div>
           </motion.div>
           {/* Tags */}
@@ -143,7 +161,18 @@ export const GraveyardProjectCard = ({ project, index }: {
             <div className="h-full">
               <div className="flex items-center gap-3 mb-6">
                 <div className="p-2 rounded-md border border-amber-500/20 bg-amber-500/5">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-amber-500/70">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="text-amber-500/70"
+                  >
                     <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
                     <path d="M2 17l10 5 10-5"></path>
                     <path d="M2 12l10 5 10-5"></path>
@@ -164,7 +193,9 @@ export const GraveyardProjectCard = ({ project, index }: {
               </div>
               <div className="flex items-center justify-between text-xs text-foreground/50 pt-2 border-t border-primary/5 mt-auto">
                 <div className="flex items-center">
-                  <span className="text-amber-500/70 font-light">{project.title}</span>
+                  <span className="text-amber-500/70 font-light">
+                    {project.title}
+                  </span>
                 </div>
                 <Button
                   variant="ghost"
@@ -180,7 +211,10 @@ export const GraveyardProjectCard = ({ project, index }: {
             <>
               <div className="mb-6 p-3 bg-red-500/5 border border-red-500/10 rounded-md relative">
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-background px-3">
-                  <RiCrossFill className="h-4 w-4 text-red-500/70 mx-auto" strokeWidth={1.5} />
+                  <RiCrossFill
+                    className="h-4 w-4 text-red-500/70 mx-auto"
+                    strokeWidth={1.5}
+                  />
                 </div>
                 <p className="text-center text-xs italic text-foreground/60 pt-1">
                   &quot;{project.epitaph}&quot;
@@ -198,7 +232,9 @@ export const GraveyardProjectCard = ({ project, index }: {
                 </div>
                 {project.resurrectionPotential !== undefined && (
                   <div className="pt-2">
-                    <ResurrectionMeter potential={project.resurrectionPotential} />
+                    <ResurrectionMeter
+                      potential={project.resurrectionPotential}
+                    />
                   </div>
                 )}
                 <div className="flex items-center justify-between text-xs text-foreground/50 pt-2 border-t border-primary/5">
@@ -222,4 +258,4 @@ export const GraveyardProjectCard = ({ project, index }: {
       </Card>
     </motion.div>
   );
-}
+};

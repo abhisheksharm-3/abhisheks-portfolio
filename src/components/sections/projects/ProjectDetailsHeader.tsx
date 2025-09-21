@@ -22,7 +22,10 @@ interface ProjectDetailHeaderProps {
  * This component is designed to be part of a larger staggered animation sequence.
  * @returns {JSX.Element} The ProjectDetailHeader component.
  */
-export function ProjectDetailHeader({ title, description }: ProjectDetailHeaderProps) {
+export function ProjectDetailHeader({
+  title,
+  description,
+}: ProjectDetailHeaderProps) {
   return (
     <motion.div variants={containerVariants} className="overflow-visible mb-4">
       <motion.h1

@@ -1,12 +1,12 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { ArrowRight, Mail, MessageCircle, Send } from 'lucide-react';
-import { CONTACT_CHANNELS } from '@/data/contact';
-import { CONTACT_ANIMATION_CONFIG } from '@/lib/config/contact';
+import React from "react";
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Mail, MessageCircle, Send } from "lucide-react";
+import { CONTACT_CHANNELS } from "@/data/contact";
+import { CONTACT_ANIMATION_CONFIG } from "@/lib/config/contact";
 
 /**
  * Renders the main header for the Contact CTA section.
@@ -40,7 +40,10 @@ export const SectionHeader = ({ isInView }: { isInView: boolean }) => (
       <motion.h2
         initial={{ y: 60 }}
         animate={isInView ? { y: 0 } : {}}
-        transition={{ duration: CONTACT_ANIMATION_CONFIG.header.duration, delay: CONTACT_ANIMATION_CONFIG.header.delay }}
+        transition={{
+          duration: CONTACT_ANIMATION_CONFIG.header.duration,
+          delay: CONTACT_ANIMATION_CONFIG.header.delay,
+        }}
         className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-none"
       >
         <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
@@ -87,7 +90,10 @@ export const CallToActionButtons = ({ isInView }: { isInView: boolean }) => (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: CONTACT_ANIMATION_CONFIG.buttons.duration, delay: CONTACT_ANIMATION_CONFIG.buttons.delay }}
+      transition={{
+        duration: CONTACT_ANIMATION_CONFIG.buttons.duration,
+        delay: CONTACT_ANIMATION_CONFIG.buttons.delay,
+      }}
     >
       <Button
         size="lg"
@@ -103,7 +109,10 @@ export const CallToActionButtons = ({ isInView }: { isInView: boolean }) => (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: CONTACT_ANIMATION_CONFIG.buttons.duration, delay: CONTACT_ANIMATION_CONFIG.buttons.delay + 0.1 }}
+      transition={{
+        duration: CONTACT_ANIMATION_CONFIG.buttons.duration,
+        delay: CONTACT_ANIMATION_CONFIG.buttons.delay + 0.1,
+      }}
     >
       <Button
         variant="outline"
@@ -127,30 +136,42 @@ export const ContactChannels = ({ isInView }: { isInView: boolean }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
-    transition={{ duration: CONTACT_ANIMATION_CONFIG.channels.duration, delay: CONTACT_ANIMATION_CONFIG.channels.delay }}
+    transition={{
+      duration: CONTACT_ANIMATION_CONFIG.channels.duration,
+      delay: CONTACT_ANIMATION_CONFIG.channels.delay,
+    }}
     className="mt-16 pt-8 border-t border-primary/10 flex flex-wrap justify-center gap-6"
   >
     {CONTACT_CHANNELS.map((channel, index) => (
       <motion.a
         key={channel.label}
         href={channel.href}
-        target={channel.href.startsWith('http') ? '_blank' : undefined}
-        rel={channel.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        target={channel.href.startsWith("http") ? "_blank" : undefined}
+        rel={
+          channel.href.startsWith("http") ? "noopener noreferrer" : undefined
+        }
         initial={{ opacity: 0, y: 10 }}
         animate={isInView ? { opacity: 1, y: 0 } : {}}
         transition={{
           duration: CONTACT_ANIMATION_CONFIG.channelItem.duration,
-          delay: CONTACT_ANIMATION_CONFIG.channelItem.baseDelay + index * CONTACT_ANIMATION_CONFIG.channelItem.stagger
+          delay:
+            CONTACT_ANIMATION_CONFIG.channelItem.baseDelay +
+            index * CONTACT_ANIMATION_CONFIG.channelItem.stagger,
         }}
         className="flex items-center gap-2 text-foreground/60 text-xs hover:text-foreground/80 transition-colors duration-300"
       >
-        <div className="p-1.5 rounded-md border border-primary/10 bg-primary/5">{channel.icon}</div>
+        <div className="p-1.5 rounded-md border border-primary/10 bg-primary/5">
+          {channel.icon}
+        </div>
         <div>
           <span className="text-foreground/40 block mb-0.5">
-            {channel.label === "Email" ? "Drop me a mail"
-             : channel.label === "LinkedIn" ? "Let’s connect"
-             : channel.label === "GitHub" ? "Peek at my code"
-             : channel.label}
+            {channel.label === "Email"
+              ? "Drop me a mail"
+              : channel.label === "LinkedIn"
+                ? "Let’s connect"
+                : channel.label === "GitHub"
+                  ? "Peek at my code"
+                  : channel.label}
           </span>
           <span className="text-foreground/80">{channel.value}</span>
         </div>

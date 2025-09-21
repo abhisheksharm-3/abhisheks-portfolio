@@ -7,5 +7,5 @@ export const PHILOSOPHY_ANIMATION_CONFIG = {
   quote: { duration: 0.8, delay: 0.2 },
   decorative: { duration: 0.7, delay: 0.5 },
   description: { duration: 0.7, delay: 0.7 },
-  pathAnimation: { duration: 2, delay: 0.5 }
+  pathAnimation: { duration: 2, delay: 0.5 },
 } as const;

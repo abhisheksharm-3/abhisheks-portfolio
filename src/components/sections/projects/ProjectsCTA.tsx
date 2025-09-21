@@ -20,7 +20,7 @@ const itemVariants: Variants = {
  * ProjectsCTA - Call-to-action component for projects section
  * Renders a card prompting users to get in touch with continuous background glow
  * and staggered content animation.
- * 
+ *
  * @returns JSX.Element representing the projects CTA section
  */
 export const ProjectsCTA = () => {
@@ -37,24 +37,38 @@ export const ProjectsCTA = () => {
             className="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-transparent rounded-2xl blur-2xl -z-10"
           />
 
-          <motion.h3 variants={itemVariants} className="text-2xl sm:text-3xl font-serif italic mb-4">
+          <motion.h3
+            variants={itemVariants}
+            className="text-2xl sm:text-3xl font-serif italic mb-4"
+          >
             Have a project in mind?
           </motion.h3>
 
           <motion.div
             variants={{
               hidden: { width: 0 },
-              visible: { width: "8rem", transition: { duration: 1, ease: "easeOut" } },
+              visible: {
+                width: "8rem",
+                transition: { duration: 1, ease: "easeOut" },
+              },
             }}
             className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto mb-6"
           />
-          
-          <motion.p variants={itemVariants} className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8 max-w-xl mx-auto">
-            I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of your vision.
+
+          <motion.p
+            variants={itemVariants}
+            className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8 max-w-xl mx-auto"
+          >
+            I&apos;m always open to discussing new projects, creative ideas, or
+            opportunities to be part of your vision.
           </motion.p>
-          
+
           <motion.div variants={itemVariants}>
-            <Button size="lg" className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8" asChild>
+            <Button
+              size="lg"
+              className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8"
+              asChild
+            >
               <Link href="/contact" className="flex items-center">
                 Get in touch
                 <motion.div

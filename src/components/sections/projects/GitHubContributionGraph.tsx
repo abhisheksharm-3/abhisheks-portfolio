@@ -2,7 +2,11 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
-import { fetchGitHubStats, GitHubStats, ContributionDay } from "@/lib/github-stats";
+import {
+  fetchGitHubStats,
+  GitHubStats,
+  ContributionDay,
+} from "@/lib/github-stats";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 
@@ -18,7 +22,11 @@ interface ContributionSquareProps {
 /**
  * Individual contribution square component
  */
-const ContributionSquare = ({ day, index, isInView }: ContributionSquareProps) => {
+const ContributionSquare = ({
+  day,
+  index,
+  isInView,
+}: ContributionSquareProps) => {
   const getContributionLevel = (count: number) => {
     if (count === 0) return "bg-primary/5 border-primary/10";
     if (count <= 3) return "bg-primary/20 border-primary/20";
@@ -30,11 +38,7 @@ const ContributionSquare = ({ day, index, isInView }: ContributionSquareProps) =
   return (
     <motion.div
       initial={{ scale: 0, opacity: 0 }}
-      animate={
-        isInView
-          ? { scale: 1, opacity: 1 }
-          : { scale: 0, opacity: 0 }
-      }
+      animate={isInView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
       transition={{
         duration: 0.3,
         delay: index * 0.001, // Stagger effect
@@ -53,7 +57,7 @@ const ContributionSquare = ({ day, index, isInView }: ContributionSquareProps) =
  * GitHubContributionGraph - A GitHub-style contribution graph
  * Displays contribution activity in a calendar heat map format
  * that matches the website's aesthetic.
- * 
+ *
  * @returns JSX.Element representing the contribution graph
  */
 export const GitHubContributionGraph = () => {
@@ -68,7 +72,7 @@ export const GitHubContributionGraph = () => {
         const data = await fetchGitHubStats();
         setGithubStats(data);
       } catch (error) {
-        console.warn('Failed to load GitHub contribution data:', error);
+        console.warn("Failed to load GitHub contribution data:", error);
       } finally {
         setIsLoading(false);
       }
@@ -81,35 +85,43 @@ export const GitHubContributionGraph = () => {
   const mockContributionData = useMemo(() => {
     const days: ContributionDay[] = [];
     const today = new Date();
-    
+
     for (let i = 364; i >= 0; i--) {
       const date = new Date(today);
       date.setDate(date.getDate() - i);
-      
+
       // Create realistic contribution pattern
       const dayOfWeek = date.getDay();
       const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
       const isWorkday = !isWeekend;
-      
+
       let contributionCount = 0;
       if (isWorkday) {
-        contributionCount = Math.random() > 0.3 ? Math.floor(Math.random() * 12) : 0;
+        contributionCount =
+          Math.random() > 0.3 ? Math.floor(Math.random() * 12) : 0;
       } else {
-        contributionCount = Math.random() > 0.7 ? Math.floor(Math.random() * 6) : 0;
+        contributionCount =
+          Math.random() > 0.7 ? Math.floor(Math.random() * 6) : 0;
       }
-      
+
       days.push({
-        date: date.toISOString().split('T')[0],
+        date: date.toISOString().split("T")[0],
         contributionCount,
-        color: contributionCount > 0 ? "#22c55e" : "#374151"
+        color: contributionCount > 0 ? "#22c55e" : "#374151",
       });
     }
-    
+
     return days;
   }, []);
 
-  const contributionData = githubStats?.contributionCalendar?.flatMap(week => week.contributionDays) || mockContributionData;
-  const totalContributions = contributionData.reduce((sum, day) => sum + day.contributionCount, 0);
+  const contributionData =
+    githubStats?.contributionCalendar?.flatMap(
+      (week) => week.contributionDays,
+    ) || mockContributionData;
+  const totalContributions = contributionData.reduce(
+    (sum, day) => sum + day.contributionCount,
+    0,
+  );
 
   // Group days into weeks for proper grid layout
   const weeks = [];
@@ -119,26 +131,43 @@ export const GitHubContributionGraph = () => {
 
   // Get month labels aligned with contribution data
   const monthLabels = useMemo(() => {
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
     const labels = [];
     const today = new Date();
-    
+
     // Start from 365 days ago and get first day of each month going forward
     const startDate = new Date(today);
     startDate.setDate(startDate.getDate() - 364); // 365 days back
-    
+
     const endDate = new Date(today);
-    const currentDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
-    
+    const currentDate = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      1,
+    );
+
     while (currentDate <= endDate) {
       labels.push(months[currentDate.getMonth()]);
       currentDate.setMonth(currentDate.getMonth() + 1);
     }
-    
+
     return labels;
   }, []);
 
-  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   return (
     <motion.div
@@ -162,9 +191,7 @@ export const GitHubContributionGraph = () => {
           <div className="text-sm font-light text-foreground/70">
             {isLoading ? "Loading..." : `${totalContributions} contributions`}
           </div>
-          <div className="text-xs text-foreground/40">
-            Past 12 months
-          </div>
+          <div className="text-xs text-foreground/40">Past 12 months</div>
         </div>
       </div>
 
@@ -172,7 +199,9 @@ export const GitHubContributionGraph = () => {
       <div className="border border-primary/10 rounded-lg p-6 bg-background/30 backdrop-blur-sm">
         {isLoading ? (
           <div className="flex items-center justify-center h-32">
-            <div className="text-sm text-foreground/40">Loading contribution data...</div>
+            <div className="text-sm text-foreground/40">
+              Loading contribution data...
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -187,9 +216,11 @@ export const GitHubContributionGraph = () => {
             <div className="flex gap-1">
               {/* Day labels */}
               <div className="hidden sm:flex flex-col justify-around text-xs text-foreground/40 pr-2 h-24">
-                {weekDays.filter((_, i) => i % 2 === 1).map((day) => (
-                  <span key={day}>{day}</span>
-                ))}
+                {weekDays
+                  .filter((_, i) => i % 2 === 1)
+                  .map((day) => (
+                    <span key={day}>{day}</span>
+                  ))}
               </div>
 
               {/* Contribution squares */}
@@ -217,11 +248,15 @@ export const GitHubContributionGraph = () => {
                   <div
                     key={level}
                     className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-sm border ${
-                      level === 0 ? "bg-primary/5 border-primary/10" :
-                      level === 1 ? "bg-primary/20 border-primary/20" :
-                      level === 2 ? "bg-primary/40 border-primary/30" :
-                      level === 3 ? "bg-primary/60 border-primary/40" :
-                      "bg-primary/80 border-primary/50"
+                      level === 0
+                        ? "bg-primary/5 border-primary/10"
+                        : level === 1
+                          ? "bg-primary/20 border-primary/20"
+                          : level === 2
+                            ? "bg-primary/40 border-primary/30"
+                            : level === 3
+                              ? "bg-primary/60 border-primary/40"
+                              : "bg-primary/80 border-primary/50"
                     }`}
                   />
                 ))}
@@ -234,13 +269,11 @@ export const GitHubContributionGraph = () => {
 
       {/* Footer note */}
       <div className="text-center text-xs text-foreground/40 mt-4 font-light">
-        {isLoading ? (
-          "Fetching contribution data from GitHub..."
-        ) : githubStats ? (
-          "Live data from GitHub API"
-        ) : (
-          "Unable to fetch GitHub data - showing mock data"
-        )}
+        {isLoading
+          ? "Fetching contribution data from GitHub..."
+          : githubStats
+            ? "Live data from GitHub API"
+            : "Unable to fetch GitHub data - showing mock data"}
       </div>
     </motion.div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion, Variants, AnimatePresence } from "framer-motion";
+import { useRef, useState } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { projects } from "@/data/project";
 import {
@@ -12,6 +12,7 @@ import {
   ProjectsPageBackground,
   ProjectAnalytics,
 } from "@/components/sections/projects";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 
 /**
  * A sorted, unique list of all project tags, generated once at the module level.
@@ -19,22 +20,6 @@ import {
 const allTags = Array.from(
   new Set(projects.flatMap((project) => project.tags))
 ).sort();
-
-/**
- * Animation variants for container elements to orchestrate staggering children.
- */
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.1 } },
-};
-
-/**
- * Animation variants for individual items to fade and slide in.
- */
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
-};
 
 /**
  * Renders the main projects page, including filtering and animated project cards.
@@ -48,12 +33,15 @@ const ProjectsPage = () => {
       ? projects
       : projects.filter((project) => project.tags.includes(activeFilter));
 
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   return (
     <AppShell>
       <motion.div
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
+        ref={sectionRef}
+        animate={isInView ? "visible" : "hidden"}
         className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
       >
         <ProjectsPageBackground />
