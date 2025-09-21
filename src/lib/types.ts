@@ -96,7 +96,7 @@ export interface TypeMobileMenuProps {
 /**
  * Defines the props for the AppShell component.
  */
-export interface AppShellProps {
+export interface AppShellPropsType {
   /** Optional classes to apply to the main container for custom styling. */
   className?: string;
   /** The main content of the page to be rendered within the layout. */

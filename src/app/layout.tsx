@@ -1,27 +1,44 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Newsreader } from "next/font/google";
+import { Geist_Mono, Geist, Newsreader } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 
+/**
+ * Initializes the Geist Sans font with the Latin subset.
+ * It's assigned to the CSS variable `--font-geist-sans`.
+ */
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
+/**
+ * Initializes the Geist Mono font with the Latin subset.
+ * It's assigned to the CSS variable `--font-geist-mono`.
+ */
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
+/**
+ * Initializes the Newsreader font with the Latin subset, including normal and italic styles.
+ * It's assigned to the CSS variable `--font-newsreader`.
+ */
 const newsreader = Newsreader({
-  // New font
   variable: "--font-newsreader",
   subsets: ["latin"],
-  style: ["normal", "italic"], // Important for serifs
+  style: ["normal", "italic"],
 });
 
+/**
+ * Defines the metadata for the application, used for SEO and social media sharing.
+ * Includes title, description, Open Graph, and Twitter card information.
+ * @see https://nextjs.org/docs/app/api-reference/functions/generate-metadata
+ */
 export const metadata: Metadata = {
+  metadataBase: new URL("https://abhisheksan.com"),
   title: "Abhishek Sharma | Developer",
   description:
     "I’m Abhishek Sharma. I design and build for the web and mobile. This is my corner of the internet to share what I work on.",
@@ -50,35 +67,40 @@ export const metadata: Metadata = {
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },
-  metadataBase: new URL("https://abhisheksan.com"),
   authors: [{ name: "Abhishek Sharma", url: "https://abhisheksan.com" }],
   category: "personal",
   creator: "Abhishek Sharma",
   publisher: "Abhishek Sharma",
 };
 
-
-export default function RootLayout({
+/**
+ * The root layout component that wraps the entire application.
+ * It sets up the HTML structure, applies global fonts, theme provider, and analytics.
+ *
+ * @param {object} props - The properties for the component.
+ * @param {React.ReactNode} props.children - The child components to be rendered within the layout.
+ * @returns {JSX.Element} The root layout of the application.
+ */
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
-  return (
-    <html lang="en" suppressHydrationWarning>
-      <head />
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}
+}>) => (
+  <html lang="en" suppressHydrationWarning>
+    <body
+      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}
+    >
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Analytics />
-        </ThemeProvider>
-      </body>
-    </html>
-  );
-}
+        {children}
+        <Analytics />
+      </ThemeProvider>
+    </body>
+  </html>
+);
+
+export default RootLayout;

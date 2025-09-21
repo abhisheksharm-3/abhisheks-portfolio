@@ -3,66 +3,69 @@
 import { useEffect, useRef } from "react";
 import {
   motion,
-  useScroll,
-  useTransform,
-  useSpring,
   useMotionValue,
+  useScroll,
+  useSpring,
+  useTransform,
 } from "framer-motion";
-
 import {
-  NoiseBackground,
-  AsymmetricalGrid,
   AbstractShapes,
   AnimatedPaths,
   AsymmetricalDecoration,
+  AsymmetricalGrid,
+  NoiseBackground,
 } from "./HeroBackground";
-
 import {
   ExperienceCounter,
-  HeroName,
   HeroDescription,
-  SkillsSection,
+  HeroName,
   ScrollIndicator,
+  SkillsSection,
 } from "./HeroContent";
 
 /**
- * Hero - Main hero section component for the homepage
- * Orchestrates background elements, content, and UI with mouse-based parallax 
- * and scroll-based animations. Provides dynamic interaction through mouse tracking
- * and smooth scroll animations.
- * 
- * @returns JSX.Element representing the complete hero section
+ * The main hero section for the homepage.
+ *
+ * This component orchestrates a complex visual experience by combining:
+ * 1.  **Mouse Parallax**: Tracks mouse movement to create a 3D depth effect on background and UI elements.
+ * 2.  **Scroll Animation**: Fades out and moves the content upwards as the user scrolls down the page.
+ * 3.  **Content Layout**: Structures the main hero content, including name, description, and skills.
+ *
+ * @returns {JSX.Element} The fully rendered and interactive hero section.
  */
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // --- Performant Mouse Tracking ---
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
+  // Set up a performant mouse move listener to track mouse position relative to the container's center.
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
+      const { current: el } = containerRef;
+      if (!el) return;
+
       const { clientX, clientY } = e;
-      const { left, top, width, height } =
-        containerRef.current.getBoundingClientRect();
-      
+      const { left, top, width, height } = el.getBoundingClientRect();
+
       const x = clientX - (left + width / 2);
       const y = clientY - (top + height / 2);
+
       mouseX.set(x);
       mouseY.set(y);
     };
-    
-    const currentRef = containerRef.current;
-    currentRef?.addEventListener("mousemove", handleMouseMove);
-    return () => currentRef?.removeEventListener("mousemove", handleMouseMove);
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
+  // Track scroll progress relative to the hero section itself.
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
+  // Create animations based on scroll progress.
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
   const smoothY = useSpring(y, { damping: 15, stiffness: 100 });
   const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
@@ -72,23 +75,20 @@ export const Hero = () => {
       ref={containerRef}
       className="relative min-h-[100vh] w-full overflow-hidden"
     >
-      {/* Background Elements */}
       <NoiseBackground />
       <AsymmetricalGrid />
       <AbstractShapes mouseX={mouseX} mouseY={mouseY} />
       <AnimatedPaths />
       <AsymmetricalDecoration mouseX={mouseX} mouseY={mouseY} />
 
-      {/* UI Elements */}
       <ExperienceCounter />
 
-      {/* Main Content with Parallax */}
-      <div className="relative z-10 container mx-auto px-6 min-h-screen flex">
+      <div className="relative z-10 mx-auto min-h-screen w-full max-w-7xl px-6 flex">
         <motion.div
           style={{ y: smoothY, opacity }}
-          className="flex flex-col md:flex-row items-start justify-center w-full py-20"
+          className="flex w-full flex-col items-start justify-center py-20 md:flex-row"
         >
-          <div className="w-full md:w-1/2 flex flex-col mt-0 md:mt-16">
+          <div className="flex w-full flex-col md:mt-16 md:w-1/2">
             <HeroName />
             <HeroDescription />
           </div>
@@ -96,7 +96,6 @@ export const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Navigation Helper */}
       <ScrollIndicator />
     </section>
   );

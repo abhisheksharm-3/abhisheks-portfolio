@@ -15,7 +15,7 @@ export const DesktopNavbar = ({ activeItem }: { activeItem: string | null }) => 
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   return (
-    <nav className="hidden md:flex items-center space-x-6">
+    <nav className="hidden xl:flex items-center space-x-6">
       <motion.ul
         variants={navbarContainerVariants}
         className="flex items-center space-x-6"

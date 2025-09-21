@@ -76,7 +76,7 @@ export const Navbar = () => {
         <Logo />
         <DesktopNavbar activeItem={activeItem} />
 
-        <div className="flex md:hidden items-center space-x-2 z-50">
+        <div className="flex xl:hidden items-center space-x-2 z-50">
           <ModeToggle />
           <Button
             variant="ghost"

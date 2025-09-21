@@ -4,35 +4,38 @@ import React from "react";
 import { motion, useTransform, MotionValue } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useExperienceCounter } from "@/hooks/useExperienceCounter";
-import { SkillItemProps } from "@/lib/types"; // Assuming MousePosition is also here
+import { SkillItemProps } from "@/lib/types";
 import { ANIMATION_CONFIG, SKILLS } from "@/data/hero";
 
-// Type for the mouse position motion values, to be used by SkillsSection
+/**
+ * Defines the shape for props containing mouse-position MotionValues.
+ */
 interface MouseMotionValues {
   mouseX: MotionValue<number>;
   mouseY: MotionValue<number>;
 }
 
 /**
- * A utility function to scroll to a specific section of the page.
+ * A utility function that smoothly scrolls the window to a given element ID.
+ * @param sectionId The ID of the element to scroll to.
  */
 const scrollToSection = (sectionId: string): void => {
   const section = document.getElementById(sectionId);
-  section?.scrollIntoView({ behavior: "smooth" }); // Using "smooth" directly
+  section?.scrollIntoView({ behavior: "smooth" });
 };
 
 /**
- * A fixed-position counter displaying years of experience. (No changes needed)
+ * Renders a fixed-position counter displaying the years of professional experience.
  */
 export const ExperienceCounter: React.FC = () => {
-  const counterValue = useExperienceCounter(1); // Explicitly set target count
+  const counterValue = useExperienceCounter(1);
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5, delay: 1 }}
-      className="hidden md:flex flex-col items-center fixed left-8 top-0 bottom-0 w-12 z-10"
+      className="hidden xl:flex flex-col items-center fixed left-8 top-0 bottom-0 w-12 z-10"
     >
       <div className="h-1/3" />
       <div className="h-1/3 flex flex-col items-center justify-center">
@@ -51,7 +54,118 @@ export const ExperienceCounter: React.FC = () => {
 };
 
 /**
- * Displays a single skill with multiple reveal and hover animations. (No changes needed)
+ * Renders the developer's name with a staggered reveal animation.
+ */
+/**
+ * Renders the developer's name with a staggered reveal animation.
+ * Optimized for responsiveness across all screen sizes to prevent clipping.
+ */
+export const HeroName: React.FC = () => (
+  <div className="relative mb-20 sm:mb-28 md:mb-20">
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.2 }}
+      className="relative z-10"
+    >
+      <div className="overflow-hidden text-center md:text-left">
+        <motion.span
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="block text-6xl font-serif tracking-tighter sm:max-w-[280px] sm:inline-block sm:text-7xl md:max-w-none md:pr-8 md:text-7xl lg:text-8xl xl:text-9xl bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent"
+        >
+          Abhishek
+        </motion.span>
+      </div>
+    </motion.div>
+
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.4 }}
+      className="relative z-10 md:ml-[25%]"
+    >
+      <div className="overflow-hidden text-center md:text-left">
+        <motion.span
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="block text-6xl font-serif italic tracking-tighter sm:text-7xl md:inline-block md:pr-8 md:text-7xl lg:text-8xl xl:text-9xl bg-gradient-to-r from-primary/70 to-primary/80 bg-clip-text text-transparent"
+        >
+          Sharma
+        </motion.span>
+      </div>
+    </motion.div>
+
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 0.1, scale: 1 }}
+      transition={{ duration: 1.5, delay: 0.8 }}
+      className="absolute -right-10 top-1/2 -translate-y-1/2 w-32 h-32 border border-primary/30 rounded-full hidden md:block"
+    />
+  </div>
+);
+
+/**
+ * Renders the multi-line description and bio with reveal animations.
+ */
+export const HeroDescription: React.FC = () => {
+  const descriptionLines = [
+    { text: "Full-stack developer", gradient: true },
+    { text: "who loves building side products", gradient: false },
+    { text: "and chasing ideas past midnight", gradient: false },
+  ];
+
+  return (
+    <div className="space-y-5 mb-16 max-w-md">
+      {descriptionLines.map((line, index) => (
+        <div key={index} className="overflow-hidden">
+          <motion.p
+            initial={{ y: 40 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.8, delay: 1.0 + index * 0.2 }}
+            className="text-lg sm:text-xl md:text-2xl font-light"
+          >
+            <span
+              className={
+                line.gradient
+                  ? "bg-gradient-to-r from-primary/90 to-foreground bg-clip-text text-transparent"
+                  : "text-foreground/70"
+              }
+            >
+              {line.text}
+            </span>
+          </motion.p>
+        </div>
+      ))}
+      <motion.div
+        initial={{ opacity: 0, width: 0 }}
+        animate={{ opacity: 1, width: "4rem" }}
+        transition={{ duration: 1, delay: 1.5 }}
+        className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent my-6"
+      />
+      <motion.p
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1.6 }}
+        className="text-sm sm:text-base text-foreground/50 font-light leading-relaxed max-w-lg"
+      >
+        CS & Engineering graduate who started coding in{" "}
+        <span className="text-foreground/70">8th grade</span>. I’ve built
+        everything from{" "}
+        <span className="text-primary/80">AI-powered scheduling apps </span>
+        to <span className="text-primary/80">minimalist mobile tools</span>. I
+        enjoy making things that feel smooth, intentional, and a little bit
+        clever.
+      </motion.p>
+    </div>
+  );
+};
+
+/**
+ * Displays an individual skill item with complex, multi-part animations.
+ * @param {SkillItemProps} props The component props.
  */
 export const SkillItem: React.FC<SkillItemProps> = ({ skill, index }) => (
   <motion.div
@@ -108,7 +222,79 @@ export const SkillItem: React.FC<SkillItemProps> = ({ skill, index }) => (
 );
 
 /**
- * An animated scroll-down indicator. (No changes needed)
+ * Renders the skills list, including a title and decorative elements
+ * that react to mouse movement for a parallax effect.
+ * @param {MouseMotionValues} props The mouse position motion values.
+ */
+export const SkillsSection: React.FC<MouseMotionValues> = ({
+  mouseX,
+  mouseY,
+}) => {
+  const x = useTransform(
+    mouseX,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE
+  );
+  const y = useTransform(
+    mouseY,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE
+  );
+
+  return (
+    <div className="w-full md:w-1/2 md:pl-20 mt-0 md:mt-36 relative">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.2 }}
+        transition={{ duration: 1, delay: 1.5 }}
+        className="absolute -left-10 top-0 w-[1px] h-32 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden md:block"
+      />
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1.5 }}
+        className="mb-10 flex items-center"
+      >
+        <span className="text-sm uppercase tracking-wider text-foreground/40 font-light">
+          What I do best
+        </span>
+        <div className="ml-4 h-[1px] w-12 bg-primary/20"></div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 1.6 }}
+        className="relative border-l border-primary/5 pl-6 py-2"
+      >
+        <div className="space-y-8 w-full">
+          {SKILLS.map((skill, index) => (
+            <SkillItem key={skill} skill={skill} index={index} />
+          ))}
+        </div>
+        <div className="absolute left-0 top-0 w-1.5 h-1.5 rounded-full bg-primary/20 -translate-x-[3px]"></div>
+        <div className="absolute left-0 bottom-0 w-1.5 h-1.5 rounded-full bg-primary/20 -translate-x-[3px]"></div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.5, delay: 2.2 }}
+        style={{ x, y }}
+        className="mt-16 ml-auto mr-16 relative"
+      >
+        <div className="w-20 h-20 border border-primary/10 rounded-full relative">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border border-primary/20 rounded-full" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-primary/5 rounded-full" />
+        </div>
+        <motion.div
+          className="absolute -bottom-4 -left-4 w-8 h-8 border border-primary/20 rounded-sm"
+          animate={{ rotate: 45 }}
+          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
+        />
+      </motion.div>
+    </div>
+  );
+};
+
+/**
+ * Renders an animated scroll down indicator to prompt user action.
  */
 export const ScrollIndicator: React.FC = () => (
   <motion.div
@@ -132,176 +318,3 @@ export const ScrollIndicator: React.FC = () => (
     </motion.div>
   </motion.div>
 );
-
-/**
- * Renders the main name "Abhishek Sharma". (No changes needed)
- */
-export const HeroName: React.FC = () => (
-    <div className="mb-20 sm:mb-28 md:mb-20 relative">
-        <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.2 }}
-        className="relative z-10"
-        >
-        <div className="overflow-hidden">
-            <motion.span
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="inline-block text-6xl pr-12 sm:text-7xl md:text-8xl lg:text-9xl font-serif tracking-tighter bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent"
-            >
-            Abhishek
-            </motion.span>
-        </div>
-        </motion.div>
-
-        <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, delay: 0.4 }}
-        className="ml-[15%] md:ml-[25%] relative z-10"
-        >
-        <div className="overflow-hidden">
-            <motion.span
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="inline-block text-6xl pr-12 sm:text-7xl md:text-8xl lg:text-9xl font-serif italic tracking-tighter bg-gradient-to-r from-primary/70 to-primary/80 bg-clip-text text-transparent"
-            >
-            Sharma
-            </motion.span>
-        </div>
-        </motion.div>
-
-        <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 0.1, scale: 1 }}
-        transition={{ duration: 1.5, delay: 0.8 }}
-        className="absolute -right-10 top-1/2 -translate-y-1/2 w-32 h-32 border border-primary/30 rounded-full hidden md:block"
-        />
-    </div>
-);
-
-/**
- * Renders the descriptive text below the main name. (No changes needed)
- */
-export const HeroDescription: React.FC = () => {
-    const descriptionLines = [
-        { text: "Full-stack developer", gradient: true },
-        { text: "who loves building side products", gradient: false },
-        { text: "and chasing ideas past midnight", gradient: false },
-    ];
-
-    return (
-        <div className="space-y-5 mb-16 max-w-md">
-            {descriptionLines.map((line, index) => (
-                <div key={index} className="overflow-hidden">
-                <motion.p
-                    initial={{ y: 40 }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 0.8, delay: 1.0 + index * 0.2 }}
-                    className="text-lg sm:text-xl md:text-2xl font-light"
-                >
-                    <span
-                    className={
-                        line.gradient
-                        ? "bg-gradient-to-r from-primary/90 to-foreground bg-clip-text text-transparent"
-                        : "text-foreground/70"
-                    }
-                    >
-                    {line.text}
-                    </span>
-                </motion.p>
-                </div>
-            ))}
-
-            <motion.div
-                initial={{ opacity: 0, width: 0 }}
-                animate={{ opacity: 1, width: "4rem" }}
-                transition={{ duration: 1, delay: 1.5 }}
-                className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent my-6"
-            />
-
-            <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 1.6 }}
-                className="text-sm sm:text-base text-foreground/50 font-light leading-relaxed max-w-lg"
-            >
-                CS & Engineering graduate who started coding in{" "}
-                <span className="text-foreground/70">8th grade</span>. I’ve built
-                everything from{" "}
-                <span className="text-primary/80">AI-powered scheduling apps </span>
-                to <span className="text-primary/80">minimalist mobile tools</span>. I
-                enjoy making things that feel smooth, intentional, and a little bit
-                clever.
-            </motion.p>
-        </div>
-    );
-};
-
-/**
- * REFACTORED: The right-hand section of the hero, displaying the list of skills.
- */
-export const SkillsSection: React.FC<MouseMotionValues> = ({ mouseX, mouseY }) => {
-  // Create transformed motion values from the stable MotionValues. This is very performant.
-  const x = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
-  const y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
-
-  return (
-    <div className="w-full md:w-1/2 md:pl-20 mt-0 md:mt-36 relative">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.2 }}
-        transition={{ duration: 1, delay: 1.5 }}
-        className="absolute -left-10 top-0 w-[1px] h-32 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden md:block"
-      />
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.5 }}
-        className="mb-10 flex items-center"
-      >
-        <span className="text-sm uppercase tracking-wider text-foreground/40 font-light">
-          What I do best
-        </span>
-        <div className="ml-4 h-[1px] w-12 bg-primary/20"></div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, delay: 1.6 }}
-        className="relative border-l border-primary/5 pl-6 py-2"
-      >
-        <div className="space-y-8 w-full">
-          {SKILLS.map((skill, index) => (
-            <SkillItem key={skill} skill={skill} index={index} />
-          ))}
-        </div>
-        <div className="absolute left-0 top-0 w-1.5 h-1.5 rounded-full bg-primary/20 -translate-x-[3px]"></div>
-        <div className="absolute left-0 bottom-0 w-1.5 h-1.5 rounded-full bg-primary/20 -translate-x-[3px]"></div>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.5, delay: 2.2 }}
-        style={{ x, y }} // Apply the performant transformed values here
-        className="mt-16 ml-auto mr-16 relative"
-      >
-        <div className="w-20 h-20 border border-primary/10 rounded-full relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border border-primary/20 rounded-full" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 bg-primary/5 rounded-full" />
-        </div>
-        <motion.div
-          className="absolute -bottom-4 -left-4 w-8 h-8 border border-primary/20 rounded-sm"
-          animate={{ rotate: 45 }}
-          transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
-        />
-      </motion.div>
-    </div>
-  );
-};
