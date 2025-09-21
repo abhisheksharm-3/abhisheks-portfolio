@@ -8,7 +8,7 @@ import {
   DecorativeDivider,
   PhilosophyDescription,
   CardCornerAccent,
-} from "./PhilosophyComponents";
+} from "./DevPhilosophyComponents";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 
