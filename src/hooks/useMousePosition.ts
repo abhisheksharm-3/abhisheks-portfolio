@@ -7,12 +7,12 @@ import { MousePositionType } from "@/lib/types";
  * Normalizes the mouse coordinates to a range of -1 to 1.
  * @param {number} clientX - The raw clientX from the mouse event.
  * @param {number} clientY - The raw clientY from the mouse event.
- * @returns {MousePosition} The normalized mouse position.
+ * @returns {MousePositionType} The normalized mouse position.
  */
 const normalizeMousePosition = (
   clientX: number,
   clientY: number,
-): MousePosition => ({
+): MousePositionType => ({
   x: (clientX / window.innerWidth) * 2 - 1,
   y: (clientY / window.innerHeight) * 2 - 1,
 });

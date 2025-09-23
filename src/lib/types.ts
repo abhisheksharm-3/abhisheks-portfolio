@@ -96,13 +96,13 @@ export interface TimelineItemType {
   subtitle: string;
   date: string;
   description: string;
-  badges?: { label: string; value: string }[];
+  badges?: readonly { readonly label: string; readonly value: string }[];
 }
 
 export interface TimelineCardPropsType {
   title: string;
   Icon: LucideIcon;
-  items: TimelineItemType[];
+  items: readonly TimelineItemType[];
 }
 
 export interface ContactEmailPropsType {

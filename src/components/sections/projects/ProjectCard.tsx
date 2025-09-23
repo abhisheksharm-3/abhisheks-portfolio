@@ -35,7 +35,7 @@ interface ProjectCardProps {
  * @param delay - Animation delay for staggered loading (default: 0)
  * @returns JSX.Element representing the project card
  */
-export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
+export const ProjectCard = ({ project, delay = 0 }: ProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.01 });
@@ -87,7 +87,7 @@ export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
 
           {/* Tags overlay */}
           <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
-            {project.tags.slice(0, 3).map((tag) => (
+            {project.tags.slice(0, 3).map((tag: string) => (
               <span
                 key={tag}
                 className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md text-xs font-light"
