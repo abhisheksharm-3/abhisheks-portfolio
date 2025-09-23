@@ -14,6 +14,7 @@ import {
 import { deadProjects } from "@/data/project";
 import { ArrowRight } from "lucide-react";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { getPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * A collection of inspirational quotes about learning from failure.
@@ -47,7 +48,7 @@ const GraveyardPage = () => {
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
+        className={`${getPageWrapperClasses()} relative overflow-hidden`}
       >
         <GraveyardBackground />
 
@@ -59,7 +60,7 @@ const GraveyardPage = () => {
           <GraveyardIntroCard />
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} mb-16`}>
           {deadProjects.map((project, index) => (
             <motion.div key={project.title} variants={itemVariants}>
               <GraveyardProjectCard project={project} index={index} />

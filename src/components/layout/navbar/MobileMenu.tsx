@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MobileMenuPropsType } from "@/lib/types";
-import { mobileMenuVariants } from "@/lib/config/nav-config";
+import { NAVIGATION_ANIMATIONS } from "@/data/navigation";
 import { MobileNavLink } from "./MobileNavLink";
 import { MobileMenuFooter } from "../footer";
 import { Button } from "@/components/ui/button";
@@ -61,7 +61,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
             className="flex flex-col items-center pt-8"
             initial="hidden"
             animate="visible"
-            variants={mobileMenuVariants}
+            variants={NAVIGATION_ANIMATIONS.mobileMenu.container}
           >
             <motion.div
               initial={{ opacity: 0, y: -20 }}

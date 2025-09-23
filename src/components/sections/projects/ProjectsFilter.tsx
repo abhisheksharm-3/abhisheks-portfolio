@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion, Variants } from "framer-motion";
-import { Project } from "@/lib/types";
+import { ProjectType } from "@/lib/types";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -19,7 +19,7 @@ interface ProjectsFiltersProps {
   allTags: string[];
   activeFilter: string;
   setActiveFilter: (tag: string) => void;
-  projects: Project[];
+  projects: ProjectType[];
   filteredCount: number;
 }
 

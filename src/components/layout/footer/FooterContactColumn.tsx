@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import {
-  footerContainerVariants,
-  footerItemVariants,
-} from "@/lib/config/footer-config";
+  containerVariants,
+  itemVariants,
+} from "@/lib/config/page-animations";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Mail } from "lucide-react";
 import Link from "next/link";
@@ -14,25 +14,25 @@ import Link from "next/link";
  */
 export const FooterContactColumn = () => (
   <motion.div
-    variants={footerItemVariants}
+    variants={itemVariants}
     className="md:text-right flex flex-col items-start md:items-end"
   >
     <h3 className="text-sm font-medium text-foreground/70 mb-5">
       hit me up
     </h3>
     <motion.div
-      variants={footerContainerVariants}
+      variants={containerVariants}
       className="space-y-4 flex flex-col items-start md:items-end"
     >
       <motion.a
         href="mailto:abhishek@abhisheksan.com"
         className="inline-flex items-center text-sm text-foreground/50 hover:text-primary transition-colors group"
-        variants={footerItemVariants}
+        variants={itemVariants}
       >
         <Mail className="h-3.5 w-3.5 mr-2 text-primary/50 group-hover:text-primary transition-colors" />
         abhishek@abhisheksan.com
       </motion.a>
-      <motion.div variants={footerItemVariants}>
+      <motion.div variants={itemVariants}>
         <Button
           variant="outline"
           size="sm"

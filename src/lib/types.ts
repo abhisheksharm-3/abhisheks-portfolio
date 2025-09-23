@@ -1,28 +1,31 @@
 import { LucideIcon } from "lucide-react";
 import { ReactNode } from "react";
-import { contactFormSchema } from "./config/contact";
+import { CONTACT_FORM_SCHEMA } from "@/data/contact";
 import z from "zod";
 
-export interface MousePosition {
+export interface MousePositionType {
   x: number;
   y: number;
 }
+
 /**
  * Defines the props for the MobileNavLink component.
  */
 export interface MobileNavLinkPropsType {
-  item: TypeNavItem;
+  item: NavigationItemType;
   isActive: boolean;
   isHovered: boolean;
   onHoverStart: () => void;
   onHoverEnd: () => void;
   onClick: () => void;
 }
-export interface SkillItemProps {
+
+export interface SkillItemPropsType {
   skill: string;
   index: number;
 }
-export interface Project {
+
+export interface ProjectType {
   title: string;
   slug: string;
   description: string;
@@ -38,13 +41,14 @@ export interface Project {
   duration?: string;
   building?: boolean;
 }
-export interface ProjectsProps {
+
+export interface ProjectsPropsType {
   headline?: string;
   cta?: boolean;
 }
 
-export interface ProjectCardProps {
-  project: Project;
+export interface ProjectCardPropsType {
+  project: ProjectType;
   index: number;
   isInView: boolean;
   isHovered: boolean;
@@ -52,42 +56,56 @@ export interface ProjectCardProps {
   onLeave: () => void;
 }
 
-export interface TypeExpertise {
-  icon: React.ReactNode;
+export interface ExpertiseType {
+  icon: LucideIcon;
   title: string;
   description: string;
-  skills: string[];
+  skills: readonly string[];
   level: string;
 }
 
-export interface AnimatedPathProps {
+export interface AnimatedPathPropsType {
   className?: string;
   pathD?: string;
   delay?: number;
 }
 
-export interface ContactChannel {
-  readonly icon: React.ReactNode;
+export interface ContactChannelType {
+  readonly icon: LucideIcon;
   readonly label: string;
   readonly value: string;
   readonly href: string;
 }
 
-export type TypeTimelineItemProps = {
+export interface PersonalInterestType {
+  readonly category: string;
+  readonly icon: LucideIcon;
+  readonly description: string;
+  readonly tags: readonly string[];
+}
+
+export interface SocialLinkType {
+  readonly label: string;
+  readonly icon: React.ComponentType<{ className?: string }>;
+  readonly href: string;
+  readonly displayUrl: string;
+}
+
+export interface TimelineItemType {
   title: string;
   subtitle: string;
   date: string;
   description: string;
   badges?: { label: string; value: string }[];
-};
+}
 
-export type TypeTimelineCardProps = {
+export interface TimelineCardPropsType {
   title: string;
   Icon: LucideIcon;
-  items: TypeTimelineItemProps[];
-};
+  items: TimelineItemType[];
+}
 
-export interface TypeContactEmailProps {
+export interface ContactEmailPropsType {
   name: string;
   email: string;
   subject: string;
@@ -97,11 +115,14 @@ export interface TypeContactEmailProps {
   referer: string;
 }
 
-export type TypeNavItem = { name: string; href: string };
+export interface NavigationItemType { 
+  name: string; 
+  href: string; 
+}
 
 export interface MobileMenuPropsType {
   onClose: () => void;
-  navigationItems: TypeNavItem[];
+  navigationItems: NavigationItemType[];
   activeItem: string | null;
 }
 
@@ -127,7 +148,7 @@ export interface AppShellPropsType {
   showBackground?: boolean;
 }
 
-export type ContactFormDataType = z.infer<typeof contactFormSchema>;
+export type ContactFormDataType = z.infer<typeof CONTACT_FORM_SCHEMA>;
 
 /**
  * Props for the ContactEmailTemplate component.

@@ -14,6 +14,7 @@ import {
   SkillsSection,
 } from "@/components/sections/about";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { getPageWrapperClasses, getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Renders the "About Me" page, featuring sections that animate into view on scroll.
@@ -26,13 +27,13 @@ const AboutPage = () => {
 
   return (
     <AppShell>
-      <div className="pt-24 px-6 sm:px-8 lg:px-32">
+      <div className={getPageWrapperClasses()}>
         <motion.section
           ref={sectionRef}
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="py-36 sm:py-44 relative overflow-hidden"
+          className={getSectionClasses()}
         >
           <SharedBackground
             isInView={isInView}
@@ -43,7 +44,7 @@ const AboutPage = () => {
             <AboutPageHeader />
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-20">
+          <div className={`grid grid-cols-1 md:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_LARGE} ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}>
             <motion.div variants={itemVariants} className="md:col-span-2">
               <BioCard />
             </motion.div>
@@ -52,15 +53,15 @@ const AboutPage = () => {
             </motion.div>
           </div>
 
-          <motion.div variants={itemVariants} className="mb-20">
+          <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
             <ExperienceEducationSection />
           </motion.div>
 
-          <motion.div variants={itemVariants} className="mb-20">
+          <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
             <SkillsSection />
           </motion.div>
 
-          <motion.div variants={itemVariants} className="mb-20">
+          <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
             <InterestsSection />
           </motion.div>
 

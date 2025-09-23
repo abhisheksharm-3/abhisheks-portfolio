@@ -2,7 +2,7 @@
 
 import { motion, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Project } from "@/lib/types";
+import { ProjectType } from "@/lib/types";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -21,7 +21,7 @@ const itemVariants: Variants = {
  * @param {Project} props.project - The project data to display.
  * @returns {JSX.Element} The ProjectDetailOverview component.
  */
-export function ProjectDetailOverview({ project }: { project: Project }) {
+export function ProjectDetailOverview({ project }: { project: ProjectType }) {
   return (
     <div className="mb-16">
       <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative">

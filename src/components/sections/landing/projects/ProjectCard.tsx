@@ -17,7 +17,7 @@ import {
   Github,
   Calendar,
 } from "lucide-react";
-import { Project } from "@/lib/types";
+import { ProjectType } from "@/lib/types";
 
 /**
  * Renders a subtle, animated geometric accent in the corner of the project image.
@@ -62,13 +62,13 @@ const ProjectImageOverlay = ({ isHovered }: { isHovered: boolean }) => (
 
 /**
  * Renders the project's cover image with animated scale and filter effects on hover.
- * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ * @param {{ project: ProjectType; isHovered: boolean }} props - Component props.
  */
 const ProjectImage = ({
   project,
   isHovered,
 }: {
-  project: Project;
+  project: ProjectType;
   isHovered: boolean;
 }) => (
   <motion.div
@@ -159,13 +159,13 @@ const ProjectTags = ({
 /**
  * Renders project action links, transitioning between text links and full buttons on hover.
  * This component maintains a fixed height to prevent layout shift during the transition.
- * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ * @param {{ project: ProjectType; isHovered: boolean }} props - Component props.
  */
 const ProjectActions = ({
   project,
   isHovered,
 }: {
-  project: Project;
+  project: ProjectType;
   isHovered: boolean;
 }) => {
   const hasUrl = project.url;
@@ -230,13 +230,13 @@ const ProjectActions = ({
 
 /**
  * Renders the header section of the project card content.
- * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ * @param {{ project: ProjectType; isHovered: boolean }} props - Component props.
  */
 const ProjectHeader = ({
   project,
   isHovered,
 }: {
-  project: Project;
+  project: ProjectType;
   isHovered: boolean;
 }) => (
   <CardHeader className="pt-8 pb-0 px-8">
@@ -317,13 +317,13 @@ const ProjectDescription = ({
 
 /**
  * Renders the footer section of the project card content.
- * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ * @param {{ project: ProjectType; isHovered: boolean }} props - Component props.
  */
 const ProjectFooter = ({
   project,
   isHovered,
 }: {
-  project: Project;
+  project: ProjectType;
   isHovered: boolean;
 }) => (
   <CardFooter className="px-8 pt-6 pb-8 flex justify-between items-center">
@@ -346,13 +346,13 @@ const ProjectFooter = ({
 
 /**
  * A container component for the project's image and its decorative overlays.
- * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ * @param {{ project: ProjectType; isHovered: boolean }} props - Component props.
  */
 export const ProjectImageContainer = ({
   project,
   isHovered,
 }: {
-  project: Project;
+  project: ProjectType;
   isHovered: boolean;
 }) => (
   <div className="relative w-full h-80 overflow-hidden rounded-t-2xl">
@@ -374,13 +374,13 @@ export const ProjectImageContainer = ({
 /**
  * A container component for the project's textual content, including header, description, and footer.
  * It uses a flex column layout to ensure the footer is always at the bottom.
- * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ * @param {{ project: ProjectType; isHovered: boolean }} props - Component props.
  */
 export const ProjectContent = ({
   project,
   isHovered,
 }: {
-  project: Project;
+  project: ProjectType;
   isHovered: boolean;
 }) => (
   <div className="flex flex-col flex-1">

@@ -7,16 +7,16 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Palette, ArrowRight } from "lucide-react";
-import { TypeExpertise } from "@/lib/types";
-import { SKILLS_ANIMATION_CONFIG } from "@/lib/config/skills";
+import { ExpertiseType } from "@/lib/types";
+import { SKILLS_ANIMATIONS } from "@/data/animations";
 
 /**
  * Renders a single skill card with its associated technologies.
- * @param {{ service: TypeExpertise }} props - The service/skill data to display.
+ * @param {{ service: ExpertiseType }} props - The service/skill data to display.
  */
-const SkillCard = ({ service }: { service: TypeExpertise }) => (
+const SkillCard = ({ service }: { service: ExpertiseType }) => (
   <motion.div
-    variants={SKILLS_ANIMATION_CONFIG.item}
+    variants={SKILLS_ANIMATIONS.item}
     className="group flex flex-col h-full"
   >
     <div className="p-3 rounded-md border border-primary/10 inline-flex self-start mb-4 group-hover:border-primary/20 transition-colors duration-300">
@@ -25,7 +25,7 @@ const SkillCard = ({ service }: { service: TypeExpertise }) => (
         transition={{ duration: 0.3 }}
         className="text-primary/70"
       >
-        {service.icon}
+        <service.icon className="h-5 w-5" />
       </motion.div>
     </div>
     <div className="flex items-center justify-between mb-2">
@@ -58,13 +58,13 @@ const SkillCard = ({ service }: { service: TypeExpertise }) => (
 
 /**
  * Renders the featured skills area, combining a description with a grid of core skills.
- * @param {{ mainServices: TypeExpertise[]; isInView: boolean }} props - Component props.
+ * @param {{ mainServices: ExpertiseType[]; isInView: boolean }} props - Component props.
  */
 export const FeaturedSkillsSection = ({
   mainServices,
   isInView,
 }: {
-  mainServices: TypeExpertise[];
+  mainServices: ExpertiseType[];
   isInView: boolean;
 }) => (
   <Card className="border-primary/10 backdrop-blur-sm overflow-hidden mb-12 relative">
@@ -119,7 +119,7 @@ export const FeaturedSkillsSection = ({
         </div>
         <div className="w-full lg:w-2/3 pt-8 mt-8 border-t lg:border-t-0 lg:pt-0 lg:mt-0 lg:pl-16 lg:border-l border-primary/5">
           <motion.div
-            variants={SKILLS_ANIMATION_CONFIG.container}
+            variants={SKILLS_ANIMATIONS.container}
             initial="hidden"
             animate={isInView ? "show" : "hidden"}
             className="grid grid-cols-1 sm:grid-cols-3 gap-8"
@@ -140,23 +140,23 @@ export const FeaturedSkillsSection = ({
 
 /**
  * Renders a grid of cards for secondary or additional skills.
- * @param {{ additionalServices: TypeExpertise[]; isInView: boolean }} props - Component props.
+ * @param {{ additionalServices: ExpertiseType[]; isInView: boolean }} props - Component props.
  */
 export const SecondarySkillsGrid = ({
   additionalServices,
   isInView,
 }: {
-  additionalServices: TypeExpertise[];
+  additionalServices: ExpertiseType[];
   isInView: boolean;
 }) => (
   <motion.div
-    variants={SKILLS_ANIMATION_CONFIG.container}
+    variants={SKILLS_ANIMATIONS.container}
     initial="hidden"
     animate={isInView ? "show" : "hidden"}
     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
   >
     {additionalServices.map((service) => (
-      <motion.div key={service.title} variants={SKILLS_ANIMATION_CONFIG.item}>
+      <motion.div key={service.title} variants={SKILLS_ANIMATIONS.item}>
         <Card className="group border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-colors duration-300 h-full flex flex-col">
           <CardHeader className="pt-6 pb-0 px-6">
             <div className="flex items-start gap-3">
@@ -165,7 +165,7 @@ export const SecondarySkillsGrid = ({
                   whileHover={{ rotate: 15 }}
                   className="text-primary/70"
                 >
-                  {service.icon}
+                  <service.icon className="h-4 w-4" />
                 </motion.div>
               </div>
               <div className="flex-1">

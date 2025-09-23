@@ -11,7 +11,7 @@ import nodemailer from "nodemailer";
 import { ContactEmailTemplate } from "@/components/emails/ContactEmailTemplate";
 import React from "react";
 import { ContactFormDataType } from "@/lib/types";
-import { contactFormSchema } from "@/lib/config/contact";
+import { CONTACT_FORM_SCHEMA } from "@/data/contact";
 
 /**
  * Gathers and validates required environment variables for the mail service.
@@ -101,7 +101,7 @@ const sendContactEmail = async (
 export const POST = async (request: NextRequest): Promise<NextResponse> => {
   try {
     const body = await request.json();
-    const validation = contactFormSchema.safeParse(body);
+    const validation = CONTACT_FORM_SCHEMA.safeParse(body);
 
     if (!validation.success) {
       return NextResponse.json(

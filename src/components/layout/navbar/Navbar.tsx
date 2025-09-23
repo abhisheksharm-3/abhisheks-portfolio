@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModeToggle } from "@/components/ModeToggle";
 import { MobileMenu } from "./MobileMenu";
-import { TypeNavItem } from "@/lib/types";
-import { navigationItems } from "@/lib/config/nav-config";
+import { NavigationItemType } from "@/lib/types";
+import { NAVIGATION_ITEMS as navigationItems } from "@/data/navigation";
 import { NavbarBackground } from "./NavbarBackground";
 import { Logo } from "./Logo";
 import { DesktopNavbar } from "./DesktopNavbar";
@@ -38,10 +38,10 @@ const useScrollEffect = (threshold: number): boolean => {
 
 /**
  * A custom hook that determines the active navigation item based on the current URL pathname.
- * @param {TypeNavItem[]} items - The array of navigation items to check against.
+ * @param {NavigationItemType[]} items - The array of navigation items to check against.
  * @returns {string | null} The name of the active navigation item, or null if none are active.
  */
-const useActivePath = (items: TypeNavItem[]): string | null => {
+const useActivePath = (items: NavigationItemType[]): string | null => {
   const pathname = usePathname();
   const activeItem = items.find((item) =>
     item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)

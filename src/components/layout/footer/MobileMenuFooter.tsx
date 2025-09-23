@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { socialLinks } from "@/data/contact";
+import { SOCIAL_LINKS } from "@/data/contact";
 import { motion } from "framer-motion";
 import { Logo } from "../navbar";
 
@@ -25,7 +25,7 @@ export const MobileMenuFooter = () => (
     />
 
     <div className="flex justify-center space-x-6">
-      {socialLinks.map((platform, i) => (
+      {SOCIAL_LINKS.map((platform, i) => (
         <motion.div
           key={platform.label}
           initial={{ scale: 0, opacity: 0 }}

@@ -4,7 +4,7 @@ import { motion, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
-import { Project } from "@/lib/types";
+import { ProjectType } from "@/lib/types";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -23,7 +23,7 @@ const itemVariants: Variants = {
  * @param {Project} props.project - The project data to display.
  * @returns {JSX.Element} The ProjectDetailSidebar component.
  */
-export function ProjectDetailSidebar({ project }: { project: Project }) {
+export function ProjectDetailSidebar({ project }: { project: ProjectType }) {
   const projectDetails = [
     { label: "Year", value: project.year },
     { label: "Role", value: project.role },

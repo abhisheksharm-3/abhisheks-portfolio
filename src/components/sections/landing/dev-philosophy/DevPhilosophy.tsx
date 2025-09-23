@@ -11,6 +11,7 @@ import {
 } from "./DevPhilosophyComponents";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * The main component for the Philosophy section.
@@ -24,14 +25,14 @@ export const Philosophy = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-36 sm:py-44 relative overflow-hidden"
+      className={getSectionClasses()}
     >
       <SharedBackground
         isInView={isInView}
         noiseFilterId="philosophyNoiseFilter"
       />
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className={`container mx-auto ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING} relative z-10`}>
         <SectionHeader subtitle="how i think about dev" isInView={isInView}>
           <span className="font-serif italic bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none pr-4">
             not a manifesto, just how i build
@@ -60,7 +61,7 @@ export const Philosophy = () => {
                 <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/5 via-transparent to-primary/5 opacity-50" />
 
                 {/* Content with enhanced spacing */}
-                <div className="relative z-10 p-8 pt-20 sm:p-12 sm:pt-16 lg:p-16 lg:pt-20">
+                <div className={`relative z-10 ${SPACING_STANDARDS.CARD.PADDING} pt-20 sm:${SPACING_STANDARDS.CARD.PADDING_LARGE} sm:pt-16 lg:${SPACING_STANDARDS.CARD.PADDING_LARGE} lg:pt-20`}>
                     <QuoteBlock isInView={isInView} />
                     <DecorativeDivider isInView={isInView} />
                     <PhilosophyDescription isInView={isInView} />

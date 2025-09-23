@@ -4,6 +4,7 @@ import { motion, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Mail, Github, Linkedin, Instagram } from "lucide-react";
 import React from "react";
+import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 // --- CONFIG & DATA ---
 
@@ -56,7 +57,7 @@ export const ContactInfoCard: React.FC = () => {
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
-        className="p-8 sm:p-10"
+        className={`${SPACING_STANDARDS.CARD.PADDING} sm:${SPACING_STANDARDS.CARD.PADDING_LARGE}`}
       >
         <motion.div
           variants={itemVariants}

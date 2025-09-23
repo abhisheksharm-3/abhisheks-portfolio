@@ -4,10 +4,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import {
-  footerContainerVariants,
-  footerItemVariants,
-  FooterNavLinks,
-} from "@/lib/config/footer-config";
+  containerVariants,
+  itemVariants,
+} from "@/lib/config/page-animations";
+import { NAVIGATION_ITEMS } from "@/data/navigation";
 
 /**
  * Renders the navigation column for the site footer.
@@ -17,11 +17,11 @@ export const FooterNavColumn = () => {
   const [focusedLink, setFocusedLink] = useState<string | null>(null);
 
   return (
-    <motion.div variants={footerItemVariants} className="md:text-center">
+    <motion.div variants={itemVariants} className="md:text-center">
       <h3 className="text-sm font-medium text-foreground/70 mb-5">jump to</h3>
-      <motion.ul variants={footerContainerVariants} className="space-y-3">
-        {FooterNavLinks.map((link) => (
-          <motion.li key={link.name} variants={footerItemVariants}>
+      <motion.ul variants={containerVariants} className="space-y-3">
+        {NAVIGATION_ITEMS.map((link) => (
+          <motion.li key={link.name} variants={itemVariants}>
             <Link
               href={link.href}
               className="text-sm text-foreground/50 hover:text-primary transition-colors relative inline-block"

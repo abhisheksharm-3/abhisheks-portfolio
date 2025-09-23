@@ -8,9 +8,10 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Send, ArrowRight, Mail } from "lucide-react";
 import Link from "next/link";
-import { socialLinks } from "@/data/contact";
+import { SOCIAL_LINKS } from "@/data/contact";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Renders the primary and secondary call-to-action buttons for the section.
@@ -21,7 +22,7 @@ const CTAButtons = ({ isInView }: { isInView: boolean }) => (
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
     transition={{ duration: 0.6, delay: 0.8 }}
-    className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
+    className={`flex flex-col sm:flex-row items-center justify-center ${SPACING_STANDARDS.GRID.GAP_MEDIUM} ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}
   >
     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
       <Button
@@ -70,18 +71,18 @@ const DirectContact = ({ isInView }: { isInView: boolean }) => (
     transition={{ duration: 0.6, delay: 0.9 }}
     className="relative max-w-4xl mx-auto text-center"
   >
-    <div className="flex items-center justify-center mb-8">
+    <div className={`flex items-center justify-center ${SPACING_STANDARDS.CONTENT.PARAGRAPH_SPACING}`}>
       <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent w-24" />
       <span className="px-4 text-xs text-foreground/50 uppercase tracking-wider">or</span>
       <div className="h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent w-24" />
     </div>
 
-    <div className="text-center mb-12">
+    <div className={`text-center ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}>
       <motion.p
         initial={{ opacity: 0 }}
         animate={isInView ? { opacity: 1 } : {}}
         transition={{ duration: 0.6, delay: 1 }}
-        className="text-foreground/60 text-sm mb-3"
+        className={`text-foreground/60 text-sm ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}
       >
         just email me directly:
       </motion.p>
@@ -109,9 +110,9 @@ const DirectContact = ({ isInView }: { isInView: boolean }) => (
       initial={{ opacity: 0, y: 20 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6, delay: 1.2 }}
-      className="flex flex-wrap items-center justify-center gap-4"
+      className={`flex flex-wrap items-center justify-center ${SPACING_STANDARDS.GRID.GAP_MEDIUM}`}
     >
-      {socialLinks.map((link, index) => (
+      {SOCIAL_LINKS.map((link, index) => (
         <motion.a
           key={link.label}
           href={link.href}
@@ -130,7 +131,7 @@ const DirectContact = ({ isInView }: { isInView: boolean }) => (
           transition={{ duration: 0.4, delay: 1.3 + index * 0.1 }}
         >
           <span className="group-hover:scale-110 transition-transform duration-200">
-            {link.icon}
+            <link.icon className="h-4 w-4" />
           </span>
           <span className="font-light">{link.label}</span>
         </motion.a>
@@ -149,11 +150,11 @@ export const ContactCTA = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-36 sm:py-44 relative overflow-hidden"
+      className={getSectionClasses()}
     >
       <SharedBackground isInView={isInView} noiseFilterId="contactCTANoiseFilter" />
       
-      <div className="container mx-auto px-6 relative z-10">
+      <div className={`container mx-auto ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING} relative z-10`}>
         <SectionHeader subtitle="reach out" isInView={isInView}>
           <span className="font-serif italic bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none pr-4">
             let&apos;s make cool stuff
@@ -165,7 +166,7 @@ export const ContactCTA = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.7 }}
-            className="text-center mb-12"
+            className={`text-center ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}
           >
             <p className="text-foreground/70 text-lg max-w-3xl mx-auto leading-relaxed">
               i&apos;m down for fun projects and cool full-time gigs. got an idea, a product to push, or a messy problem? let&apos;s jam and make it real.

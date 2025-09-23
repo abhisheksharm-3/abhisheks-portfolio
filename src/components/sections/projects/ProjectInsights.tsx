@@ -2,12 +2,12 @@
 
 import { motion, Variants } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
-import { calculateProjectStats } from "@/lib/project-stats";
 import {
-  fetchGitHubStats,
+  calculateProjectStats,
   calculateTechnicalExpertise,
-  GitHubStats,
-} from "@/lib/github-stats";
+} from "@/lib/stats";
+import { fetchGitHubStats } from "@/lib/server-actions";
+import { GitHubStats } from "@/lib/types/stats";
 import { projects } from "@/data/project";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis } from "recharts";

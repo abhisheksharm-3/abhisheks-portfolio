@@ -1,6 +1,6 @@
 "use client";
 
-import { ANIMATION_CONFIG } from "@/data/hero";
+import { HERO_ANIMATIONS as ANIMATION_CONFIG } from "@/data/animations";
 import { useState, useEffect } from "react";
 
 /**

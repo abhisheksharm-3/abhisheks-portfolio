@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { PHILOSOPHY_ANIMATION_CONFIG } from "@/lib/config/philosophy";
+import { PHILOSOPHY_ANIMATIONS } from "@/data/animations";
 
 /**
  * Renders the central blockquote for the section.
@@ -12,8 +12,8 @@ export const QuoteBlock = ({ isInView }: { isInView: boolean }) => (
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
     transition={{
-      duration: PHILOSOPHY_ANIMATION_CONFIG.quote.duration,
-      delay: PHILOSOPHY_ANIMATION_CONFIG.quote.delay,
+      duration: PHILOSOPHY_ANIMATIONS.quote.duration,
+      delay: PHILOSOPHY_ANIMATIONS.quote.delay,
     }}
     className="text-center relative"
   >
@@ -84,8 +84,8 @@ export const DecorativeDivider = ({ isInView }: { isInView: boolean }) => (
       initial={{ width: 0, opacity: 0 }}
       animate={isInView ? { width: 80, opacity: 1 } : {}}
       transition={{
-        duration: PHILOSOPHY_ANIMATION_CONFIG.decorative.duration,
-        delay: PHILOSOPHY_ANIMATION_CONFIG.decorative.delay,
+        duration: PHILOSOPHY_ANIMATIONS.decorative.duration,
+        delay: PHILOSOPHY_ANIMATIONS.decorative.delay,
         ease: "easeOut"
       }}
       className="h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-primary/40 relative"
@@ -136,8 +136,8 @@ export const DecorativeDivider = ({ isInView }: { isInView: boolean }) => (
       initial={{ width: 0, opacity: 0 }}
       animate={isInView ? { width: 80, opacity: 1 } : {}}
       transition={{
-        duration: PHILOSOPHY_ANIMATION_CONFIG.decorative.duration,
-        delay: PHILOSOPHY_ANIMATION_CONFIG.decorative.delay,
+        duration: PHILOSOPHY_ANIMATIONS.decorative.duration,
+        delay: PHILOSOPHY_ANIMATIONS.decorative.delay,
         ease: "easeOut"
       }}
       className="h-[1px] bg-gradient-to-l from-transparent via-primary/60 to-primary/40 relative"
@@ -157,8 +157,8 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
     transition={{
-      duration: PHILOSOPHY_ANIMATION_CONFIG.description.duration,
-      delay: PHILOSOPHY_ANIMATION_CONFIG.description.delay,
+      duration: PHILOSOPHY_ANIMATIONS.description.duration,
+      delay: PHILOSOPHY_ANIMATIONS.description.delay,
     }}
     className="text-center max-w-3xl mx-auto"
   >

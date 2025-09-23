@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AnimatedPathProps } from "@/lib/types";
+import { AnimatedPathPropsType } from "@/lib/types";
 import {
   SHARED_GRID_CONFIG,
   SHARED_SVG_PATHS,
@@ -12,7 +12,7 @@ const AnimatedPath = ({
   className,
   pathD = SHARED_SVG_PATHS.default,
   delay = 0,
-}: AnimatedPathProps) => (
+}: AnimatedPathPropsType) => (
   <svg
     width="100"
     height="100"

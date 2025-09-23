@@ -1,13 +1,14 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
+import { getHeaderClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: SPACING_STANDARDS.ANIMATION.STAGGER_DELAY,
     },
   },
 };
@@ -32,9 +33,9 @@ export const ProjectsHeader = () => {
   return (
     <motion.div
       variants={containerVariants}
-      className="flex flex-col mb-16 sm:mb-20 relative z-10"
+      className={getHeaderClasses()}
     >
-      <motion.div variants={itemVariants} className="flex items-center mb-4">
+      <motion.div variants={itemVariants} className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}>
         <div className="w-7 h-7 rounded-md border border-primary/10 flex items-center justify-center mr-3">
           <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
         </div>
@@ -43,7 +44,7 @@ export const ProjectsHeader = () => {
         </span>
       </motion.div>
 
-      <div className="overflow-visible mb-4">
+      <div className={`overflow-visible ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}>
         <motion.h1
           variants={itemVariants}
           className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"
@@ -65,12 +66,12 @@ export const ProjectsHeader = () => {
             transition: { duration: 1, ease: "easeOut" },
           },
         }}
-        className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent mt-4"
+        className={`h-[1px] bg-gradient-to-r from-primary/40 to-transparent ${SPACING_STANDARDS.HEADER.ACCENT_LINE_MARGIN}`}
       />
 
       <motion.p
         variants={itemVariants}
-        className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
+        className={`text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed ${SPACING_STANDARDS.HEADER.SUBTITLE_MARGIN_TOP}`}
       >
         Browse my comprehensive collection of projects spanning web development,
         mobile applications, and design work. Each project represents a journey

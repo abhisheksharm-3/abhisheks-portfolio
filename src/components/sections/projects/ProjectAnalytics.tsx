@@ -3,12 +3,11 @@
 import { motion, useInView, Variants } from "framer-motion";
 import { useState, useEffect, useMemo, useRef } from "react";
 import {
-  fetchGitHubStats,
   calculateTechnicalExpertise,
-  GitHubStats,
-  ContributionDay,
-} from "@/lib/github-stats";
-import { calculateProjectStats } from "@/lib/project-stats";
+} from "@/lib/stats";
+import { fetchGitHubStats } from "@/lib/server-actions";
+import { GitHubStats, ContributionDay } from "@/lib/types/stats";
+import { calculateProjectStats } from "@/lib/stats";
 import { projects } from "@/data/project";
 import {
   Github,

@@ -8,14 +8,14 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { featuredProjects } from "@/data/project";
-import { ProjectsProps, ProjectCardProps } from "@/lib/types";
+import { ProjectsPropsType, ProjectCardPropsType } from "@/lib/types";
 import {
-  PROJECT_ANIMATION_DELAYS,
-  PROJECT_ANIMATION_DURATIONS,
-} from "@/lib/config/projects";
+  PROJECT_ANIMATIONS,
+} from "@/data/animations";
 import { ProjectImageContainer, ProjectContent } from "./ProjectCard";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Renders the "see all projects" link for the section header.
@@ -76,7 +76,7 @@ const CTASection = ({ isInView }: { isInView: boolean }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
-    transition={{ delay: PROJECT_ANIMATION_DELAYS.CTA, duration: 1.2 }}
+    transition={{ delay: PROJECT_ANIMATIONS.DELAYS.CTA, duration: 1.2 }}
     className="flex justify-center relative"
   >
     {/* Background gradient */}
@@ -151,15 +151,15 @@ const ProjectCard = ({
   isHovered,
   onHover,
   onLeave,
-}: ProjectCardProps) => {
+}: ProjectCardPropsType) => {
   const cardAnimation = {
     initial: { opacity: 0, y: 32 },
     animate: isInView ? { opacity: 1, y: 0 } : {},
     transition: {
-      duration: PROJECT_ANIMATION_DURATIONS.FADE_IN,
+      duration: PROJECT_ANIMATIONS.DURATIONS.FADE_IN,
       delay:
-        PROJECT_ANIMATION_DELAYS.CARD_BASE +
-        index * PROJECT_ANIMATION_DELAYS.CARD_STAGGER,
+        PROJECT_ANIMATIONS.DELAYS.CARD_BASE +
+        index * PROJECT_ANIMATIONS.DELAYS.CARD_STAGGER,
       ease: "easeOut" as const,
     },
   };
@@ -202,19 +202,19 @@ const ProjectCard = ({
 
 /**
  * The main component for displaying a list of featured projects.
- * @param {ProjectsProps} props - Component props.
+ * @param {ProjectsPropsType} props - Component props.
  */
 export const Projects = ({
   headline = "stuff i’m proud of",
   cta = true,
-}: ProjectsProps) => {
+}: ProjectsPropsType) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
     <section
-      className="py-36 sm:py-44 relative overflow-hidden"
+      className={getSectionClasses()}
       ref={sectionRef}
       id="work-section"
     >
@@ -223,7 +223,7 @@ export const Projects = ({
         noiseFilterId="projectsNoiseFilter"
       />
       
-      <div className="container mx-auto px-6 relative z-10">
+      <div className={`container mx-auto ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING} relative z-10`}>
         <ProjectsHeader headline={headline} isInView={isInView} />
         
         {/* Enhanced projects grid */}

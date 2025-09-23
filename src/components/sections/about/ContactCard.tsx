@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { socialLinks } from "@/data/contact";
+import { SOCIAL_LINKS } from "@/data/contact";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -51,7 +51,7 @@ export const ContactCard = () => {
         </p>
 
         <div className="space-y-3">
-          {socialLinks.map(({ label, href, displayUrl }) => (
+          {SOCIAL_LINKS.map(({ label, href, displayUrl }) => (
             <div key={label}>
               <p className="text-xs text-foreground/50 mb-1">{label}</p>
               <Link

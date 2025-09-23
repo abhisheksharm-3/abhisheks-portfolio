@@ -2,15 +2,12 @@
 
 import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import {
-  footerContainerVariants,
-  footerItemVariants,
-} from "@/lib/config/footer-config";
 import { FooterBackground } from "./FooterBackground";
 import { FooterBrandColumn } from "./FooterBrandColumn";
 import { FooterNavColumn } from "./FooterNavColumn";
 import { FooterContactColumn } from "./FooterContactColumn";
 import { FooterBottomBar } from "./FooterBottomBar";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 
 /**
  * Renders the main site footer with navigation, social links, and contact information.
@@ -19,7 +16,7 @@ import { FooterBottomBar } from "./FooterBottomBar";
 export const Footer = () => {
   return (
     <motion.footer
-      variants={footerContainerVariants}
+      variants={containerVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
@@ -28,11 +25,11 @@ export const Footer = () => {
       <FooterBackground />
 
       <div className="container mx-auto px-6 py-16 sm:py-20 relative z-10">
-        <motion.div variants={footerItemVariants}>
+        <motion.div variants={itemVariants}>
           <Card className="border-primary/10 backdrop-blur-sm overflow-hidden mb-12 relative">
             <div className="p-8 sm:p-10">
               <motion.div
-                variants={footerContainerVariants}
+                variants={containerVariants}
                 className="grid grid-cols-1 md:grid-cols-3 gap-10"
               >
                 <FooterBrandColumn />

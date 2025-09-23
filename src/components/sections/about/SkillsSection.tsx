@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Expertise } from "@/data/expertise";
+import { EXPERTISE } from "@/data/skills-expertise";
 import { motion, Variants } from "framer-motion";
 
 /**
@@ -82,14 +82,14 @@ export const SkillsSection = () => {
         viewport={{ once: true, amount: 0.1 }}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        {Expertise.map((category) => (
+        {EXPERTISE.map((category) => (
           <motion.div variants={itemVariants} key={category.title}>
             <Card className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300 group relative overflow-hidden h-full">
               <CardContent className="p-6">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5 group-hover:bg-primary/10 transition-colors duration-300">
                     <div className="text-primary/70 scale-90">
-                      {category.icon}
+                      <category.icon className="h-4 w-4" />
                     </div>
                   </div>
                   <h4 className="text-base font-medium group-hover:text-primary/90 transition-colors duration-300">

@@ -2,11 +2,8 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect, useMemo } from "react";
-import {
-  fetchGitHubStats,
-  GitHubStats,
-  ContributionDay,
-} from "@/lib/github-stats";
+import { fetchGitHubStats } from "@/lib/server-actions";
+import { GitHubStats, ContributionDay } from "@/lib/types/stats";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 

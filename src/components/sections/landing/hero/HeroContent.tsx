@@ -5,8 +5,9 @@ import { motion, useTransform, MotionValue } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useExperienceCounter } from "@/hooks/useExperienceCounter";
-import { SkillItemProps } from "@/lib/types";
-import { ANIMATION_CONFIG, SKILLS } from "@/data/hero";
+import { SkillItemPropsType } from "@/lib/types";
+import { HERO_ANIMATIONS as ANIMATION_CONFIG } from "@/data/animations";
+import { HERO_SKILLS as SKILLS } from "@/data/skills-expertise";
 
 /**
  * A utility function that smoothly scrolls the window to a given element ID.
@@ -163,9 +164,9 @@ export const HeroDescription: React.FC = () => {
 
 /**
  * Displays an individual skill item with complex, multi-part animations.
- * @param {SkillItemProps} props The component props.
+ * @param {SkillItemPropsType} props The component props.
  */
-export const SkillItem: React.FC<SkillItemProps> = ({ skill, index }) => (
+export const SkillItem: React.FC<SkillItemPropsType> = ({ skill, index }) => (
   <motion.div
     className="group relative"
     initial={{ opacity: 0, x: 20 }}

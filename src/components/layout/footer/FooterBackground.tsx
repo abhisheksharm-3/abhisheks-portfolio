@@ -1,4 +1,4 @@
-import { footerPathVariants } from "@/lib/config/footer-config";
+import { itemVariants } from "@/lib/config/page-animations";
 import { motion } from "framer-motion";
 
 /**
@@ -36,7 +36,7 @@ export const FooterBackground = () => (
           d="M10,30 C20,50 40,10 50,40 S80,20 90,40"
           stroke="currentColor"
           strokeWidth="0.5"
-          variants={footerPathVariants}
+          variants={itemVariants}
         />
       </motion.svg>
       <motion.svg
@@ -48,7 +48,7 @@ export const FooterBackground = () => (
           d="M10,50 Q40,20 50,50 T90,30"
           stroke="currentColor"
           strokeWidth="0.5"
-          variants={footerPathVariants}
+          variants={itemVariants}
         />
       </motion.svg>
     </motion.div>

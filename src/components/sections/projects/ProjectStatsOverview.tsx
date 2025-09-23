@@ -2,8 +2,9 @@
 
 import { motion, Variants, animate } from "framer-motion";
 import { useState, useEffect, useMemo, useRef } from "react";
-import { calculateProjectStats } from "@/lib/project-stats";
-import { fetchGitHubStats, GitHubStats } from "@/lib/github-stats";
+import { calculateProjectStats } from "@/lib/stats";
+import { fetchGitHubStats } from "@/lib/server-actions";
+import { GitHubStats } from "@/lib/types/stats";
 import { Github, Star, Code } from "lucide-react";
 
 const containerVariants: Variants = {

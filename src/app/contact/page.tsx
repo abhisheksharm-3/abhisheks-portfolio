@@ -11,6 +11,7 @@ import {
 } from "@/components/sections/contact";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import { useRef } from "react";
+import { getPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Renders the main contact page, orchestrating the animated entry of its sections.
@@ -26,7 +27,7 @@ const ContactPage = () => {
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
+        className={`${getPageWrapperClasses()} relative overflow-hidden`}
       >
         <ContactBackground />
 
@@ -34,12 +35,12 @@ const ContactPage = () => {
           <ContactHeader />
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className={`grid grid-cols-1 lg:grid-cols-2 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} max-w-6xl mx-auto`}>
           <motion.div variants={itemVariants}>
             <SendMessageCard />
           </motion.div>
 
-          <div className="flex flex-col gap-8">
+          <div className={`flex flex-col ${SPACING_STANDARDS.GRID.GAP_MEDIUM}`}>
             <motion.div variants={itemVariants}>
               <ScheduleMeetingCard />
             </motion.div>

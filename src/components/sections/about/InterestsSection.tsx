@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { personalInterests } from "@/data/about";
+import { PERSONAL_INTERESTS } from "@/data/about";
 import { motion, Variants } from "framer-motion";
 
 const gridContainerVariants: Variants = {
@@ -71,7 +71,7 @@ export const InterestsSection = () => {
         viewport={{ once: true, amount: 0.1 }}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
       >
-        {personalInterests.map((interest) => (
+        {PERSONAL_INTERESTS.map((interest) => (
           <motion.div variants={itemVariants} key={interest.category}>
             <Card className="border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-all duration-300 group relative overflow-hidden h-full">
               <CardContent className="p-6">
@@ -81,7 +81,7 @@ export const InterestsSection = () => {
                       whileHover={{ rotate: 15 }}
                       className="text-primary/70"
                     >
-                      {interest.icon}
+                      <interest.icon className="h-5 w-5" />
                     </motion.div>
                   </div>
                   <h4 className="text-base font-medium group-hover:text-primary/90 transition-colors duration-300">

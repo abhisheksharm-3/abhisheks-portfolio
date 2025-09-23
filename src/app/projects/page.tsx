@@ -13,6 +13,7 @@ import {
   ProjectAnalytics,
 } from "@/components/sections/projects";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { getPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * A sorted, unique list of all project tags, generated once at the module level.
@@ -42,7 +43,7 @@ const ProjectsPage = () => {
         initial="hidden"
         ref={sectionRef}
         animate={isInView ? "visible" : "hidden"}
-        className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
+        className={`${getPageWrapperClasses()} relative overflow-hidden`}
       >
         <ProjectsPageBackground />
 
@@ -50,12 +51,11 @@ const ProjectsPage = () => {
           <ProjectsHeader />
         </motion.div>
 
-        <motion.div variants={itemVariants} className="mb-20">
+        <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
           <ProjectAnalytics />
         </motion.div>
 
-        <motion.div variants={itemVariants} className="my-20">
-          {" "}
+        <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
           <ProjectsFilters
             allTags={allTags}
             activeFilter={activeFilter}
@@ -67,7 +67,7 @@ const ProjectsPage = () => {
 
         <motion.div
           layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20"
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}
         >
           <AnimatePresence initial={false}>
             {filteredProjects.map((project) => (

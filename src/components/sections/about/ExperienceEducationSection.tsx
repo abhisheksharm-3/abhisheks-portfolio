@@ -1,12 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { educationData, experienceData } from "@/data/about";
-import { TypeTimelineCardProps } from "@/lib/types";
+import { EDUCATION_DATA, EXPERIENCE_DATA } from "@/data/about";
+import { TimelineCardPropsType } from "@/lib/types";
 import { Briefcase, GraduationCap } from "lucide-react";
 
 /**
  * A reusable card component for displaying a list of timeline events.
  */
-export const TimelineCard = ({ title, Icon, items }: TypeTimelineCardProps) => (
+export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
   <Card className="border-primary/10 backdrop-blur-sm relative">
     <CardContent className="p-8">
       <div className="flex items-center mb-6">
@@ -65,12 +65,12 @@ export const ExperienceEducationSection = () => {
       <TimelineCard
         title="Experience"
         Icon={Briefcase}
-        items={experienceData}
+        items={EXPERIENCE_DATA}
       />
       <TimelineCard
         title="Education"
         Icon={GraduationCap}
-        items={educationData}
+        items={EDUCATION_DATA}
       />
     </div>
   );

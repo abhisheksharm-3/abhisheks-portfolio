@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { SectionHeaderPropsType } from "@/lib/types";
+import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * A reusable, animated header for different sections of the landing page.
@@ -19,9 +20,9 @@ export const SectionHeader = ({
     initial={{ opacity: 0, y: 24 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
     transition={{ duration: 0.8 }}
-    className={cn("flex flex-col mb-16 sm:mb-20 relative z-10", className)}
+    className={cn(`flex flex-col ${SPACING_STANDARDS.HEADER.SECTION_MARGIN_BOTTOM} relative z-10`, className)}
   >
-    <div className="flex items-center mb-4">
+    <div className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}>
       <motion.div
         initial={{ scale: 0 }}
         animate={isInView ? { scale: 1 } : {}}
@@ -53,7 +54,7 @@ export const SectionHeader = ({
       initial={{ width: 0, opacity: 0 }}
       animate={isInView ? { width: "5rem", opacity: 1 } : {}}
       transition={{ duration: 1, delay: 0.6 }}
-      className="h-[1px] bg-gradient-to-r from-primary/40 to-transparent mt-4"
+      className={`h-[1px] bg-gradient-to-r from-primary/40 to-transparent ${SPACING_STANDARDS.HEADER.ACCENT_LINE_MARGIN}`}
     />
   </motion.div>
 );

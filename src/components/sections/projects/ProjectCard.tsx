@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight, ExternalLink, Github, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Props for the ProjectCard component
@@ -34,7 +35,7 @@ interface ProjectCardProps {
  * @param delay - Animation delay for staggered loading (default: 0)
  * @returns JSX.Element representing the project card
  */
-export const ProjectCard = ({ project, delay = 0 }: ProjectCardProps) => {
+export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.01 });
@@ -103,8 +104,8 @@ export const ProjectCard = ({ project, delay = 0 }: ProjectCardProps) => {
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <div className="flex items-start justify-between mb-3">
+        <div className={SPACING_STANDARDS.CARD.PADDING_SMALL}>
+          <div className={`flex items-start justify-between ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}>
             <h3 className="text-xl font-serif text-foreground/90 group-hover:text-primary/90 transition-colors duration-300">
               {project.title}
             </h3>

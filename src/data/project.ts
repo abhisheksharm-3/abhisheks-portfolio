@@ -1,9 +1,9 @@
-import { Project } from "@/lib/types";
+import { ProjectType } from "@/lib/types";
 
 /**
  * Array of all projects containing information about each project.
  */
-export const projects: Project[] = [
+export const projects: ProjectType[] = [
   {
     title: "Credify",
     slug: "credify",

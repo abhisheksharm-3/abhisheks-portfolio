@@ -2,12 +2,11 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import { ProjectStats } from "@/lib/project-stats";
 import {
-  fetchGitHubStats,
   calculateTechnicalExpertise,
-  GitHubStats,
-} from "@/lib/github-stats";
+} from "@/lib/stats";
+import { fetchGitHubStats } from "@/lib/server-actions";
+import { ProjectStats, GitHubStats } from "@/lib/types/stats";
 import { projects } from "@/data/project";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MousePosition } from "@/lib/types";
+import { MousePositionType } from "@/lib/types";
 
 /**
  * Normalizes the mouse coordinates to a range of -1 to 1.
@@ -20,10 +20,10 @@ const normalizeMousePosition = (
 /**
  * A custom React hook that tracks the normalized mouse position on the window.
  * The position is normalized to a range from -1 to 1 for both x and y axes.
- * @returns {MousePosition} The current normalized mouse position.
+ * @returns {MousePositionType} The current normalized mouse position.
  */
-export const useMousePosition = (): MousePosition => {
-  const [mousePosition, setMousePosition] = useState<MousePosition>({
+export const useMousePosition = (): MousePositionType => {
+  const [mousePosition, setMousePosition] = useState<MousePositionType>({
     x: 0,
     y: 0,
   });

@@ -6,12 +6,12 @@ import Link from "next/link";
 import { ArrowRight, History } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  navbarContainerVariants,
-  navbarItemVariants,
-  navigationItems,
-} from "@/lib/config/nav-config";
+  NAVIGATION_ITEMS,
+  NAVIGATION_ANIMATIONS,
+} from "@/data/navigation";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
+import { itemVariants } from "@/lib/config/page-animations";
 
 /**
  * Renders the navigation links, theme toggle, and action buttons for desktop viewports.
@@ -28,13 +28,13 @@ export const DesktopNavbar = ({
   return (
     <nav className="hidden xl:flex items-center space-x-8">
       <motion.ul
-        variants={navbarContainerVariants}
+        variants={NAVIGATION_ANIMATIONS.navbar.container}
         className="flex items-center space-x-8"
       >
-        {navigationItems.map((item) => (
+        {NAVIGATION_ITEMS.map((item) => (
           <motion.li
             key={item.name}
-            variants={navbarItemVariants}
+            variants={NAVIGATION_ANIMATIONS.navbar.item}
             className="relative"
             onMouseEnter={() => setHoveredItem(item.name)}
             onMouseLeave={() => setHoveredItem(null)}
@@ -84,12 +84,12 @@ export const DesktopNavbar = ({
       </motion.ul>
 
       <motion.div
-        variants={navbarItemVariants}
+        variants={itemVariants}
         className="w-px h-6 bg-gradient-to-b from-transparent via-primary/30 to-transparent"
       />
 
       <motion.div
-        variants={navbarItemVariants}
+        variants={itemVariants}
         whileHover={{ scale: 1.02 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
       >
@@ -97,7 +97,7 @@ export const DesktopNavbar = ({
       </motion.div>
 
       <motion.div
-        variants={navbarItemVariants}
+        variants={itemVariants}
         whileHover={{ scale: 1.02 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
       >
@@ -124,7 +124,7 @@ export const DesktopNavbar = ({
       </motion.div>
 
       <motion.div
-        variants={navbarItemVariants}
+        variants={itemVariants}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
