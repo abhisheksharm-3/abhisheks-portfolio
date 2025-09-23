@@ -38,10 +38,10 @@ const useScrollEffect = (threshold: number): boolean => {
 
 /**
  * A custom hook that determines the active navigation item based on the current URL pathname.
- * @param {NavigationItemType[]} items - The array of navigation items to check against.
+ * @param {readonly NavigationItemType[]} items - The array of navigation items to check against.
  * @returns {string | null} The name of the active navigation item, or null if none are active.
  */
-const useActivePath = (items: NavigationItemType[]): string | null => {
+const useActivePath = (items: readonly NavigationItemType[]): string | null => {
   const pathname = usePathname();
   const activeItem = items.find((item) =>
     item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),

@@ -122,7 +122,7 @@ export interface NavigationItemType {
 
 export interface MobileMenuPropsType {
   onClose: () => void;
-  navigationItems: NavigationItemType[];
+  navigationItems: readonly NavigationItemType[];
   activeItem: string | null;
 }
 
