@@ -3,21 +3,14 @@
 import React from "react";
 import { motion, useTransform, MotionValue } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { useExperienceCounter } from "@/hooks/useExperienceCounter";
 import { SkillItemProps } from "@/lib/types";
 import { ANIMATION_CONFIG, SKILLS } from "@/data/hero";
 
 /**
- * Defines the shape for props containing mouse-position MotionValues.
- */
-interface MouseMotionValues {
-  mouseX: MotionValue<number>;
-  mouseY: MotionValue<number>;
-}
-
-/**
  * A utility function that smoothly scrolls the window to a given element ID.
- * @param sectionId The ID of the element to scroll to.
+ * @param {string} sectionId - The ID of the element to scroll to.
  */
 const scrollToSection = (sectionId: string): void => {
   const section = document.getElementById(sectionId);
@@ -25,7 +18,7 @@ const scrollToSection = (sectionId: string): void => {
 };
 
 /**
- * Renders a fixed-position counter displaying the years of professional experience.
+ * Renders a fixed-position counter displaying years of professional experience.
  */
 export const ExperienceCounter: React.FC = () => {
   const counterValue = useExperienceCounter(1);
@@ -36,6 +29,7 @@ export const ExperienceCounter: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 1.5, delay: 1 }}
       className="hidden xl:flex flex-col items-center fixed left-8 top-0 bottom-0 w-12 z-10"
+      aria-hidden="true"
     >
       <div className="h-1/3" />
       <div className="h-1/3 flex flex-col items-center justify-center">
@@ -54,11 +48,8 @@ export const ExperienceCounter: React.FC = () => {
 };
 
 /**
- * Renders the developer's name with a staggered reveal animation.
- */
-/**
- * Renders the developer's name with a staggered reveal animation.
- * Optimized for responsiveness across all screen sizes to prevent clipping.
+ * Renders the developer's name with a staggered reveal animation,
+ * optimized for responsiveness across all screen sizes.
  */
 export const HeroName: React.FC = () => (
   <div className="relative mb-20 sm:mb-28 md:mb-20">
@@ -73,13 +64,17 @@ export const HeroName: React.FC = () => (
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
-          className="block text-6xl font-serif tracking-tighter sm:max-w-[280px] sm:inline-block sm:text-7xl md:max-w-none md:pr-8 md:text-7xl lg:text-8xl xl:text-9xl bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent"
+          className={cn(
+            "block text-6xl font-serif tracking-tighter",
+            "sm:max-w-[280px] sm:inline-block sm:text-7xl",
+            "md:max-w-none md:pr-8 lg:text-8xl xl:text-9xl",
+            "bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent"
+          )}
         >
           Abhishek
         </motion.span>
       </div>
     </motion.div>
-
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
@@ -91,18 +86,22 @@ export const HeroName: React.FC = () => (
           initial={{ y: 100 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="block text-6xl font-serif italic tracking-tighter sm:text-7xl md:inline-block md:pr-8 md:text-7xl lg:text-8xl xl:text-9xl bg-gradient-to-r from-primary/70 to-primary/80 bg-clip-text text-transparent"
+          className={cn(
+            "block text-6xl font-serif italic tracking-tighter",
+            "sm:text-7xl md:inline-block md:pr-8 lg:text-8xl xl:text-9xl",
+            "bg-gradient-to-r from-primary/70 to-primary/80 bg-clip-text text-transparent"
+          )}
         >
           Sharma
         </motion.span>
       </div>
     </motion.div>
-
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 0.1, scale: 1 }}
       transition={{ duration: 1.5, delay: 0.8 }}
       className="absolute -right-10 top-1/2 -translate-y-1/2 w-32 h-32 border border-primary/30 rounded-full hidden md:block"
+      aria-hidden="true"
     />
   </div>
 );
@@ -128,11 +127,10 @@ export const HeroDescription: React.FC = () => {
             className="text-lg sm:text-xl md:text-2xl font-light"
           >
             <span
-              className={
-                line.gradient
+              className={cn(line.gradient
                   ? "bg-gradient-to-r from-primary/90 to-foreground bg-clip-text text-transparent"
                   : "text-foreground/70"
-              }
+              )}
             >
               {line.text}
             </span>
@@ -189,6 +187,7 @@ export const SkillItem: React.FC<SkillItemProps> = ({ skill, index }) => (
           initial={{ scale: 0.8 }}
           whileHover={{ scale: 1.2 }}
           transition={{ duration: 0.3 }}
+          aria-hidden="true"
         />
       </motion.div>
       <div className="relative">
@@ -207,6 +206,7 @@ export const SkillItem: React.FC<SkillItemProps> = ({ skill, index }) => (
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5, delay: 2.5 + index * 0.15 }}
+        aria-hidden="true"
       >
         <div className="relative w-16 h-[3px] bg-primary/5 rounded-full overflow-hidden">
           <motion.div
@@ -226,18 +226,15 @@ export const SkillItem: React.FC<SkillItemProps> = ({ skill, index }) => (
  * that react to mouse movement for a parallax effect.
  * @param {MouseMotionValues} props The mouse position motion values.
  */
-export const SkillsSection: React.FC<MouseMotionValues> = ({
+export const SkillsSection: React.FC<{
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+}> = ({
   mouseX,
   mouseY,
 }) => {
-  const x = useTransform(
-    mouseX,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
-  );
-  const y = useTransform(
-    mouseY,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
-  );
+  const x = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
+  const y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
 
   return (
     <div className="w-full md:w-1/2 md:pl-20 mt-0 md:mt-36 relative">
@@ -246,6 +243,7 @@ export const SkillsSection: React.FC<MouseMotionValues> = ({
         animate={{ opacity: 0.2 }}
         transition={{ duration: 1, delay: 1.5 }}
         className="absolute -left-10 top-0 w-[1px] h-32 bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden md:block"
+        aria-hidden="true"
       />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -278,6 +276,7 @@ export const SkillsSection: React.FC<MouseMotionValues> = ({
         transition={{ duration: 1.5, delay: 2.2 }}
         style={{ x, y }}
         className="mt-16 ml-auto mr-16 relative"
+        aria-hidden="true"
       >
         <div className="w-20 h-20 border border-primary/10 rounded-full relative">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 border border-primary/20 rounded-full" />
@@ -302,7 +301,8 @@ export const ScrollIndicator: React.FC = () => (
     animate={{ opacity: 1 }}
     transition={{ duration: 1, delay: 2.5 }}
     className="absolute bottom-12 right-12 flex flex-col items-center cursor-pointer z-10"
-    onClick={() => scrollToSection("projects")}
+    onClick={() => scrollToSection("work-section")}
+    aria-label="Scroll to projects section"
   >
     <div className="flex items-center mb-2">
       <span className="mr-2 text-xs tracking-widest uppercase text-foreground/30">

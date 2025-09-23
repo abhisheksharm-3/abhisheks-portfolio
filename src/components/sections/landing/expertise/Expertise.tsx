@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { useInView } from "framer-motion";
-import { Expertise } from "@/data/skills";
+import { Expertise } from "@/data/expertise";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import {
   FeaturedSkillsSection,

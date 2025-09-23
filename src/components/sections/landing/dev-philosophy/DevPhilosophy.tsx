@@ -24,7 +24,7 @@ export const Philosophy = () => {
   return (
     <section
       ref={sectionRef}
-      className="py-28 sm:py-36 relative overflow-hidden"
+      className="py-36 sm:py-44 relative overflow-hidden"
     >
       <SharedBackground
         isInView={isInView}

@@ -4,7 +4,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { ContactCTA } from "@/components/sections/landing/cta/ContactCTA";
 import { Hero } from "@/components/sections/landing/hero/HeroComponent";
 import { Philosophy } from "@/components/sections/landing/dev-philosophy/DevPhilosophy";
-import { Projects } from "@/components/sections/landing/projects/projects";
+import { Projects } from "@/components/sections/landing/projects/Projects";
 import { Skills } from "@/components/sections/landing/expertise/Expertise";
 
 /**

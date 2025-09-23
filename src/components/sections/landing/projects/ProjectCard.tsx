@@ -16,11 +16,13 @@ import {
   ExternalLink,
   Github,
   Calendar,
-  Sparkles,
 } from "lucide-react";
 import { Project } from "@/lib/types";
 
-/** Renders a subtle geometric accent pattern */
+/**
+ * Renders a subtle, animated geometric accent in the corner of the project image.
+ * @param {{ isHovered: boolean }} props - Controls the animation state.
+ */
 const ProjectImageAccent = ({ isHovered }: { isHovered: boolean }) => (
   <motion.div
     className="absolute top-6 left-6 z-20"
@@ -29,6 +31,7 @@ const ProjectImageAccent = ({ isHovered }: { isHovered: boolean }) => (
       opacity: isHovered ? 1 : 0.7,
     }}
     transition={{ duration: 0.4, ease: "easeOut" }}
+    aria-hidden="true"
   >
     <div className="relative">
       <div className="w-2 h-2 rounded-full bg-primary/60 shadow-lg shadow-primary/20" />
@@ -41,7 +44,10 @@ const ProjectImageAccent = ({ isHovered }: { isHovered: boolean }) => (
   </motion.div>
 );
 
-/** Renders a sophisticated gradient overlay */
+/**
+ * Renders a sophisticated gradient overlay that animates on hover.
+ * @param {{ isHovered: boolean }} props - Controls the animation state.
+ */
 const ProjectImageOverlay = ({ isHovered }: { isHovered: boolean }) => (
   <motion.div
     className="absolute inset-0 z-10"
@@ -54,7 +60,10 @@ const ProjectImageOverlay = ({ isHovered }: { isHovered: boolean }) => (
   />
 );
 
-/** Enhanced project image with premium hover effects */
+/**
+ * Renders the project's cover image with animated scale and filter effects on hover.
+ * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ */
 const ProjectImage = ({
   project,
   isHovered,
@@ -83,7 +92,10 @@ const ProjectImage = ({
   </motion.div>
 );
 
-/** Premium technology badges with staggered animations */
+/**
+ * Renders technology tags, showing the first two and a "+N" badge for the rest.
+ * @param {{ tags?: string[]; isHovered: boolean }} props - Component props.
+ */
 const ProjectTags = ({
   tags,
   isHovered,
@@ -144,7 +156,11 @@ const ProjectTags = ({
   );
 };
 
-/** Premium action buttons with enhanced interactions - FIXED HEIGHT */
+/**
+ * Renders project action links, transitioning between text links and full buttons on hover.
+ * This component maintains a fixed height to prevent layout shift during the transition.
+ * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ */
 const ProjectActions = ({
   project,
   isHovered,
@@ -157,11 +173,10 @@ const ProjectActions = ({
 
   return (
     <div className="h-8 flex items-center">
-      {" "}
-      {/* Fixed height container */}
       <AnimatePresence mode="wait">
         {isHovered ? (
           <motion.div
+            key="buttons"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 5 }}
@@ -169,36 +184,16 @@ const ProjectActions = ({
             className="flex items-center gap-2"
           >
             {hasUrl && (
-              <Button
-                variant="default"
-                size="sm"
-                className="h-8 px-3 text-xs font-medium shadow-md hover:shadow-lg transition-shadow"
-                asChild
-              >
-                <Link
-                  href={hasUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5"
-                >
+              <Button size="sm" className="h-8 px-3 text-xs font-medium" asChild>
+                <Link href={hasUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
                   View Live
                   <ArrowUpRight className="h-3 w-3" />
                 </Link>
               </Button>
             )}
             {hasGithub && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-3 text-xs font-medium hover:bg-muted/50"
-                asChild
-              >
-                <Link
-                  href={hasGithub}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5"
-                >
+              <Button variant="outline" size="sm" className="h-8 px-3 text-xs font-medium" asChild>
+                <Link href={hasGithub} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
                   <Github className="h-3 w-3" />
                   Code
                 </Link>
@@ -207,37 +202,24 @@ const ProjectActions = ({
           </motion.div>
         ) : (
           <motion.div
+            key="text-links"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex items-center gap-3 h-full" // Added h-full to maintain height
+            className="flex items-center gap-3 h-full"
           >
             {hasUrl && (
-              <motion.a
-                href={hasUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group"
-                whileHover={{ x: 2 }}
-                transition={{ duration: 0.2 }}
-              >
+              <Link href={hasUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group">
                 <ExternalLink className="h-3 w-3 group-hover:text-primary transition-colors" />
                 Visit
-              </motion.a>
+              </Link>
             )}
             {hasGithub && hasUrl && <div className="w-px h-3 bg-border/50" />}
             {hasGithub && (
-              <motion.a
-                href={hasGithub}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group"
-                whileHover={{ x: 2 }}
-                transition={{ duration: 0.2 }}
-              >
+              <Link href={hasGithub} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group">
                 <Github className="h-3 w-3 group-hover:text-primary transition-colors" />
                 Source
-              </motion.a>
+              </Link>
             )}
           </motion.div>
         )}
@@ -246,7 +228,10 @@ const ProjectActions = ({
   );
 };
 
-/** Premium header with refined typography */
+/**
+ * Renders the header section of the project card content.
+ * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ */
 const ProjectHeader = ({
   project,
   isHovered,
@@ -255,24 +240,28 @@ const ProjectHeader = ({
   isHovered: boolean;
 }) => (
   <CardHeader className="pt-8 pb-0 px-8">
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center justify-between mb-4">
       <motion.div
         className="flex items-center gap-2"
         animate={{ opacity: isHovered ? 1 : 0.7 }}
         transition={{ duration: 0.3 }}
       >
-        <Sparkles className="h-3.5 w-3.5 text-primary/60" />
+        <div className="w-2 h-2 rounded-full bg-primary/60" />
         <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">
           Featured
         </span>
       </motion.div>
-      <div className="flex items-center gap-2 text-xs text-muted-foreground/80">
+      <motion.div 
+        className="flex items-center gap-2 text-xs text-muted-foreground/80"
+        animate={{ opacity: isHovered ? 0.9 : 0.6 }}
+        transition={{ duration: 0.3 }}
+      >
         <Calendar className="h-3 w-3" />
         <span className="font-mono">{project.year}</span>
-      </div>
+      </motion.div>
     </div>
 
-    <CardTitle className="text-2xl md:text-3xl font-serif tracking-tight leading-tight">
+    <CardTitle className="text-2xl md:text-3xl font-serif tracking-tight leading-tight mb-4">
       <motion.span
         className="inline-block"
         animate={{
@@ -287,16 +276,19 @@ const ProjectHeader = ({
     <motion.div
       initial={{ width: "2rem", opacity: 0.3 }}
       animate={{
-        width: isHovered ? "4rem" : "3rem",
-        opacity: isHovered ? 0.6 : 0.4,
+        width: isHovered ? "5rem" : "3rem",
+        opacity: isHovered ? 0.8 : 0.5,
       }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="h-px bg-gradient-to-r from-primary/40 via-primary/20 to-transparent mt-4"
+      className="h-[1px] bg-gradient-to-r from-primary/50 via-primary/30 to-transparent"
     />
   </CardHeader>
 );
 
-/** Enhanced description with better readability */
+/**
+ * Renders the description section of the project card content.
+ * @param {{ description: string; isHovered: boolean }} props - Component props.
+ */
 const ProjectDescription = ({
   description,
   isHovered,
@@ -305,22 +297,28 @@ const ProjectDescription = ({
   isHovered: boolean;
 }) => (
   <CardContent className="pt-6 px-8 flex-1">
-    {" "}
-    {/* Added flex-1 to push footer down */}
-    <motion.p
-      className="text-muted-foreground text-sm leading-relaxed font-light"
+    <motion.div
+      className="relative"
       animate={{
-        opacity: isHovered ? 0.9 : 0.7,
+        opacity: isHovered ? 0.95 : 0.75,
         y: isHovered ? 0 : 2,
       }}
       transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      {description}
-    </motion.p>
+      {/* Subtle background accent */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/2 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      
+      <p className="relative text-muted-foreground text-sm leading-relaxed font-light px-2 py-1">
+        {description}
+      </p>
+    </motion.div>
   </CardContent>
 );
 
-/** Refined footer with better visual hierarchy */
+/**
+ * Renders the footer section of the project card content.
+ * @param {{ project: Project; isHovered: boolean }} props - Component props.
+ */
 const ProjectFooter = ({
   project,
   isHovered,
@@ -330,11 +328,14 @@ const ProjectFooter = ({
 }) => (
   <CardFooter className="px-8 pt-6 pb-8 flex justify-between items-center">
     <motion.div
-      className="flex items-center gap-2"
+      className="flex items-center gap-3"
       animate={{ opacity: isHovered ? 0.9 : 0.6 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="w-1 h-1 rounded-full bg-primary/40" />
+      <div className="flex items-center gap-2">
+        <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
+        <div className="w-3 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
+      </div>
       <span className="text-xs text-muted-foreground font-medium">
         {project.role || "Developer"}
       </span>
@@ -344,7 +345,8 @@ const ProjectFooter = ({
 );
 
 /**
- * Premium image container with enhanced visual effects
+ * A container component for the project's image and its decorative overlays.
+ * @param {{ project: Project; isHovered: boolean }} props - Component props.
  */
 export const ProjectImageContainer = ({
   project,
@@ -353,16 +355,26 @@ export const ProjectImageContainer = ({
   project: Project;
   isHovered: boolean;
 }) => (
-  <div className="relative w-full h-72 overflow-hidden rounded-t-xl">
+  <div className="relative w-full h-80 overflow-hidden rounded-t-2xl">
     <ProjectImageAccent isHovered={isHovered} />
     <ProjectImageOverlay isHovered={isHovered} />
     <ProjectImage project={project} isHovered={isHovered} />
     <ProjectTags tags={project.tags} isHovered={isHovered} />
+    
+    {/* Enhanced corner decoration */}
+    <div className="absolute bottom-4 left-4 opacity-60 group-hover:opacity-80 transition-opacity duration-300">
+      <div className="flex items-center gap-2">
+        <div className="w-2 h-2 rounded-full bg-primary/40" />
+        <div className="w-4 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
+      </div>
+    </div>
   </div>
 );
 
 /**
- * Premium content container with refined spacing and typography
+ * A container component for the project's textual content, including header, description, and footer.
+ * It uses a flex column layout to ensure the footer is always at the bottom.
+ * @param {{ project: Project; isHovered: boolean }} props - Component props.
  */
 export const ProjectContent = ({
   project,

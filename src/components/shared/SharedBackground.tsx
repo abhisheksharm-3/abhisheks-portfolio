@@ -105,7 +105,7 @@ export const SharedBackground = ({
   isInView: boolean;
   noiseFilterId: string;
 }) => (
-  <div className="absolute inset-0 pointer-events-none">
+  <div className="absolute inset-0 -mx-6 sm:-mx-8 lg:-mx-32 pointer-events-none">
     <NoiseTexture filterId={noiseFilterId} />
     <AsymmetricalGrid />
     <DecorativePaths isInView={isInView} />

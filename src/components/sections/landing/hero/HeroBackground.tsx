@@ -2,7 +2,7 @@
 
 import { motion, useTransform, MotionValue } from "framer-motion";
 
-// A mock config, replace with your actual data
+// This would typically be in a shared config file
 const ANIMATION_CONFIG = {
   MOUSE_PARALLAX_MULTIPLIER: {
     XLARGE: 0.1,
@@ -12,21 +12,11 @@ const ANIMATION_CONFIG = {
   },
 };
 
-// ====================================================================
-// Hero Background Components (hero-background.tsx)
-// ====================================================================
-
-// Type for the mouse position motion values, to be used by child components
-interface MouseMotionValues {
-  mouseX: MotionValue<number>;
-  mouseY: MotionValue<number>;
-}
-
 /**
- * Renders a subtle SVG noise filter as a background layer. (No changes needed)
+ * Renders a subtle SVG noise filter as a background layer.
  */
 export const NoiseBackground: React.FC = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
+  <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20" aria-hidden="true">
     <div className="absolute inset-0 z-0 mix-blend-overlay">
       <svg
         className="w-full h-full opacity-20"
@@ -48,42 +38,43 @@ export const NoiseBackground: React.FC = () => (
 );
 
 /**
- * Renders a faint, asymmetrical grid. (No changes needed)
+ * Renders a faint, asymmetrical grid of decorative lines.
  */
-export const AsymmetricalGrid: React.FC = () => (
-  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-    <div className="absolute inset-0 opacity-5">
-      {/* Vertical grid lines */}
-      {[
+export const AsymmetricalGrid: React.FC = () => {
+    const verticalLines = [
         { left: "13%", opacity: "bg-primary/30" },
         { left: "28%", opacity: "bg-primary/10" },
         { left: "67%", opacity: "bg-primary/20" },
         { left: "89%", opacity: "bg-primary/15" },
-      ].map((line, index) => (
-        <div
-          key={`vertical-${index}`}
-          className={`absolute top-0 bottom-0 w-[1px] ${line.opacity}`}
-          style={{ left: line.left }}
-        />
-      ))}
-      {/* Horizontal grid lines */}
-      {[
+    ];
+    const horizontalLines = [
         { top: "22%", opacity: "bg-primary/25" },
         { top: "58%", opacity: "bg-primary/10" },
         { top: "81%", opacity: "bg-primary/20" },
-      ].map((line, index) => (
-        <div
-          key={`horizontal-${index}`}
-          className={`absolute left-0 right-0 h-[1px] ${line.opacity}`}
-          style={{ top: line.top }}
-        />
-      ))}
-    </div>
-  </div>
-);
+    ];
+
+    return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5" aria-hidden="true">
+            {verticalLines.map((line, index) => (
+                <div
+                key={`v-${index}`}
+                className={`absolute top-0 bottom-0 w-[1px] ${line.opacity}`}
+                style={{ left: line.left }}
+                />
+            ))}
+            {horizontalLines.map((line, index) => (
+                <div
+                key={`h-${index}`}
+                className={`absolute left-0 right-0 h-[1px] ${line.opacity}`}
+                style={{ top: line.top }}
+                />
+            ))}
+        </div>
+    );
+};
 
 /**
- * Renders decorative SVG paths that animate as if being drawn. (No changes needed)
+ * Renders decorative SVG paths that animate as if being drawn on screen.
  */
 export const AnimatedPaths: React.FC = () => (
   <>
@@ -94,6 +85,7 @@ export const AnimatedPaths: React.FC = () => (
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 2, delay: 0.5 }}
+      aria-hidden="true"
     >
       <motion.path
         d="M10,30 C20,50 40,10 50,40 S80,20 90,40"
@@ -111,6 +103,7 @@ export const AnimatedPaths: React.FC = () => (
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 2, delay: 0.8 }}
+      aria-hidden="true"
     >
       <motion.path
         d="M10,50 Q40,20 50,50 T90,30"
@@ -125,40 +118,22 @@ export const AnimatedPaths: React.FC = () => (
 );
 
 /**
- * REFACTORED: Renders abstract shapes with mouse-interactive parallax.
+ * Renders various abstract shapes and gradients that have a mouse-interactive parallax effect.
+ * @param {MouseMotionValues} props - The mouse position motion values.
  */
-export const AbstractShapes: React.FC<MouseMotionValues> = ({
+export const AbstractShapes: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValue<number>; }> = ({
   mouseX,
   mouseY,
 }) => {
-  // Create transformed motion values. These hooks now run only once and are very efficient.
-  const lightX = useTransform(
-    mouseX,
-    (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE,
-  );
-  const lightY = useTransform(
-    mouseY,
-    (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE,
-  );
-  const accent1X = useTransform(
-    mouseX,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM,
-  );
-  const accent1Y = useTransform(
-    mouseY,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM,
-  );
-  const accent2X = useTransform(
-    mouseX,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
-  );
-  const accent2Y = useTransform(
-    mouseY,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
-  );
+  const lightX = useTransform(mouseX, (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE);
+  const lightY = useTransform(mouseY, (val) => val * -ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.XLARGE);
+  const accent1X = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM);
+  const accent1Y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.MEDIUM);
+  const accent2X = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
+  const accent2Y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
 
   return (
-    <>
+    <div className="absolute inset-0" aria-hidden="true">
       <motion.div
         className="absolute -left-[10%] top-[15%] w-[45vw] h-[45vw] rounded-full bg-gradient-to-br from-primary/5 via-primary/2 to-transparent blur-[120px]"
         animate={{ scale: [1, 1.05, 1], opacity: [0.3, 0.4, 0.3] }}
@@ -184,30 +159,26 @@ export const AbstractShapes: React.FC<MouseMotionValues> = ({
         transition={{ duration: 1.5, delay: 1.2 }}
         style={{ x: accent2X, y: accent2Y }}
       />
-    </>
+    </div>
   );
 };
 
 /**
- * REFACTORED: Renders an asymmetrical decorative shape with a subtle mouse parallax effect.
+ * Renders an asymmetrical decorative shape with a subtle mouse parallax effect.
+ * @param {MouseMotionValues} props - The mouse position motion values.
  */
-export const AsymmetricalDecoration: React.FC<MouseMotionValues> = ({
+export const AsymmetricalDecoration: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValue<number>; }> = ({
   mouseX,
   mouseY,
 }) => {
-  const x = useTransform(
-    mouseX,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL,
-  );
-  const y = useTransform(
-    mouseY,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL,
-  );
+  const x = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL);
+  const y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL);
 
   return (
     <motion.div
       className="absolute top-[10%] right-[20%] hidden md:block"
       style={{ x, y }}
+      aria-hidden="true"
     >
       <motion.div
         initial={{ opacity: 0 }}

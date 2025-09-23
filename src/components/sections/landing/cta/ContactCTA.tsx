@@ -153,7 +153,7 @@ export const ContactCTA = () => {
     >
       <SharedBackground isInView={isInView} noiseFilterId="contactCTANoiseFilter" />
       
-      <div className="container mx-auto px-6 sm:px-8 lg:px-16 relative z-10">
+      <div className="container mx-auto px-6 relative z-10">
         <SectionHeader subtitle="reach out" isInView={isInView}>
           <span className="font-serif italic bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none pr-4">
             let&apos;s make cool stuff

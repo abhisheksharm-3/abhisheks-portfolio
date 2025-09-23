@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Expertise } from "@/data/skills";
+import { Expertise } from "@/data/expertise";
 import { motion, Variants } from "framer-motion";
 
 /**

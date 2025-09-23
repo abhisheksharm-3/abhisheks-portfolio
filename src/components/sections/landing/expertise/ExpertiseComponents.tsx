@@ -85,7 +85,7 @@ export const FeaturedSkillsSection = ({
             transition={{ duration: 0.6, delay: 0.4 }}
             className="text-2xl sm:text-3xl font-serif italic mb-6"
           >
-            Development Approach
+            how i build stuff
           </motion.h3>
           <motion.div
             initial={{ width: 0 }}
@@ -99,10 +99,10 @@ export const FeaturedSkillsSection = ({
             transition={{ duration: 0.6, delay: 0.6 }}
             className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8"
           >
-            My process is pragmatic: build small, ship fast, refine
-            continuously. Whether it&apos;s prototyping an AI agent in 48 hours
-            or deploying a scalable backend with Appwrite, I value momentum and
-            clarity — without losing sight of design and usability.
+            i keep it simple: start small, ship fast, tweak along the way. could
+            be spinning up an ai bot in a weekend or rolling out a backend that
+            just scales. i move quick, but never forget the details that make
+            things actually usable.
           </motion.p>
           <Button
             variant="outline"
@@ -110,7 +110,7 @@ export const FeaturedSkillsSection = ({
             asChild
           >
             <Link href="/about" className="flex items-center text-sm">
-              Learn more about my process
+              check out more on my process
               <motion.div whileHover={{ x: 3 }} className="ml-2">
                 <ArrowRight className="h-4 w-4 text-primary/70" />
               </motion.div>

@@ -27,19 +27,19 @@ import {
  * The main hero section for the homepage.
  *
  * This component orchestrates a complex visual experience by combining:
- * 1.  **Mouse Parallax**: Tracks mouse movement to create a 3D depth effect on background and UI elements.
- * 2.  **Scroll Animation**: Fades out and moves the content upwards as the user scrolls down the page.
- * 3.  **Content Layout**: Structures the main hero content, including name, description, and skills.
+ * 1.  **Mouse Parallax**: Tracks mouse movement for a 3D depth effect.
+ * 2.  **Scroll Animation**: Fades out and moves content up on scroll.
+ * 3.  **Content Layout**: Structures the hero's name, description, and skills.
  *
  * @returns {JSX.Element} The fully rendered and interactive hero section.
  */
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Set up a performant mouse move listener to track mouse position relative to the container's center.
+  // Set up a performant mouse move listener to track mouse position
+  // relative to the center of the hero section.
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const { current: el } = containerRef;
@@ -59,13 +59,13 @@ export const Hero = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  // Track scroll progress relative to the hero section itself.
+  // Track scroll progress relative to the hero section.
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // Create animations based on scroll progress.
+  // Create spring-smoothed animations based on scroll progress.
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
   const smoothY = useSpring(y, { damping: 15, stiffness: 100 });
   const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
