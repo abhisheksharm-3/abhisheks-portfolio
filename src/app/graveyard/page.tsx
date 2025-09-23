@@ -14,7 +14,7 @@ import {
 import { deadProjects } from "@/data/project";
 import { ArrowRight } from "lucide-react";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
-import { getPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import { getHalfScreenPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * A collection of inspirational quotes about learning from failure.
@@ -48,7 +48,7 @@ const GraveyardPage = () => {
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className={`${getPageWrapperClasses()} relative overflow-hidden`}
+        className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
       >
         <GraveyardBackground />
 

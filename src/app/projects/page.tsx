@@ -13,7 +13,7 @@ import {
   ProjectAnalytics,
 } from "@/components/sections/projects";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
-import { getPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import { getHalfScreenPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * A sorted, unique list of all project tags, generated once at the module level.
@@ -43,7 +43,7 @@ const ProjectsPage = () => {
         initial="hidden"
         ref={sectionRef}
         animate={isInView ? "visible" : "hidden"}
-        className={`${getPageWrapperClasses()} relative overflow-hidden`}
+        className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
       >
         <ProjectsPageBackground />
 

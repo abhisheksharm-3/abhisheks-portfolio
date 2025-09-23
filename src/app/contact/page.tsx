@@ -11,7 +11,7 @@ import {
 } from "@/components/sections/contact";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import { useRef } from "react";
-import { getPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import { getHalfScreenPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Renders the main contact page, orchestrating the animated entry of its sections.
@@ -27,7 +27,7 @@ const ContactPage = () => {
         variants={containerVariants}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className={`${getPageWrapperClasses()} relative overflow-hidden`}
+        className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
       >
         <ContactBackground />
 

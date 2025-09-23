@@ -64,6 +64,13 @@ export const getPageWrapperClasses = () =>
   `${SPACING_STANDARDS.PAGE.TOP_PADDING} ${SPACING_STANDARDS.PAGE.BOTTOM_PADDING} ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING}`;
 
 /**
+ * Helper function to get page wrapper classes with half-screen top spacing for better UX
+ * Used on pages where content should start at approximately half the screen height
+ */
+export const getHalfScreenPageWrapperClasses = () => 
+  `pt-[25vh] ${SPACING_STANDARDS.PAGE.BOTTOM_PADDING} ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING}`;
+
+/**
  * Helper function to get consistent section classes
  */
 export const getSectionClasses = () => 

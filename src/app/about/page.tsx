@@ -14,7 +14,7 @@ import {
   SkillsSection,
 } from "@/components/sections/about";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
-import { getPageWrapperClasses, getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import { getHalfScreenPageWrapperClasses, getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Renders the "About Me" page, featuring sections that animate into view on scroll.
@@ -27,13 +27,12 @@ const AboutPage = () => {
 
   return (
     <AppShell>
-      <div className={getPageWrapperClasses()}>
+      <div className={getHalfScreenPageWrapperClasses()}>
         <motion.section
           ref={sectionRef}
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className={getSectionClasses()}
         >
           <SharedBackground
             isInView={isInView}
