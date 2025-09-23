@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, MotionValue } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  MotionValue,
+} from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { AppShell } from "@/components/layout/AppShell";
 import { useEffect, useRef } from "react";
@@ -115,7 +120,10 @@ const AnimatedPaths = () => (
 /**
  * Renders abstract shapes and gradients that react to mouse movement.
  */
-const AbstractShapes: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValue<number> }> = ({ mouseX, mouseY }) => {
+const AbstractShapes: React.FC<{
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+}> = ({ mouseX, mouseY }) => {
   const lightX = useTransform(mouseX, (val) => val * -0.1);
   const lightY = useTransform(mouseY, (val) => val * -0.1);
   const accent1X = useTransform(mouseX, (val) => val * 0.06);
@@ -148,7 +156,10 @@ const AbstractShapes: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValu
 /**
  * Renders a decorative corner element that reacts to mouse movement.
  */
-const AsymmetricalDecoration: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValue<number> }> = ({ mouseX, mouseY }) => {
+const AsymmetricalDecoration: React.FC<{
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+}> = ({ mouseX, mouseY }) => {
   const x = useTransform(mouseX, (val) => val * 0.04);
   const y = useTransform(mouseY, (val) => val * 0.04);
 
@@ -170,7 +181,6 @@ const AsymmetricalDecoration: React.FC<{ mouseX: MotionValue<number>; mouseY: Mo
   );
 };
 
-
 // --- Main Error Component ---
 
 /**
@@ -181,7 +191,13 @@ const AsymmetricalDecoration: React.FC<{ mouseX: MotionValue<number>; mouseY: Mo
  * @param {Error} props.error The error that was thrown.
  * @param {Function} props.reset A function to re-render the component tree.
  */
-const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: () => void; }) => {
+const Error = ({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
@@ -209,16 +225,13 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
 
   return (
     <AppShell showBackground={false}>
-      <div
-        ref={containerRef}
-        className="relative min-h-screen overflow-hidden"
-      >
+      <div ref={containerRef} className="relative min-h-screen overflow-hidden">
         <NoiseBackground />
         <AsymmetricalGrid />
         <AbstractShapes mouseX={mouseX} mouseY={mouseY} />
         <AnimatedPaths />
         <AsymmetricalDecoration mouseX={mouseX} mouseY={mouseY} />
-        
+
         <div className="relative z-10 min-h-screen flex items-center justify-center text-center px-6">
           <div className="w-full max-w-2xl">
             <motion.div
@@ -227,18 +240,20 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: 0.2 }}
             >
-              <div
-                className="relative inline-flex items-center justify-center w-32 h-32 bg-destructive/5 rounded-full border border-destructive/10"
-              >
+              <div className="relative inline-flex items-center justify-center w-32 h-32 bg-destructive/5 rounded-full border border-destructive/10">
                 <motion.div
                   className="absolute inset-0"
-                  animate={{ 
+                  animate={{
                     boxShadow: [
                       "0 0 0 0px rgba(239, 68, 68, 0.1)",
                       "0 0 0 20px rgba(239, 68, 68, 0)",
-                    ] 
+                    ],
                   }}
-                  transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+                  transition={{
+                    duration: 2.5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
                 />
                 <AlertTriangle className="w-16 h-16 text-destructive/80" />
               </div>
@@ -254,14 +269,15 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
                 Something went wrong
               </motion.h1>
             </div>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0 }}
               className="text-lg text-muted-foreground max-w-md mx-auto leading-relaxed mb-8"
             >
-              Looks like something broke. You can try refreshing, or reach out if it keeps happening.
+              Looks like something broke. You can try refreshing, or reach out
+              if it keeps happening.
             </motion.p>
 
             <motion.details
@@ -280,13 +296,16 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
                 </p>
                 {error.digest && (
                   <p className="text-xs text-muted-foreground">
-                    Error ID: <code className="bg-background px-1 rounded text-xs">{error.digest}</code>
+                    Error ID:{" "}
+                    <code className="bg-background px-1 rounded text-xs">
+                      {error.digest}
+                    </code>
                   </p>
                 )}
               </div>
             </motion.details>
-            
-            <motion.div 
+
+            <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -300,10 +319,10 @@ const Error = ({ error, reset }: { error: Error & { digest?: string }; reset: ()
                 <RefreshCw className="mr-2 h-4 w-4 transition-transform group-hover:rotate-180" />
                 Try again
               </Button>
-              
-              <Button 
-                asChild 
-                variant="outline" 
+
+              <Button
+                asChild
+                variant="outline"
                 size="lg"
                 className="w-full sm:w-auto group"
               >

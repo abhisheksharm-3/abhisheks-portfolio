@@ -14,7 +14,10 @@ import {
 import { deadProjects } from "@/data/project";
 import { ArrowRight } from "lucide-react";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
-import { getHalfScreenPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import {
+  getHalfScreenPageWrapperClasses,
+  SPACING_STANDARDS,
+} from "@/lib/config/spacing-standards";
 
 /**
  * A collection of inspirational quotes about learning from failure.
@@ -60,7 +63,9 @@ const GraveyardPage = () => {
           <GraveyardIntroCard />
         </motion.div>
 
-        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} mb-16`}>
+        <div
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} mb-16`}
+        >
           {deadProjects.map((project, index) => (
             <motion.div key={project.title} variants={itemVariants}>
               <GraveyardProjectCard project={project} index={index} />

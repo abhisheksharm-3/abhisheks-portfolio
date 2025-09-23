@@ -49,7 +49,11 @@ export async function generateMetadata({
  * @param {ReactNode} props.children - The page component to be rendered within this layout.
  * @returns {ReactNode} The rendered children.
  */
-const DetailedProjectPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
+const DetailedProjectPageLayout = ({
+  children,
+}: {
+  children: ReactNode;
+}): ReactNode => {
   return children;
 };
 

@@ -55,42 +55,45 @@ export const SPACING_STANDARDS = {
 /**
  * Helper function to get consistent container classes
  */
-export const getContainerClasses = () => SPACING_STANDARDS.PAGE.CONTAINER_PADDING;
+export const getContainerClasses = () =>
+  SPACING_STANDARDS.PAGE.CONTAINER_PADDING;
 
 /**
  * Helper function to get consistent page wrapper classes
  */
-export const getPageWrapperClasses = () => 
+export const getPageWrapperClasses = () =>
   `${SPACING_STANDARDS.PAGE.TOP_PADDING} ${SPACING_STANDARDS.PAGE.BOTTOM_PADDING} ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING}`;
 
 /**
  * Helper function to get page wrapper classes with half-screen top spacing for better UX
  * Used on pages where content should start at approximately half the screen height
  */
-export const getHalfScreenPageWrapperClasses = () => 
+export const getHalfScreenPageWrapperClasses = () =>
   `pt-[25vh] ${SPACING_STANDARDS.PAGE.BOTTOM_PADDING} ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING}`;
 
 /**
  * Helper function to get consistent section classes
  */
-export const getSectionClasses = () => 
+export const getSectionClasses = () =>
   `${SPACING_STANDARDS.PAGE.SECTION_VERTICAL} relative overflow-hidden`;
 
 /**
  * Helper function to get consistent header classes
  */
-export const getHeaderClasses = () => 
+export const getHeaderClasses = () =>
   `flex flex-col ${SPACING_STANDARDS.HEADER.SECTION_MARGIN_BOTTOM} relative z-10`;
 
 /**
  * Helper function to get consistent grid classes
  */
-export const getGridClasses = (size: 'small' | 'medium' | 'large' | 'extra-large' = 'medium') => {
+export const getGridClasses = (
+  size: "small" | "medium" | "large" | "extra-large" = "medium",
+) => {
   const gaps = {
     small: SPACING_STANDARDS.GRID.GAP_SMALL,
     medium: SPACING_STANDARDS.GRID.GAP_MEDIUM,
     large: SPACING_STANDARDS.GRID.GAP_LARGE,
-    'extra-large': SPACING_STANDARDS.GRID.GAP_EXTRA_LARGE,
+    "extra-large": SPACING_STANDARDS.GRID.GAP_EXTRA_LARGE,
   };
   return gaps[size];
 };

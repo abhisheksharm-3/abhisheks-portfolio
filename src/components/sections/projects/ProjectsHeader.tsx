@@ -1,7 +1,10 @@
 "use client";
 
 import { motion, Variants } from "framer-motion";
-import { getHeaderClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import {
+  getHeaderClasses,
+  SPACING_STANDARDS,
+} from "@/lib/config/spacing-standards";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -31,11 +34,11 @@ const itemVariants: Variants = {
  */
 export const ProjectsHeader = () => {
   return (
-    <motion.div
-      variants={containerVariants}
-      className={getHeaderClasses()}
-    >
-      <motion.div variants={itemVariants} className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}>
+    <motion.div variants={containerVariants} className={getHeaderClasses()}>
+      <motion.div
+        variants={itemVariants}
+        className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
+      >
         <div className="w-7 h-7 rounded-md border border-primary/10 flex items-center justify-center mr-3">
           <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
         </div>
@@ -44,7 +47,9 @@ export const ProjectsHeader = () => {
         </span>
       </motion.div>
 
-      <div className={`overflow-visible ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}>
+      <div
+        className={`overflow-visible ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
+      >
         <motion.h1
           variants={itemVariants}
           className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"

@@ -1,4 +1,12 @@
-import { Mail, Code, ExternalLink, Github, Linkedin, Instagram, LucideIcon } from "lucide-react";
+import {
+  Mail,
+  Code,
+  ExternalLink,
+  Github,
+  Linkedin,
+  Instagram,
+  LucideIcon,
+} from "lucide-react";
 import { RiGithubFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
 import z from "zod";
 
@@ -17,7 +25,7 @@ export const CONTACT_INFO = {
     url: "https://linkedin.com/in/abhisheksan/",
   },
   twitter: {
-    username: "abhisheksharm_3", 
+    username: "abhisheksharm_3",
     url: "https://twitter.com/abhisheksharm_3",
   },
 } as const;
@@ -57,7 +65,7 @@ export const SOCIAL_LINKS = [
     displayUrl: `linkedin.com/in/${CONTACT_INFO.linkedin.username}`,
   },
   {
-    label: "GitHub", 
+    label: "GitHub",
     icon: RiGithubFill,
     href: CONTACT_INFO.github.url,
     displayUrl: `github.com/${CONTACT_INFO.github.username}`,

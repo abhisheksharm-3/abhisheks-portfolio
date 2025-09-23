@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -41,7 +41,7 @@ export const MobileNavLink = ({
       href={item.href}
       className={cn(
         "relative z-10 text-lg font-light flex items-center justify-center transition-all duration-200 py-3 px-4 w-full",
-        isActive ? "text-primary" : "text-foreground/80"
+        isActive ? "text-primary" : "text-foreground/80",
       )}
       onClick={onClick}
     >

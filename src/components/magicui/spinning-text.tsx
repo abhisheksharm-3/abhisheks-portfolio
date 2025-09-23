@@ -39,7 +39,9 @@ export function SpinningText({
   variants,
 }: SpinningTextProps) {
   if (typeof children !== "string" && !Array.isArray(children)) {
-    throw new Error("SpinningText children must be a string or an array of strings");
+    throw new Error(
+      "SpinningText children must be a string or an array of strings",
+    );
   }
 
   const text = Array.isArray(children) ? children.join("") : children;

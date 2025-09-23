@@ -9,13 +9,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { featuredProjects } from "@/data/project";
 import { ProjectsPropsType, ProjectCardPropsType } from "@/lib/types";
-import {
-  PROJECT_ANIMATIONS,
-} from "@/data/animations";
+import { PROJECT_ANIMATIONS } from "@/data/animations";
 import { ProjectImageContainer, ProjectContent } from "./ProjectCard";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SectionHeader } from "@/components/shared/SectionHeader";
-import { getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import {
+  getSectionClasses,
+  SPACING_STANDARDS,
+} from "@/lib/config/spacing-standards";
 
 /**
  * Renders the "see all projects" link for the section header.
@@ -81,7 +82,7 @@ const CTASection = ({ isInView }: { isInView: boolean }) => (
   >
     {/* Background gradient */}
     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent rounded-2xl blur-xl" />
-    
+
     <div className="relative">
       {/* Decorative elements */}
       <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
@@ -89,7 +90,7 @@ const CTASection = ({ isInView }: { isInView: boolean }) => (
         <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
         <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-primary/30" />
       </div>
-      
+
       <Button
         variant="outline"
         size="lg"
@@ -112,7 +113,7 @@ const CTASection = ({ isInView }: { isInView: boolean }) => (
             transition={{ duration: 0.8 }}
             aria-hidden="true"
           />
-          
+
           <motion.span
             className="font-medium tracking-wide relative z-10 mr-4"
             whileHover={{ scale: 1.02 }}
@@ -120,7 +121,7 @@ const CTASection = ({ isInView }: { isInView: boolean }) => (
           >
             let&apos;s build something cool
           </motion.span>
-          
+
           <motion.div
             className="
               relative z-10 w-8 h-8 rounded-full 
@@ -163,7 +164,7 @@ const ProjectCard = ({
       ease: "easeOut" as const,
     },
   };
-  
+
   return (
     <motion.div
       {...cardAnimation}
@@ -175,7 +176,7 @@ const ProjectCard = ({
     >
       {/* Enhanced background glow */}
       <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background/30 to-primary/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl scale-105" />
-      
+
       <Card
         className={cn(
           "relative overflow-hidden transition-all duration-500 py-0",
@@ -183,12 +184,12 @@ const ProjectCard = ({
           "shadow-lg shadow-primary/5 rounded-2xl",
           "group-hover:shadow-xl group-hover:shadow-primary/10",
           "group-hover:border-primary/20 group-hover:bg-background/80",
-          isHovered && "transform scale-[1.02]"
+          isHovered && "transform scale-[1.02]",
         )}
       >
         <ProjectImageContainer project={project} isHovered={isHovered} />
         <ProjectContent project={project} isHovered={isHovered} />
-        
+
         {/* Corner accent enhancement */}
         <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
           <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />
@@ -213,19 +214,17 @@ export const Projects = ({
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
-    <section
-      className={getSectionClasses()}
-      ref={sectionRef}
-      id="work-section"
-    >
+    <section className={getSectionClasses()} ref={sectionRef} id="work-section">
       <SharedBackground
         isInView={isInView}
         noiseFilterId="projectsNoiseFilter"
       />
-      
-      <div className={`container mx-auto ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING} relative z-10`}>
+
+      <div
+        className={`container mx-auto ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING} relative z-10`}
+      >
         <ProjectsHeader headline={headline} isInView={isInView} />
-        
+
         {/* Enhanced projects grid */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -235,7 +234,7 @@ export const Projects = ({
         >
           {/* Subtle background pattern */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-primary/2 rounded-3xl opacity-60" />
-          
+
           <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-20 p-6">
             {featuredProjects.map((project, index) => (
               <ProjectCard
@@ -250,7 +249,7 @@ export const Projects = ({
             ))}
           </div>
         </motion.div>
-        
+
         {cta && <CTASection isInView={isInView} />}
       </div>
     </section>

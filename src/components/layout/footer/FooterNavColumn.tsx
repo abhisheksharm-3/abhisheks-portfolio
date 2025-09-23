@@ -3,10 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  containerVariants,
-  itemVariants,
-} from "@/lib/config/page-animations";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import { NAVIGATION_ITEMS } from "@/data/navigation";
 
 /**

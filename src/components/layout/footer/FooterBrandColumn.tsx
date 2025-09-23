@@ -1,7 +1,4 @@
-import {
-  containerVariants,
-  itemVariants,
-} from "@/lib/config/page-animations";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import { SOCIAL_LINKS } from "@/data/contact";
 import { motion } from "framer-motion";
 import Link from "next/link";

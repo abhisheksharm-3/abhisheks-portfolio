@@ -20,9 +20,14 @@ export const SectionHeader = ({
     initial={{ opacity: 0, y: 24 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
     transition={{ duration: 0.8 }}
-    className={cn(`flex flex-col ${SPACING_STANDARDS.HEADER.SECTION_MARGIN_BOTTOM} relative z-10`, className)}
+    className={cn(
+      `flex flex-col ${SPACING_STANDARDS.HEADER.SECTION_MARGIN_BOTTOM} relative z-10`,
+      className,
+    )}
   >
-    <div className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}>
+    <div
+      className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
+    >
       <motion.div
         initial={{ scale: 0 }}
         animate={isInView ? { scale: 1 } : {}}

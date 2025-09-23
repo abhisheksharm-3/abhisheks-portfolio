@@ -13,13 +13,16 @@ import {
   ProjectAnalytics,
 } from "@/components/sections/projects";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
-import { getHalfScreenPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import {
+  getHalfScreenPageWrapperClasses,
+  SPACING_STANDARDS,
+} from "@/lib/config/spacing-standards";
 
 /**
  * A sorted, unique list of all project tags, generated once at the module level.
  */
 const allTags = Array.from(
-  new Set(projects.flatMap((project) => project.tags))
+  new Set(projects.flatMap((project) => project.tags)),
 ).sort();
 
 /**
@@ -51,11 +54,17 @@ const ProjectsPage = () => {
           <ProjectsHeader />
         </motion.div>
 
-        <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+        <motion.div
+          variants={itemVariants}
+          className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
+        >
           <ProjectAnalytics />
         </motion.div>
 
-        <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+        <motion.div
+          variants={itemVariants}
+          className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
+        >
           <ProjectsFilters
             allTags={allTags}
             activeFilter={activeFilter}

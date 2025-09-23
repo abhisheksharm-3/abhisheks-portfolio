@@ -115,7 +115,6 @@ export function calculateProjectStats(): ProjectStats {
 // GITHUB STATS FUNCTIONS
 // ============================================================================
 
-
 // ============================================================================
 // TECHNICAL EXPERTISE FUNCTIONS
 // ============================================================================
@@ -290,7 +289,6 @@ const getCategoryFullName = (category: string): string => {
 // ============================================================================
 // COMBINED STATS FUNCTIONS
 // ============================================================================
-
 
 /**
  * Utility function to get project statistics synchronously.

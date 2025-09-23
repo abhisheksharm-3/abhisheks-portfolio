@@ -14,7 +14,11 @@ import {
   SkillsSection,
 } from "@/components/sections/about";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
-import { getHalfScreenPageWrapperClasses, getSectionClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import {
+  getHalfScreenPageWrapperClasses,
+  getSectionClasses,
+  SPACING_STANDARDS,
+} from "@/lib/config/spacing-standards";
 
 /**
  * Renders the "About Me" page, featuring sections that animate into view on scroll.
@@ -43,7 +47,9 @@ const AboutPage = () => {
             <AboutPageHeader />
           </motion.div>
 
-          <div className={`grid grid-cols-1 md:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_LARGE} ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}>
+          <div
+            className={`grid grid-cols-1 md:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_LARGE} ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}
+          >
             <motion.div variants={itemVariants} className="md:col-span-2">
               <BioCard />
             </motion.div>
@@ -52,15 +58,24 @@ const AboutPage = () => {
             </motion.div>
           </div>
 
-          <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+          <motion.div
+            variants={itemVariants}
+            className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
+          >
             <ExperienceEducationSection />
           </motion.div>
 
-          <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+          <motion.div
+            variants={itemVariants}
+            className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
+          >
             <SkillsSection />
           </motion.div>
 
-          <motion.div variants={itemVariants} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+          <motion.div
+            variants={itemVariants}
+            className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
+          >
             <InterestsSection />
           </motion.div>
 

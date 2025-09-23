@@ -5,10 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight, History } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {
-  NAVIGATION_ITEMS,
-  NAVIGATION_ANIMATIONS,
-} from "@/data/navigation";
+import { NAVIGATION_ITEMS, NAVIGATION_ANIMATIONS } from "@/data/navigation";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
 import { itemVariants } from "@/lib/config/page-animations";
@@ -47,11 +44,11 @@ export const DesktopNavbar = ({
                 "relative text-sm font-medium transition-colors duration-300",
                 activeItem === item.name
                   ? "text-primary"
-                  : "text-foreground/70 hover:text-primary"
+                  : "text-foreground/70 hover:text-primary",
               )}
             >
               <span className="relative z-10">{item.name}</span>
-              
+
               <motion.div
                 className="absolute inset-0 -mx-2 -my-1 rounded-lg bg-primary/5 -z-0"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -61,7 +58,7 @@ export const DesktopNavbar = ({
                 }}
                 transition={{ duration: 0.2 }}
               />
-              
+
               {(activeItem === item.name || hoveredItem === item.name) && (
                 <motion.div
                   layoutId="nav-underline"
@@ -69,7 +66,7 @@ export const DesktopNavbar = ({
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
-              
+
               {activeItem === item.name && (
                 <motion.div
                   className="absolute -bottom-2 left-0 h-0.5 w-full bg-primary/20 blur-sm rounded-full"
@@ -109,7 +106,7 @@ export const DesktopNavbar = ({
             "text-xs text-foreground/60 hover:text-foreground/80",
             "hover:bg-foreground/5 group transition-all duration-300",
             "border border-transparent hover:border-primary/10",
-            "rounded-lg px-3 py-2"
+            "rounded-lg px-3 py-2",
           )}
         >
           <Link
@@ -118,7 +115,9 @@ export const DesktopNavbar = ({
             rel="noopener noreferrer"
           >
             <History className="mr-1.5 h-3 w-3 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
-            <span className="group-hover:tracking-wide transition-all duration-300">Old Portfolio</span>
+            <span className="group-hover:tracking-wide transition-all duration-300">
+              Old Portfolio
+            </span>
           </Link>
         </Button>
       </motion.div>
@@ -138,7 +137,7 @@ export const DesktopNavbar = ({
             "hover:from-primary/10 hover:to-primary/20 text-xs group",
             "transition-all duration-300 overflow-hidden",
             "shadow-sm hover:shadow-md hover:shadow-primary/10",
-            "rounded-lg px-4 py-2"
+            "rounded-lg px-4 py-2",
           )}
         >
           <Link href="/contact">

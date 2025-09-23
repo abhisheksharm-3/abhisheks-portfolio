@@ -46,7 +46,7 @@ export const MobileMenuFooter = () => (
               rel="noopener noreferrer"
               aria-label={platform.label}
             >
-              {platform.icon}
+              <platform.icon className="h-5 w-5" />
             </a>
           </Button>
         </motion.div>

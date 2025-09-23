@@ -27,7 +27,7 @@ export const QuoteBlock = ({ isInView }: { isInView: boolean }) => (
       >
         &ldquo;
       </motion.div>
-      
+
       <motion.div
         initial={{ opacity: 0, scale: 0.5, rotate: 15 }}
         animate={isInView ? { opacity: 1, scale: 1, rotate: 0 } : {}}
@@ -36,7 +36,7 @@ export const QuoteBlock = ({ isInView }: { isInView: boolean }) => (
       >
         &rdquo;
       </motion.div>
-      
+
       {/* Enhanced blockquote */}
       <blockquote className="relative z-10 text-2xl sm:text-3xl lg:text-4xl font-serif italic leading-relaxed mb-8 px-4 sm:px-8">
         <motion.span
@@ -55,7 +55,7 @@ export const QuoteBlock = ({ isInView }: { isInView: boolean }) => (
         </motion.span>
       </blockquote>
     </div>
-    
+
     {/* Enhanced tagline */}
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -86,14 +86,14 @@ export const DecorativeDivider = ({ isInView }: { isInView: boolean }) => (
       transition={{
         duration: PHILOSOPHY_ANIMATIONS.decorative.duration,
         delay: PHILOSOPHY_ANIMATIONS.decorative.delay,
-        ease: "easeOut"
+        ease: "easeOut",
       }}
       className="h-[1px] bg-gradient-to-r from-transparent via-primary/60 to-primary/40 relative"
     >
       {/* Subtle glow effect */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/30 to-primary/20 blur-sm" />
     </motion.div>
-    
+
     {/* Enhanced central element */}
     <motion.div
       initial={{ scale: 0, opacity: 0, rotate: 180 }}
@@ -104,18 +104,23 @@ export const DecorativeDivider = ({ isInView }: { isInView: boolean }) => (
       {/* Outer ring with pulse */}
       <motion.div
         animate={isInView ? { scale: [1, 1.2, 1] } : {}}
-        transition={{ duration: 2, delay: 1.5, repeat: Infinity, repeatDelay: 3 }}
+        transition={{
+          duration: 2,
+          delay: 1.5,
+          repeat: Infinity,
+          repeatDelay: 3,
+        }}
         className="w-4 h-4 rounded-full border border-primary/40 bg-background/80 backdrop-blur-sm relative"
       >
         {/* Inner dot */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="w-1.5 h-1.5 rounded-full bg-primary/60" />
         </div>
-        
+
         {/* Subtle glow */}
         <div className="absolute inset-0 rounded-full bg-primary/20 blur-md opacity-50" />
       </motion.div>
-      
+
       {/* Decorative rays */}
       <div className="absolute inset-0 flex items-center justify-center">
         {[0, 45, 90, 135].map((rotation, index) => (
@@ -130,7 +135,7 @@ export const DecorativeDivider = ({ isInView }: { isInView: boolean }) => (
         ))}
       </div>
     </motion.div>
-    
+
     {/* Right line with enhanced gradient */}
     <motion.div
       initial={{ width: 0, opacity: 0 }}
@@ -138,7 +143,7 @@ export const DecorativeDivider = ({ isInView }: { isInView: boolean }) => (
       transition={{
         duration: PHILOSOPHY_ANIMATIONS.decorative.duration,
         delay: PHILOSOPHY_ANIMATIONS.decorative.delay,
-        ease: "easeOut"
+        ease: "easeOut",
       }}
       className="h-[1px] bg-gradient-to-l from-transparent via-primary/60 to-primary/40 relative"
     >
@@ -171,11 +176,13 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
     >
       {/* Subtle background accent */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/3 to-transparent rounded-xl -mx-4" />
-      
-      <p className="
+
+      <p
+        className="
         relative text-foreground/70 text-base sm:text-lg font-light leading-relaxed 
         px-4 py-6 sm:px-6 lg:px-8
-      ">
+      "
+      >
         <motion.span
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -183,18 +190,20 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
           className="inline-block"
         >
           building for me is about{" "}
-          <span className="text-primary/80 font-medium">clarity and momentum</span>.
-        </motion.span>
-        {" "}
+          <span className="text-primary/80 font-medium">
+            clarity and momentum
+          </span>
+          .
+        </motion.span>{" "}
         <motion.span
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.6, delay: 1.3 }}
           className="inline-block"
         >
-          i like making stuff that&apos;s lightweight, scales when it needs to, and actually solves a problem —
-        </motion.span>
-        {" "}
+          i like making stuff that&apos;s lightweight, scales when it needs to,
+          and actually solves a problem —
+        </motion.span>{" "}
         <motion.span
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -202,11 +211,11 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
           className="inline-block"
         >
           could be an{" "}
-          <span className="text-primary/70 font-medium">ai agent</span> digging through messy pdfs, 
-          or a no-frills{" "}
-          <span className="text-primary/70 font-medium">android app</span> that just gets out of your way.
-        </motion.span>
-        {" "}
+          <span className="text-primary/70 font-medium">ai agent</span> digging
+          through messy pdfs, or a no-frills{" "}
+          <span className="text-primary/70 font-medium">android app</span> that
+          just gets out of your way.
+        </motion.span>{" "}
         <motion.span
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
@@ -214,11 +223,14 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
           className="inline-block"
         >
           my approach:{" "}
-          <span className="text-foreground/90 font-medium italic">start scrappy, ship fast, keep tweaking</span>.
+          <span className="text-foreground/90 font-medium italic">
+            start scrappy, ship fast, keep tweaking
+          </span>
+          .
         </motion.span>
       </p>
     </motion.div>
-    
+
     {/* Enhanced footer tag */}
     <motion.div
       initial={{ opacity: 0, y: 10 }}
@@ -229,22 +241,26 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
       {/* Decorative container */}
       <div className="relative group cursor-default">
         {/* Background with hover effect */}
-        <div className="
+        <div
+          className="
           absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-primary/10 
           rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300
-        " />
-        
+        "
+        />
+
         {/* Border accent */}
         <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-12 h-[1px] bg-primary/30" />
-        
+
         {/* Text content */}
-        <p className="
+        <p
+          className="
           relative text-foreground/60 font-light text-sm tracking-wide 
           px-6 py-3 transition-colors duration-300 group-hover:text-primary/70
-        ">
+        "
+        >
           how i think about dev
         </p>
-        
+
         {/* Side decorations */}
         <div className="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-2 w-1 h-1 rounded-full bg-primary/40 opacity-60" />
         <div className="absolute right-0 top-1/2 transform -translate-y-1/2 translate-x-2 w-1 h-1 rounded-full bg-primary/40 opacity-60" />
@@ -266,15 +282,15 @@ export const CardCornerAccent = () => (
       {/* Primary lines */}
       <div className="absolute top-0 right-0 w-px h-20 bg-gradient-to-b from-primary/30 via-primary/20 to-transparent transition-all duration-300 group-hover:from-primary/50" />
       <div className="absolute top-0 right-0 h-px w-20 bg-gradient-to-l from-primary/30 via-primary/20 to-transparent transition-all duration-300 group-hover:from-primary/50" />
-      
+
       {/* Subtle inner lines */}
       <div className="absolute top-2 right-0 w-px h-12 bg-gradient-to-b from-primary/10 to-transparent" />
       <div className="absolute top-0 right-2 h-px w-12 bg-gradient-to-l from-primary/10 to-transparent" />
-      
+
       {/* Corner dot */}
       <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-primary/40" />
     </div>
-    
+
     {/* Bottom-left corner accent */}
     <div
       className="absolute bottom-0 left-0 w-20 h-20 overflow-hidden group opacity-60"
@@ -283,11 +299,11 @@ export const CardCornerAccent = () => (
       {/* Primary lines */}
       <div className="absolute bottom-0 left-0 w-px h-20 bg-gradient-to-t from-primary/20 via-primary/15 to-transparent transition-all duration-300 group-hover:from-primary/30" />
       <div className="absolute bottom-0 left-0 h-px w-20 bg-gradient-to-r from-primary/20 via-primary/15 to-transparent transition-all duration-300 group-hover:from-primary/30" />
-      
+
       {/* Subtle inner lines */}
       <div className="absolute bottom-2 left-0 w-px h-12 bg-gradient-to-t from-primary/8 to-transparent" />
       <div className="absolute bottom-0 left-2 h-px w-12 bg-gradient-to-r from-primary/8 to-transparent" />
-      
+
       {/* Corner dot */}
       <div className="absolute bottom-1 left-1 w-1 h-1 rounded-full bg-primary/30" />
     </div>

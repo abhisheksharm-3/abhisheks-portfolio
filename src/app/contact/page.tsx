@@ -11,7 +11,10 @@ import {
 } from "@/components/sections/contact";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import { useRef } from "react";
-import { getHalfScreenPageWrapperClasses, SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import {
+  getHalfScreenPageWrapperClasses,
+  SPACING_STANDARDS,
+} from "@/lib/config/spacing-standards";
 
 /**
  * Renders the main contact page, orchestrating the animated entry of its sections.
@@ -35,7 +38,9 @@ const ContactPage = () => {
           <ContactHeader />
         </motion.div>
 
-        <div className={`grid grid-cols-1 lg:grid-cols-2 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} max-w-6xl mx-auto`}>
+        <div
+          className={`grid grid-cols-1 lg:grid-cols-2 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} max-w-6xl mx-auto`}
+        >
           <motion.div variants={itemVariants}>
             <SendMessageCard />
           </motion.div>

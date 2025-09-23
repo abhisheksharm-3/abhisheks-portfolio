@@ -11,12 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  ArrowUpRight,
-  ExternalLink,
-  Github,
-  Calendar,
-} from "lucide-react";
+import { ArrowUpRight, ExternalLink, Github, Calendar } from "lucide-react";
 import { ProjectType } from "@/lib/types";
 
 /**
@@ -184,16 +179,35 @@ const ProjectActions = ({
             className="flex items-center gap-2"
           >
             {hasUrl && (
-              <Button size="sm" className="h-8 px-3 text-xs font-medium" asChild>
-                <Link href={hasUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
+              <Button
+                size="sm"
+                className="h-8 px-3 text-xs font-medium"
+                asChild
+              >
+                <Link
+                  href={hasUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5"
+                >
                   View Live
                   <ArrowUpRight className="h-3 w-3" />
                 </Link>
               </Button>
             )}
             {hasGithub && (
-              <Button variant="outline" size="sm" className="h-8 px-3 text-xs font-medium" asChild>
-                <Link href={hasGithub} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5">
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 px-3 text-xs font-medium"
+                asChild
+              >
+                <Link
+                  href={hasGithub}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5"
+                >
                   <Github className="h-3 w-3" />
                   Code
                 </Link>
@@ -209,14 +223,24 @@ const ProjectActions = ({
             className="flex items-center gap-3 h-full"
           >
             {hasUrl && (
-              <Link href={hasUrl} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group">
+              <Link
+                href={hasUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group"
+              >
                 <ExternalLink className="h-3 w-3 group-hover:text-primary transition-colors" />
                 Visit
               </Link>
             )}
             {hasGithub && hasUrl && <div className="w-px h-3 bg-border/50" />}
             {hasGithub && (
-              <Link href={hasGithub} target="_blank" rel="noopener noreferrer" className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group">
+              <Link
+                href={hasGithub}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5 group"
+              >
                 <Github className="h-3 w-3 group-hover:text-primary transition-colors" />
                 Source
               </Link>
@@ -251,7 +275,7 @@ const ProjectHeader = ({
           Featured
         </span>
       </motion.div>
-      <motion.div 
+      <motion.div
         className="flex items-center gap-2 text-xs text-muted-foreground/80"
         animate={{ opacity: isHovered ? 0.9 : 0.6 }}
         transition={{ duration: 0.3 }}
@@ -307,7 +331,7 @@ const ProjectDescription = ({
     >
       {/* Subtle background accent */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/2 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      
+
       <p className="relative text-muted-foreground text-sm leading-relaxed font-light px-2 py-1">
         {description}
       </p>
@@ -360,7 +384,7 @@ export const ProjectImageContainer = ({
     <ProjectImageOverlay isHovered={isHovered} />
     <ProjectImage project={project} isHovered={isHovered} />
     <ProjectTags tags={project.tags} isHovered={isHovered} />
-    
+
     {/* Enhanced corner decoration */}
     <div className="absolute bottom-4 left-4 opacity-60 group-hover:opacity-80 transition-opacity duration-300">
       <div className="flex items-center gap-2">

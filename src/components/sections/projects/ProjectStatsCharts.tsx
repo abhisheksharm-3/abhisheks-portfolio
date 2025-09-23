@@ -2,9 +2,7 @@
 
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-import {
-  calculateTechnicalExpertise,
-} from "@/lib/stats";
+import { calculateTechnicalExpertise } from "@/lib/stats";
 import { fetchGitHubStats } from "@/lib/server-actions";
 import { ProjectStats, GitHubStats } from "@/lib/types/stats";
 import { projects } from "@/data/project";

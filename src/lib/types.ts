@@ -115,9 +115,9 @@ export interface ContactEmailPropsType {
   referer: string;
 }
 
-export interface NavigationItemType { 
-  name: string; 
-  href: string; 
+export interface NavigationItemType {
+  name: string;
+  href: string;
 }
 
 export interface MobileMenuPropsType {

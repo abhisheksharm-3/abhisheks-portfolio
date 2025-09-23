@@ -69,7 +69,7 @@ export const HeroName: React.FC = () => (
             "block text-6xl font-serif tracking-tighter",
             "sm:max-w-[280px] sm:inline-block sm:text-7xl",
             "md:max-w-none md:pr-8 lg:text-8xl xl:text-9xl",
-            "bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent"
+            "bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent",
           )}
         >
           Abhishek
@@ -90,7 +90,7 @@ export const HeroName: React.FC = () => (
           className={cn(
             "block text-6xl font-serif italic tracking-tighter",
             "sm:text-7xl md:inline-block md:pr-8 lg:text-8xl xl:text-9xl",
-            "bg-gradient-to-r from-primary/70 to-primary/80 bg-clip-text text-transparent"
+            "bg-gradient-to-r from-primary/70 to-primary/80 bg-clip-text text-transparent",
           )}
         >
           Sharma
@@ -128,9 +128,10 @@ export const HeroDescription: React.FC = () => {
             className="text-lg sm:text-xl md:text-2xl font-light"
           >
             <span
-              className={cn(line.gradient
+              className={cn(
+                line.gradient
                   ? "bg-gradient-to-r from-primary/90 to-foreground bg-clip-text text-transparent"
-                  : "text-foreground/70"
+                  : "text-foreground/70",
               )}
             >
               {line.text}
@@ -230,12 +231,15 @@ export const SkillItem: React.FC<SkillItemPropsType> = ({ skill, index }) => (
 export const SkillsSection: React.FC<{
   mouseX: MotionValue<number>;
   mouseY: MotionValue<number>;
-}> = ({
-  mouseX,
-  mouseY,
-}) => {
-  const x = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
-  const y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE);
+}> = ({ mouseX, mouseY }) => {
+  const x = useTransform(
+    mouseX,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
+  );
+  const y = useTransform(
+    mouseY,
+    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.LARGE,
+  );
 
   return (
     <div className="w-full md:w-1/2 md:pl-20 mt-0 md:mt-36 relative">

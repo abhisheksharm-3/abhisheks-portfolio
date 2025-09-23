@@ -9,7 +9,10 @@ import {
   TechnicalExpertise,
   CombinedStats,
 } from "@/lib/types/stats";
-import { calculateProjectStats, calculateTechnicalExpertise } from "@/lib/stats";
+import {
+  calculateProjectStats,
+  calculateTechnicalExpertise,
+} from "@/lib/stats";
 
 const GITHUB_USERNAME = "abhisheksharm-3";
 

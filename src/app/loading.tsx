@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, MotionValue } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  MotionValue,
+} from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { useEffect, useRef } from "react";
 
@@ -112,7 +117,10 @@ const AnimatedPaths = () => (
 /**
  * Renders abstract shapes and gradients that react to mouse movement.
  */
-const AbstractShapes: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValue<number> }> = ({ mouseX, mouseY }) => {
+const AbstractShapes: React.FC<{
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+}> = ({ mouseX, mouseY }) => {
   const lightX = useTransform(mouseX, (val) => val * -0.1);
   const lightY = useTransform(mouseY, (val) => val * -0.1);
 
@@ -133,7 +141,6 @@ const AbstractShapes: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValu
   );
 };
 
-
 // --- Main Loading Component ---
 
 /**
@@ -151,7 +158,9 @@ const Loading = () => {
       const { current: el } = containerRef;
       if (!el) return;
       const { clientX, clientY, currentTarget } = e;
-      const { left, top, width, height } = (currentTarget as HTMLElement).getBoundingClientRect();
+      const { left, top, width, height } = (
+        currentTarget as HTMLElement
+      ).getBoundingClientRect();
       const x = clientX - (left + width / 2);
       const y = clientY - (top + height / 2);
       mouseX.set(x);
@@ -164,10 +173,7 @@ const Loading = () => {
 
   return (
     <AppShell showBackground={false}>
-      <div
-        ref={containerRef}
-        className="relative min-h-screen overflow-hidden"
-      >
+      <div ref={containerRef} className="relative min-h-screen overflow-hidden">
         <NoiseBackground />
         <AsymmetricalGrid />
         <AbstractShapes mouseX={mouseX} mouseY={mouseY} />
@@ -217,7 +223,7 @@ const Loading = () => {
                 Loading
               </motion.h2>
             </div>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

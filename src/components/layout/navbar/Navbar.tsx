@@ -44,7 +44,7 @@ const useScrollEffect = (threshold: number): boolean => {
 const useActivePath = (items: NavigationItemType[]): string | null => {
   const pathname = usePathname();
   const activeItem = items.find((item) =>
-    item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+    item.href === "/" ? pathname === "/" : pathname.startsWith(item.href),
   );
   return activeItem?.name || null;
 };
@@ -81,7 +81,7 @@ export const Navbar = () => {
         }}
         className={cn(
           "fixed top-0 w-full px-6 sm:px-8 lg:px-32 flex justify-between items-center z-40 transition-all duration-500 ease-out",
-          isScrolled ? "py-3" : "py-5"
+          isScrolled ? "py-3" : "py-5",
         )}
       >
         <NavbarBackground isScrolled={isScrolled} />
@@ -92,7 +92,7 @@ export const Navbar = () => {
         >
           <Logo />
         </motion.div>
-        
+
         <DesktopNavbar activeItem={activeItem} />
 
         <div className="flex xl:hidden items-center space-x-3 z-50">
@@ -103,7 +103,7 @@ export const Navbar = () => {
           >
             <ModeToggle />
           </motion.div>
-          
+
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -120,7 +120,10 @@ export const Navbar = () => {
                 animate={{ rotate: mobileMenuOpen ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Menu size={18} className="text-foreground/70 hover:text-foreground transition-colors" />
+                <Menu
+                  size={18}
+                  className="text-foreground/70 hover:text-foreground transition-colors"
+                />
               </motion.div>
             </Button>
           </motion.div>

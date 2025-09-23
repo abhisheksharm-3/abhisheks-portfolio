@@ -2,9 +2,7 @@
 
 import { motion, useInView, Variants } from "framer-motion";
 import { useState, useEffect, useMemo, useRef } from "react";
-import {
-  calculateTechnicalExpertise,
-} from "@/lib/stats";
+import { calculateTechnicalExpertise } from "@/lib/stats";
 import { fetchGitHubStats } from "@/lib/server-actions";
 import { GitHubStats, ContributionDay } from "@/lib/types/stats";
 import { calculateProjectStats } from "@/lib/stats";

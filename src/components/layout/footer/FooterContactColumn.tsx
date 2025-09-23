@@ -1,8 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  containerVariants,
-  itemVariants,
-} from "@/lib/config/page-animations";
+import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Mail } from "lucide-react";
 import Link from "next/link";
@@ -17,9 +14,7 @@ export const FooterContactColumn = () => (
     variants={itemVariants}
     className="md:text-right flex flex-col items-start md:items-end"
   >
-    <h3 className="text-sm font-medium text-foreground/70 mb-5">
-      hit me up
-    </h3>
+    <h3 className="text-sm font-medium text-foreground/70 mb-5">hit me up</h3>
     <motion.div
       variants={containerVariants}
       className="space-y-4 flex flex-col items-start md:items-end"

@@ -4,7 +4,12 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Palette, ArrowRight } from "lucide-react";
 import { ExpertiseType } from "@/lib/types";

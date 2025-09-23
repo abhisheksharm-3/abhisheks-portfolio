@@ -105,7 +105,9 @@ export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
 
         {/* Content */}
         <div className={SPACING_STANDARDS.CARD.PADDING_SMALL}>
-          <div className={`flex items-start justify-between ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}>
+          <div
+            className={`flex items-start justify-between ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}
+          >
             <h3 className="text-xl font-serif text-foreground/90 group-hover:text-primary/90 transition-colors duration-300">
               {project.title}
             </h3>

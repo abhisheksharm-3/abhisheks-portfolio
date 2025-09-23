@@ -13,7 +13,7 @@ export const NavbarBackground = ({ isScrolled }: { isScrolled: boolean }) => (
       "absolute inset-0 -z-10 transition-all duration-500",
       isScrolled
         ? "backdrop-blur-xl"
-        : "border-transparent backdrop-blur-none bg-transparent"
+        : "border-transparent backdrop-blur-none bg-transparent",
     )}
     animate={{
       opacity: isScrolled ? 1 : 0.8,

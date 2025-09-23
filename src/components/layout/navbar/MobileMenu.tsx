@@ -36,7 +36,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
         className="fixed inset-0 z-40 bg-background/90 backdrop-blur-md"
         onClick={onClose}
       />
-      
+
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -55,7 +55,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
         >
           <X className="h-5 w-5 text-foreground/70 group-hover:text-foreground transition-colors" />
         </motion.button>
-        
+
         <div className="h-full flex flex-col justify-between px-6 pb-10">
           <motion.div
             className="flex flex-col items-center pt-8"
@@ -73,7 +73,9 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
                 <h2 className="text-3xl font-light tracking-tighter text-center">
                   <span className="text-primary font-serif italic">A</span>
                   <span className="font-extralight tracking-tight">BHK</span>
-                  <span className="text-primary/70 align-super text-xs">®</span>
+                  <span className="text-primary/70 align-super text-xs">
+                    ®
+                  </span>
                 </h2>
                 <motion.div
                   className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mt-3 w-16 mx-auto"
@@ -83,17 +85,17 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
                 />
               </Link>
             </motion.div>
-            
+
             <div className="flex flex-col items-center gap-4 w-full max-w-sm px-8">
               {navigationItems.map((item, index) => (
                 <motion.div
                   key={item.name}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ 
-                    delay: 0.2 + index * 0.08, 
+                  transition={{
+                    delay: 0.2 + index * 0.08,
                     duration: 0.4,
-                    ease: "easeOut"
+                    ease: "easeOut",
                   }}
                   className="w-full"
                 >
@@ -109,7 +111,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
               ))}
             </div>
 
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7, duration: 0.4 }}
@@ -122,7 +124,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
                 className={cn(
                   "text-sm text-foreground/60 hover:text-foreground/80",
                   "hover:bg-foreground/5 group transition-all duration-200",
-                  "rounded-lg px-4 py-2"
+                  "rounded-lg px-4 py-2",
                 )}
                 onClick={onClose}
               >

@@ -1,6 +1,11 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, MotionValue } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+  MotionValue,
+} from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
@@ -39,42 +44,45 @@ const NoiseBackground = () => (
  * Renders a grid of vertical and horizontal lines with a 'destructive' theme.
  */
 const AsymmetricalGrid = () => {
-    const verticalLines = [
-        { left: "15%", opacity: "bg-destructive/30" },
-        { left: "32%", opacity: "bg-destructive/10" },
-        { left: "68%", opacity: "bg-destructive/20" },
-        { left: "85%", opacity: "bg-destructive/15" },
-    ];
-    const horizontalLines = [
-        { top: "25%", opacity: "bg-destructive/25" },
-        { top: "55%", opacity: "bg-destructive/10" },
-        { top: "75%", opacity: "bg-destructive/20" },
-    ];
-  
-    return (
-      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
-        {verticalLines.map((line, index) => (
-          <div
-            key={`v-${index}`}
-            className={`absolute top-0 bottom-0 w-[1px] ${line.opacity}`}
-            style={{ left: line.left }}
-          />
-        ))}
-        {horizontalLines.map((line, index) => (
-          <div
-            key={`h-${index}`}
-            className={`absolute left-0 right-0 h-[1px] ${line.opacity}`}
-            style={{ top: line.top }}
-          />
-        ))}
-      </div>
-    );
-  };
-  
+  const verticalLines = [
+    { left: "15%", opacity: "bg-destructive/30" },
+    { left: "32%", opacity: "bg-destructive/10" },
+    { left: "68%", opacity: "bg-destructive/20" },
+    { left: "85%", opacity: "bg-destructive/15" },
+  ];
+  const horizontalLines = [
+    { top: "25%", opacity: "bg-destructive/25" },
+    { top: "55%", opacity: "bg-destructive/10" },
+    { top: "75%", opacity: "bg-destructive/20" },
+  ];
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5">
+      {verticalLines.map((line, index) => (
+        <div
+          key={`v-${index}`}
+          className={`absolute top-0 bottom-0 w-[1px] ${line.opacity}`}
+          style={{ left: line.left }}
+        />
+      ))}
+      {horizontalLines.map((line, index) => (
+        <div
+          key={`h-${index}`}
+          className={`absolute left-0 right-0 h-[1px] ${line.opacity}`}
+          style={{ top: line.top }}
+        />
+      ))}
+    </div>
+  );
+};
+
 /**
  * Renders abstract shapes and gradients that react to mouse movement.
  */
-const AbstractShapes: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValue<number> }> = ({ mouseX, mouseY }) => {
+const AbstractShapes: React.FC<{
+  mouseX: MotionValue<number>;
+  mouseY: MotionValue<number>;
+}> = ({ mouseX, mouseY }) => {
   const lightX = useTransform(mouseX, (val) => val * -0.1);
   const lightY = useTransform(mouseY, (val) => val * -0.1);
 
@@ -94,7 +102,6 @@ const AbstractShapes: React.FC<{ mouseX: MotionValue<number>; mouseY: MotionValu
     </>
   );
 };
-
 
 // --- Main 404 Not Found Component ---
 
@@ -127,14 +134,11 @@ const NotFound = () => {
 
   return (
     <AppShell showBackground={false}>
-      <div
-        ref={containerRef}
-        className="relative min-h-screen overflow-hidden"
-      >
+      <div ref={containerRef} className="relative min-h-screen overflow-hidden">
         <NoiseBackground />
         <AsymmetricalGrid />
         <AbstractShapes mouseX={mouseX} mouseY={mouseY} />
-        
+
         <div className="relative z-10 min-h-screen flex items-center justify-center text-center px-6">
           <div className="w-full max-w-2xl">
             <motion.div
@@ -154,28 +158,29 @@ const NotFound = () => {
                 </motion.span>
               </div>
             </motion.div>
-            
+
             <div className="overflow-hidden mb-4">
-                <motion.h2
-                  initial={{ y: 40 }}
-                  animate={{ y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.6 }}
-                  className="text-3xl font-semibold sm:text-4xl lg:text-5xl bg-gradient-to-r from-foreground/90 to-foreground/70 bg-clip-text text-transparent font-serif"
-                >
-                  Page Not Found
-                </motion.h2>
+              <motion.h2
+                initial={{ y: 40 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+                className="text-3xl font-semibold sm:text-4xl lg:text-5xl bg-gradient-to-r from-foreground/90 to-foreground/70 bg-clip-text text-transparent font-serif"
+              >
+                Page Not Found
+              </motion.h2>
             </div>
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.0 }}
               className="mb-8 text-lg leading-relaxed text-muted-foreground max-w-md mx-auto"
             >
-              The page you&apos;re looking for doesn&apos;t exist or has been moved. Let&apos;s get you back on track.
+              The page you&apos;re looking for doesn&apos;t exist or has been
+              moved. Let&apos;s get you back on track.
             </motion.p>
 
-            <motion.div 
+            <motion.div
               className="flex flex-col sm:flex-row gap-4 justify-center items-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -196,9 +201,9 @@ const NotFound = () => {
                   Home
                 </Link>
               </Button>
-              <Button 
-                asChild 
-                variant="ghost" 
+              <Button
+                asChild
+                variant="ghost"
                 size="lg"
                 className="w-full sm:w-auto group"
               >
