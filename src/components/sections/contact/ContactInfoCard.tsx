@@ -66,7 +66,7 @@ export const ContactInfoCard: React.FC = () => {
           <div className="p-2 rounded-md border border-primary/10 bg-primary/5">
             <Mail className="h-5 w-5 text-primary/70" strokeWidth={1.5} />
           </div>
-          <h2 className="text-2xl font-serif italic">Contact Details</h2>
+          <h2 className="text-2xl font-serif italic">contact details</h2>
         </motion.div>
 
         <motion.div

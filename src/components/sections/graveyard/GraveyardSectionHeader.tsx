@@ -51,7 +51,7 @@ export const GraveyardSectionHeader = ({ quote }: { quote: string }) => {
         >
           <div className="py-1">
             <span className="bg-gradient-to-r from-red-500/80 via-red-500/90 to-red-500/70 bg-clip-text text-transparent select-none">
-              The Project Graveyard
+              the project graveyard
             </span>
           </div>
         </motion.h1>
@@ -73,9 +73,9 @@ export const GraveyardSectionHeader = ({ quote }: { quote: string }) => {
         variants={itemVariants}
         className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
       >
-        Here lies the stuff I never shipped. Some ideas broke, some lost steam,
-        and some just weren’t meant to be — but all of them taught me something
-        I carry forward.
+        here lies the stuff i never shipped. some ideas broke, some lost steam,
+        and some just weren’t meant to be. but each one left me with scars,
+        skills, or stories i still carry forward.
       </motion.p>
 
       <motion.div variants={itemVariants} className="mt-4 max-w-2xl">

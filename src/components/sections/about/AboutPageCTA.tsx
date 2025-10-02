@@ -25,7 +25,7 @@ export const AboutPageCTA = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            View my projects
+            view my projects
           </motion.span>
           <motion.div
             className="ml-3 h-6 w-6 rounded-full border border-primary/20 flex items-center justify-center relative z-10 group-hover:border-primary/40 transition-colors duration-300"

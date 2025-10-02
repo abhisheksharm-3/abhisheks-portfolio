@@ -41,7 +41,7 @@ export const ContactHeader = () => {
           <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
         </div>
         <span className="text-xs text-primary/60 uppercase tracking-wider font-light">
-          Get in Touch
+          get in touch
         </span>
       </motion.div>
 
@@ -54,7 +54,7 @@ export const ContactHeader = () => {
         >
           <div className="py-1">
             <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
-              Let&apos;s Connect
+              let&apos;s connect
             </span>
           </div>
         </motion.h1>
@@ -76,8 +76,8 @@ export const ContactHeader = () => {
         variants={itemVariants}
         className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
       >
-        I&apos;m available for freelance projects, collaborations, and full-time
-        opportunities. Feel free to reach out through the form below or schedule
+        i&apos;m available for freelance projects, collaborations, and full-time
+        opportunities. feel free to reach out through the form below or schedule
         a meeting directly.
       </motion.p>
     </motion.div>

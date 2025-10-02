@@ -157,10 +157,8 @@ const Loading = () => {
     const handleMouseMove = (e: MouseEvent) => {
       const { current: el } = containerRef;
       if (!el) return;
-      const { clientX, clientY, currentTarget } = e;
-      const { left, top, width, height } = (
-        currentTarget as HTMLElement
-      ).getBoundingClientRect();
+      const { clientX, clientY } = e;
+      const { left, top, width, height } = el.getBoundingClientRect();
       const x = clientX - (left + width / 2);
       const y = clientY - (top + height / 2);
       mouseX.set(x);

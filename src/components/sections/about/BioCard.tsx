@@ -39,9 +39,9 @@ export const BioCard = () => {
           className={`${SPACING_STANDARDS.CONTENT.LIST_SPACING} text-foreground/70 font-light`}
         >
           <p>
-            Hey, I’m Abhishek — a developer who likes turning ideas into working
-            products. I started out just curious about how apps worked, and that
-            curiosity pretty much snowballed into studying Computer Science and
+            hey, i'm abhishek — a dev who likes turning ideas into working
+            products. started out just curious about how apps worked, and that
+            curiosity pretty much snowballed into studying computer science and
             building all kinds of projects.
           </p>
 
@@ -49,15 +49,15 @@ export const BioCard = () => {
             className={`pl-4 border-l-2 border-primary/30 ${SPACING_STANDARDS.CONTENT.PARAGRAPH_SPACING} italic`}
           >
             <p className="text-foreground/80">
-              “Clever code makes you feel smart. Simple code helps you sleep
-              better.”
+              "clever code makes you feel smart. simple code helps you sleep
+              better."
             </p>
           </div>
 
           <p>
-            Most of what I do sits somewhere between frontend, backend, and
-            mobile. I enjoy shipping stuff that actually feels good to use, not
-            just works. That balance between technical detail and user
+            most of what i do sits somewhere between frontend, backend, and
+            mobile. i enjoy shipping stuff that actually feels good to use, not
+            just works. that balance between technical detail and user
             experience is what keeps me hooked.
           </p>
 
@@ -67,26 +67,26 @@ export const BioCard = () => {
             <h4
               className={`text-sm font-medium ${SPACING_STANDARDS.CONTENT.SMALL_SPACING} text-primary/80`}
             >
-              What I’m into right now
+              what i'm into right now
             </h4>
             <p className="text-sm">
-              Playing around with RAG systems, AI agents, and Appwrite backends.
-              Also deep diving into Jetpack Compose and native Android — because
-              I think mobile + AI is where a lot of the fun is headed.
+              playing around with rag systems, ai agents, and appwrite backends.
+              also deep diving into jetpack compose and native android — because
+              i think mobile + ai is where a lot of the fun is headed.
             </p>
           </div>
 
           <p>
-            Hackathons have been a big part of my story — they pushed me to ship
+            hackathons have been a big part of my story — they pushed me to ship
             fast, solve problems creatively, and actually enjoy the chaos.
-            Whether it was building a media verification tool in a day or trying
-            out weird new ideas, those sprints shaped how I work.
+            whether it was building a media verification tool in a day or trying
+            out weird new ideas, those sprints shaped how i work.
           </p>
 
           <p>
-            Outside of projects, I’m just trying to keep learning,
+            outside of projects, i'm just trying to keep learning,
             experimenting, and building things that are both useful and a little
-            exciting. That’s the vibe I want to carry into whatever I work on
+            exciting. that's the vibe i want to carry into whatever i work on
             next.
           </p>
         </div>

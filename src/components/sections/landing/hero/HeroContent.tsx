@@ -112,9 +112,9 @@ export const HeroName: React.FC = () => (
  */
 export const HeroDescription: React.FC = () => {
   const descriptionLines = [
-    { text: "Full-stack developer", gradient: true },
-    { text: "who loves building side products", gradient: false },
-    { text: "and chasing ideas past midnight", gradient: false },
+    { text: "full-stack dev", gradient: true },
+    { text: "who builds side projects", gradient: false },
+    { text: "and chases ideas past midnight", gradient: false },
   ];
 
   return (
@@ -151,13 +151,12 @@ export const HeroDescription: React.FC = () => {
         transition={{ duration: 0.8, delay: 1.6 }}
         className="text-sm sm:text-base text-foreground/50 font-light leading-relaxed max-w-lg"
       >
-        CS & Engineering graduate who started coding in{" "}
-        <span className="text-foreground/70">8th grade</span>. I’ve built
+        cs grad who started coding in{" "}
+        <span className="text-foreground/70">8th grade</span>. i've built
         everything from{" "}
-        <span className="text-primary/80">AI-powered scheduling apps </span>
-        to <span className="text-primary/80">minimalist mobile tools</span>. I
-        enjoy making things that feel smooth, intentional, and a little bit
-        clever.
+        <span className="text-primary/80">ai scheduling apps </span>
+        to <span className="text-primary/80">minimal mobile tools</span>. i
+        make stuff that feels smooth, intentional, and a little clever.
       </motion.p>
     </div>
   );
@@ -257,7 +256,7 @@ export const SkillsSection: React.FC<{
         className="mb-10 flex items-center"
       >
         <span className="text-sm uppercase tracking-wider text-foreground/40 font-light">
-          What I do best
+          what i do best
         </span>
         <div className="ml-4 h-[1px] w-12 bg-primary/20"></div>
       </motion.div>

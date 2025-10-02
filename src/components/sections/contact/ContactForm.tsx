@@ -27,14 +27,14 @@ import * as z from "zod";
 
 // --- FORM SCHEMA (Synced with backend) ---
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.email({ message: "Please enter a valid email address." }),
+  name: z.string().min(2, { message: "name must be at least 2 characters." }),
+  email: z.email({ message: "please enter a valid email address." }),
   subject: z
     .string()
-    .min(3, { message: "Subject must be at least 3 characters." }),
+    .min(3, { message: "subject must be at least 3 characters." }),
   message: z
     .string()
-    .min(10, { message: "Message must be at least 10 characters." }),
+    .min(10, { message: "message must be at least 10 characters." }),
 });
 type FormValues = z.infer<typeof formSchema>;
 

@@ -65,19 +65,19 @@ export function ProjectStatsCharts({
         setRadarData([
           {
             technology: "Frontend",
-            fullName: "Frontend Development",
+            fullName: "frontend development",
             value: 15,
             normalized: 85,
           },
           {
             technology: "Backend",
-            fullName: "Backend Development",
+            fullName: "backend development",
             value: 12,
             normalized: 75,
           },
           {
             technology: "Mobile",
-            fullName: "Mobile Development",
+            fullName: "mobile development",
             value: 8,
             normalized: 65,
           },
@@ -137,8 +137,8 @@ export function ProjectStatsCharts({
       value: isLoading
         ? "..."
         : githubStats?.publicRepos.toString() || stats.totalProjects.toString(),
-      label: "Public Repos",
-      subtitle: "Open source projects",
+      label: "public repos",
+      subtitle: "open source projects",
       gradient: "from-blue-500 to-blue-600",
     },
     {

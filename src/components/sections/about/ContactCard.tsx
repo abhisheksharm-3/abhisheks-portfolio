@@ -45,9 +45,9 @@ export const ContactCard = () => {
           <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
 
-        <h3 className="text-xl font-medium mb-2">Contact Details</h3>
+        <h3 className="text-xl font-medium mb-2">contact details</h3>
         <p className="text-xs text-foreground/50 mb-4">
-          Always down to chat about code, ideas, or random side quests.
+          always down to chat about code, ideas, or random side quests.
         </p>
 
         <div className="space-y-3">
@@ -75,7 +75,7 @@ export const ContactCard = () => {
           asChild
         >
           <Link href="/contact" className="flex items-center justify-center">
-            <span className="relative z-10">Let&apos;s talk</span>
+            <span className="relative z-10">let&apos;s talk</span>
             <ArrowRight className="ml-2 h-4 w-4 relative z-10 transform transition-transform group-hover:translate-x-1" />
             <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
           </Link>

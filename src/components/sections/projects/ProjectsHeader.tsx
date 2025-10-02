@@ -43,7 +43,7 @@ export const ProjectsHeader = () => {
           <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
         </div>
         <span className="text-xs text-primary/60 uppercase tracking-wider font-light">
-          Project Archive
+          project archive
         </span>
       </motion.div>
 
@@ -56,7 +56,7 @@ export const ProjectsHeader = () => {
         >
           <div className="py-1">
             <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
-              Complete Portfolio
+              complete portfolio
             </span>
           </div>
         </motion.h1>
@@ -78,8 +78,8 @@ export const ProjectsHeader = () => {
         variants={itemVariants}
         className={`text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed ${SPACING_STANDARDS.HEADER.SUBTITLE_MARGIN_TOP}`}
       >
-        Browse my comprehensive collection of projects spanning web development,
-        mobile applications, and design work. Each project represents a journey
+        browse my comprehensive collection of projects spanning web development,
+        mobile applications, and design work. each project represents a journey
         of learning, experimentation, and craftsmanship.
       </motion.p>
     </motion.div>

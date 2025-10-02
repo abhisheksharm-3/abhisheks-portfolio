@@ -48,7 +48,7 @@ export const AboutPageHeader = () => {
           <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
         </div>
         <span className="text-xs text-primary/60 uppercase tracking-wider font-light">
-          About Me
+          about me
         </span>
       </motion.div>
 
@@ -83,9 +83,9 @@ export const AboutPageHeader = () => {
         variants={itemVariants}
         className={`text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed ${SPACING_STANDARDS.HEADER.SUBTITLE_MARGIN_TOP}`}
       >
-        CS Graduate and software developer passionate about building scalable,
-        user-focused applications. My work spans full-stack web, mobile
-        development, and AI integrations—with a growing focus on RAG systems and
+        cs graduate and software developer passionate about building scalable,
+        user-focused applications. my work spans full-stack web, mobile
+        development, and ai integrations—with a growing focus on rag systems and
         intelligent agents.
       </motion.p>
     </motion.div>

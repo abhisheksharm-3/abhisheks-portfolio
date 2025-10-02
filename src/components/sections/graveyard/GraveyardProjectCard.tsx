@@ -3,257 +3,198 @@ import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "lucide-react";
+import { Calendar, ExternalLink, Github, AlertCircle } from "lucide-react";
 import Image from "next/image";
-import { ResurrectionMeter } from "./ResurrectionMeter";
-import { RiCrossFill, RiGhostFill } from "@remixicon/react";
+import { DeadProjectType } from "@/data/project";
+import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
-const causeOfDeath = [
-  "Died of scope creep",
-  "Suffocated under technical debt",
-  "Fatal API deprecation",
-  "Starved of resources",
-  "Crushed by competing priorities",
-  "Expired due to market changes",
-  "Victim of budget cuts",
-];
-
-export const GraveyardProjectCard = ({
-  project,
-  index,
-}: {
-  project: {
-    title: string;
-    description: string;
-    reason: string;
-    lessons: string;
-    progress: string;
-    technologies: string[];
-    year: string;
-    duration: string;
-    imageSrc: string;
-    epitaph: string;
-    resurrectionPotential?: number;
-  };
+interface GraveyardProjectCardProps {
+  project: DeadProjectType;
   index: number;
-}) => {
+}
+
+export const GraveyardProjectCard = ({ 
+  project, 
+  index 
+}: GraveyardProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
+  const [showLessons, setShowLessons] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(cardRef, { once: true, amount: 0.2 });
-
-  const randomCause = causeOfDeath[index % causeOfDeath.length];
-
-  const handleFlip = () => setIsFlipped((f) => !f);
+  const isInView = useInView(cardRef, { once: true, amount: 0.01 });
 
   return (
     <motion.div
       ref={cardRef}
       initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
       transition={{
         duration: 0.8,
         delay: 0.1 + index * 0.1,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="h-full"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="h-full group"
     >
       <Card
-        className={`h-full overflow-hidden border-primary/10 backdrop-blur-sm transition-all duration-300 py-0 relative
-            ${isHovered ? "shadow-xl border-red-500/20" : "shadow-md"}`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className={`
+          h-full overflow-hidden border-primary/10 backdrop-blur-sm transition-all duration-500 py-0
+          ${isHovered ? "shadow-xl border-primary/20 -translate-y-1" : "shadow-md"}
+        `}
       >
-        {/* Corners */}
-        <div className="absolute top-0 left-0 w-16 h-16 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 left-0 w-px h-16 bg-gradient-to-b from-red-500/30 to-transparent" />
-          <div className="absolute top-0 left-0 h-px w-16 bg-gradient-to-r from-red-500/30 to-transparent" />
-        </div>
-        <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden pointer-events-none">
-          <div className="absolute bottom-0 right-0 w-px h-16 bg-gradient-to-t from-red-500/30 to-transparent" />
-          <div className="absolute bottom-0 right-0 h-px w-16 bg-gradient-to-l from-red-500/30 to-transparent" />
-        </div>
-        {/* Header */}
-        <div className="p-6 pb-0 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-md border border-red-500/20 bg-red-500/5">
-              <RiCrossFill
-                className="h-4 w-4 text-red-500/70"
-                strokeWidth={1.5}
-              />
-            </div>
-            <span className="text-xs text-red-500/70 font-light">
-              Abandoned at {project.progress}
-            </span>
-          </div>
-          <span className="text-xs text-primary/60 px-2 py-1 border border-primary/10 rounded-md">
-            {project.year}
-          </span>
-        </div>
-        {/* Image */}
-        <div className="relative w-full h-52 overflow-hidden mt-6">
+        {/* Image container */}
+        <div className="relative w-full h-48 overflow-hidden">
           <motion.div
             className="w-full h-full"
-            animate={isHovered ? { scale: 1.05 } : { scale: 1 }}
+            animate={{ scale: isHovered ? 1.05 : 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
           >
             <Image
               src={project.imageSrc}
               alt={project.title}
               fill
-              className="object-cover opacity-40 grayscale"
-              sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+              className="object-cover opacity-70 grayscale-[30%]"
+              sizes="(max-width: 768px) 100vw, 50vw"
             />
-            {/* Ghost animation */}
-            <motion.div
-              className="absolute inset-0 flex items-center justify-center bg-gradient-to-b from-gray-900/60 via-gray-800/50 to-gray-900/70 backdrop-blur-[2px]"
-              animate={isHovered ? { opacity: 1 } : { opacity: 0.9 }}
-            >
-              <motion.div
-                animate={
-                  isHovered
-                    ? { y: [0, -10, 0], opacity: 1 }
-                    : { y: 0, opacity: 0.7 }
-                }
-                transition={{
-                  y: { duration: 2, repeat: Infinity, ease: "easeInOut" },
-                  opacity: { duration: 0.3 },
-                }}
-                className="flex flex-col items-center"
-              >
-                <RiGhostFill
-                  className="h-14 w-14 text-white/60"
-                  strokeWidth={1.5}
-                />
-              </motion.div>
-            </motion.div>
-            {/* Gradient overlay & title */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-4">
-              <h3 className="text-2xl font-serif italic text-white mb-1">
-                {project.title}
-              </h3>
-              <p className="text-white/70 text-sm line-clamp-2">
-                {project.description}
-              </p>
-            </div>
           </motion.div>
-          {/* Tags */}
-          <div className="absolute top-4 right-4 flex flex-wrap gap-2 justify-end">
-            {project.technologies.slice(0, 3).map((tech: string) => (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80" />
+
+          {/* Year badge */}
+          <div className="absolute top-4 right-4">
+            <div className="flex items-center space-x-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md px-2 py-1">
+              <Calendar className="w-3 h-3" />
+              <span className="text-xs font-medium">{project.year}</span>
+            </div>
+          </div>
+
+          {/* Tags overlay */}
+          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+            {project.technologies.slice(0, 3).map((tag: string) => (
               <span
-                key={tech}
-                className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white/90 rounded-md text-xs border border-white/10"
+                key={tag}
+                className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md text-xs font-light"
               >
-                {tech}
+                {tag}
               </span>
             ))}
             {project.technologies.length > 3 && (
-              <span className="px-2 py-1 bg-black/50 backdrop-blur-sm text-white/90 rounded-md text-xs border border-white/10">
+              <span className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md text-xs font-light">
                 +{project.technologies.length - 3}
               </span>
             )}
           </div>
         </div>
+
         {/* Content */}
-        <div className="p-6">
-          {isFlipped ? (
-            <div className="h-full">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-md border border-amber-500/20 bg-amber-500/5">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-amber-500/70"
-                  >
-                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                    <path d="M2 17l10 5 10-5"></path>
-                    <path d="M2 12l10 5 10-5"></path>
-                  </svg>
-                </div>
-                <h3 className="text-lg font-serif italic">Lessons Learned</h3>
-              </div>
-              <motion.div
-                initial={{ width: 0 }}
-                animate={{ width: "3rem" }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="h-[1px] bg-gradient-to-r from-amber-500/30 to-transparent mb-6"
-              />
-              <div className="bg-amber-500/5 border border-amber-500/10 rounded-md p-4 mb-6">
-                <p className="text-foreground/70 text-sm font-light leading-relaxed">
-                  {project.lessons}
-                </p>
-              </div>
-              <div className="flex items-center justify-between text-xs text-foreground/50 pt-2 border-t border-primary/5 mt-auto">
-                <div className="flex items-center">
-                  <span className="text-amber-500/70 font-light">
-                    {project.title}
-                  </span>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handleFlip}
-                  className="text-xs text-primary/70 hover:text-primary px-2 py-1 h-auto"
-                >
-                  ← Back to project
-                </Button>
-              </div>
+        <div className={SPACING_STANDARDS.CARD.PADDING_SMALL}>
+          <div className={`flex items-start justify-between ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}>
+            <h3 className="text-xl font-serif text-foreground/90 group-hover:text-primary/90 transition-colors duration-300">
+              {project.title}
+            </h3>
+          </div>
+
+          <motion.div
+            initial={{ width: 0 }}
+            animate={isInView ? { width: "2.5rem" } : { width: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
+            className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-4"
+          />
+
+          <p className="text-foreground/60 text-sm font-light leading-relaxed mb-6 line-clamp-2">
+            {project.description}
+          </p>
+
+          {/* Status indicator */}
+          <div className="mb-4">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 rounded-md">
+              <AlertCircle className="w-3 h-3 text-amber-500/70" />
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-light">Abandoned at {project.progress}</span>
+            </div>
+          </div>
+
+          {/* Why it was abandoned / Lessons learned toggle */}
+          {!showLessons ? (
+            <div className="mb-4">
+              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">Why Abandoned</h4>
+              <p className="text-foreground/60 text-sm font-light leading-relaxed">
+                {project.reason}
+              </p>
             </div>
           ) : (
-            <>
-              <div className="mb-6 p-3 bg-red-500/5 border border-red-500/10 rounded-md relative">
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-background px-3">
-                  <RiCrossFill
-                    className="h-4 w-4 text-red-500/70 mx-auto"
-                    strokeWidth={1.5}
-                  />
-                </div>
-                <p className="text-center text-xs italic text-foreground/60 pt-1">
-                  &quot;{project.epitaph}&quot;
-                </p>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <h4 className="text-sm font-medium text-red-500/80 mb-1 flex items-center">
-                    <span className="inline-block w-3 h-3 bg-red-500/20 rounded-full mr-2"></span>
-                    Cause of death:
-                  </h4>
-                  <p className="text-foreground/60 text-xs font-light leading-relaxed pl-5">
-                    {randomCause}. {project.reason}
-                  </p>
-                </div>
-                {project.resurrectionPotential !== undefined && (
-                  <div className="pt-2">
-                    <ResurrectionMeter
-                      potential={project.resurrectionPotential}
-                    />
-                  </div>
-                )}
-                <div className="flex items-center justify-between text-xs text-foreground/50 pt-2 border-t border-primary/5">
-                  <div className="flex items-center">
-                    <Calendar className="h-3 w-3 mr-2 text-foreground/30" />
-                    <span>Lived for {project.duration}</span>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleFlip}
-                    className="text-xs text-primary/70 hover:text-primary px-2 py-1 h-auto"
-                  >
-                    Lessons learned →
-                  </Button>
-                </div>
-              </div>
-            </>
+            <div className="mb-4">
+              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">Lessons Learned</h4>
+              <p className="text-foreground/60 text-sm font-light leading-relaxed">
+                {project.lessons}
+              </p>
+            </div>
           )}
+
+          {/* Project metadata */}
+          <div className="space-y-2 mb-6 border-l-2 border-primary/10 pl-4">
+            <div className="flex items-center text-xs">
+              <span className="w-16 text-foreground/40 font-light">Duration</span>
+              <span className="text-foreground/70">{project.duration}</span>
+            </div>
+            <div className="flex items-center text-xs">
+              <span className="w-16 text-foreground/40 font-light">Status</span>
+              <span className="text-foreground/70">Abandoned</span>
+            </div>
+          </div>
+
+          {/* Action buttons */}
+          <div className="flex items-center gap-3 mt-auto">
+            {project.link && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
+                asChild
+              >
+                <a
+                  href={project.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <span className="text-xs font-light">Live Site</span>
+                  <ExternalLink className="ml-1.5 h-3 w-3 text-primary/70 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
+                </a>
+              </Button>
+            )}
+            {project.repo && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
+                asChild
+              >
+                <a
+                  href={project.repo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center"
+                >
+                  <span className="text-xs font-light">Code</span>
+                  <Github className="ml-1.5 h-3 w-3 text-primary/70" />
+                </a>
+              </Button>
+            )}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowLessons(!showLessons)}
+              className="group/btn text-xs text-foreground/70 hover:text-foreground ml-auto px-2 py-1 h-auto"
+            >
+              {showLessons ? "← Details" : "Lessons →"}
+            </Button>
+          </div>
+        </div>
+
+        {/* Decorative corner */}
+        <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden opacity-60">
+          <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />
+          <div className="absolute top-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
+          <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300" />
         </div>
       </Card>
     </motion.div>

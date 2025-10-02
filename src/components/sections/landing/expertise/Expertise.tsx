@@ -34,7 +34,7 @@ export const Skills = () => {
       <div
         className={`container mx-auto ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING} relative z-10`}
       >
-        <SectionHeader subtitle="Expertise" isInView={isInView}>
+        <SectionHeader subtitle="expertise" isInView={isInView}>
           <span className="font-serif italic bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none pr-4">
             what i do best
           </span>

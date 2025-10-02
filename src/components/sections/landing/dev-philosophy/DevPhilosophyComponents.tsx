@@ -66,7 +66,7 @@ export const QuoteBlock = ({ isInView }: { isInView: boolean }) => (
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent rounded-lg" />
       <p className="relative text-sm font-light text-foreground/60 italic px-6 py-2">
         <span className="border-l-2 border-primary/30 pl-3">
-          clever code feeds your ego — simple code lets you sleep at night.
+          clever code feeds your ego. simple code lets you sleep at night.
         </span>
       </p>
     </motion.div>
@@ -202,7 +202,7 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
           className="inline-block"
         >
           i like making stuff that&apos;s lightweight, scales when it needs to,
-          and actually solves a problem —
+          and actually solves problems —
         </motion.span>{" "}
         <motion.span
           initial={{ opacity: 0 }}
@@ -212,7 +212,7 @@ export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
         >
           could be an{" "}
           <span className="text-primary/70 font-medium">ai agent</span> digging
-          through messy pdfs, or a no-frills{" "}
+          through messy pdfs, or a minimal{" "}
           <span className="text-primary/70 font-medium">android app</span> that
           just gets out of your way.
         </motion.span>{" "}
