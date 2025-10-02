@@ -152,7 +152,7 @@ export const HeroDescription: React.FC = () => {
         className="text-sm sm:text-base text-foreground/50 font-light leading-relaxed max-w-lg"
       >
         cs grad who started coding in{" "}
-        <span className="text-foreground/70">8th grade</span>. i've built
+        <span className="text-foreground/70">8th grade</span>. i&apos;ve built
         everything from{" "}
         <span className="text-primary/80">ai scheduling apps </span>
         to <span className="text-primary/80">minimal mobile tools</span>. i
