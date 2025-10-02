@@ -6,12 +6,13 @@ import { NavigationItemType } from "@/lib/types";
  * Used by both navbar and footer components
  */
 export const NAVIGATION_ITEMS: readonly NavigationItemType[] = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
-  { name: "Projects", href: "/projects" },
-  { name: "Graveyard", href: "/graveyard" },
-  { name: "Contact", href: "/contact" },
+  { name: "home", href: "/" },
+  { name: "who i am", href: "/about" },
+  { name: "things i built", href: "/projects" },
+  { name: "things i killed", href: "/graveyard" },
+  { name: "say hi", href: "/contact" },
 ] as const;
+
 
 /**
  * Navigation animation configurations
