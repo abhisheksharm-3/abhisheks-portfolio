@@ -49,8 +49,8 @@ export const BioCard = () => {
             className={`pl-4 border-l-2 border-primary/30 ${SPACING_STANDARDS.CONTENT.PARAGRAPH_SPACING} italic`}
           >
             <p className="text-foreground/80">
-              &quot;clever code makes you feel smart. simple code helps you sleep
-              better.&quot;
+              &quot;clever code makes you feel smart. simple code helps you
+              sleep better.&quot;
             </p>
           </div>
 
@@ -86,8 +86,8 @@ export const BioCard = () => {
           <p>
             outside of projects, i&apos;m just trying to keep learning,
             experimenting, and building things that are both useful and a little
-            exciting. that&apos;s the vibe i want to carry into whatever i work on
-            next.
+            exciting. that&apos;s the vibe i want to carry into whatever i work
+            on next.
           </p>
         </div>
       </CardContent>

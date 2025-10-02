@@ -1,11 +1,4 @@
-import {
-  Camera,
-  BookOpen,
-  Music,
-  Gamepad,
-  Film,
-  Coffee,
-} from "lucide-react";
+import { Camera, BookOpen, Music, Gamepad, Film, Coffee } from "lucide-react";
 
 /**
  * Personal interests and hobbies data

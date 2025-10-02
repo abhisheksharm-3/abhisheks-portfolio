@@ -385,7 +385,8 @@ export const deadProjects: DeadProjectType[] = [
   {
     title: "WebList",
     description: "all-in-one toolkit hub that never launched.",
-    reason: "didn't buy domain in time and misjudged how long \"tiny\" projects actually take",
+    reason:
+      'didn\'t buy domain in time and misjudged how long "tiny" projects actually take',
     lessons:
       "secure domains first, scope properly, everything eats more time than you think.",
     progress: "35%",
@@ -398,8 +399,10 @@ export const deadProjects: DeadProjectType[] = [
   {
     title: "Aventra",
     description: "ai trip planner that planned itself into the grave.",
-    reason: "idea was actually solid. funny thing, the exact same problem statement showed up at Google's 2025 GenAI Exchange with EaseMyTrip as partner. if i had built it properly, i could've just shipped it there. instead i overscoped, underestimated the grind, and it collapsed under its own weight.",
-    lessons: "great ideas mean nothing if you don't cut scope and execute. ai + realtime apis can eat you alive if you don't box them in.",
+    reason:
+      "idea was actually solid. funny thing, the exact same problem statement showed up at Google's 2025 GenAI Exchange with EaseMyTrip as partner. if i had built it properly, i could've just shipped it there. instead i overscoped, underestimated the grind, and it collapsed under its own weight.",
+    lessons:
+      "great ideas mean nothing if you don't cut scope and execute. ai + realtime apis can eat you alive if you don't box them in.",
     progress: "60%",
     technologies: ["Next.js", "Appwrite", "FastAPI", "TailwindCSS"],
     year: "2025",
@@ -412,24 +415,35 @@ export const deadProjects: DeadProjectType[] = [
   {
     title: "Triptalkies",
     description: "trip planning prototype.",
-    reason: "my only project where i built custom auth from scratch. shipped a v1 and then just left it there. never bothered to push further.",
-    lessons: "rolling your own auth is cool until you realize the project needs way more polish to actually live. without momentum it dies quick.",
+    reason:
+      "my only project where i built custom auth from scratch. shipped a v1 and then just left it there. never bothered to push further.",
+    lessons:
+      "rolling your own auth is cool until you realize the project needs way more polish to actually live. without momentum it dies quick.",
     progress: "40%",
     technologies: ["NextJs", "TypeScript", "TailwindCSS"],
     year: "2023",
     duration: "September 2023 - November 2023",
     imageSrc: "/images/graveyard/triptalkies.png",
-    epitaph: "triptalkies: trip ended before the journey even started. sep–nov 2023",
+    epitaph:
+      "triptalkies: trip ended before the journey even started. sep–nov 2023",
     link: "https://triptalkies.vercel.app/",
     repo: "https://github.com/abhisheksharm-3/trip-website",
   },
   {
     title: "Lexalyze",
     description: "ai legal doc parser.",
-    reason: "built it as my nlp course project. prof had so many rules on what i could or couldn't use that it killed the fun. never got time to pick it back up.",
-    lessons: "school projects don't always become real projects. but i still want to rebuild it someday using rag and adding indian laws. just don't know when.",
+    reason:
+      "built it as my nlp course project. prof had so many rules on what i could or couldn't use that it killed the fun. never got time to pick it back up.",
+    lessons:
+      "school projects don't always become real projects. but i still want to rebuild it someday using rag and adding indian laws. just don't know when.",
     progress: "70%",
-    technologies: ["SvelteKit", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
+    technologies: [
+      "SvelteKit",
+      "TypeScript",
+      "TailwindCSS",
+      "FastAPI",
+      "Python",
+    ],
     year: "2024",
     duration: "December 2024",
     imageSrc: "/images/graveyard/lexalyze.png",

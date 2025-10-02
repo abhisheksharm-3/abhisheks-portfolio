@@ -13,9 +13,9 @@ interface GraveyardProjectCardProps {
   index: number;
 }
 
-export const GraveyardProjectCard = ({ 
-  project, 
-  index 
+export const GraveyardProjectCard = ({
+  project,
+  index,
 }: GraveyardProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showLessons, setShowLessons] = useState(false);
@@ -87,7 +87,9 @@ export const GraveyardProjectCard = ({
 
         {/* Content */}
         <div className={SPACING_STANDARDS.CARD.PADDING_SMALL}>
-          <div className={`flex items-start justify-between ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}>
+          <div
+            className={`flex items-start justify-between ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}
+          >
             <h3 className="text-xl font-serif text-foreground/90 group-hover:text-primary/90 transition-colors duration-300">
               {project.title}
             </h3>
@@ -108,21 +110,27 @@ export const GraveyardProjectCard = ({
           <div className="mb-4">
             <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 rounded-md">
               <AlertCircle className="w-3 h-3 text-amber-500/70" />
-              <span className="text-xs text-amber-600 dark:text-amber-400 font-light">Abandoned at {project.progress}</span>
+              <span className="text-xs text-amber-600 dark:text-amber-400 font-light">
+                Abandoned at {project.progress}
+              </span>
             </div>
           </div>
 
           {/* Why it was abandoned / Lessons learned toggle */}
           {!showLessons ? (
             <div className="mb-4">
-              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">Why Abandoned</h4>
+              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">
+                Why Abandoned
+              </h4>
               <p className="text-foreground/60 text-sm font-light leading-relaxed">
                 {project.reason}
               </p>
             </div>
           ) : (
             <div className="mb-4">
-              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">Lessons Learned</h4>
+              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">
+                Lessons Learned
+              </h4>
               <p className="text-foreground/60 text-sm font-light leading-relaxed">
                 {project.lessons}
               </p>
@@ -132,7 +140,9 @@ export const GraveyardProjectCard = ({
           {/* Project metadata */}
           <div className="space-y-2 mb-6 border-l-2 border-primary/10 pl-4">
             <div className="flex items-center text-xs">
-              <span className="w-16 text-foreground/40 font-light">Duration</span>
+              <span className="w-16 text-foreground/40 font-light">
+                Duration
+              </span>
               <span className="text-foreground/70">{project.duration}</span>
             </div>
             <div className="flex items-center text-xs">

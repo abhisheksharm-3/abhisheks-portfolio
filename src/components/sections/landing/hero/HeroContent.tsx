@@ -155,8 +155,8 @@ export const HeroDescription: React.FC = () => {
         <span className="text-foreground/70">8th grade</span>. i&apos;ve built
         everything from{" "}
         <span className="text-primary/80">ai scheduling apps </span>
-        to <span className="text-primary/80">minimal mobile tools</span>. i
-        make stuff that feels smooth, intentional, and a little clever.
+        to <span className="text-primary/80">minimal mobile tools</span>. i make
+        stuff that feels smooth, intentional, and a little clever.
       </motion.p>
     </div>
   );

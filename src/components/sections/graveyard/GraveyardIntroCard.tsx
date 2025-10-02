@@ -94,7 +94,9 @@ export const GraveyardIntroCard = () => {
                       Fair Warning
                     </p>
                     <p className="text-xs text-amber-600/80 dark:text-amber-400/80 font-light leading-relaxed">
-                      These projects are abandoned and unmaintained. Some links may be broken, features may not work, and databases may be empty.
+                      These projects are abandoned and unmaintained. Some links
+                      may be broken, features may not work, and databases may be
+                      empty.
                     </p>
                   </div>
                 </div>

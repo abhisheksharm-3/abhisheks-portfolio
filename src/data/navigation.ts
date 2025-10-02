@@ -13,7 +13,6 @@ export const NAVIGATION_ITEMS: readonly NavigationItemType[] = [
   { name: "say hi", href: "/contact" },
 ] as const;
 
-
 /**
  * Navigation animation configurations
  * Centralized for consistency across navbar and footer
