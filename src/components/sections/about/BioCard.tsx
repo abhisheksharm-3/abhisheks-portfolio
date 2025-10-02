@@ -39,7 +39,7 @@ export const BioCard = () => {
           className={`${SPACING_STANDARDS.CONTENT.LIST_SPACING} text-foreground/70 font-light`}
         >
           <p>
-            hey, i'm abhishek — a dev who likes turning ideas into working
+            hey, i&apos;m abhishek — a dev who likes turning ideas into working
             products. started out just curious about how apps worked, and that
             curiosity pretty much snowballed into studying computer science and
             building all kinds of projects.
@@ -49,8 +49,8 @@ export const BioCard = () => {
             className={`pl-4 border-l-2 border-primary/30 ${SPACING_STANDARDS.CONTENT.PARAGRAPH_SPACING} italic`}
           >
             <p className="text-foreground/80">
-              "clever code makes you feel smart. simple code helps you sleep
-              better."
+              &quot;clever code makes you feel smart. simple code helps you sleep
+              better.&quot;
             </p>
           </div>
 
@@ -67,7 +67,7 @@ export const BioCard = () => {
             <h4
               className={`text-sm font-medium ${SPACING_STANDARDS.CONTENT.SMALL_SPACING} text-primary/80`}
             >
-              what i'm into right now
+              what i&apos;m into right now
             </h4>
             <p className="text-sm">
               playing around with rag systems, ai agents, and appwrite backends.
@@ -84,9 +84,9 @@ export const BioCard = () => {
           </p>
 
           <p>
-            outside of projects, i'm just trying to keep learning,
+            outside of projects, i&apos;m just trying to keep learning,
             experimenting, and building things that are both useful and a little
-            exciting. that's the vibe i want to carry into whatever i work on
+            exciting. that&apos;s the vibe i want to carry into whatever i work on
             next.
           </p>
         </div>
