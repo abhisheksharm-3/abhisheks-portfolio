@@ -22,7 +22,6 @@ import {
   ScrollIndicator,
   SkillsSection,
 } from "./HeroContent";
-import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * The main hero section for the homepage.

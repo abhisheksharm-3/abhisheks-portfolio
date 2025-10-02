@@ -16,7 +16,6 @@ import {
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import {
   getHalfScreenPageWrapperClasses,
-  getSectionClasses,
   SPACING_STANDARDS,
 } from "@/lib/config/spacing-standards";
 

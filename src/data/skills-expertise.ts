@@ -1,13 +1,4 @@
-import {
-  Code,
-  Terminal,
-  Database,
-  Cloud,
-  Smartphone,
-  Brain,
-  Globe,
-  LucideIcon,
-} from "lucide-react";
+import { Code, Terminal, Database, Cloud, Smartphone, Brain, Globe } from "lucide-react";
 
 /**
  * Skills displayed in the Hero section

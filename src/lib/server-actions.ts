@@ -1,12 +1,10 @@
 "use server";
 
 import { projects } from "@/data/project";
-import { ProjectType } from "@/lib/types";
 import {
   GitHubStats,
   GitHubUser,
   Repository,
-  TechnicalExpertise,
   CombinedStats,
 } from "@/lib/types/stats";
 import {

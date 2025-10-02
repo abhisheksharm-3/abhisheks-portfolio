@@ -98,7 +98,7 @@ const TimelineChart = ({
  */
 export function ProjectInsights() {
   const { theme } = useTheme();
-  const [githubStats, setGithubStats] = useState<GitHubStats | null>(null);
+  const [, setGithubStats] = useState<GitHubStats | null>(null);
   const [radarData, setRadarData] = useState<
     Array<{
       technology: string;

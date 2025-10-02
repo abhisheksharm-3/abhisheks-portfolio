@@ -1,5 +1,3 @@
-import { ProjectType } from "@/lib/types";
-
 // Project Stats Types
 export interface ProjectStats {
   totalProjects: number;

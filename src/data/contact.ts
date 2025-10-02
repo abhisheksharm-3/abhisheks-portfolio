@@ -1,12 +1,4 @@
-import {
-  Mail,
-  Code,
-  ExternalLink,
-  Github,
-  Linkedin,
-  Instagram,
-  LucideIcon,
-} from "lucide-react";
+import { Mail, Code, ExternalLink, Github, Linkedin, Instagram } from "lucide-react";
 import { RiGithubFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
 import z from "zod";
 

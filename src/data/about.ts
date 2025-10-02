@@ -5,7 +5,6 @@ import {
   Gamepad,
   Film,
   Coffee,
-  LucideIcon,
 } from "lucide-react";
 
 /**

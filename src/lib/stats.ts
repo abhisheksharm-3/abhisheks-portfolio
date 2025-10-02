@@ -6,8 +6,6 @@ import {
   TechnicalExpertise,
 } from "@/lib/types/stats";
 
-const GITHUB_USERNAME = "abhisheksharm-3";
-
 // ============================================================================
 // PROJECT STATS FUNCTIONS
 // ============================================================================
