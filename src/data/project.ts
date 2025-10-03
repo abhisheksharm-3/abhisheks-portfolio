@@ -409,7 +409,7 @@ export const deadProjects: DeadProjectType[] = [
     duration: "2 months",
     imageSrc: "/images/graveyard/aventra.png",
     epitaph: "aventra: planned its own final trip. apr–may 2025",
-    link: "https://aventra.vercel.app/",
+    link: "https://aventra.click",
     repo: "https://github.com/abhisheksharm-3/aventra",
   },
   {
