@@ -24,8 +24,8 @@ export const CONTACT_INFO = {
     url: "https://linkedin.com/in/abhisheksan/",
   },
   twitter: {
-    username: "abhisheksharm_3",
-    url: "https://twitter.com/abhisheksharm_3",
+    username: "iabhisheksan",
+    url: "https://x.com/iabhisheksan",
   },
 } as const;
 
@@ -102,8 +102,8 @@ export const CONTACT_DETAILS = [
   {
     label: "Instagram",
     Icon: Instagram,
-    link: "https://instagram.com/abhisheksharm_3",
-    display: "@abhisheksharm_3",
+    link: "https://instagram.com/abhishekxsharmaa",
+    display: "@abhishekxsharmaa",
   },
 ] as const;
 
