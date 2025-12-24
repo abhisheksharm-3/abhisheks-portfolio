@@ -1,23 +1,21 @@
 "use server";
 
 import {
-  GitHubStats,
-  GitHubUser,
-  Repository,
+  GitHubStatsType,
+  GitHubUserType,
+  RepositoryType,
 } from "@/lib/types/stats";
 
 const GITHUB_USERNAME = "abhisheksharm-3";
 
-// ============================================================================
-// GITHUB STATS SERVER ACTIONS
-// ============================================================================
+
 
 /**
  * Fetches comprehensive GitHub statistics using the GraphQL API.
  * Requires a GITHUB_ACCESS_TOKEN in your environment variables.
  * @returns GitHub statistics including repos, stars, contributions, and languages
  */
-export async function fetchGitHubStats(): Promise<GitHubStats> {
+export async function fetchGitHubStats(): Promise<GitHubStatsType> {
   const githubToken = process.env.GITHUB_ACCESS_TOKEN;
 
   if (!githubToken) {
@@ -99,17 +97,17 @@ export async function fetchGitHubStats(): Promise<GitHubStats> {
     throw new Error("Invalid data structure received from GitHub API.");
   }
 
-  const user: GitHubUser = json.data.user;
+  const user: GitHubUserType = json.data.user;
 
   const totalStars = user.repositories.nodes.reduce(
-    (acc: number, repo: Repository) => acc + repo.stargazerCount,
+    (acc: number, repo: RepositoryType) => acc + repo.stargazerCount,
     0,
   );
 
   // Extract unique languages with proper typing
   const languages = user.repositories.nodes
-    .filter((repo: Repository) => repo.primaryLanguage !== null)
-    .map((repo: Repository) => repo.primaryLanguage!.name);
+    .filter((repo: RepositoryType) => repo.primaryLanguage !== null)
+    .map((repo: RepositoryType) => repo.primaryLanguage!.name);
   const topLanguages: string[] = [...new Set(languages)].slice(0, 10);
 
   return {

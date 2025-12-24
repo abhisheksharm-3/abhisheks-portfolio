@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { NAVIGATION_ITEMS } from "@/data/navigation";
 
 /**
@@ -14,11 +14,11 @@ export const FooterNavColumn = () => {
   const [focusedLink, setFocusedLink] = useState<string | null>(null);
 
   return (
-    <motion.div variants={itemVariants} className="md:text-center">
+    <motion.div variants={ITEM_VARIANTS} className="md:text-center">
       <h3 className="text-sm font-medium text-foreground/70 mb-5">jump to</h3>
-      <motion.ul variants={containerVariants} className="space-y-3">
+      <motion.ul variants={CONTAINER_VARIANTS} className="space-y-3">
         {NAVIGATION_ITEMS.map((link) => (
-          <motion.li key={link.name} variants={itemVariants}>
+          <motion.li key={link.name} variants={ITEM_VARIANTS}>
             <Link
               href={link.href}
               className="text-sm text-foreground/50 hover:text-primary transition-colors relative inline-block"

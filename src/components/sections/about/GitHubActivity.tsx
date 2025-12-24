@@ -5,16 +5,16 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 import { fetchGitHubStats } from "@/lib/server-actions";
-import { GitHubStats, ContributionDay } from "@/lib/types/stats";
+import { GitHubStatsType, ContributionDayType, ContributionWeekType } from "@/lib/types/stats";
 
 /**
  * GitHub activity section with contribution graph matching the original design.
  * Features colored dots, full-width layout, month labels, and peak commits.
  */
 export const GitHubActivity = () => {
-    const [stats, setStats] = useState<GitHubStats | null>(null);
+    const [stats, setStats] = useState<GitHubStatsType | null>(null);
     const [isPending, startTransition] = useTransition();
-    const [hoveredDay, setHoveredDay] = useState<ContributionDay | null>(null);
+    const [hoveredDay, setHoveredDay] = useState<ContributionDayType | null>(null);
     const [hasLoaded, setHasLoaded] = useState(false);
 
     useEffect(() => {
@@ -70,7 +70,7 @@ export const GitHubActivity = () => {
         let lastMonth = "";
         let maxContributions = 0;
 
-        allWeeks.forEach((week, index) => {
+        allWeeks.forEach((week: ContributionWeekType, index: number) => {
             if (week.contributionDays.length > 0) {
                 const firstDay = week.contributionDays[0];
                 const date = new Date(firstDay.date);
@@ -84,7 +84,7 @@ export const GitHubActivity = () => {
                 }
 
                 // Track peak contributions
-                week.contributionDays.forEach((day) => {
+                week.contributionDays.forEach((day: ContributionDayType) => {
                     if (day.contributionCount > maxContributions) {
                         maxContributions = day.contributionCount;
                     }
@@ -209,9 +209,9 @@ export const GitHubActivity = () => {
                         {/* Graph - Properly contained with scroll if needed */}
                         <div className="mt-4 w-full max-w-full overflow-x-auto">
                             <div className="grid grid-cols-[repeat(53,1fr)] gap-[2px] min-w-0">
-                                {weeks.map((week, weekIndex) => (
+                                {weeks.map((week: ContributionWeekType, weekIndex: number) => (
                                     <div key={weekIndex} className="flex flex-col gap-[3px]">
-                                        {week.contributionDays.map((day) => (
+                                        {week.contributionDays.map((day: ContributionDayType) => (
                                             <div
                                                 key={day.date}
                                                 onMouseEnter={() => setHoveredDay(day)}
@@ -252,7 +252,7 @@ export const GitHubActivity = () => {
                             frequently used
                         </p>
                         <div className="flex flex-wrap gap-2">
-                            {stats.topLanguages.slice(0, 6).map((lang) => (
+                            {stats.topLanguages.slice(0, 6).map((lang: string) => (
                                 <span
                                     key={lang}
                                     className="px-3 py-1 text-xs font-light text-foreground/60 bg-primary/5 rounded-full border border-primary/10"

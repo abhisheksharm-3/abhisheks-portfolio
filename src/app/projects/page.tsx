@@ -11,7 +11,7 @@ import {
   ProjectCard,
   ProjectsPageBackground,
 } from "@/components/sections/projects";
-import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import {
   getHalfScreenPageWrapperClasses,
   SPACING_STANDARDS,
@@ -53,7 +53,7 @@ const ProjectsPage = () => {
   return (
     <AppShell>
       <motion.div
-        variants={containerVariants}
+        variants={CONTAINER_VARIANTS}
         initial="hidden"
         ref={sectionRef}
         animate={isInView ? "visible" : "hidden"}
@@ -61,12 +61,12 @@ const ProjectsPage = () => {
       >
         <ProjectsPageBackground />
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <ProjectsHeader />
         </motion.div>
 
         <motion.div
-          variants={itemVariants}
+          variants={ITEM_VARIANTS}
           className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
         >
           <ProjectsFilters
@@ -99,7 +99,7 @@ const ProjectsPage = () => {
           </AnimatePresence>
         </motion.div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <ProjectsCTA />
         </motion.div>
       </motion.div>

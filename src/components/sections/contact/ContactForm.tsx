@@ -23,28 +23,15 @@ import {
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { submitContactForm } from "@/app/actions";
+import { CONTACT_FORM_SCHEMA } from "@/data/contact";
+import { ContactFormDataType } from "@/lib/types";
 
-// --- FORM SCHEMA (Synced with backend) ---
-const formSchema = z.object({
-  name: z.string().min(2, { message: "name must be at least 2 characters." }),
-  email: z.email({ message: "please enter a valid email address." }),
-  subject: z
-    .string()
-    .min(3, { message: "subject must be at least 3 characters." }),
-  message: z
-    .string()
-    .min(10, { message: "message must be at least 10 characters." }),
-});
-type FormValues = z.infer<typeof formSchema>;
-
-// --- ANIMATION VARIANTS ---
-const formContainerVariants: Variants = {
+const FORM_CONTAINER_VARIANTS: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
 };
-const formItemVariants: Variants = {
+const FORM_ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 15 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
@@ -60,12 +47,12 @@ export const SendMessageCard = () => {
     null
   );
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ContactFormDataType>({
+    resolver: zodResolver(CONTACT_FORM_SCHEMA),
     defaultValues: { name: "", email: "", subject: "", message: "" },
   });
 
-  const onSubmit = (data: FormValues) => {
+  const handleSubmit = (data: ContactFormDataType) => {
     setSubmitStatus(null);
 
     startTransition(async () => {
@@ -114,14 +101,14 @@ export const SendMessageCard = () => {
 
         <Form {...form}>
           <motion.form
-            variants={formContainerVariants}
+            variants={FORM_CONTAINER_VARIANTS}
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            onSubmit={form.handleSubmit(onSubmit)}
+            onSubmit={form.handleSubmit(handleSubmit)}
             className="space-y-6"
           >
-            <motion.div variants={formItemVariants}>
+            <motion.div variants={FORM_ITEM_VARIANTS}>
               <FormField
                 control={form.control}
                 name="name"
@@ -138,7 +125,7 @@ export const SendMessageCard = () => {
                 )}
               />
             </motion.div>
-            <motion.div variants={formItemVariants}>
+            <motion.div variants={FORM_ITEM_VARIANTS}>
               <FormField
                 control={form.control}
                 name="email"
@@ -159,7 +146,7 @@ export const SendMessageCard = () => {
                 )}
               />
             </motion.div>
-            <motion.div variants={formItemVariants}>
+            <motion.div variants={FORM_ITEM_VARIANTS}>
               <FormField
                 control={form.control}
                 name="subject"
@@ -176,7 +163,7 @@ export const SendMessageCard = () => {
                 )}
               />
             </motion.div>
-            <motion.div variants={formItemVariants}>
+            <motion.div variants={FORM_ITEM_VARIANTS}>
               <FormField
                 control={form.control}
                 name="message"
@@ -197,7 +184,7 @@ export const SendMessageCard = () => {
                 )}
               />
             </motion.div>
-            <motion.div variants={formItemVariants} className="pt-2">
+            <motion.div variants={FORM_ITEM_VARIANTS} className="pt-2">
               <Button
                 type="submit"
                 disabled={isPending}

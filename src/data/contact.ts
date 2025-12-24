@@ -107,27 +107,9 @@ export const CONTACT_DETAILS = [
   },
 ] as const;
 
-/**
- * Contact form validation schema
- */
 export const CONTACT_FORM_SCHEMA = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
   email: z.email("Please enter a valid email address."),
   subject: z.string().min(3, "Subject must be at least 3 characters."),
   message: z.string().min(10, "Message must be at least 10 characters."),
 });
-
-/**
- * Contact animation configurations
- */
-export const CONTACT_ANIMATIONS = {
-  section: { duration: 1 },
-  header: { duration: 0.8, delay: 0.4 },
-  content: { duration: 0.8, delay: 0.3 },
-  buttons: { duration: 0.5, delay: 0.6 },
-  contactInfo: { duration: 0.8, delay: 0.9 },
-  channels: { duration: 0.8, delay: 1 },
-  channelItem: { duration: 0.5, baseDelay: 1.1, stagger: 0.1 },
-  pathAnimation: { duration: 2, delay: 0.5 },
-  hoverTransition: { duration: 0.8 },
-} as const;

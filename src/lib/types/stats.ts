@@ -1,30 +1,53 @@
-// Project Stats Types
-export interface ProjectStats {
+/**
+ * Statistics for portfolio projects derived from project data.
+ */
+export interface ProjectStatsType {
   totalProjects: number;
   activeProjects: number;
-  yearlyBreakdown: Array<{ year: string; count: number }>;
-  technologyBreakdown: Array<{
-    technology: string;
-    count: number;
-    percentage: number;
-  }>;
+  yearlyBreakdown: YearlyBreakdownType[];
+  technologyBreakdown: TechnologyBreakdownType[];
   diversityScore: number;
   currentInternshipStatus: string;
   mostActiveYear: string;
 }
 
-// GitHub Stats Types
-export interface ContributionDay {
+/**
+ * Yearly project breakdown data.
+ */
+export interface YearlyBreakdownType {
+  year: string;
+  count: number;
+}
+
+/**
+ * Technology usage breakdown data.
+ */
+export interface TechnologyBreakdownType {
+  technology: string;
+  count: number;
+  percentage: number;
+}
+
+/**
+ * Single day of GitHub contributions.
+ */
+export interface ContributionDayType {
   date: string;
   contributionCount: number;
   color: string;
 }
 
-export interface ContributionWeek {
-  contributionDays: ContributionDay[];
+/**
+ * Week of GitHub contributions.
+ */
+export interface ContributionWeekType {
+  contributionDays: ContributionDayType[];
 }
 
-export interface Repository {
+/**
+ * GitHub repository data from API.
+ */
+export interface RepositoryType {
   name: string;
   stargazerCount: number;
   forkCount: number;
@@ -37,15 +60,18 @@ export interface Repository {
   isPrivate: boolean;
 }
 
-export interface GitHubUser {
+/**
+ * GitHub user data from GraphQL API.
+ */
+export interface GitHubUserType {
   repositories: {
     totalCount: number;
-    nodes: Repository[];
+    nodes: RepositoryType[];
   };
   contributionsCollection: {
     contributionCalendar: {
       totalContributions: number;
-      weeks: ContributionWeek[];
+      weeks: ContributionWeekType[];
     };
   };
   followers: {
@@ -56,27 +82,34 @@ export interface GitHubUser {
   };
 }
 
-export interface GitHubStats {
+/**
+ * Aggregated GitHub statistics for display.
+ */
+export interface GitHubStatsType {
   publicRepos: number;
   totalStars: number;
   contributions: number;
-  contributionCalendar: ContributionWeek[];
+  contributionCalendar: ContributionWeekType[];
   topLanguages: string[];
   followers: number;
   following: number;
 }
 
-// Technical Expertise Types
-export interface TechnicalExpertise {
+/**
+ * Technical skill expertise data.
+ */
+export interface TechnicalExpertiseType {
   technology: string;
   fullName: string;
   value: number;
   normalized: number;
 }
 
-// Combined Stats Types
-export interface CombinedStats {
-  projectStats: ProjectStats;
-  githubStats: GitHubStats;
-  technicalExpertise: TechnicalExpertise[];
+/**
+ * Combined statistics from all sources.
+ */
+export interface CombinedStatsType {
+  projectStats: ProjectStatsType;
+  githubStats: GitHubStatsType;
+  technicalExpertise: TechnicalExpertiseType[];
 }

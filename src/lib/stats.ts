@@ -1,15 +1,13 @@
 import { projects } from "@/data/project";
-import { ProjectStats } from "@/lib/types/stats";
+import { ProjectStatsType } from "@/lib/types/stats";
 
-// ============================================================================
-// PROJECT STATS FUNCTIONS
-// ============================================================================
+
 
 /**
  * Calculates comprehensive project statistics from the projects data.
  * @returns Project statistics including counts, breakdowns, and metrics
  */
-export function calculateProjectStats(): ProjectStats {
+export function calculateProjectStats(): ProjectStatsType {
   const currentYear = new Date().getFullYear();
 
   // Basic counts from actual data
@@ -109,7 +107,7 @@ export function calculateProjectStats(): ProjectStats {
  * Use this when you only need project stats without GitHub data.
  * @returns Project statistics
  */
-export function getProjectStatsSync(): ProjectStats {
+export function getProjectStatsSync(): ProjectStatsType {
   return calculateProjectStats();
 }
 

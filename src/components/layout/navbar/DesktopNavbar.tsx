@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import { NAVIGATION_ITEMS, NAVIGATION_ANIMATIONS } from "@/data/navigation";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
-import { itemVariants } from "@/lib/config/page-animations";
+import { ITEM_VARIANTS } from "@/lib/config/page-animations";
 
 /**
  * Renders the navigation links, theme toggle, and action buttons for desktop viewports.
@@ -81,12 +81,12 @@ export const DesktopNavbar = ({
       </motion.ul>
 
       <motion.div
-        variants={itemVariants}
+        variants={ITEM_VARIANTS}
         className="w-px h-6 bg-gradient-to-b from-transparent via-primary/30 to-transparent"
       />
 
       <motion.div
-        variants={itemVariants}
+        variants={ITEM_VARIANTS}
         whileHover={{ scale: 1.02 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
       >
@@ -94,7 +94,7 @@ export const DesktopNavbar = ({
       </motion.div>
 
       <motion.div
-        variants={itemVariants}
+        variants={ITEM_VARIANTS}
         whileHover={{ scale: 1.02 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}
       >
@@ -123,7 +123,7 @@ export const DesktopNavbar = ({
       </motion.div>
 
       <motion.div
-        variants={itemVariants}
+        variants={ITEM_VARIANTS}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 400, damping: 25 }}

@@ -13,7 +13,7 @@ import {
 } from "@/components/sections/graveyard";
 import { deadProjects } from "@/data/project";
 import { ArrowRight } from "lucide-react";
-import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import {
   getHalfScreenPageWrapperClasses,
   SPACING_STANDARDS,
@@ -48,18 +48,18 @@ const GraveyardPage = () => {
     <AppShell>
       <motion.div
         ref={sectionRef}
-        variants={containerVariants}
+        variants={CONTAINER_VARIANTS}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
       >
         <GraveyardBackground />
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <GraveyardSectionHeader quote={quote} />
         </motion.div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <GraveyardIntroCard />
         </motion.div>
 
@@ -67,13 +67,13 @@ const GraveyardPage = () => {
           className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} mb-16`}
         >
           {deadProjects.map((project, index) => (
-            <motion.div key={project.title} variants={itemVariants}>
+            <motion.div key={project.title} variants={ITEM_VARIANTS}>
               <GraveyardProjectCard project={project} index={index} />
             </motion.div>
           ))}
         </div>
 
-        <motion.div variants={itemVariants} className="text-center mt-16">
+        <motion.div variants={ITEM_VARIANTS} className="text-center mt-16">
           <h3 className="text-2xl font-serif italic mb-4">
             Prefer the land of the living?
           </h3>

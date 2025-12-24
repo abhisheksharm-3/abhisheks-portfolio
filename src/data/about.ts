@@ -97,8 +97,3 @@ export const EDUCATION_DATA = [
     badges: [{ label: "Score", value: "92.2%" }],
   },
 ] as const;
-
-// Backward compatibility exports
-export const personalInterests = PERSONAL_INTERESTS;
-export const experienceData = EXPERIENCE_DATA;
-export const educationData = EDUCATION_DATA;

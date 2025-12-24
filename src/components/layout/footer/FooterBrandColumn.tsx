@@ -1,4 +1,4 @@
-import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SOCIAL_LINKS } from "@/data/contact";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -8,7 +8,7 @@ import Link from "next/link";
  * Includes the logo, a brief tagline, and animated social media links.
  */
 export const FooterBrandColumn = () => (
-  <motion.div variants={itemVariants} className="flex flex-col">
+  <motion.div variants={ITEM_VARIANTS} className="flex flex-col">
     <Link href="/" className="mb-5 inline-block">
       <h2 className="text-2xl sm:text-3xl font-light tracking-tighter">
         <span className="text-primary font-serif italic">A</span>
@@ -19,7 +19,7 @@ export const FooterBrandColumn = () => (
     <p className="text-sm text-foreground/60 font-light leading-relaxed mb-6 max-w-xs">
       building things on the web that actually feel good to use.
     </p>
-    <motion.div variants={containerVariants} className="flex space-x-3">
+    <motion.div variants={CONTAINER_VARIANTS} className="flex space-x-3">
       {SOCIAL_LINKS.map((platform) => (
         <motion.a
           key={platform.label}
@@ -30,7 +30,7 @@ export const FooterBrandColumn = () => (
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           aria-label={platform.label}
-          variants={itemVariants}
+          variants={ITEM_VARIANTS}
         >
           <platform.icon />
         </motion.a>

@@ -9,7 +9,7 @@ import {
   ScheduleMeetingCard,
   SendMessageCard,
 } from "@/components/sections/contact";
-import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { useRef } from "react";
 import {
   getHalfScreenPageWrapperClasses,
@@ -27,29 +27,29 @@ const ContactPage = () => {
     <AppShell>
       <motion.div
         ref={sectionRef}
-        variants={containerVariants}
+        variants={CONTAINER_VARIANTS}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
         className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
       >
         <ContactBackground />
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <ContactHeader />
         </motion.div>
 
         <div
           className={`grid grid-cols-1 lg:grid-cols-2 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} max-w-6xl mx-auto`}
         >
-          <motion.div variants={itemVariants}>
+          <motion.div variants={ITEM_VARIANTS}>
             <SendMessageCard />
           </motion.div>
 
           <div className={`flex flex-col ${SPACING_STANDARDS.GRID.GAP_MEDIUM}`}>
-            <motion.div variants={itemVariants}>
+            <motion.div variants={ITEM_VARIANTS}>
               <ScheduleMeetingCard />
             </motion.div>
-            <motion.div variants={itemVariants}>
+            <motion.div variants={ITEM_VARIANTS}>
               <ContactInfoCard />
             </motion.div>
           </div>

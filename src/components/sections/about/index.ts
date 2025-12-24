@@ -1,8 +1,8 @@
-export { BioCard } from "@/components/sections/about/BioCard";
-export { ContactCard } from "@/components/sections/about/ContactCard";
-export { ExperienceEducationSection } from "@/components/sections/about/ExperienceEducationSection";
-export { SkillsSection } from "@/components/sections/about/SkillsSection";
-export { InterestsSection } from "@/components/sections/about/InterestsSection";
-export { AboutPageHeader } from "@/components/sections/about/AboutPageHeader";
-export { AboutPageCTA } from "@/components/sections/about/AboutPageCTA";
-export { GitHubActivity } from "@/components/sections/about/GitHubActivity";
+export { BioCard } from "./BioCard";
+export { ContactCard } from "./ContactCard";
+export { ExperienceEducationSection } from "./ExperienceEducationSection";
+export { SkillsSection } from "./SkillsSection";
+export { InterestsSection } from "./InterestsSection";
+export { AboutPageHeader } from "./AboutPageHeader";
+export { AboutPageCTA } from "./AboutPageCTA";
+export { GitHubActivity } from "./GitHubActivity";

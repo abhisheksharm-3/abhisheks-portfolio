@@ -1,9 +1,9 @@
-import { itemVariants } from "@/lib/config/page-animations";
+import { ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { motion } from "framer-motion";
 
 export const FooterBottomBar = () => (
   <motion.div
-    variants={itemVariants}
+    variants={ITEM_VARIANTS}
     className="pt-8 border-t border-primary/5 flex flex-col md:flex-row justify-between items-center text-center md:text-left gap-4"
   >
     <p className="text-xs text-foreground/40 font-light">

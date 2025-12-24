@@ -13,7 +13,7 @@ import { ProjectDetailImage } from "@/components/sections/projects/ProjectDetail
 import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDetailOverview";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
-import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 
 /**
  * Renders the detailed view for a single project based on the URL slug.
@@ -31,14 +31,14 @@ const DetailedProjectPage = () => {
   return (
     <AppShell>
       <motion.div
-        variants={containerVariants}
+        variants={CONTAINER_VARIANTS}
         initial="hidden"
         animate="visible"
         className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
       >
         <ProjectsPageBackground />
 
-        <motion.div variants={itemVariants} className="mb-8">
+        <motion.div variants={ITEM_VARIANTS} className="mb-8">
           <Button
             variant="outline"
             size="sm"
@@ -53,26 +53,26 @@ const DetailedProjectPage = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <motion.div variants={itemVariants} className="lg:col-span-2">
+          <motion.div variants={ITEM_VARIANTS} className="lg:col-span-2">
             <ProjectDetailHeader
               title={project.title}
               description={project.longDescription || project.description}
             />
           </motion.div>
-          <motion.div variants={itemVariants}>
+          <motion.div variants={ITEM_VARIANTS}>
             <ProjectDetailSidebar project={project} />
           </motion.div>
         </div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <ProjectDetailImage src={project.imageSrc} alt={project.title} />
         </motion.div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <ProjectDetailOverview project={project} />
         </motion.div>
 
-        <motion.div variants={itemVariants}>
+        <motion.div variants={ITEM_VARIANTS}>
           <ProjectDetailMoreProjects />
         </motion.div>
       </motion.div>

@@ -31,7 +31,7 @@
     "nodemailer": "^7.0.5",
     "ogl": "^1.0.11",
     "react": "^19.2.1",
-    "react-dom": "^19.1.1",
+    "react-dom": "^19.2.1",
     "react-hook-form": "^7.62.0",
     "recharts": "^2.15.4",
     "tailwind-merge": "^3.3.1",

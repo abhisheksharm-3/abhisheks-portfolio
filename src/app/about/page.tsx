@@ -14,7 +14,7 @@ import {
   SkillsSection,
   GitHubActivity,
 } from "@/components/sections/about";
-import { containerVariants, itemVariants } from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import {
   getHalfScreenPageWrapperClasses,
   SPACING_STANDARDS,
@@ -34,7 +34,7 @@ const AboutPage = () => {
       <div className={`${getHalfScreenPageWrapperClasses()} overflow-x-hidden`}>
         <motion.section
           ref={sectionRef}
-          variants={containerVariants}
+          variants={CONTAINER_VARIANTS}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
@@ -43,50 +43,50 @@ const AboutPage = () => {
             noiseFilterId="aboutPageNoiseFilter"
           />
 
-          <motion.div variants={itemVariants}>
+          <motion.div variants={ITEM_VARIANTS}>
             <AboutPageHeader />
           </motion.div>
 
           <div
             className={`grid grid-cols-1 md:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_LARGE} ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}
           >
-            <motion.div variants={itemVariants} className="md:col-span-2">
+            <motion.div variants={ITEM_VARIANTS} className="md:col-span-2">
               <BioCard />
             </motion.div>
-            <motion.div variants={itemVariants}>
+            <motion.div variants={ITEM_VARIANTS}>
               <ContactCard />
             </motion.div>
           </div>
 
           <motion.div
-            variants={itemVariants}
+            variants={ITEM_VARIANTS}
             className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
           >
             <ExperienceEducationSection />
           </motion.div>
 
           <motion.div
-            variants={itemVariants}
+            variants={ITEM_VARIANTS}
             className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
           >
             <SkillsSection />
           </motion.div>
 
           <motion.div
-            variants={itemVariants}
+            variants={ITEM_VARIANTS}
             className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
           >
             <GitHubActivity />
           </motion.div>
 
           <motion.div
-            variants={itemVariants}
+            variants={ITEM_VARIANTS}
             className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
           >
             <InterestsSection />
           </motion.div>
 
-          <motion.div variants={itemVariants}>
+          <motion.div variants={ITEM_VARIANTS}>
             <AboutPageCTA />
           </motion.div>
         </motion.section>
