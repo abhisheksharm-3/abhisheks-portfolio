@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import { submitContactForm } from "@/app/actions";
 
 // --- FORM SCHEMA (Synced with backend) ---
 const formSchema = z.object({
@@ -50,12 +51,13 @@ const formItemVariants: Variants = {
 
 /**
  * A card component containing a contact form with validation and submission handling.
+ * Uses React 19's useTransition for pending state management and Server Actions for form submission.
  * @returns {JSX.Element} The SendMessageCard component.
  */
 export const SendMessageCard = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(
-    null,
+    null
   );
 
   const form = useForm<FormValues>({
@@ -63,34 +65,38 @@ export const SendMessageCard = () => {
     defaultValues: { name: "", email: "", subject: "", message: "" },
   });
 
-  const onSubmit = async (data: FormValues) => {
-    setIsSubmitting(true);
+  const onSubmit = (data: FormValues) => {
     setSubmitStatus(null);
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
 
-      if (!response.ok) throw new Error("Failed to submit form");
+    startTransition(async () => {
+      try {
+        const result = await submitContactForm(data);
 
-      setSubmitStatus("success");
-      form.reset();
-    } catch (error) {
-      console.error("Form submission error:", error);
-      setSubmitStatus("error");
-    } finally {
-      setIsSubmitting(false);
-      setTimeout(() => setSubmitStatus(null), 5000); // Clear status after 5s
-    }
+        if (result.error) {
+          console.error("Form submission error:", result.error);
+          setSubmitStatus("error");
+        } else {
+          setSubmitStatus("success");
+          form.reset();
+        }
+      } catch (error) {
+        console.error("Form submission error:", error);
+        setSubmitStatus("error");
+      } finally {
+        setTimeout(() => setSubmitStatus(null), 5000);
+      }
+    });
   };
 
+
   return (
-    <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative h-full">
-      <div className="p-8 sm:p-10">
+    <Card className="border-primary/10 backdrop-blur-sm overflow-hidden relative h-full group">
+      {/* Ambient background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+
+      <div className="p-8 sm:p-10 relative">
         <div className="flex items-center gap-3 mb-6">
-          <div className="p-2 rounded-md border border-primary/10 bg-primary/5">
+          <div className="p-2.5 rounded-lg border border-primary/10 bg-gradient-to-br from-primary/10 to-primary/5">
             <MessageCircle
               className="h-5 w-5 text-primary/70"
               strokeWidth={1.5}
@@ -194,10 +200,10 @@ export const SendMessageCard = () => {
             <motion.div variants={formItemVariants} className="pt-2">
               <Button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isPending}
                 className="group w-full bg-primary hover:bg-primary/90 text-primary-foreground transition-all duration-300"
               >
-                {isSubmitting ? (
+                {isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
                   </>

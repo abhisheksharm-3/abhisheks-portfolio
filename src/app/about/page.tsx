@@ -12,6 +12,7 @@ import {
   ExperienceEducationSection,
   InterestsSection,
   SkillsSection,
+  GitHubActivity,
 } from "@/components/sections/about";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import {
@@ -26,11 +27,11 @@ import {
  */
 const AboutPage = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.01, margin: "100px 0px 0px 0px" });
 
   return (
     <AppShell>
-      <div className={getHalfScreenPageWrapperClasses()}>
+      <div className={`${getHalfScreenPageWrapperClasses()} overflow-x-hidden`}>
         <motion.section
           ref={sectionRef}
           variants={containerVariants}
@@ -69,6 +70,13 @@ const AboutPage = () => {
             className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
           >
             <SkillsSection />
+          </motion.div>
+
+          <motion.div
+            variants={itemVariants}
+            className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
+          >
+            <GitHubActivity />
           </motion.div>
 
           <motion.div

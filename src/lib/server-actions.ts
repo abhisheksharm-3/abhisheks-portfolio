@@ -1,16 +1,10 @@
 "use server";
 
-import { projects } from "@/data/project";
 import {
   GitHubStats,
   GitHubUser,
   Repository,
-  CombinedStats,
 } from "@/lib/types/stats";
-import {
-  calculateProjectStats,
-  calculateTechnicalExpertise,
-} from "@/lib/stats";
 
 const GITHUB_USERNAME = "abhisheksharm-3";
 
@@ -131,26 +125,3 @@ export async function fetchGitHubStats(): Promise<GitHubStats> {
   };
 }
 
-// ============================================================================
-// COMBINED STATS SERVER ACTIONS
-// ============================================================================
-
-/**
- * Fetches and calculates all statistics in one function call.
- * This is useful when you need all stats data together.
- * @returns Combined statistics including project stats, GitHub stats, and technical expertise
- */
-export async function fetchAllStats(): Promise<CombinedStats> {
-  const projectStats = calculateProjectStats();
-  const githubStats = await fetchGitHubStats();
-  const technicalExpertise = await calculateTechnicalExpertise(
-    projects,
-    githubStats,
-  );
-
-  return {
-    projectStats,
-    githubStats,
-    technicalExpertise,
-  };
-}

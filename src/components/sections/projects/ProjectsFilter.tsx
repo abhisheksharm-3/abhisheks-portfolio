@@ -21,14 +21,16 @@ interface ProjectsFiltersProps {
   setActiveFilter: (tag: string) => void;
   projects: ProjectType[];
   filteredCount: number;
+  isPending?: boolean;
 }
 
 export function ProjectsFilters({
   allTags,
   activeFilter,
   setActiveFilter,
-  projects = [], // Added default value to prevent crashes
+  projects = [],
   filteredCount,
+  isPending = false,
 }: ProjectsFiltersProps) {
   const tagCounts = useMemo(() => {
     const counts: { [key: string]: number } = { all: projects.length };
@@ -52,9 +54,20 @@ export function ProjectsFilters({
           </span>
         </div>
         <div className="flex items-center space-x-4 text-xs text-foreground/40">
-          <span>{filteredCount} projects shown</span>
+          <span className={isPending ? "opacity-50" : ""}>
+            {filteredCount} projects shown
+          </span>
           <div className="w-px h-4 bg-primary/10" />
-          <span className="font-mono capitalize">{activeFilter}</span>
+          <span className="font-mono capitalize flex items-center gap-2">
+            {activeFilter}
+            {isPending && (
+              <span className="flex gap-0.5">
+                <span className="w-1 h-1 rounded-full bg-foreground/40 animate-pulse" />
+                <span className="w-1 h-1 rounded-full bg-foreground/40 animate-pulse" style={{ animationDelay: "0.15s" }} />
+                <span className="w-1 h-1 rounded-full bg-foreground/40 animate-pulse" style={{ animationDelay: "0.3s" }} />
+              </span>
+            )}
+          </span>
         </div>
       </div>
 

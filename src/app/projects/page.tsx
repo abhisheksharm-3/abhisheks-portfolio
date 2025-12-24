@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition, useMemo } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { projects } from "@/data/project";
@@ -10,7 +10,6 @@ import {
   ProjectsCTA,
   ProjectCard,
   ProjectsPageBackground,
-  ProjectAnalytics,
 } from "@/components/sections/projects";
 import { containerVariants, itemVariants } from "@/lib/config/page-animations";
 import {
@@ -27,18 +26,30 @@ const allTags = Array.from(
 
 /**
  * Renders the main projects page, including filtering and animated project cards.
+ * Uses React 19's useTransition for smooth filter transitions.
  * @returns {JSX.Element} The ProjectsPage component.
  */
 const ProjectsPage = () => {
   const [activeFilter, setActiveFilter] = useState("all");
+  const [isPending, startTransition] = useTransition();
 
-  const filteredProjects =
+  // Calculate filtered projects during render (React best practice)
+  const filteredProjects = useMemo(() =>
     activeFilter === "all"
       ? projects
-      : projects.filter((project) => project.tags.includes(activeFilter));
+      : projects.filter((project) => project.tags.includes(activeFilter)),
+    [activeFilter]
+  );
+
+  // Wrap filter changes in transition for responsive UI
+  const handleFilterChange = (filter: string) => {
+    startTransition(() => {
+      setActiveFilter(filter);
+    });
+  };
 
   const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
+  const isInView = useInView(sectionRef, { once: true, amount: 0.01, margin: "100px 0px 0px 0px" });
   return (
     <AppShell>
       <motion.div
@@ -58,19 +69,13 @@ const ProjectsPage = () => {
           variants={itemVariants}
           className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
         >
-          <ProjectAnalytics />
-        </motion.div>
-
-        <motion.div
-          variants={itemVariants}
-          className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
-        >
           <ProjectsFilters
             allTags={allTags}
             activeFilter={activeFilter}
-            setActiveFilter={setActiveFilter}
+            setActiveFilter={handleFilterChange}
             projects={projects}
             filteredCount={filteredProjects.length}
+            isPending={isPending}
           />
         </motion.div>
 
