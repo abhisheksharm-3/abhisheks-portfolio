@@ -20,7 +20,7 @@ import { ProjectType } from "@/lib/types";
  */
 const ProjectImageAccent = ({ isHovered }: { isHovered: boolean }) => (
   <motion.div
-    className="absolute top-6 left-6 z-20"
+    className="absolute top-3 left-3 sm:top-6 sm:left-6 z-20"
     animate={{
       scale: isHovered ? 1.1 : 1,
       opacity: isHovered ? 1 : 0.7,
@@ -103,7 +103,7 @@ const ProjectTags = ({
   const remainingCount = tags.length - 2;
 
   return (
-    <div className="absolute top-6 right-6 z-20 flex flex-col gap-2 items-end max-w-[60%]">
+    <div className="absolute top-3 right-3 sm:top-6 sm:right-6 z-20 flex flex-col gap-1.5 sm:gap-2 items-end max-w-[50%] sm:max-w-[60%]">
       {visibleTags.map((tag, index) => (
         <motion.div
           key={tag}
@@ -122,7 +122,7 @@ const ProjectTags = ({
         >
           <Badge
             variant="secondary"
-            className="bg-background/90 text-foreground/70 border-border/50 backdrop-blur-md shadow-lg text-xs font-medium px-3 py-1.5 hover:bg-background/95 transition-colors"
+            className="bg-background/90 text-foreground/70 border-border/50 backdrop-blur-md shadow-lg text-[10px] sm:text-xs font-medium px-2 py-1 sm:px-3 sm:py-1.5 hover:bg-background/95 transition-colors"
           >
             {tag}
           </Badge>
@@ -141,7 +141,7 @@ const ProjectTags = ({
         >
           <Badge
             variant="outline"
-            className="bg-background/60 text-muted-foreground border-border/40 backdrop-blur-sm text-xs px-2.5 py-1"
+            className="bg-background/60 text-muted-foreground border-border/40 backdrop-blur-sm text-[10px] sm:text-xs px-2 py-0.5 sm:px-2.5 sm:py-1"
           >
             +{remainingCount}
           </Badge>
@@ -263,15 +263,15 @@ const ProjectHeader = ({
   project: ProjectType;
   isHovered: boolean;
 }) => (
-  <CardHeader className="pt-8 pb-0 px-8">
-    <div className="flex items-center justify-between mb-4">
+  <CardHeader className="pt-4 pb-0 px-4 sm:pt-6 sm:px-6 md:pt-8 md:px-8">
+    <div className="flex items-center justify-between mb-2 sm:mb-4">
       <motion.div
         className="flex items-center gap-2"
         animate={{ opacity: isHovered ? 1 : 0.7 }}
         transition={{ duration: 0.3 }}
       >
         <div className="w-2 h-2 rounded-full bg-primary/60" />
-        <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase">
+        <span className="text-[10px] sm:text-xs text-muted-foreground font-medium tracking-wider uppercase">
           Featured
         </span>
       </motion.div>
@@ -285,7 +285,7 @@ const ProjectHeader = ({
       </motion.div>
     </div>
 
-    <CardTitle className="text-2xl md:text-3xl font-serif tracking-tight leading-tight mb-4">
+    <CardTitle className="text-lg sm:text-2xl md:text-3xl font-serif tracking-tight leading-tight mb-2 sm:mb-4">
       <motion.span
         className="inline-block"
         animate={{
@@ -320,7 +320,7 @@ const ProjectDescription = ({
   description: string;
   isHovered: boolean;
 }) => (
-  <CardContent className="pt-6 px-8 flex-1">
+  <CardContent className="pt-3 px-4 sm:pt-4 sm:px-6 md:pt-6 md:px-8 flex-1">
     <motion.div
       className="relative"
       animate={{
@@ -332,7 +332,7 @@ const ProjectDescription = ({
       {/* Subtle background accent */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/2 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-      <p className="relative text-muted-foreground text-sm leading-relaxed font-light px-2 py-1">
+      <p className="relative text-muted-foreground text-xs sm:text-sm leading-relaxed font-light px-1 py-0.5 sm:px-2 sm:py-1">
         {description}
       </p>
     </motion.div>
@@ -350,7 +350,7 @@ const ProjectFooter = ({
   project: ProjectType;
   isHovered: boolean;
 }) => (
-  <CardFooter className="px-8 pt-6 pb-8 flex justify-between items-center">
+  <CardFooter className="px-4 pt-3 pb-4 sm:px-6 sm:pt-4 sm:pb-6 md:px-8 md:pt-6 md:pb-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
     <motion.div
       className="flex items-center gap-3"
       animate={{ opacity: isHovered ? 0.9 : 0.6 }}
@@ -360,7 +360,7 @@ const ProjectFooter = ({
         <div className="w-1.5 h-1.5 rounded-full bg-primary/50" />
         <div className="w-3 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
       </div>
-      <span className="text-xs text-muted-foreground font-medium">
+      <span className="text-[10px] sm:text-xs text-muted-foreground font-medium">
         {project.role || "Developer"}
       </span>
     </motion.div>
@@ -379,17 +379,17 @@ export const ProjectImageContainer = ({
   project: ProjectType;
   isHovered: boolean;
 }) => (
-  <div className="relative w-full h-80 overflow-hidden rounded-t-2xl">
+  <div className="relative w-full h-48 sm:h-60 md:h-80 overflow-hidden rounded-t-xl sm:rounded-t-2xl">
     <ProjectImageAccent isHovered={isHovered} />
     <ProjectImageOverlay isHovered={isHovered} />
     <ProjectImage project={project} isHovered={isHovered} />
     <ProjectTags tags={project.tags} isHovered={isHovered} />
 
     {/* Enhanced corner decoration */}
-    <div className="absolute bottom-4 left-4 opacity-60 group-hover:opacity-80 transition-opacity duration-300">
-      <div className="flex items-center gap-2">
-        <div className="w-2 h-2 rounded-full bg-primary/40" />
-        <div className="w-4 h-[1px] bg-gradient-to-r from-primary/30 to-transparent" />
+    <div className="absolute bottom-2 left-2 sm:bottom-4 sm:left-4 opacity-60 group-hover:opacity-80 transition-opacity duration-300">
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary/40" />
+        <div className="w-3 h-[1px] sm:w-4 bg-gradient-to-r from-primary/30 to-transparent" />
       </div>
     </div>
   </div>

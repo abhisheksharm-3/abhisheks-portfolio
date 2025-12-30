@@ -57,7 +57,7 @@ const ProjectsHeader = ({
   headline: string;
   isInView: boolean;
 }) => (
-  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-16 sm:mb-20 relative z-10">
+  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 md:mb-16 lg:mb-20 relative z-10">
     <div className="flex-1">
       <SectionHeader subtitle="stuff i’ve built" isInView={isInView}>
         <span className="font-serif italic bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none pr-3">
@@ -235,7 +235,7 @@ export const Projects = ({
           {/* Subtle background pattern */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-primary/2 rounded-3xl opacity-60" />
 
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 mb-20 p-6">
+          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 mb-10 sm:mb-16 md:mb-20 p-2 sm:p-4 md:p-6">
             {featuredProjects.map((project, index) => (
               <ProjectCard
                 key={project.slug}
