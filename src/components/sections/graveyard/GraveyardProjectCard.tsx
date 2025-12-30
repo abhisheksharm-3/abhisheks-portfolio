@@ -18,7 +18,7 @@ export const GraveyardProjectCard = ({
   index,
 }: GraveyardProjectCardProps) => {
   const [isHovered, setIsHovered] = useState(false);
-  const [showLessons, setShowLessons] = useState(false);
+  const [isShowingLessons, setIsShowingLessons] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.01 });
 
@@ -117,7 +117,7 @@ export const GraveyardProjectCard = ({
           </div>
 
           {/* Why it was abandoned / Lessons learned toggle */}
-          {!showLessons ? (
+          {!isShowingLessons ? (
             <div className="mb-4">
               <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">
                 Why Abandoned
@@ -192,10 +192,10 @@ export const GraveyardProjectCard = ({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setShowLessons(!showLessons)}
+              onClick={() => setIsShowingLessons(!isShowingLessons)}
               className="group/btn text-xs text-foreground/70 hover:text-foreground ml-auto px-2 py-1 h-auto"
             >
-              {showLessons ? "← Details" : "Lessons →"}
+              {isShowingLessons ? "← Details" : "Lessons →"}
             </Button>
           </div>
         </div>

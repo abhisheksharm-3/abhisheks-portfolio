@@ -55,17 +55,17 @@ const useActivePath = (items: readonly NavigationItemType[]): string | null => {
  * and orchestrates desktop and mobile navigation components.
  */
 export const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isScrolled = useScrollEffect(40);
   const activeItem = useActivePath(navigationItems);
 
   // Toggles a class on the body to prevent scrolling when the mobile menu is open.
   useEffect(() => {
-    document.body.classList.toggle("overflow-hidden", mobileMenuOpen);
+    document.body.classList.toggle("overflow-hidden", isMobileMenuOpen);
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
-  }, [mobileMenuOpen]);
+  }, [isMobileMenuOpen]);
 
   return (
     <>
@@ -112,12 +112,12 @@ export const Navbar = () => {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setMobileMenuOpen(true)}
+              onClick={() => setIsMobileMenuOpen(true)}
               aria-label="Open menu"
               className="rounded-lg hover:bg-primary/5 transition-all duration-200 p-2"
             >
               <motion.div
-                animate={{ rotate: mobileMenuOpen ? 90 : 0 }}
+                animate={{ rotate: isMobileMenuOpen ? 90 : 0 }}
                 transition={{ duration: 0.2 }}
               >
                 <Menu
@@ -131,9 +131,9 @@ export const Navbar = () => {
       </motion.header>
 
       <AnimatePresence mode="wait">
-        {mobileMenuOpen && (
+        {isMobileMenuOpen && (
           <MobileMenu
-            onClose={() => setMobileMenuOpen(false)}
+            onClose={() => setIsMobileMenuOpen(false)}
             navigationItems={navigationItems}
             activeItem={activeItem}
           />

@@ -8,7 +8,7 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { featuredProjects } from "@/data/project";
-import { ProjectsPropsType, ProjectCardPropsType } from "@/lib/types";
+import { ProjectsPropsType, LandingProjectCardPropsType } from "@/lib/types";
 import { PROJECT_ANIMATIONS } from "@/data/animations";
 import { ProjectImageContainer, ProjectContent } from "./ProjectCard";
 import { SharedBackground } from "@/components/shared/SharedBackground";
@@ -152,7 +152,7 @@ const ProjectCard = ({
   isHovered,
   onHover,
   onLeave,
-}: ProjectCardPropsType) => {
+}: LandingProjectCardPropsType) => {
   const cardAnimation = {
     initial: { opacity: 0, y: 32 },
     animate: isInView ? { opacity: 1, y: 0 } : {},

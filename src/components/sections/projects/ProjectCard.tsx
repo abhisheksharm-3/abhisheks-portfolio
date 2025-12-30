@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Card } from "@/components/ui/card";
@@ -6,39 +8,19 @@ import { ArrowUpRight, ExternalLink, Github, Calendar } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import type { ProjectCardPropsType } from "@/lib/types";
 
 /**
- * Props for the ProjectCard component
+ * ProjectCard displays a project with image, details, and action buttons.
+ * Features hover animations, tags display, and metadata.
  */
-interface ProjectCardProps {
-  project: {
-    title: string;
-    description: string;
-    tags: string[];
-    year: string;
-    role?: string;
-    client?: string;
-    duration?: string;
-    imageSrc: string;
-    url?: string;
-    github?: string;
-    slug: string;
-  };
-  delay?: number;
-}
-
-/**
- * ProjectCard component displays a project with image, details, and action buttons.
- * Features hover animations, tags display, and metadata like role/client/duration.
- *
- * @param project - Project data including title, description, tags, and links
- * @param delay - Animation delay for staggered loading (default: 0)
- * @returns JSX.Element representing the project card
- */
-export const ProjectCard = ({ project, delay = 0 }: ProjectCardProps) => {
+export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.01 });
+
+  const handleMouseEnter = () => setIsHovered(true);
+  const handleMouseLeave = () => setIsHovered(false);
 
   return (
     <motion.div
@@ -50,8 +32,8 @@ export const ProjectCard = ({ project, delay = 0 }: ProjectCardProps) => {
         delay: 0.1 + delay,
         ease: [0.22, 1, 0.36, 1],
       }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className="h-full group"
     >
       <Card
@@ -129,25 +111,19 @@ export const ProjectCard = ({ project, delay = 0 }: ProjectCardProps) => {
             <div className="space-y-2 mb-6 border-l-2 border-primary/10 pl-4">
               {project.role && (
                 <div className="flex items-center text-xs">
-                  <span className="w-12 text-foreground/40 font-light">
-                    Role
-                  </span>
+                  <span className="w-12 text-foreground/40 font-light">Role</span>
                   <span className="text-foreground/70">{project.role}</span>
                 </div>
               )}
               {project.client && (
                 <div className="flex items-center text-xs">
-                  <span className="w-12 text-foreground/40 font-light">
-                    Client
-                  </span>
+                  <span className="w-12 text-foreground/40 font-light">Client</span>
                   <span className="text-foreground/70">{project.client}</span>
                 </div>
               )}
               {project.duration && (
                 <div className="flex items-center text-xs">
-                  <span className="w-12 text-foreground/40 font-light">
-                    Time
-                  </span>
+                  <span className="w-12 text-foreground/40 font-light">Time</span>
                   <span className="text-foreground/70">{project.duration}</span>
                 </div>
               )}

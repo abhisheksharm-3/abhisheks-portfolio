@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { submitContactForm } from "@/app/actions";
+import { submitContactForm } from "@/lib/actions";
 import { CONTACT_FORM_SCHEMA } from "@/data/contact";
 import { ContactFormDataType } from "@/lib/types";
 

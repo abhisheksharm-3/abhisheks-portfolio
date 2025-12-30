@@ -20,13 +20,13 @@ import {
  */
 export const ModeToggle = () => {
   const { setTheme, theme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setIsMounted(true);
   }, []);
 
-  if (!mounted) {
+  if (!isMounted) {
     return (
       <Button
         variant="ghost"
@@ -102,10 +102,9 @@ export const ModeToggle = () => {
             flex items-center gap-2 cursor-pointer 
             transition-all duration-200 py-2 px-3 text-sm
             rounded-md mx-1 my-0.5
-            ${
-              theme === "light"
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+            ${theme === "light"
+              ? "bg-primary/10 text-primary"
+              : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
             }
           `}
         >
@@ -118,10 +117,9 @@ export const ModeToggle = () => {
             flex items-center gap-2 cursor-pointer 
             transition-all duration-200 py-2 px-3 text-sm
             rounded-md mx-1 my-0.5
-            ${
-              theme === "dark"
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+            ${theme === "dark"
+              ? "bg-primary/10 text-primary"
+              : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
             }
           `}
         >
@@ -134,10 +132,9 @@ export const ModeToggle = () => {
             flex items-center gap-2 cursor-pointer 
             transition-all duration-200 py-2 px-3 text-sm
             rounded-md mx-1 my-0.5
-            ${
-              theme === "system"
-                ? "bg-primary/10 text-primary"
-                : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
+            ${theme === "system"
+              ? "bg-primary/10 text-primary"
+              : "text-foreground/70 hover:text-foreground hover:bg-foreground/5"
             }
           `}
         >
