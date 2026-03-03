@@ -53,6 +53,13 @@ export const PERSONAL_INTERESTS = [
  */
 export const EXPERIENCE_DATA = [
   {
+    title: "Software Engineer 1",
+    subtitle: "Wednesday Solutions",
+    date: "Feb 2026 – Present",
+    description:
+      "working as a full-stack dev — shipping features, owning code end-to-end, and collaborating with a team that actually cares about craft. learning a lot about building things at scale and writing code that others have to live with.",
+  },
+  {
     title: "Software Development Intern",
     subtitle: "Stardom",
     date: "Jan 2025 – Jun 2025",

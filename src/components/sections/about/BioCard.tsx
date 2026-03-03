@@ -84,10 +84,10 @@ export const BioCard = () => {
           </p>
 
           <p>
-            outside of projects, i&apos;m just trying to keep learning,
-            experimenting, and building things that are both useful and a little
-            exciting. that&apos;s the vibe i want to carry into whatever i work
-            on next.
+            these days i&apos;m working full-time and still finding time to
+            tinker — whether it&apos;s a side project, a new tool, or just
+            something that seemed interesting at midnight. that balance of
+            shipping real work and staying curious is what keeps things fun.
           </p>
         </div>
       </CardContent>

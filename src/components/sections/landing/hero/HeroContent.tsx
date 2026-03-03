@@ -113,8 +113,8 @@ export const HeroName: React.FC = () => (
 export const HeroDescription: React.FC = () => {
   const descriptionLines = [
     { text: "full-stack dev", gradient: true },
-    { text: "who builds side projects", gradient: false },
-    { text: "and chases ideas past midnight", gradient: false },
+    { text: "building things by day,", gradient: false },
+    { text: "exploring ideas past midnight", gradient: false },
   ];
 
   return (
