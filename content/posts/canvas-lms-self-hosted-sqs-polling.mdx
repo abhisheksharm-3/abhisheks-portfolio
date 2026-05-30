@@ -1,6 +1,6 @@
 ---
 title: "canvas lms self-hosted: polling submissions without kinesis"
-subhead: "canvas self-hosted has no kinesis and no usable webhooks. we replaced both with a self-feeding sqs loop that handled 15k monthly submissions reliably."
+subhead: "canvas self-hosted gave us only rest polling. the fix was a spring + sqs poll chain with watermarks for a 15k/month qms pipeline."
 date: "2026-04-20"
 keywords:
   - "canvas lms self-hosted event ingestion"
@@ -10,143 +10,246 @@ keywords:
   - "canvas lms api polling architecture"
   - "lms submission ingestion without event streaming"
 tags: ["backend", "aws"]
-readingTime: 8
+readingTime: 10
 type: "technical"
 searchIntent: "informational"
 draft: false
 faqs:
   - question: "why doesn't self-hosted canvas lms support real-time event streaming?"
-    answer: "canvas cloud uses amazon kinesis data streams for real-time submission events. that dependency is hardcoded into the canvas event system. self-hosted canvas doesn't ship with kinesis, and the admin tooling to configure webhook subscriptions is either unavailable or restricted in most on-prem installations. the result: none of the standard event-driven integration paths work unless you're on the hosted canvas cloud product. if you hit this building an integration for a university running their own canvas instance, polling is the only viable path."
+    answer: "in our setup, the deployable integration surface was a canvas personal access token and the rest api. the hosted canvas event-streaming path depends on infrastructure we did not control, and the self-hosted instance did not give us a reliable webhook subscription surface for submissions. that left polling as the only path we could operate ourselves. the important design shift was treating polling as a durable queue workflow, not as a cron script."
   - question: "can you use canvas lms webhooks in a self-hosted deployment?"
-    answer: "technically canvas supports data streaming subscriptions, but in self-hosted environments the required services aren't provisioned. most self-hosted canvas deployments either don't expose webhook subscription endpoints at all or require canvas support contracts to enable. if you're building an integration for a university or institution running their own canvas instance, assume webhooks are unavailable and design around polling from the start. trying to make webhooks work in self-hosted canvas is a rabbit hole with no exit."
+    answer: "do not assume you can. canvas has event and data-streaming concepts, but a self-hosted institution may not expose the services or admin surface you need to subscribe to submission events. for this project we confirmed the available path was rest api access through a service account. the production design therefore avoided inbound canvas callbacks entirely and stored canvas state in our own database and sqs queues."
   - question: "what is a self-feeding sqs queue and why use it instead of a cron job?"
-    answer: "a self-feeding sqs queue is a polling loop where each job re-enqueues itself before finishing. the message handler runs, does its work, then sends a new delayed message to the same queue. this creates a continuous polling cycle without a separate scheduler. compared to cron: sqs handles retries and dead-letter queues natively, the poll interval becomes a message attribute you can adjust per-tenant without redeploying, concurrent execution for multiple organizations is controlled by sqs consumer concurrency rather than a distributed cron lock, and polling health is visible through standard sqs metrics like message age and dlq depth."
+    answer: "a self-feeding sqs queue is a polling loop where each trigger message schedules the next trigger after it finishes the current poll cycle. in our implementation, the trigger message contains the lms account id, tenant id, empty-poll count, assignment watermarks, and a chain id. the consumer reads the trigger, scans active canvas assignments, publishes one canvas-submission message per new student submission, then sends a delayed trigger back to the same queue. compared to cron: sqs owns retries and dead-letter queues, delay seconds can change per account, and the watchdog can reseed a broken chain without adding a second scheduler model."
   - question: "how do you handle duplicate submissions when polling the canvas api?"
-    answer: "canvas api responses are not guaranteed to exclude submissions you've already processed. you need idempotency at the ingestion layer, not the polling layer. store the canvas submission id and updated_at timestamp on every ingested record. before inserting, check for an existing record by canvas submission id. if it exists and updated_at hasn't changed, skip it. if updated_at changed, update in place and re-trigger downstream processing. this approach means polling at 60-second intervals doesn't flood downstream queues with duplicate jobs regardless of how many times the same submission appears in the api response."
+    answer: "canvas api responses are not guaranteed to respect the cursor perfectly, so the poller uses three layers. first, it stores a per-assignment last_submission_at watermark in the database. second, it applies a client-side submitted_at >= since filter after reading the canvas response. third, it advances the next watermark by one second because canvas timestamps have second-level precision. the downstream processor still treats duplicates as possible and ignores database uniqueness collisions when the same student and assignment arrive again."
 toc:
   - { id: "what-canvas-self-hosted-actually-gives-you", label: "what canvas self-hosted actually gives you", depth: 2 }
   - { id: "why-a-cron-job-breaks-at-multi-tenant-scale", label: "why a cron job breaks at multi-tenant scale", depth: 2 }
   - { id: "how-the-self-feeding-queue-works", label: "how the self-feeding queue works", depth: 2 }
   - { id: "the-poll-handler-and-canvas-api-call", label: "the poll handler and canvas api call", depth: 2 }
-  - { id: "normalizing-canvas-submissions-for-your-existing-pipeline", label: "normalizing canvas submissions for your existing pipeline", depth: 2 }
+  - { id: "how-canvas-submissions-enter-the-existing-pipeline", label: "how canvas submissions enter the existing pipeline", depth: 2 }
   - { id: "what-i-would-change", label: "what i would change", depth: 2 }
   - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
 ---
 
-I spent 2 days reading Canvas source and documentation before accepting that the standard integration paths were closed. We were building an LMS submission ingestion system for a multi-tenant grading platform. The system processes around 15,000 monthly submissions across university tenants. Moodle was working through webhooks in under a day. Canvas took a different path.
+The working Canvas integration was not a webhook. It was a Spring worker that reads `qms-canvas-poll-trigger`, calls Canvas with `submitted_since`, writes a per-assignment watermark, publishes `qms-canvas-submission`, and schedules the next trigger with a delayed SQS message.
 
-Canvas cloud uses Amazon Kinesis for real-time submission event streaming. That dependency is hardcoded into the Canvas event system. Self-hosted Canvas doesn't ship with Kinesis. Webhook subscriptions require admin tooling that most on-prem deployments either don't expose or haven't configured. After confirming this directly with the institution's Canvas system admin, the options were: accept 60-second latency through polling, or abandon near-real-time ingestion entirely.
+The throughput target in our QMS docs was 15,000 submissions per month. That works out to roughly 500 submissions per day. The load-test design assumed a 4-hour peak window and treated 7 requests per second for 2 minutes as 12x the required peak ingestion rate. Moodle had a plugin webhook path. Canvas had a service-account token and the REST API.
 
-We built a self-feeding SQS polling loop. It has been running in production for 3 weeks with 0 dropped submissions.
+The part that made polling tolerable was not the Canvas API call. It was the state around it: a database cursor per assignment, two SQS queues, a watchdog that reseeds silent chains every 30 minutes, and a chain id that kills old trigger loops after a reset.
 
 ## What canvas self-hosted actually gives you
 
-Canvas exposes a REST API with a `/submissions` endpoint you can query per-course, per-assignment. You can pass `per_page` up to 100 and filter by `submitted_after` to get only submissions newer than your last poll.
+Canvas gives you a per-assignment submissions endpoint. That is the ingestion boundary I would design around first, because the rest of the system becomes a cursor problem.
 
-That is the entire surface area available in self-hosted deployments. No push. No streaming. No webhooks in practice. Just a paginated read API.
+```text
+GET /api/v1/courses/{courseId}/assignments/{assignmentId}/submissions
+  ?per_page=50
+  &submitted_since={isoInstant}
+```
 
-The Canvas API documentation describes the event system as though Kinesis is a configuration option. It isn't. In the self-hosted codebase, Kinesis is the transport layer for `canvas_events`. If the Kinesis client isn't initialized (which it won't be in any standard on-prem install), events are dropped silently. There is no fallback to HTTP delivery or a queue.
+That endpoint is the ingest surface in the Upthink backend. The poller does not read a course-level "all new submissions" feed. It loads active assignments from our database and calls Canvas per assignment with a cursor.
 
-The `submitted_after` filter takes an ISO 8601 timestamp. You give it your last poll time, you get back everything submitted since then. This is the cursor pattern, and it works correctly as long as you handle the Link header pagination on the response.
+The local configuration makes the shape explicit. Canvas has 2 queue URLs, not a callback URL:
+
+```yaml
+app:
+  sqs:
+    queue:
+      canvas-submission-poll-trigger: http://sqs.ap-south-1.localhost:4566/000000000000/qms-canvas-poll-trigger
+      canvas-submission: http://sqs.ap-south-1.localhost:4566/000000000000/qms-canvas-submission
+  scheduler:
+    canvas-poll-trigger-consumer-interval-ms: 30000
+    canvas-watchdog-cron: "0 */30 * * * *"
+```
+
+That is the first constraint. The backend wakes every 30 seconds to check the trigger queue, and a watchdog runs every 30 minutes to find accounts whose poll chain stopped moving.
+
+The `submitted_since` filter takes an ISO 8601 timestamp. In practice we still filter the response client-side because some Canvas environments can return stale submissions even when the query includes the cursor. The database watermark is the source of truth; the Canvas filter is just a way to reduce response size.
 
 ## Why a cron job breaks at multi-tenant scale
 
-The first instinct is a cron job: run every 60 seconds, poll the Canvas API, ingest anything new. This works at small scale. At multi-tenant scale it has 4 problems that compound each other.
+Cron is the wrong primary control loop when the cursor is per account and per assignment. The moment you have multiple API workers, retries, tenant isolation, and a reset button, a single scheduled method turns into a locking problem.
 
-**Distributed locking.** With multiple API instances, 2 processes can poll the same tenant at the same time. You need a distributed lock per tenant, which means Redis or a DB-level advisory lock, which means more infrastructure and more failure modes.
+**Distributed locking.** With multiple API instances, 2 processes can poll the same Canvas account at the same time. You need a lock per account or a queue message per account. SQS already gave us the second option.
 
-**Fixed intervals.** A cron interval is a deployment config. Changing the poll frequency for a specific tenant requires a config change and a redeploy. With SQS, the poll interval is a message attribute. You set it per message, change it without redeploying, and vary it dynamically based on submission velocity.
+**Fixed intervals.** A cron interval is a deployment config. In the actual worker, the next delay is computed from `consecutiveEmptyPolls`: 120 seconds for the first 2 empty polls, then 300, 600, and 1200 seconds, plus up to 29 seconds of jitter. SQS `DelaySeconds` carries that decision on the next trigger.
 
-**Silent failures.** If a cron job fails, it disappears unless you've built alerting around it. SQS dead-letter queues give you this for free. After N failed receive attempts, the message moves to the DLQ and you get CloudWatch metrics on DLQ depth without writing any alerting logic.
+**Silent failures.** If a self-feeding chain breaks, there may be no message left to retry. We store `last_canvas_poll_at` on `lms_account`, then the watchdog treats an account as stale after 10 minutes in cloud deploys. Local dev overrides that threshold to 0 because LocalStack SQS is wiped on restart while Postgres survives.
 
-**Operational overhead.** We were already using SQS for Moodle submission ingestion and plagiarism job dispatch. The Canvas polling queue was the 4th queue in the system. A cron job would have been a 3rd execution model alongside the existing SQS consumers and the API server.
+**Operational overhead.** We already had SQS consumers for Moodle submission ingestion, plagiarism, and passback. Canvas added 2 more queues: one trigger queue and one submission queue. That kept all long-running LMS ingestion inside the same worker model.
 
 ## How the self-feeding queue works
 
-A self-feeding queue has one rule: before the message handler returns, it sends a new delayed message to the same queue. The queue drives itself forward.
+A self-feeding queue has one rule: the poller attempts to schedule the next trigger before deleting the current one. In this codebase, the trigger queue is just the account-level clock, and the watchdog exists because that scheduling step can still fail.
 
 ```
-┌─────────────────────────────────┐
-│  CANVAS_POLL_QUEUE              │
-│                                 │
-│  [msg: tenantId, lastPolledAt]  │──► consumer polls Canvas API
-│                                 │         │
-│         waits 60s               │◄────────┘ re-enqueues with new cursor
-└─────────────────────────────────┘
+qms-canvas-poll-trigger
+  message: lmsAccountId, tenantId, assignmentWatermarks, chainId
+      |
+      v
+CanvasSubmissionPollConsumer
+  - verifies tenant/account match before setting RLS
+  - scans active courses and assignments
+  - calls Canvas submissions endpoint with submitted_since
+  - writes assignment watermarks
+      |
+      +--> qms-canvas-submission
+      |      message: tenantId, lmsAccountId, courseRef, assignmentRef, studentRef
+      |
+      +--> delayed trigger back to qms-canvas-poll-trigger
 ```
 
-Each tenant gets its own polling message. 12 active tenants means 12 messages cycling through the queue independently. One slow Canvas instance doesn't block others because the SQS consumer processes each message in isolation.
+Each Canvas account gets its own trigger chain. The poll-trigger consumer receives up to 5 messages with a 5-second long poll, extends visibility to 480 seconds before work starts, and processes each account separately.
 
-The failure mode to plan for: if the re-enqueue step fails after the Canvas API call succeeds, the polling loop for that tenant stops. We handled this with a startup check that runs on API boot. It queries the list of active Canvas tenants, checks whether each has a message currently in-flight or delayed on `CANVAS_POLL_QUEUE`, and re-seeds any that are missing. A rolling deployment might re-seed a tenant that already has a message, so each message carries a deduplication id per tenant to prevent double polling within the SQS deduplication window.
+The submission queue is separate because polling and file ingestion have different failure modes. `qms-canvas-submission` receives up to 10 messages at a time, also with a 5-second long poll. It has `MAX_RECEIVE_COUNT = 3` in the app, while Terraform sends the 4th receive to the DLQ.
+
+The cloud queue settings are not exotic. The important bit is separating poll triggers from submission processing:
+
+```hcl
+resource "aws_sqs_queue" "canvas_poll_trigger" {
+  name                       = "${var.name_prefix}-canvas-poll-trigger"
+  visibility_timeout_seconds = 300
+  message_retention_seconds  = 86400
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.canvas_poll_trigger_dlq.arn
+    maxReceiveCount     = 2
+  })
+}
+
+resource "aws_sqs_queue" "canvas_submission" {
+  name                       = "${var.name_prefix}-canvas-submission"
+  visibility_timeout_seconds = 300
+  message_retention_seconds  = 86400
+
+  redrive_policy = jsonencode({
+    deadLetterTargetArn = aws_sqs_queue.canvas_submission_dlq.arn
+    maxReceiveCount     = 4
+  })
+}
+```
+
+The failure mode to plan for: if the trigger chain breaks after a deploy, queue purge, or JVM crash, polling stops silently. We handled that with `last_canvas_poll_at` on the LMS account and a watchdog that runs on startup and every 30 minutes. When it reseeds an account, it writes a new `canvas_poll_chain_id` to the database and stamps that value on the trigger message. The consumer discards old trigger messages whose chain id no longer matches the database. This is how we kill parallel poll chains without purging SQS.
 
 ## The poll handler and canvas api call
 
-The poll message is minimal: tenant id and cursor.
+The poll trigger is not just tenant id and cursor. It carries enough state to make the chain resumable and discard stale messages:
 
-```typescript
-type CanvasPollMessage = {
-  tenantId: string
-  lastPolledAt: string // ISO 8601
+```java
+public record CanvasPollTriggerMessage(
+        UUID lmsAccountId,
+        UUID tenantId,
+        int consecutiveEmptyPolls,
+        Map<String, String> assignmentWatermarks,
+        UUID chainId
+) {
+    public CanvasPollTriggerMessage {
+        if (assignmentWatermarks == null) assignmentWatermarks = Map.of();
+        if (consecutiveEmptyPolls < 0) consecutiveEmptyPolls = 0;
+    }
 }
 ```
 
-The handler fetches new submissions, sends them downstream, then re-enqueues before returning:
+The first safety check happens before the worker sets the tenant RLS context. The trigger message contains both `lmsAccountId` and `tenantId`, but the worker treats those ids as untrusted until it has loaded the account without RLS and confirmed ownership:
 
-```typescript
-async function handleCanvasPollMessage(message: CanvasPollMessage) {
-  const { tenantId, lastPolledAt } = message
-  const nowIso = new Date().toISOString()
+```java
+LmsAccount account = transactionTemplate.execute(status -> {
+    LmsAccount a = lmsAccountReadPort.findByIdBypassRls(lmsAccountId)
+            .filter(acc -> acc.getTenantId().equals(tenantId))
+            .orElse(null);
+    if (a != null) {
+        rlsConnectionManager.initializeRlsForTenant(tenantId);
+    }
+    return a;
+});
 
-  const credentials = await getCanvasCredentials(tenantId)
-  const submissions = await fetchNewSubmissions(credentials, lastPolledAt)
+if (account == null || !account.isOperational()) {
+    return;
+}
 
-  if (submissions.length > 0) {
-    await enqueueSubmissionsForIngestion(tenantId, submissions)
-  }
-
-  await sqsClient.send(
-    new SendMessageCommand({
-      QueueUrl: CANVAS_POLL_QUEUE_URL,
-      MessageBody: JSON.stringify({
-        tenantId,
-        lastPolledAt: nowIso,
-      } satisfies CanvasPollMessage),
-      DelaySeconds: 60,
-      MessageDeduplicationId: `${tenantId}-${Math.floor(Date.now() / 70_000)}`,
-      MessageGroupId: tenantId,
-    })
-  )
+UUID messageChainId = trigger.chainId();
+UUID dbChainId = account.getCanvasPollChainId();
+if (dbChainId != null && !dbChainId.equals(messageChainId)) {
+    return;
 }
 ```
 
-The `MessageDeduplicationId` uses a 70-second bucket so a re-seeded tenant during rolling deploy doesn't create a second in-flight message. The `MessageGroupId` is the tenant id. This requires a FIFO queue, which gives you per-tenant ordering at the cost of slightly higher SQS pricing.
+The poller then resolves an assignment watermark, calls Canvas, publishes submission messages, and advances the watermark. This is the part that stopped repeated ingestion when Canvas returned the same rows again:
 
-The Canvas API call follows pagination via Link headers:
+```java
+List<CanvasClient.CanvasSubmissionRef> submissions = canvasClient.getSubmissions(
+        account.getBaseUrl(), token,
+        course.lmsCourseRef(), assignment.getLmsAssignmentRef(),
+        since)
+        .stream()
+        .filter(s -> !s.submittedAt().isBefore(since))
+        .toList();
 
-```typescript
-async function fetchNewSubmissions(
-  credentials: CanvasCredentials,
-  since: string
-): Promise<CanvasSubmission[]> {
-  const results: CanvasSubmission[] = []
-  let url: string | null =
-    `${credentials.baseUrl}/api/v1/courses/${credentials.courseId}/submissions` +
-    `?per_page=100&submitted_after=${encodeURIComponent(since)}`
+if (submissions.isEmpty()) return 0;
 
-  while (url) {
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${credentials.accessToken}` },
-    })
-    if (!res.ok) throw new Error(`canvas api ${res.status} for tenant ${credentials.tenantId}`)
+Instant latestSubmittedAt = Instant.MIN;
+List<CanvasSubmissionMessage> messages = new ArrayList<>(submissions.size());
+for (var sub : submissions) {
+    messages.add(new CanvasSubmissionMessage(
+            tenantId,
+            account.getId(),
+            course.lmsCourseRef(),
+            assignment.getLmsAssignmentRef(),
+            sub.userId()));
 
-    const page: CanvasSubmission[] = await res.json()
-    results.push(...page)
+    if (sub.submittedAt().isAfter(latestSubmittedAt)) {
+        latestSubmittedAt = sub.submittedAt();
+    }
+}
 
-    // Canvas pagination uses RFC 5988 Link headers, not query params
-    url = parseLinkHeader(res.headers.get("Link"))?.next ?? null
-  }
+publishSubmissionMessages(messages);
 
-  return results
+Instant nextWatermark = latestSubmittedAt.plusSeconds(1);
+updatedWatermarks.put(assignment.getId().toString(), nextWatermark.toString());
+```
+
+That `plusSeconds(1)` matters. Canvas timestamps have second-level precision. Advancing by a millisecond still leaves the cursor inside the same timestamp bucket, which can cause the same submission to appear on the next cycle.
+
+The Canvas API call follows pagination through the `Link` response header:
+
+```java
+public List<CanvasSubmissionRef> getSubmissions(String baseUrl, String token,
+                                                String courseId, String assignmentId,
+                                                Instant since) {
+    List<CanvasSubmissionRef> results = new ArrayList<>();
+    String uri = "/api/v1/courses/" + courseId + "/assignments/" + assignmentId + "/submissions"
+            + "?per_page=50"
+            + (since != null ? "&submitted_since=" + since : "");
+
+    while (uri != null) {
+        var response = clientFor(baseUrl, token).get()
+                .uri(uri)
+                .exchangeToMono(resp -> {
+                    String linkHeader = resp.headers().asHttpHeaders().getFirst("Link");
+                    return resp.bodyToMono(String.class)
+                            .map(body -> Map.entry(body, linkHeader != null ? linkHeader : ""));
+                })
+                .block(TIMEOUT);
+
+        if (response == null) break;
+
+        JsonNode arr = objectMapper.readTree(response.getKey());
+        for (JsonNode node : arr) {
+            String submittedAt = node.path("submitted_at").asText(null);
+            if (submittedAt == null || submittedAt.isBlank()) continue;
+
+            results.add(new CanvasSubmissionRef(
+                    node.path("id").asText(),
+                    node.path("user_id").asText(),
+                    Instant.parse(submittedAt)));
+        }
+
+        uri = safeNextLink(response.getValue(), baseUrl);
+    }
+
+    return results;
 }
 ```
 
@@ -157,44 +260,72 @@ Link: <https://canvas.example.edu/api/v1/courses/123/submissions?...&page=bookma
       <https://canvas.example.edu/api/v1/courses/123/submissions?...&page=first>; rel="first"
 ```
 
-Parse the `rel="next"` URL and follow it. The `per_page=100` limit means a burst of 500 submissions at a deadline requires 5 API calls, which completes in under 3 seconds at typical Canvas API response times.
+Parse the `rel="next"` URL and follow it. The code also checks that absolute next-page URLs stay on the same origin as the configured Canvas base URL. If Canvas or a proxy returns a cross-origin next link, the worker stops pagination instead of letting `WebClient` follow an unexpected host.
 
-## Normalizing canvas submissions for your existing pipeline
+## How canvas submissions enter the existing pipeline
 
-If you already have a Moodle integration, your downstream ingestion pipeline probably expects a normalized payload rather than a raw LMS response. The Canvas submission shape is different from Moodle's, so you normalize at the adapter layer before handing off.
+Canvas submissions enter the existing pipeline as references first, not as full payloads. The poller only enqueues identifiers, then a submission consumer fetches the full submission and attachment when it is ready to create the internal submission record.
 
-```typescript
-function toSubmissionPayload(
-  tenantId: string,
-  raw: CanvasSubmission
-): SubmissionPayload {
-  return {
-    tenantId,
-    source: "canvas",
-    externalId: String(raw.id),
-    studentId: String(raw.user_id),
-    assignmentId: String(raw.assignment_id),
-    submittedAt: raw.submitted_at,
-    attachmentUrl: raw.attachments?.[0]?.url ?? null,
-    checksum: raw.attachments?.[0]?.md5 ?? null,
-  }
+```java
+public record CanvasSubmissionMessage(
+        UUID tenantId,
+        UUID lmsAccountId,
+        String lmsCourseRef,
+        String lmsAssignmentRef,
+        String lmsStudentRef
+) {}
+```
+
+The message intentionally avoids carrying attachment URLs. Canvas file URLs can expire or redirect to object storage, so the worker fetches the submission detail only when it is ready to process it:
+
+```java
+CanvasClient.CanvasSubmissionDetail detail = canvasClient.getSingleSubmission(
+        account.getBaseUrl(), token, lmsCourseRef, lmsAssignmentRef, lmsStudentRef);
+
+if (detail == null || detail.attachments().isEmpty()) {
+    return null;
+}
+
+CanvasClient.CanvasAttachment attachment = detail.attachments().get(0);
+byte[] fileContent = canvasClient.downloadFile(account.getBaseUrl(), token, attachment.url());
+
+return new CanvasSubmissionResult(
+        lmsStudentRef,
+        attachment.filename(),
+        fileContent,
+        detail.submittedAt());
+```
+
+The final handoff reuses the same internal submission creation path as the rest of the product. The only Canvas-specific part is that Canvas uses `user_id` as the student submission reference in this flow:
+
+```java
+try {
+    submitAssignmentUseCase.create(
+            lmsAssignmentRef,
+            tenantId,
+            lmsStudentRef,
+            result.lmsStudentId(),
+            result.submittedAt(),
+            SubmissionStatus.RECEIVED,
+            result.fileName(),
+            result.fileContent(),
+            "CANVAS_SUBMISSION_QUEUE"
+    );
+} catch (DataIntegrityViolationException e) {
+    log.info("Duplicate Canvas submission ignored");
 }
 ```
 
-The downstream ingestion consumer handles idempotency. This adapter does not. Before creating a record, it does a lookup by `(tenantId, source, externalId)`. If it finds a match with an unchanged `submittedAt`, it skips. If `submittedAt` changed (a resubmission), it updates the record and re-triggers the plagiarism and grading queue entries. This means the poller can run as aggressively as needed without flooding downstream systems.
-
-One thing worth noting: Canvas can return a submission with `workflow_state: "unsubmitted"` in the results even with a `submitted_after` filter if a student submitted and then unsubmitted. Filter these out at the adapter layer before enqueuing. An unsubmitted submission that enters your grading queue will fail every downstream step.
+The duplicate handling is deliberately downstream. The poller should reduce duplicate messages, but the database write path still has to tolerate the same Canvas student and assignment arriving twice.
 
 ## What I would change
 
-**Adaptive poll intervals.** The 60-second fixed interval works for normal load. Around assignment deadlines, hundreds of submissions arrive in minutes and 60 seconds feels slow. The fix is to track the count from the previous poll and adjust `DelaySeconds` on the next message: shorten to 15 seconds when the last poll returned results, back to 60 when it returned nothing. This halves the effective latency during burst periods without increasing API calls during idle periods.
+I would keep the 2-queue split and change the parts that are currently hidden in code constants.
 
-**EventBridge Scheduler instead of self-feeding SQS.** The startup re-seeding logic was the most brittle part of the system. EventBridge Scheduler gives you a per-tenant scheduled rule with built-in idempotency, failure handling, and no need to manage the loop state yourself. Each tenant gets a rule like `rate(1 minute)` that fires directly into a Lambda or SQS target. The self-feeding pattern made sense here because the rest of the ingestion system was already SQS-native, but if you're starting from scratch, EventBridge Scheduler is cleaner.
+**Make the delay policy configurable per account.** The current adaptive delay is hardcoded: 120 seconds for the first 2 empty polls, then 300, 600, and 1200 seconds with jitter. The send step clamps `DelaySeconds` to 900, so the effective maximum delay is 15 minutes. That is fine for normal university workloads, but deadline-heavy courses deserve their own profile. I would move those thresholds onto the LMS account so a high-volume tenant can stay hot without making every Canvas account poll aggressively.
 
-**Per-assignment polling instead of per-course.** We polled at the course level, which meant iterating over all assignments in the response to find new submissions. Canvas also exposes `/assignments/{id}/submissions` which lets you narrow polling to active assignments only. For courses with many archived assignments, per-assignment polling significantly reduces response size and API quota consumption.
+**EventBridge Scheduler instead of self-feeding SQS.** The watchdog and chain id logic work, but they exist because a self-feeding queue can go quiet. EventBridge Scheduler would give each Canvas account a scheduled rule that targets SQS directly. The tradeoff is a larger control-plane surface. In this codebase, SQS was already the worker model, so the self-feeding design kept deployment simpler.
 
-The approach as built worked: 0 dropped submissions across all tenants in 3 weeks, sub-90-second ingestion latency for 95% of submissions, and no dedicated scheduler service in the infrastructure.
+**Capture Canvas API drift as metrics.** The client-side stale-submission filter was added because the API did not always behave like the docs implied. I would add a counter for "returned by Canvas but rejected by local watermark" per account and assignment. That would show which institutions have noisy Canvas responses before they turn into queue volume.
 
-## Frequently asked questions
-
-The FAQs are rendered below from the post frontmatter.
+The design limit I would document clearly: this is not real-time ingestion. In the current code, an idle Canvas account backs off to an effective 15-minute SQS delay, and the watchdog only checks stale chains every 30 minutes. That was acceptable for our grading workflow. It would be wrong for a product that promises seconds-level delivery.
