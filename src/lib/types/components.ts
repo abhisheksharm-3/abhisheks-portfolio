@@ -11,9 +11,6 @@ export interface MousePositionType {
 export interface MobileNavLinkPropsType {
     item: NavigationItemType;
     isActive: boolean;
-    isHovered: boolean;
-    onHoverStart: () => void;
-    onHoverEnd: () => void;
     onClick: () => void;
 }
 

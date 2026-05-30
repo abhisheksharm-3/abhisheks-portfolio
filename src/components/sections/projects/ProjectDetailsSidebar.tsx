@@ -49,7 +49,7 @@ export function ProjectDetailSidebar({ project }: { project: ProjectType }) {
               {project.tags.map((tag: string) => (
                 <span
                   key={tag}
-                  className="px-2.5 py-0.5 border border-primary/15 rounded-full text-[11px] text-foreground/50 font-light"
+                  className="px-2.5 py-0.5 border border-foreground/10 text-[11px] text-foreground/50 font-light"
                 >
                   {tag}
                 </span>
@@ -61,21 +61,17 @@ export function ProjectDetailSidebar({ project }: { project: ProjectType }) {
 
       <div className="h-px bg-primary/10 mb-6" />
 
-      <div className="flex flex-col gap-3">
+      <div className="flex flex-col gap-2">
         {project.url && (
           <Button
-            variant="default"
+            variant="outline"
             size="sm"
-            className="group w-full bg-primary hover:bg-primary/90 text-primary-foreground justify-between"
+            className="group w-full rounded-none border-foreground/15 hover:border-foreground/30 justify-between"
             asChild
           >
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={project.url} target="_blank" rel="noopener noreferrer">
               Visit Website
-              <ExternalLink className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <ExternalLink className="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
             </a>
           </Button>
         )}
@@ -83,16 +79,12 @@ export function ProjectDetailSidebar({ project }: { project: ProjectType }) {
           <Button
             variant="outline"
             size="sm"
-            className="group w-full border-primary/15 hover:bg-primary/5 hover:border-primary/25 justify-between"
+            className="group w-full rounded-none border-foreground/8 hover:border-foreground/20 justify-between"
             asChild
           >
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={project.github} target="_blank" rel="noopener noreferrer">
               View Source
-              <Github className="h-3 w-3 text-primary/60" />
+              <Github className="h-3.5 w-3.5" />
             </a>
           </Button>
         )}

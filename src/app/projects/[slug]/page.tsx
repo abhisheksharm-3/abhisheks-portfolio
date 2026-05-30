@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
-import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { projects } from "@/data/project";
 import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
@@ -39,17 +38,13 @@ const DetailedProjectPage = () => {
         <ProjectsPageBackground />
 
         <motion.div variants={ITEM_VARIANTS} className="mb-8">
-          <Button
-            variant="outline"
-            size="sm"
-            className="group border-primary/10 hover:bg-primary/5"
-            asChild
+          <Link
+            href="/projects"
+            className="group inline-flex items-center gap-2 text-xs text-foreground/40 hover:text-foreground/70 transition-colors duration-200 border border-foreground/10 hover:border-foreground/20 px-3 py-1.5"
           >
-            <Link href="/projects" className="flex items-center">
-              <ArrowLeft className="mr-2 h-3 w-3 transition-transform group-hover:-translate-x-1" />
-              back to projects
-            </Link>
-          </Button>
+            <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
+            back to projects
+          </Link>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">

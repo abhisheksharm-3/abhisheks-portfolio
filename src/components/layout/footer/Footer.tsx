@@ -5,7 +5,10 @@ import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { SOCIAL_LINKS, CONTACT_INFO } from "@/data/contact";
 import { NAVIGATION_ITEMS } from "@/data/navigation";
-import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
+import {
+  CONTAINER_VARIANTS,
+  ITEM_VARIANTS,
+} from "@/lib/config/page-animations";
 
 export const Footer = () => (
   <footer className="border-t border-primary/10">
@@ -65,7 +68,10 @@ export const Footer = () => (
         </motion.div>
 
         {/* Contact */}
-        <motion.div variants={ITEM_VARIANTS} className="md:justify-self-end md:text-right">
+        <motion.div
+          variants={ITEM_VARIANTS}
+          className="md:justify-self-end md:text-right"
+        >
           <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
             say hi
           </p>
