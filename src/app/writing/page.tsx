@@ -51,8 +51,7 @@ const WritingPage = () => (
         </h1>
         <div className="h-px bg-primary/10 w-full mb-6" />
         <p className="text-foreground/55 max-w-2xl text-sm sm:text-base font-light leading-relaxed">
-          things i learned building ai pipelines, android apps, and other stuff
-          at midnight. honest write-ups, not tutorials.
+          write-ups from production work. things that bit me, how i diagnosed them, and what i would do differently.
         </p>
       </motion.div>
 
