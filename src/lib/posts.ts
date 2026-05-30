@@ -1,4 +1,5 @@
 // Server-only — uses fs. Do not import from client components.
+import "server-only"
 import fs from "fs"
 import path from "path"
 import matter from "gray-matter"
@@ -9,21 +10,52 @@ import remarkGfm from "remark-gfm"
 import { PostFrontmatter, type PostFrontmatterType } from "./post-schema"
 import { PostCallout } from "@/components/writing/PostCallout"
 
-const POSTS_DIR = path.join(process.cwd(), "content/posts")
+const POSTS_DIR = path.resolve(process.cwd(), "content/posts")
+const POST_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/
 
 export type PostMeta = {
   slug: string
   frontmatter: PostFrontmatterType
 }
 
+function getSlugFromFilename(filename: string): string {
+  const slug = path.basename(filename, ".mdx")
+
+  if (!POST_SLUG_PATTERN.test(slug)) {
+    throw new Error(
+      `Invalid post filename "${filename}". Use lowercase kebab-case slugs.`
+    )
+  }
+
+  return slug
+}
+
+function getPostFilePath(slug: string): string | null {
+  if (!POST_SLUG_PATTERN.test(slug)) return null
+
+  const filePath = path.resolve(POSTS_DIR, `${slug}.mdx`)
+  const isInsidePostsDir = filePath.startsWith(`${POSTS_DIR}${path.sep}`)
+
+  return isInsidePostsDir ? filePath : null
+}
+
 export async function getAllPosts(opts?: { includeDrafts?: boolean }): Promise<PostMeta[]> {
   if (!fs.existsSync(POSTS_DIR)) return []
 
-  const files = fs.readdirSync(POSTS_DIR).filter((f) => f.endsWith(".mdx"))
+  const files = fs
+    .readdirSync(POSTS_DIR, { withFileTypes: true })
+    .filter((entry) => entry.isFile() && entry.name.endsWith(".mdx"))
+    .map((entry) => entry.name)
 
   const posts = files.map((filename) => {
-    const slug = filename.replace(/\.mdx$/, "")
-    const source = fs.readFileSync(path.join(POSTS_DIR, filename), "utf-8")
+    const slug = getSlugFromFilename(filename)
+    const filePath = getPostFilePath(slug)
+
+    if (!filePath) {
+      throw new Error(`Invalid post path for "${filename}".`)
+    }
+
+    const source = fs.readFileSync(filePath, "utf-8")
     const { data } = matter(source)
     const frontmatter = PostFrontmatter.parse(data)
     return { slug, frontmatter }
@@ -40,14 +72,19 @@ export async function getAllPosts(opts?: { includeDrafts?: boolean }): Promise<P
   )
 }
 
-export async function getPostBySlug(slug: string) {
-  const filePath = path.join(POSTS_DIR, `${slug}.mdx`)
+export async function getPostBySlug(
+  slug: string,
+  opts?: { includeDrafts?: boolean }
+) {
+  const filePath = getPostFilePath(slug)
 
-  if (!fs.existsSync(filePath)) return null
+  if (!filePath || !fs.existsSync(filePath)) return null
 
   const source = fs.readFileSync(filePath, "utf-8")
   const { data, content } = matter(source)
   const frontmatter = PostFrontmatter.parse(data)
+
+  if (frontmatter.draft && !opts?.includeDrafts) return null
 
   const { content: mdxContent } = await compileMDX({
     source: content,
