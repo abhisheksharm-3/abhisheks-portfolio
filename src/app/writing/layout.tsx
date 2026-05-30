@@ -3,7 +3,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Writing | Abhishek Sharma",
   description:
-    "thoughts on building software, ai, and the occasional late-night idea. coming soon.",
+    "write-ups from production work on backend systems, ai, and web software.",
 };
 
 export default function WritingLayout({
