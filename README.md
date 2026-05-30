@@ -1,36 +1,31 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Abhishek Sharma Portfolio
 
-## Getting Started
+This is the source for my personal portfolio at [abhisheksan.com](https://abhisheksan.com).
 
-First, run the development server:
+It is a minimal Next.js portfolio for projects, writing, contact, and the older work I still want visible. The site is intentionally personal in tone: quiet interface, dark visual system, animated background, project archive, and a filesystem-backed MDX writing section.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## What's Inside
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Portfolio pages for about, projects, graveyard, writing, and contact
+- Project data stored in `src/data/project.ts`
+- MDX writing system under `content/posts`
+- Zod frontmatter validation for posts
+- Syntax-highlighted technical articles
+- Generated article metadata, JSON-LD, sitemap, robots, and OG images
+- Contact form backed by a server action and email template
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Writing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Posts live in `content/posts/*.mdx`. Frontmatter is validated through `src/lib/post-schema.ts`, loaded through `src/lib/posts.ts`, and rendered at `/writing/[slug]`.
 
-## Learn More
+The writing system is built for technical posts with real code, concrete numbers, FAQs, and structured metadata. There is also a pre-publish checker in `scripts/check-post.mjs` for catching weak post structure before publishing.
 
-To learn more about Next.js, take a look at the following resources:
+Current public post:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `canvas-lms-self-hosted-sqs-polling.mdx`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Template Use
 
-## Deploy on Vercel
+You can use this repo as a template for your own portfolio without asking. Replace the copy, project data, images, posts, email settings, and branding with your own.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Credit is appreciated, but not required.
