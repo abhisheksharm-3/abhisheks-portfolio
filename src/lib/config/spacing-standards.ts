@@ -9,12 +9,12 @@ export const SPACING_STANDARDS = {
     CONTAINER_PADDING: "px-6 sm:px-8 lg:px-16", // Consistent horizontal padding
     TOP_PADDING: "pt-32", // Consistent top padding for all pages (accounting for navbar)
     BOTTOM_PADDING: "pb-24", // Consistent bottom padding
-    SECTION_VERTICAL: "py-32 sm:py-40", // Consistent section vertical spacing
+    SECTION_VERTICAL: "py-20 sm:py-28", // Consistent section vertical spacing
   },
 
   // Header spacing
   HEADER: {
-    SECTION_MARGIN_BOTTOM: "mb-16 sm:mb-20", // Consistent header bottom margin
+    SECTION_MARGIN_BOTTOM: "mb-10 sm:mb-12", // Consistent header bottom margin
     TITLE_MARGIN_BOTTOM: "mb-4", // Title bottom margin
     SUBTITLE_MARGIN_TOP: "mt-6", // Subtitle top margin
     ACCENT_LINE_MARGIN: "mt-4", // Accent line top margin
@@ -38,7 +38,7 @@ export const SPACING_STANDARDS = {
 
   // Content spacing
   CONTENT: {
-    SECTION_SPACING: "mb-20", // Standard section spacing
+    SECTION_SPACING: "mb-12", // Standard section spacing
     PARAGRAPH_SPACING: "mb-6", // Standard paragraph spacing
     LIST_SPACING: "space-y-6", // Standard list item spacing
     SMALL_SPACING: "mb-4", // Small spacing

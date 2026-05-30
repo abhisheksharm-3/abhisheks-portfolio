@@ -12,10 +12,7 @@ import {
   ProjectsPageBackground,
 } from "@/components/sections/projects";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
-import {
-  getHalfScreenPageWrapperClasses,
-  SPACING_STANDARDS,
-} from "@/lib/config/spacing-standards";
+import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * A sorted, unique list of all project tags, generated once at the module level.
@@ -57,7 +54,7 @@ const ProjectsPage = () => {
         initial="hidden"
         ref={sectionRef}
         animate={isInView ? "visible" : "hidden"}
-        className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
+        className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden"
       >
         <ProjectsPageBackground />
 

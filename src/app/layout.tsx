@@ -1,33 +1,26 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Geist, Newsreader } from "next/font/google";
+import { Geist_Mono, Space_Grotesk, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
 import type { RootLayoutPropsType } from "@/lib/types";
 
-/**
- * Initializes the Geist Sans font with the Latin subset.
- */
-const geistSans = Geist({
+const spaceGrotesk = Space_Grotesk({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
 });
 
-/**
- * Initializes the Geist Mono font with the Latin subset.
- */
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
-/**
- * Initializes the Newsreader font with the Latin subset.
- */
-const newsreader = Newsreader({
+const playfairDisplay = Playfair_Display({
   variable: "--font-newsreader",
   subsets: ["latin"],
   style: ["normal", "italic"],
+  weight: ["400", "500", "700", "900"],
 });
 
 /**
@@ -41,7 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Abhishek Sharma | Developer",
     description:
-      "I make web and mobile apps. Here's my portfolio—projects, ideas, and ways to connect.",
+      "I build web apps, Android apps, and AI systems. This is my work.",
     url: "https://abhisheksan.com",
     siteName: "Abhishek Sharma",
     images: [
@@ -69,13 +62,10 @@ export const metadata: Metadata = {
   publisher: "Abhishek Sharma",
 };
 
-/**
- * Root layout component wrapping the application with providers and fonts.
- */
 const RootLayout = ({ children }: Readonly<RootLayoutPropsType>) => (
   <html lang="en" suppressHydrationWarning>
     <body
-      className={`${geistSans.variable} ${geistMono.variable} ${newsreader.variable} antialiased`}
+      className={`${spaceGrotesk.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
     >
       <Providers>
         {children}

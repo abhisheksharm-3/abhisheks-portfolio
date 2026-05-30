@@ -4,66 +4,70 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Palette, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { ExpertiseType } from "@/lib/types";
 import { SKILLS_ANIMATIONS } from "@/data/animations";
 
 /**
- * Renders a single skill card with its associated technologies.
- * @param {{ service: ExpertiseType }} props - The service/skill data to display.
+ * Renders a single expertise row in the editorial list.
+ * @param {{ service: ExpertiseType; index: number }} props
  */
-const SkillCard = ({ service }: { service: ExpertiseType }) => (
+const SkillRow = ({
+  service,
+  index,
+}: {
+  service: ExpertiseType;
+  index: number;
+}) => (
   <motion.div
     variants={SKILLS_ANIMATIONS.item}
-    className="group flex flex-col h-full"
+    className="group"
   >
-    <div className="p-3 rounded-md border border-primary/10 inline-flex self-start mb-4 group-hover:border-primary/20 transition-colors duration-300">
-      <motion.div
-        whileHover={{ rotate: 15 }}
-        transition={{ duration: 0.3 }}
-        className="text-primary/70"
-      >
-        <service.icon className="h-5 w-5" />
-      </motion.div>
-    </div>
-    <div className="flex items-center justify-between mb-2">
-      <h4 className="text-lg font-light">{service.title}</h4>
-      <span className="text-xs font-light text-primary/60 px-2 py-0.5 border border-primary/10 rounded-md">
-        {service.level}
-      </span>
-    </div>
-    <motion.div
-      initial={{ width: 0 }}
-      animate={{ width: "2rem" }}
-      transition={{ duration: 0.5, delay: 0.2 }}
-      className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-3"
-    />
-    <p className="text-foreground/60 text-sm font-light leading-relaxed mb-4">
-      {service.description}
-    </p>
-    <div className="flex flex-wrap gap-2 mt-auto">
-      {service.skills.map((skill) => (
-        <span
-          key={skill}
-          className="px-2 py-1 bg-primary/5 border border-primary/10 rounded-md text-xs text-primary/70"
-        >
-          {skill}
+    <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-8 py-7">
+      {/* Index + title column */}
+      <div className="flex items-baseline gap-4 sm:w-2/5">
+        <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light tabular-nums w-5 shrink-0">
+          {String(index + 1).padStart(2, "0")}
         </span>
-      ))}
+        <h4 className="text-lg font-light text-foreground group-hover:text-primary/80 transition-colors duration-300">
+          {service.title}
+        </h4>
+      </div>
+
+      {/* Description column */}
+      <p className="text-foreground/55 text-sm font-light leading-relaxed sm:w-2/5 sm:pt-0.5">
+        {service.description}
+      </p>
+
+      {/* Skills + level column */}
+      <div className="flex flex-col gap-3 sm:w-1/5 sm:items-end">
+        <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
+          {service.level}
+        </span>
+        <div className="flex flex-wrap gap-1.5 sm:justify-end">
+          {service.skills.slice(0, 3).map((skill) => (
+            <span
+              key={skill}
+              className="text-[11px] text-foreground/50 font-light"
+            >
+              {skill}
+            </span>
+          ))}
+          {service.skills.length > 3 && (
+            <span className="text-[11px] text-primary/35 font-light">
+              +{service.skills.length - 3}
+            </span>
+          )}
+        </div>
+      </div>
     </div>
+    <div className="h-px bg-primary/10" />
   </motion.div>
 );
 
 /**
- * Renders the featured skills area, combining a description with a grid of core skills.
- * @param {{ mainServices: ExpertiseType[]; isInView: boolean }} props - Component props.
+ * Renders the featured skills area as an editorial list with a description aside.
+ * @param {{ mainServices: ExpertiseType[]; isInView: boolean }} props
  */
 export const FeaturedSkillsSection = ({
   mainServices,
@@ -72,80 +76,69 @@ export const FeaturedSkillsSection = ({
   mainServices: ExpertiseType[];
   isInView: boolean;
 }) => (
-  <Card className="border-primary/10 backdrop-blur-sm overflow-hidden mb-12 relative">
-    <div className="p-8 sm:p-10">
-      <div className="flex flex-col lg:flex-row gap-12 lg:gap-16">
-        <div className="w-full lg:w-1/3">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={isInView ? { scale: 1, opacity: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="w-16 h-16 rounded-md border border-primary/10 flex items-center justify-center mb-8"
+  <div className="mb-16">
+    {/* Section intro row */}
+    <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 mb-10">
+      <div className="lg:w-2/5">
+        <motion.h3
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+          className="text-2xl sm:text-3xl font-serif italic text-foreground mb-4"
+        >
+          how i build stuff
+        </motion.h3>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
+          className="text-foreground/55 text-sm font-light leading-relaxed mb-6"
+        >
+          i keep it simple: start small, ship fast, tweak along the way. could
+          be spinning up an ai bot in a weekend or rolling out a backend that
+          just scales. i move quick, but never forget the details that make
+          things actually usable.
+        </motion.p>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.45 }}
+        >
+          <Link
+            href="/about"
+            className="group inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-primary transition-colors duration-300"
           >
-            <Palette className="h-8 w-8 text-primary/70" strokeWidth={1.25} />
-          </motion.div>
-          <motion.h3
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-2xl sm:text-3xl font-serif italic mb-6"
-          >
-            how i build stuff
-          </motion.h3>
-          <motion.div
-            initial={{ width: 0 }}
-            animate={isInView ? { width: "3rem" } : {}}
-            transition={{ duration: 0.5, delay: 0.5 }}
-            className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-6"
-          />
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8"
-          >
-            i keep it simple: start small, ship fast, tweak along the way. could
-            be spinning up an ai bot in a weekend or rolling out a backend that
-            just scales. i move quick, but never forget the details that make
-            things actually usable.
-          </motion.p>
-          <Button
-            variant="outline"
-            className="group border-primary/10 hover:bg-primary/5 rounded-md"
-            asChild
-          >
-            <Link href="/about" className="flex items-center text-sm">
-              check out more on my process
-              <motion.div whileHover={{ x: 3 }} className="ml-2">
-                <ArrowRight className="h-4 w-4 text-primary/70" />
-              </motion.div>
-            </Link>
-          </Button>
-        </div>
-        <div className="w-full lg:w-2/3 pt-8 mt-8 border-t lg:border-t-0 lg:pt-0 lg:mt-0 lg:pl-16 lg:border-l border-primary/5">
-          <motion.div
-            variants={SKILLS_ANIMATIONS.container}
-            initial="hidden"
-            animate={isInView ? "show" : "hidden"}
-            className="grid grid-cols-1 sm:grid-cols-3 gap-8"
-          >
-            {mainServices.map((service) => (
-              <SkillCard key={service.title} service={service} />
-            ))}
-          </motion.div>
-        </div>
+            see how i build things
+            <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+          </Link>
+        </motion.div>
+      </div>
+
+      <div className="lg:w-3/5">
+        {/* Top rule */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="h-px bg-primary/10 mb-0"
+        />
+        <motion.div
+          variants={SKILLS_ANIMATIONS.container}
+          initial="hidden"
+          animate={isInView ? "show" : "hidden"}
+        >
+          {mainServices.map((service, index) => (
+            <SkillRow key={service.title} service={service} index={index} />
+          ))}
+        </motion.div>
       </div>
     </div>
-    <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-      <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />
-      <div className="absolute top-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
-    </div>
-  </Card>
+  </div>
 );
 
 /**
- * Renders a grid of cards for secondary or additional skills.
- * @param {{ additionalServices: ExpertiseType[]; isInView: boolean }} props - Component props.
+ * Renders a minimal two-column list of secondary skills.
+ * @param {{ additionalServices: ExpertiseType[]; isInView: boolean }} props
  */
 export const SecondarySkillsGrid = ({
   additionalServices,
@@ -155,59 +148,57 @@ export const SecondarySkillsGrid = ({
   isInView: boolean;
 }) => (
   <motion.div
-    variants={SKILLS_ANIMATIONS.container}
-    initial="hidden"
-    animate={isInView ? "show" : "hidden"}
-    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
+    initial={{ opacity: 0, y: 20 }}
+    animate={isInView ? { opacity: 1, y: 0 } : {}}
+    transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
   >
-    {additionalServices.map((service) => (
-      <motion.div key={service.title} variants={SKILLS_ANIMATIONS.item}>
-        <Card className="group border-primary/10 backdrop-blur-sm hover:border-primary/20 transition-colors duration-300 h-full flex flex-col">
-          <CardHeader className="pt-6 pb-0 px-6">
-            <div className="flex items-start gap-3">
-              <div className="p-2 rounded-md border border-primary/10 group-hover:border-primary/20 transition-colors duration-300">
-                <motion.div
-                  whileHover={{ rotate: 15 }}
-                  className="text-primary/70"
-                >
-                  <service.icon className="h-4 w-4" />
-                </motion.div>
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-base font-medium">{service.title}</h4>
-                  <span className="text-xs text-primary/60 px-2 py-0.5 border border-primary/10 rounded-md">
-                    {service.level}
-                  </span>
-                </div>
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: "2rem" }}
-                  transition={{ duration: 0.5, delay: 0.2 }}
-                  className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mt-2"
-                />
-              </div>
+    <div className="flex items-center gap-4 mb-6">
+      <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
+        also comfortable with
+      </span>
+      <div className="h-px bg-primary/10 flex-1" />
+    </div>
+
+    <motion.div
+      variants={SKILLS_ANIMATIONS.container}
+      initial="hidden"
+      animate={isInView ? "show" : "hidden"}
+      className="grid grid-cols-1 sm:grid-cols-3 gap-0"
+    >
+      {additionalServices.map((service, index) => (
+        <motion.div
+          key={service.title}
+          variants={SKILLS_ANIMATIONS.item}
+          className="group"
+        >
+          <div
+            className={`py-6 pr-8 ${index < additionalServices.length - 1 ? "sm:border-r border-primary/10" : ""} ${index > 0 ? "sm:pl-8" : ""}`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <h4 className="text-sm font-light text-foreground group-hover:text-primary/80 transition-colors duration-300">
+                {service.title}
+              </h4>
+              <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
+                {service.level}
+              </span>
             </div>
-          </CardHeader>
-          <CardContent className="pt-4 px-6">
-            <p className="text-foreground/60 text-sm font-light leading-relaxed mb-4">
+            <p className="text-foreground/50 text-xs font-light leading-relaxed mb-3">
               {service.description}
             </p>
-          </CardContent>
-          <CardFooter className="px-6 pt-0 pb-6 mt-auto">
             <div className="flex flex-wrap gap-2">
               {service.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="px-2 py-1 bg-primary/5 border border-primary/10 rounded-md text-xs text-primary/70"
+                  className="text-[11px] text-foreground/40 font-light"
                 >
                   {skill}
                 </span>
               ))}
             </div>
-          </CardFooter>
-        </Card>
-      </motion.div>
-    ))}
+          </div>
+          <div className="h-px bg-primary/10 sm:hidden" />
+        </motion.div>
+      ))}
+    </motion.div>
   </motion.div>
 );

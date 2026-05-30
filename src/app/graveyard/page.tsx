@@ -14,20 +14,14 @@ import {
 import { deadProjects } from "@/data/project";
 import { ArrowRight } from "lucide-react";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
-import {
-  getHalfScreenPageWrapperClasses,
-  SPACING_STANDARDS,
-} from "@/lib/config/spacing-standards";
+import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
-/**
- * A collection of inspirational quotes about learning from failure.
- */
 const inspirationalQuotes = [
-  "Every dropped project is just another step toward the one that clicks.",
-  "Failure isn’t the end — it’s just part of the process.",
-  "The only real mistake is walking away without learning something new.",
-  "Progress is moving from one failure to the next without losing your drive.",
-  "Each project I leave behind clears the path for something better.",
+  "at least there’s a commit for it.",
+  "dead repos are just proof i actually tried.",
+  "some things are worth starting even when you can’t finish them.",
+  "shipped nothing, learned plenty — fair trade.",
+  "these taught me more than the ones that shipped.",
 ];
 
 /**
@@ -51,7 +45,7 @@ const GraveyardPage = () => {
         variants={CONTAINER_VARIANTS}
         initial="hidden"
         animate={isInView ? "visible" : "hidden"}
-        className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
+        className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden"
       >
         <GraveyardBackground />
 
@@ -64,7 +58,7 @@ const GraveyardPage = () => {
         </motion.div>
 
         <div
-          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} mb-16`}
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} mb-8`}
         >
           {deadProjects.map((project, index) => (
             <motion.div key={project.title} variants={ITEM_VARIANTS}>
@@ -73,11 +67,11 @@ const GraveyardPage = () => {
           ))}
         </div>
 
-        <motion.div variants={ITEM_VARIANTS} className="text-center mt-16">
-          <h3 className="text-2xl font-serif italic mb-4">
-            Prefer the land of the living?
-          </h3>
-          <div className="h-px bg-gradient-to-r from-transparent via-primary/30 to-transparent mx-auto mb-8 w-32" />
+        <motion.div variants={ITEM_VARIANTS} className="mt-8">
+          <div className="h-px bg-primary/10 mb-8" />
+          <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
+            prefer the living
+          </p>
           <Button
             size="lg"
             className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8"

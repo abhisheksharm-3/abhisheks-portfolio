@@ -57,21 +57,21 @@ export const EXPERIENCE_DATA = [
     subtitle: "Wednesday Solutions",
     date: "Feb 2026 – Present",
     description:
-      "working as a full-stack dev — shipping features, owning code end-to-end, and collaborating with a team that actually cares about craft. learning a lot about building things at scale and writing code that others have to live with.",
+      "building production systems end-to-end. shipped an autonomous multi-agent ai content pipeline (langgraph, fastapi, postgresql + pgvector), an offline ai chat app with on-device tts in react native, and a multi-tenant lms queue system on aws (ecs, sqs, terraform). passed probation. still going.",
   },
   {
     title: "Software Development Intern",
     subtitle: "Stardom",
     date: "Jan 2025 – Jun 2025",
     description:
-      "took charge of building stardom's web presence from scratch with next.js. tweaked and tuned the frontend till it actually felt fast. also set up their cloud infra + email systems — basically made sure things didn't break when people actually started using it.",
+      "took charge of building stardom's web presence from scratch with next.js. tweaked and tuned the frontend till it actually felt fast. also set up their cloud infra + email systems. basically made sure things didn't break when people actually started using it.",
   },
   {
     title: "Winner – Network18 Track",
     subtitle: "Gen AI Exchange Hackathon (Google)",
     date: "Oct 2024",
     description:
-      "built 'credify', an ai-powered media verification tool. we hacked together machine learning + attribution logic to fight fake media — ended up winning the track. intense 1 month, but super worth it.",
+      "built 'credify', an ai-powered media verification tool. we hacked together machine learning + attribution logic to fight fake media and ended up winning the track. intense 1 month, but super worth it.",
   },
 ] as const;
 
@@ -92,7 +92,7 @@ export const EDUCATION_DATA = [
     subtitle: "Mount Carmel School, Chandigarh",
     date: "2021",
     description:
-      "science + math focus. scored 92.4% — lots of late-night physics + coding side quests.",
+      "science + math focus. scored 92.4%. lots of late-night physics + coding side quests.",
     badges: [{ label: "Score", value: "92.4%" }],
   },
   {

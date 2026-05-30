@@ -4,9 +4,8 @@ import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { featuredProjects } from "@/data/project";
 import { ProjectsPropsType, LandingProjectCardPropsType } from "@/lib/types";
 import { PROJECT_ANIMATIONS } from "@/data/animations";
@@ -60,7 +59,7 @@ const ProjectsHeader = ({
   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 md:mb-16 lg:mb-20 relative z-10">
     <div className="flex-1">
       <SectionHeader subtitle="stuff i’ve built" isInView={isInView}>
-        <span className="font-serif italic bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none pr-3">
+        <span className="font-serif italic text-foreground select-none pr-3">
           {headline}
         </span>
       </SectionHeader>
@@ -70,74 +69,23 @@ const ProjectsHeader = ({
 );
 
 /**
- * Renders the final call-to-action button for the Projects section.
+ * Renders a simple "see all projects" link at the bottom of the section.
  * @param {{ isInView: boolean }} props - Controls when the animation should trigger.
  */
 const CTASection = ({ isInView }: { isInView: boolean }) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
-    transition={{ delay: PROJECT_ANIMATIONS.DELAYS.CTA, duration: 1.2 }}
-    className="flex justify-center relative"
+    transition={{ delay: PROJECT_ANIMATIONS.DELAYS.CTA, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+    className="flex justify-center"
   >
-    {/* Background gradient */}
-    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/5 to-transparent rounded-2xl blur-xl" />
-
-    <div className="relative">
-      {/* Decorative elements */}
-      <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 flex items-center gap-2">
-        <div className="w-8 h-[1px] bg-gradient-to-r from-transparent to-primary/30" />
-        <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-        <div className="w-8 h-[1px] bg-gradient-to-l from-transparent to-primary/30" />
-      </div>
-
-      <Button
-        variant="outline"
-        size="lg"
-        className="
-          group relative overflow-hidden
-          border-primary/20 hover:border-primary/30
-          bg-background/60 hover:bg-primary/5 backdrop-blur-lg
-          text-base px-10 py-7 rounded-2xl
-          shadow-lg shadow-primary/5 hover:shadow-primary/10
-          transition-all duration-500
-        "
-        asChild
-      >
-        <Link href="/contact" className="flex items-center">
-          {/* Background shimmer effect */}
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-r from-transparent via-primary/10 to-transparent opacity-0 group-hover:opacity-100"
-            initial={{ x: "-100%" }}
-            whileHover={{ x: "100%" }}
-            transition={{ duration: 0.8 }}
-            aria-hidden="true"
-          />
-
-          <motion.span
-            className="font-medium tracking-wide relative z-10 mr-4"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            let&apos;s build something cool
-          </motion.span>
-
-          <motion.div
-            className="
-              relative z-10 w-8 h-8 rounded-full 
-              border border-primary/30 bg-primary/10
-              flex items-center justify-center
-              group-hover:border-primary/50 group-hover:bg-primary/20
-              transition-all duration-300
-            "
-            whileHover={{ rotate: 90, scale: 1.1 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          >
-            <ArrowUpRight className="h-4 w-4 text-primary/70 group-hover:text-primary transition-colors" />
-          </motion.div>
-        </Link>
-      </Button>
-    </div>
+    <Link
+      href="/contact"
+      className="group inline-flex items-center gap-2 text-sm font-light text-foreground/55 hover:text-primary transition-colors duration-300"
+    >
+      <span>let&apos;s build something cool</span>
+      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+    </Link>
   </motion.div>
 );
 
@@ -174,28 +122,16 @@ const ProjectCard = ({
       onBlur={onLeave}
       className="relative group"
     >
-      {/* Enhanced background glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-background/30 to-primary/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl scale-105" />
-
       <Card
         className={cn(
-          "relative overflow-hidden transition-all duration-500 py-0",
-          "border border-primary/10 backdrop-blur-sm bg-background/60",
-          "shadow-lg shadow-primary/5 rounded-2xl",
-          "group-hover:shadow-xl group-hover:shadow-primary/10",
-          "group-hover:border-primary/20 group-hover:bg-background/80",
-          isHovered && "transform scale-[1.02]",
+          "relative overflow-hidden transition-all duration-300 py-0",
+          "border border-primary/10 bg-background/60",
+          "rounded-2xl",
+          "group-hover:border-primary/20",
         )}
       >
         <ProjectImageContainer project={project} isHovered={isHovered} />
         <ProjectContent project={project} isHovered={isHovered} />
-
-        {/* Corner accent enhancement */}
-        <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
-          <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />
-          <div className="absolute top-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
-          <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-primary/40" />
-        </div>
       </Card>
     </motion.div>
   );
@@ -220,9 +156,7 @@ export const Projects = ({
         noiseFilterId="projectsNoiseFilter"
       />
 
-      <div
-        className={`container mx-auto ${SPACING_STANDARDS.PAGE.CONTAINER_PADDING} relative z-10`}
-      >
+      <div className="relative z-10 w-full">
         <ProjectsHeader headline={headline} isInView={isInView} />
 
         {/* Enhanced projects grid */}
@@ -232,10 +166,7 @@ export const Projects = ({
           transition={{ duration: 0.8, delay: 0.4 }}
           className="relative"
         >
-          {/* Subtle background pattern */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/2 via-transparent to-primary/2 rounded-3xl opacity-60" />
-
-          <div className="relative grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 mb-10 sm:mb-16 md:mb-20 p-2 sm:p-4 md:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-12 mb-10 sm:mb-16 md:mb-20">
             {featuredProjects.map((project, index) => (
               <ProjectCard
                 key={project.slug}

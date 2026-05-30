@@ -42,39 +42,39 @@ export const EXPERTISE = [
     icon: Database,
     title: "data & storage",
     description:
-      "played with all flavors of dbs — mysql, mongo, neo4j. lately into vector search + rag pipelines. i enjoy making data not just stored, but useful.",
-    skills: ["MongoDB", "Neo4j", "MySQL", "Firebase", "Appwrite", "Vector DBs"],
+      "postgresql for production work (with pgvector for vector search). mongo, neo4j, mysql, supabase for various projects. i care about the data being retrievable and fast, not just stored.",
+    skills: ["PostgreSQL", "pgvector", "MongoDB", "MySQL", "Supabase", "Neo4j"],
     level: "comfortable",
   },
   {
     icon: Brain,
     title: "ai, rag & agents",
     description:
-      "built ai-native apps like inquora + kalendar. i get how to talk to llms, chain them up, and make them actually do things. not just hype, actual shipped stuff.",
-    skills: ["RAG Pipelines", "AI Agents", "LangChain", "Gemini API", "LLMs"],
-    level: "hands-on",
+      "building production multi-agent pipelines at work. langgraph for orchestration, pgvector for retrieval, litellm for model routing. from personal rag apps to shipped autonomous pipelines.",
+    skills: ["LangGraph", "LangChain", "LiteLLM", "pgvector", "RAG", "Claude API"],
+    level: "deep",
   },
   {
     icon: Cloud,
     title: "cloud & devops",
     description:
-      "spun things up on aws, vercel, docker. set up ci/cd so i don't babysit deploys. not a devops guru, but i can get apps live and scaling without drama.",
-    skills: ["AWS", "Docker", "Vercel", "Firebase", "CI/CD"],
-    level: "getting there",
+      "deployed full aws stacks with terraform from scratch. ecs fargate, sqs, rds, cognito, cloudwatch. gcp for cloud run jobs. load tested with k6. can get infra live and keep it that way.",
+    skills: ["AWS (ECS, SQS, Terraform)", "GCP", "Docker", "Railway", "Vercel", "CI/CD"],
+    level: "solid",
   },
   {
     icon: Smartphone,
     title: "mobile builds",
     description:
-      "made minimal android apps with jetpack compose (retask) and cross-platform stuff in react native. focus is always offline-first + uncluttered.",
-    skills: ["Jetpack Compose", "Kotlin", "React Native", "Expo"],
-    level: "dabbling",
+      "android apps in jetpack compose, cross-platform in react native with expo. built a full offline ai chat app with on-device tts. focus is always offline-first and lightweight.",
+    skills: ["React Native", "Jetpack Compose", "Kotlin", "Expo", "ONNX/TTS"],
+    level: "building",
   },
   {
     icon: Globe,
     title: "languages i speak (code)",
     description:
-      "comfortable hopping across js/ts/python/c++/go/kotlin. i don't marry languages — i just use what gets the job done cleanly.",
+      "comfortable hopping across js/ts/python/c++/go/kotlin. i don't marry languages, i just use what gets the job done cleanly.",
     skills: ["JavaScript", "TypeScript", "Python", "C/C++", "Go", "Kotlin"],
     level: "fluent",
   },

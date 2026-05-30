@@ -25,26 +25,14 @@ export const SectionHeader = ({
       className,
     )}
   >
-    <div
-      className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
+    <motion.p
+      initial={{ opacity: 0 }}
+      animate={isInView ? { opacity: 1 } : {}}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      className={`text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
     >
-      <motion.div
-        initial={{ scale: 0 }}
-        animate={isInView ? { scale: 1 } : {}}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="w-7 h-7 rounded-md border border-primary/10 flex items-center justify-center mr-3"
-      >
-        <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-      </motion.div>
-      <motion.span
-        initial={{ opacity: 0, x: -10 }}
-        animate={isInView ? { opacity: 1, x: 0 } : {}}
-        transition={{ duration: 0.5, delay: 0.3 }}
-        className="text-xs text-primary/60 uppercase tracking-wider font-light"
-      >
-        {subtitle}
-      </motion.span>
-    </div>
+      {subtitle}
+    </motion.p>
     <div className="overflow-hidden">
       <motion.h2
         initial={{ y: 60 }}
@@ -58,8 +46,8 @@ export const SectionHeader = ({
     <motion.div
       initial={{ width: 0, opacity: 0 }}
       animate={isInView ? { width: "5rem", opacity: 1 } : {}}
-      transition={{ duration: 1, delay: 0.6 }}
-      className={`h-[1px] bg-gradient-to-r from-primary/40 to-transparent ${SPACING_STANDARDS.HEADER.ACCENT_LINE_MARGIN}`}
+      transition={{ duration: 1, delay: 0.5 }}
+      className={`h-[1px] bg-primary/20 ${SPACING_STANDARDS.HEADER.ACCENT_LINE_MARGIN}`}
     />
   </motion.div>
 );

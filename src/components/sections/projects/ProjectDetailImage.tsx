@@ -8,10 +8,8 @@ interface ProjectDetailImageProps {
 }
 
 /**
- * Renders the main hero image for a project detail page.
- * This is a presentational component that expects its animation
- * to be handled by a parent motion component.
- * @returns {JSX.Element} The ProjectDetailImage component.
+ * Renders the hero image for a project detail page.
+ * Clean presentation — no decorative overlays, minimal border.
  */
 export function ProjectDetailImage({ src, alt }: ProjectDetailImageProps) {
   return (

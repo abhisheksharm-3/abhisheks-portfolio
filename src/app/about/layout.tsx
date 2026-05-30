@@ -8,7 +8,7 @@ import type { ReactNode } from "react";
 export const metadata: Metadata = {
   title: "About | Abhishek Sharma",
   description:
-    "A quick look at who I am — my background, skills, and the work I’ve done in web, mobile, and design.",
+    "Software engineer at Wednesday. I build AI pipelines, mobile apps, and web platforms.",
 };
 
 /**

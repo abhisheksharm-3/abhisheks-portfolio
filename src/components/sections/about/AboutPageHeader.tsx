@@ -1,92 +1,48 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import {
-  getHeaderClasses,
-  SPACING_STANDARDS,
-} from "@/lib/config/spacing-standards";
-
-/**
- * Defines variants for the container to orchestrate staggered animations for its children.
- */
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: SPACING_STANDARDS.ANIMATION.STAGGER_DELAY,
-      delayChildren: 0.2,
-    },
-  },
-};
-
-/**
- * Defines variants for child elements to fade and slide in from below.
- */
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: "easeOut" },
-  },
-};
+  STAGGER_CONTAINER_VARIANTS,
+  STAGGER_ITEM_VARIANTS,
+} from "@/lib/config/page-animations";
 
 /**
  * Displays the main header for the 'About' page, including name and introduction.
- * This component is designed to be part of a larger staggered animation sequence.
- * @returns {JSX.Element} The About page header.
  */
 export const AboutPageHeader = () => {
   return (
-    <motion.div variants={containerVariants} className={getHeaderClasses()}>
-      <motion.div
-        variants={itemVariants}
-        className={`flex items-center ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
+    <motion.div
+      variants={STAGGER_CONTAINER_VARIANTS}
+      initial="hidden"
+      animate="visible"
+      className="flex flex-col mb-10 sm:mb-12 relative z-10"
+    >
+      <motion.p
+        variants={STAGGER_ITEM_VARIANTS}
+        className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4"
       >
-        <div className="w-7 h-7 rounded-md border border-primary/10 flex items-center justify-center mr-3">
-          <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-        </div>
-        <span className="text-xs text-primary/60 uppercase tracking-wider font-light">
-          about me
-        </span>
-      </motion.div>
+        about me
+      </motion.p>
 
-      <div
-        className={`overflow-visible ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
+      <motion.h1
+        variants={STAGGER_ITEM_VARIANTS}
+        className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-tight text-foreground mb-6"
       >
-        <motion.h2
-          variants={itemVariants}
-          className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"
-        >
-          <div className="py-1">
-            <span className="bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent select-none">
-              Abhishek Sharma
-            </span>
-          </div>
-        </motion.h2>
-      </div>
+        Abhishek Sharma
+      </motion.h1>
 
       <motion.div
-        variants={{
-          hidden: { width: 0, opacity: 0 },
-          visible: {
-            width: "5rem",
-            opacity: 1,
-            transition: { duration: 1, ease: "easeOut" },
-          },
-        }}
-        className={`h-[1px] bg-gradient-to-r from-primary/40 to-transparent ${SPACING_STANDARDS.HEADER.ACCENT_LINE_MARGIN}`}
+        variants={STAGGER_ITEM_VARIANTS}
+        className="h-px bg-primary/10 w-full mb-6"
       />
 
       <motion.p
-        variants={itemVariants}
-        className={`text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed ${SPACING_STANDARDS.HEADER.SUBTITLE_MARGIN_TOP}`}
+        variants={STAGGER_ITEM_VARIANTS}
+        className="text-foreground/55 max-w-2xl text-sm sm:text-base font-light leading-relaxed"
       >
-        cs graduate and software developer passionate about building scalable,
-        user-focused applications. my work spans full-stack web, mobile
-        development, and ai integrations—with a growing focus on rag systems and
-        intelligent agents.
+        software engineer at wednesday. i build ai pipelines, android apps, and
+        web platforms. i care about shipping things that actually work, not
+        just things that look good in a PR description.
       </motion.p>
     </motion.div>
   );

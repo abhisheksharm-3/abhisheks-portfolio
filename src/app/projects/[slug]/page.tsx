@@ -34,7 +34,7 @@ const DetailedProjectPage = () => {
         variants={CONTAINER_VARIANTS}
         initial="hidden"
         animate="visible"
-        className="pt-36 pb-24 px-6 sm:px-8 lg:px-32 relative overflow-hidden"
+        className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden"
       >
         <ProjectsPageBackground />
 
@@ -47,7 +47,7 @@ const DetailedProjectPage = () => {
           >
             <Link href="/projects" className="flex items-center">
               <ArrowLeft className="mr-2 h-3 w-3 transition-transform group-hover:-translate-x-1" />
-              Back to Projects
+              back to projects
             </Link>
           </Button>
         </motion.div>
@@ -56,7 +56,7 @@ const DetailedProjectPage = () => {
           <motion.div variants={ITEM_VARIANTS} className="lg:col-span-2">
             <ProjectDetailHeader
               title={project.title}
-              description={project.longDescription || project.description}
+              description={project.description}
             />
           </motion.div>
           <motion.div variants={ITEM_VARIANTS}>

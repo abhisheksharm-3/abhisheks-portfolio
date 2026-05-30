@@ -1,9 +1,5 @@
 import { Variants } from "framer-motion";
 
-/**
- * Animation variants for the main page container.
- * Orchestrates a staggered animation for its children.
- */
 export const CONTAINER_VARIANTS: Variants = {
   hidden: { opacity: 0 },
   visible: {
@@ -14,10 +10,6 @@ export const CONTAINER_VARIANTS: Variants = {
   },
 };
 
-/**
- * Animation variants for individual items within the container.
- * Each item fades and slides into view.
- */
 export const ITEM_VARIANTS: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -25,4 +17,17 @@ export const ITEM_VARIANTS: Variants = {
     y: 0,
     transition: { duration: 0.8, ease: "easeOut" },
   },
+};
+
+// Fine-grained stagger for card/section interiors
+export const STAGGER_CONTAINER_VARIANTS: Variants = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+  },
+};
+
+export const STAGGER_ITEM_VARIANTS: Variants = {
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
