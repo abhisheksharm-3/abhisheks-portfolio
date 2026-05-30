@@ -66,8 +66,8 @@ export const EXPERTISE = [
     icon: Smartphone,
     title: "mobile builds",
     description:
-      "android apps in jetpack compose, cross-platform in react native with expo. built a full offline ai chat app with on-device tts. focus is always offline-first and lightweight.",
-    skills: ["React Native", "Jetpack Compose", "Kotlin", "Expo", "ONNX/TTS"],
+      "android apps in jetpack compose, cross-platform in react native with expo. spent a week on off grid, wednesday's offline ai app: fixed a broken tts lifecycle, built sentence-chunked synthesis/playback, benchmarked kokoro/piper/native tts, and added hands-free voice chat with hardware aec interruption handling.",
+    skills: ["React Native", "Jetpack Compose", "Expo", "TTS Streaming", "Hardware AEC"],
     level: "building",
   },
   {
