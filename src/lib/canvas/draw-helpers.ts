@@ -68,7 +68,7 @@ export function drawGridSystem(
     const mouseInfluenceX = (mousePosition.x - width / 2) * 0.005;
     const mouseInfluenceY = (mousePosition.y - height / 2) * 0.005;
 
-    ctx.strokeStyle = "rgba(150, 150, 180, 0.18)";
+    ctx.strokeStyle = "rgba(150, 150, 180, 0.07)";
     ctx.lineWidth = 1;
 
     ctx.beginPath();

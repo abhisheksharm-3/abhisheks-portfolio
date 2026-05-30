@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion, useTransform, MotionValue } from "framer-motion";
+import { motion, useTransform, useScroll, MotionValue } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useExperienceCounter } from "@/hooks/useExperienceCounter";
@@ -23,17 +23,25 @@ const scrollToSection = (sectionId: string): void => {
  */
 export const ExperienceCounter: React.FC = () => {
   const counterValue = useExperienceCounter(1);
+  const { scrollY } = useScroll();
+  // Fade out as user scrolls past the hero viewport
+  const scrollOpacity = useTransform(scrollY, [0, 400, 800], [1, 1, 0]);
 
   return (
+    // Outer div: scroll-based fade-out via MotionValue
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1.5, delay: 1 }}
-      className="hidden xl:flex flex-col items-center fixed left-8 top-0 bottom-0 w-12 z-10"
+      style={{ opacity: scrollOpacity }}
+      className="hidden xl:flex flex-col items-center fixed left-8 top-0 bottom-0 w-12 z-10 pointer-events-none"
       aria-hidden="true"
     >
       <div className="h-1/3" />
-      <div className="h-1/3 flex flex-col items-center justify-center">
+      {/* Inner div: initial fade-in animation, independent of scroll */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 1.5, delay: 1 }}
+        className="h-1/3 flex flex-col items-center justify-center"
+      >
         <div className="h-16 w-[1px] bg-gradient-to-b from-transparent to-primary/20" />
         <div className="my-4 font-mono text-xl text-primary/70 text-center w-full">
           {counterValue}
@@ -42,7 +50,7 @@ export const ExperienceCounter: React.FC = () => {
           </div>
         </div>
         <div className="h-16 w-[1px] bg-gradient-to-t from-transparent to-primary/20" />
-      </div>
+      </motion.div>
       <div className="h-1/3" />
     </motion.div>
   );
@@ -66,10 +74,9 @@ export const HeroName: React.FC = () => (
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
           className={cn(
-            "block text-6xl font-serif tracking-tighter",
+            "block text-6xl font-serif tracking-tighter text-primary",
             "sm:max-w-[280px] sm:inline-block sm:text-7xl",
             "md:max-w-none md:pr-8 lg:text-8xl xl:text-9xl",
-            "bg-gradient-to-r from-primary/80 via-primary/90 to-primary/70 bg-clip-text text-transparent",
           )}
         >
           Abhishek
@@ -88,9 +95,8 @@ export const HeroName: React.FC = () => (
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className={cn(
-            "block text-6xl font-serif italic tracking-tighter",
+            "block text-6xl font-serif italic tracking-tighter text-primary/80",
             "sm:text-7xl md:inline-block md:pr-8 lg:text-8xl xl:text-9xl",
-            "bg-gradient-to-r from-primary/70 to-primary/80 bg-clip-text text-transparent",
           )}
         >
           Sharma
@@ -129,9 +135,7 @@ export const HeroDescription: React.FC = () => {
           >
             <span
               className={cn(
-                line.gradient
-                  ? "bg-gradient-to-r from-primary/90 to-foreground bg-clip-text text-transparent"
-                  : "text-foreground/70",
+                line.gradient ? "text-primary" : "text-foreground/70",
               )}
             >
               {line.text}
@@ -202,22 +206,6 @@ export const SkillItem: React.FC<SkillItemPropsType> = ({ skill, index }) => (
           className="absolute -bottom-1 left-0 right-0 h-[1px] bg-gradient-to-r from-primary/30 to-transparent origin-left"
         />
       </div>
-      <motion.div
-        className="ml-auto hidden md:block"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 2.5 + index * 0.15 }}
-        aria-hidden="true"
-      >
-        <div className="relative w-16 h-[3px] bg-primary/5 rounded-full overflow-hidden">
-          <motion.div
-            className="absolute top-0 left-0 h-full bg-primary/20"
-            initial={{ width: 0 }}
-            animate={{ width: `${75 + index * 5}%` }}
-            transition={{ duration: 1, delay: 2.7 + index * 0.15 }}
-          />
-        </div>
-      </motion.div>
     </div>
   </motion.div>
 );
@@ -264,15 +252,13 @@ export const SkillsSection: React.FC<{
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 1.6 }}
-        className="relative border-l border-primary/5 pl-6 py-2"
+        className="relative pl-6 py-2"
       >
         <div className="space-y-8 w-full">
           {SKILLS.map((skill, index) => (
             <SkillItem key={skill} skill={skill} index={index} />
           ))}
         </div>
-        <div className="absolute left-0 top-0 w-1.5 h-1.5 rounded-full bg-primary/20 -translate-x-[3px]"></div>
-        <div className="absolute left-0 bottom-0 w-1.5 h-1.5 rounded-full bg-primary/20 -translate-x-[3px]"></div>
       </motion.div>
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}

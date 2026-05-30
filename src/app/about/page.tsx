@@ -15,10 +15,7 @@ import {
   GitHubActivity,
 } from "@/components/sections/about";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
-import {
-  getHalfScreenPageWrapperClasses,
-  SPACING_STANDARDS,
-} from "@/lib/config/spacing-standards";
+import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * Renders the "About Me" page, featuring sections that animate into view on scroll.
@@ -31,7 +28,7 @@ const AboutPage = () => {
 
   return (
     <AppShell>
-      <div className={`${getHalfScreenPageWrapperClasses()} overflow-x-hidden`}>
+      <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 overflow-x-hidden">
         <motion.section
           ref={sectionRef}
           variants={CONTAINER_VARIANTS}

@@ -1,19 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import { ProjectType } from "@/lib/types";
-
-const containerVariants: Variants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.05 } },
-};
-
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 15 },
-  visible: { opacity: 1, y: 0 },
-};
 
 interface ProjectsFiltersProps {
   allTags: string[];
@@ -42,73 +31,57 @@ export function ProjectsFilters({
     return counts;
   }, [allTags, projects]);
 
+  const allFilters = ["all", ...allTags];
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="w-6 h-6 rounded-md border border-primary/10 flex items-center justify-center mr-3">
-            <div className="w-1 h-1 rounded-full bg-primary/40" />
-          </div>
-          <span className="text-xs text-primary/60 uppercase tracking-wider font-light">
-            Filter & Browse
-          </span>
-        </div>
-        <div className="flex items-center space-x-4 text-xs text-foreground/40">
-          <span className={isPending ? "opacity-50" : ""}>
-            {filteredCount} projects shown
-          </span>
-          <div className="w-px h-4 bg-primary/10" />
-          <span className="font-mono capitalize flex items-center gap-2">
-            {activeFilter}
-            {isPending && (
-              <span className="flex gap-0.5">
-                <span className="w-1 h-1 rounded-full bg-foreground/40 animate-pulse" />
-                <span className="w-1 h-1 rounded-full bg-foreground/40 animate-pulse" style={{ animationDelay: "0.15s" }} />
-                <span className="w-1 h-1 rounded-full bg-foreground/40 animate-pulse" style={{ animationDelay: "0.3s" }} />
-              </span>
-            )}
-          </span>
-        </div>
+        <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
+          Filter & Browse
+        </span>
+        <span className={`text-xs text-foreground/40 font-light transition-opacity duration-200 ${isPending ? "opacity-40" : "opacity-100"}`}>
+          {filteredCount} {filteredCount === 1 ? "project" : "projects"}
+          {activeFilter !== "all" && (
+            <span className="ml-1 text-foreground/30">/ {activeFilter}</span>
+          )}
+          {isPending && (
+            <span className="ml-2 inline-flex gap-0.5 items-center">
+              <span className="w-1 h-1 rounded-full bg-foreground/30 animate-pulse" />
+              <span className="w-1 h-1 rounded-full bg-foreground/30 animate-pulse" style={{ animationDelay: "0.15s" }} />
+              <span className="w-1 h-1 rounded-full bg-foreground/30 animate-pulse" style={{ animationDelay: "0.3s" }} />
+            </span>
+          )}
+        </span>
       </div>
 
-      <Tabs
-        defaultValue="all"
-        onValueChange={setActiveFilter}
-        value={activeFilter}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="flex flex-wrap gap-2"
       >
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-        >
-          <TabsList className="flex flex-wrap gap-2 bg-transparent h-auto p-0">
-            <motion.div variants={itemVariants}>
-              <TabsTrigger
-                value="all"
-                className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 border border-primary/10 bg-transparent hover:bg-primary/5 rounded-md px-4 py-2 text-xs font-light transition-all duration-300"
-              >
-                All Projects
-                <span className="ml-2 text-[10px] text-foreground/40 bg-primary/5 px-1.5 py-0.5 rounded">
-                  {tagCounts.all}
-                </span>
-              </TabsTrigger>
-            </motion.div>
-            {allTags.map((tag) => (
-              <motion.div variants={itemVariants} key={tag}>
-                <TabsTrigger
-                  value={tag}
-                  className="data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:border-primary/30 border border-primary/10 bg-transparent hover:bg-primary/5 rounded-md px-4 py-2 text-xs font-light transition-all duration-300"
-                >
-                  {tag}
-                  <span className="ml-2 text-[10px] text-foreground/40 bg-primary/5 px-1.5 py-0.5 rounded">
-                    {tagCounts[tag] || 0}
-                  </span>
-                </TabsTrigger>
-              </motion.div>
-            ))}
-          </TabsList>
-        </motion.div>
-      </Tabs>
+        {allFilters.map((tag) => {
+          const isActive = activeFilter === tag;
+          return (
+            <button
+              key={tag}
+              onClick={() => setActiveFilter(tag)}
+              className={`
+                px-4 py-1.5 rounded-full text-xs font-light transition-all duration-200
+                ${isActive
+                  ? "border border-primary/50 text-primary bg-transparent"
+                  : "border border-primary/15 text-foreground/50 bg-transparent hover:border-primary/30 hover:text-foreground/70"
+                }
+              `}
+            >
+              {tag === "all" ? "All Projects" : tag}
+              <span className={`ml-2 text-[10px] ${isActive ? "text-primary/60" : "text-foreground/30"}`}>
+                {tagCounts[tag] ?? 0}
+              </span>
+            </button>
+          );
+        })}
+      </motion.div>
     </div>
   );
 }

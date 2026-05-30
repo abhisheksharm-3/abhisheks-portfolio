@@ -11,10 +11,6 @@ import type {
     ContactSubmissionResultType,
 } from "@/lib/types";
 
-/**
- * Validates and returns mail service configuration from environment variables.
- * @throws Error if any required environment variable is missing
- */
 const getMailConfig = (): MailConfigType => {
     const config = {
         user: process.env.MAIL_USER,
@@ -35,27 +31,25 @@ const getMailConfig = (): MailConfigType => {
     return config as MailConfigType;
 };
 
-const mailConfig = getMailConfig();
+let _transporter: nodemailer.Transporter | null = null;
 
-/** Nodemailer transporter configured with Gmail OAuth2 */
-const transporter = nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
-    auth: {
-        type: "OAuth2",
-        user: mailConfig.user,
-        clientId: mailConfig.clientId,
-        clientSecret: mailConfig.clientSecret,
-        refreshToken: mailConfig.refreshToken,
-    },
-} as nodemailer.TransportOptions);
+const getTransporter = (): nodemailer.Transporter => {
+    if (_transporter) return _transporter;
+    const { user, clientId, clientSecret, refreshToken } = getMailConfig();
+    _transporter = nodemailer.createTransport({
+        service: "gmail",
+        host: "smtp.gmail.com",
+        auth: {
+            type: "OAuth2",
+            user,
+            clientId,
+            clientSecret,
+            refreshToken,
+        },
+    } as nodemailer.TransportOptions);
+    return _transporter;
+};
 
-/**
- * Server Action to submit contact form.
- * Validates input, renders email template, and sends via nodemailer.
- * @param data - The contact form data
- * @returns Result object with success or error status
- */
 export async function submitContactForm(
     data: ContactFormDataType
 ): Promise<ContactSubmissionResultType> {
@@ -64,6 +58,15 @@ export async function submitContactForm(
     if (!validation.success) {
         return { error: "Invalid input. Please check your form data." };
     }
+
+    let mailConfig: MailConfigType;
+    try {
+        mailConfig = getMailConfig();
+    } catch {
+        return { error: "Mail service is not configured. Please email directly at abhishek@abhisheksan.com" };
+    }
+
+    const safeName = validation.data.name.replace(/[\r\n<>"]/g, "").trim();
 
     const emailHtml = await render(
         React.createElement(ContactEmailTemplate, {
@@ -79,14 +82,18 @@ export async function submitContactForm(
         })
     );
 
-    await transporter.sendMail({
-        from: `"${validation.data.name}" <${mailConfig.user}>`,
-        to: mailConfig.recipient,
-        replyTo: validation.data.email,
-        priority: "high",
-        subject: `📩 New Portfolio Message: ${validation.data.subject}`,
-        html: emailHtml,
-    });
+    try {
+        await getTransporter().sendMail({
+            from: `"${safeName}" <${mailConfig.user}>`,
+            to: mailConfig.recipient,
+            replyTo: validation.data.email,
+            priority: "high",
+            subject: `New Portfolio Message: ${validation.data.subject}`,
+            html: emailHtml,
+        });
+    } catch {
+        return { error: "Failed to send. Please email directly at abhishek@abhisheksan.com" };
+    }
 
     return { success: true, message: "Email sent successfully." };
 }

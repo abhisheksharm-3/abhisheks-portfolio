@@ -1,59 +1,57 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { EDUCATION_DATA, EXPERIENCE_DATA } from "@/data/about";
 import { TimelineCardPropsType } from "@/lib/types";
 import { Briefcase, GraduationCap } from "lucide-react";
 
 /**
- * A reusable card component for displaying a list of timeline events.
+ * A reusable editorial timeline for displaying a list of experience or education events.
  */
 export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
-  <Card className="border-primary/10 backdrop-blur-sm relative">
-    <CardContent className="p-8">
-      <div className="flex items-center mb-6">
-        <div className="w-10 h-10 rounded-md border border-primary/10 flex items-center justify-center mr-3 bg-primary/5">
-          <Icon className="h-5 w-5 text-primary/70" strokeWidth={1.5} />
-        </div>
-        <h3 className="text-xl font-serif italic">{title}</h3>
-      </div>
-      <div className="space-y-8">
+  <div>
+    <div className="flex items-center gap-3 mb-8">
+      <Icon className="h-4 w-4 text-primary/40" strokeWidth={1.5} />
+      <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
+        {title}
+      </p>
+    </div>
+
+    <div className="relative">
+      {/* Vertical line */}
+      <div className="absolute left-[3px] top-2 bottom-2 w-px bg-primary/10" />
+
+      <div className="space-y-10">
         {items.map((item, index) => (
-          <div
-            key={index}
-            className="relative pl-6 border-l border-primary/10 group hover:border-primary/30 transition-colors duration-300"
-          >
-            <div className="absolute left-[-4px] top-0 w-2 h-2 rounded-full bg-primary/40 group-hover:bg-primary/70 transition-colors duration-300" />
-            <h4 className="text-lg font-medium group-hover:text-primary/90 transition-colors duration-300">
+          <div key={index} className="relative pl-8">
+            {/* Timeline dot */}
+            <div className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full bg-primary/25" />
+
+            <h4 className="text-base font-medium text-foreground/85 leading-snug">
               {item.title}
             </h4>
-            <div className="flex items-center text-sm text-foreground/60 mt-1 mb-2">
-              <span className="font-medium">{item.subtitle}</span>
-              <span className="mx-2">•</span>
+            <div className="flex flex-wrap items-center gap-x-2 text-xs text-foreground/45 mt-1 mb-2 font-light">
+              <span>{item.subtitle}</span>
+              <span className="text-primary/20">·</span>
               <span className="italic">{item.date}</span>
             </div>
-            <p className="text-sm text-foreground/70 font-light">
+            <p className="text-sm text-foreground/55 font-light leading-relaxed">
               {item.description}
             </p>
             {item.badges && (
-              <div className="flex gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 mt-3">
                 {item.badges.map((badge) => (
-                  <div
+                  <span
                     key={badge.label}
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-primary/5 text-primary/80 border border-primary/10"
+                    className="text-[11px] text-primary/50 font-light"
                   >
                     {badge.label}: {badge.value}
-                  </div>
+                  </span>
                 ))}
               </div>
             )}
           </div>
         ))}
       </div>
-      <div className="absolute bottom-0 right-0 w-16 h-16 overflow-hidden opacity-30 pointer-events-none">
-        <div className="absolute bottom-0 right-0 w-px h-16 bg-gradient-to-t from-primary/20 to-transparent" />
-        <div className="absolute bottom-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
-      </div>
-    </CardContent>
-  </Card>
+    </div>
+  </div>
 );
 
 /**
@@ -61,7 +59,7 @@ export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
  */
 export const ExperienceEducationSection = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
       <TimelineCard
         title="Experience"
         Icon={Briefcase}

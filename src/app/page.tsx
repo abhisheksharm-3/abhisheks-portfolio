@@ -16,10 +16,8 @@ import { getPageWrapperClasses } from "@/lib/config/spacing-standards";
 const Home = () => {
   return (
     <AppShell>
-      <main className={getPageWrapperClasses()}>
-        <div className="flex flex-col items-center">
-          <Hero />
-        </div>
+      <main className="pt-32 pb-24 px-6 sm:px-8 lg:px-24 2xl:px-40 max-w-[2000px] mx-auto">
+        <Hero />
         <Projects />
         <Skills />
         <Philosophy />

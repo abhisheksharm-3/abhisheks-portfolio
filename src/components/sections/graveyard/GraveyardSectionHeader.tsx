@@ -1,6 +1,5 @@
 "use client";
 
-import { RiCrossFill } from "@remixicon/react";
 import { motion, Variants } from "framer-motion";
 
 const containerVariants: Variants = {
@@ -33,56 +32,42 @@ export const GraveyardSectionHeader = ({ quote }: { quote: string }) => {
   return (
     <motion.div
       variants={containerVariants}
-      className="flex flex-col mb-16 sm:mb-20 relative z-10"
+      className="flex flex-col mb-10 sm:mb-12 relative z-10"
     >
-      <motion.div variants={itemVariants} className="flex items-center mb-4">
-        <div className="w-7 h-7 rounded-md border border-red-500/10 flex items-center justify-center mr-3">
-          <RiCrossFill className="w-3 h-3 text-red-500/40" />
-        </div>
-        <span className="text-xs text-red-500/60 uppercase tracking-wider font-light">
-          R.I.P
-        </span>
-      </motion.div>
+      <motion.span
+        variants={itemVariants}
+        className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4"
+      >
+        R.I.P
+      </motion.span>
 
-      <div className="overflow-visible mb-4">
-        <motion.h1
-          variants={itemVariants}
-          className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-relaxed pb-2"
-        >
-          <div className="py-1">
-            <span className="bg-gradient-to-r from-red-500/80 via-red-500/90 to-red-500/70 bg-clip-text text-transparent select-none">
-              the project graveyard
-            </span>
-          </div>
-        </motion.h1>
-      </div>
+      <motion.h1
+        variants={itemVariants}
+        className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-tight text-foreground mb-6"
+      >
+        the project graveyard
+      </motion.h1>
 
       <motion.div
-        variants={{
-          hidden: { width: 0, opacity: 0 },
-          visible: {
-            width: "5rem",
-            opacity: 1,
-            transition: { duration: 1, ease: "easeOut" },
-          },
-        }}
-        className="h-[1px] bg-gradient-to-r from-red-500/40 to-transparent mt-4"
+        variants={itemVariants}
+        className="h-px bg-primary/10 w-full"
       />
 
       <motion.p
         variants={itemVariants}
-        className="text-foreground/60 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
+        className="text-foreground/55 max-w-2xl text-sm sm:text-base font-light leading-relaxed mt-6"
       >
-        here lies the stuff i never shipped. some ideas broke, some lost steam,
-        and some just weren’t meant to be. but each one left me with scars,
-        skills, or stories i still carry forward.
+        here lies the stuff i never shipped. some broke on bad decisions, some
+        got boring, some i just abandoned. every one of them cost me time and
+        taught me something.
       </motion.p>
 
-      <motion.div variants={itemVariants} className="mt-4 max-w-2xl">
-        <blockquote className="italic text-sm text-amber-500/80">
-          &quot;{quote}&quot;
-        </blockquote>
-      </motion.div>
+      <motion.p
+        variants={itemVariants}
+        className="mt-5 max-w-2xl text-xs text-foreground/30 italic font-light leading-relaxed"
+      >
+        &ldquo;{quote}&rdquo;
+      </motion.p>
     </motion.div>
   );
 };

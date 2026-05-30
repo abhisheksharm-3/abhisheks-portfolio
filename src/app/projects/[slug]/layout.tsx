@@ -34,7 +34,7 @@ export async function generateMetadata({
 
   return {
     title: `${formattedTitle} | Abhishek Sharma`,
-    description: `A closer look at my project "${formattedTitle}" — what I built, learned, and explored along the way.`,
+    description: `A closer look at my project "${formattedTitle}" . What I built, the stack I used, and how it came together.`,
   };
 }
 

@@ -1,210 +1,141 @@
 "use client";
-import { useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Calendar, ExternalLink, Github, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { DeadProjectType } from "@/data/project";
-import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 interface GraveyardProjectCardProps {
   project: DeadProjectType;
   index: number;
 }
 
-export const GraveyardProjectCard = ({
-  project,
-  index,
-}: GraveyardProjectCardProps) => {
-  const [isHovered, setIsHovered] = useState(false);
+export const GraveyardProjectCard = ({ project, index }: GraveyardProjectCardProps) => {
   const [isShowingLessons, setIsShowingLessons] = useState(false);
-  const cardRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(cardRef, { once: true, amount: 0.01 });
 
   return (
     <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 30 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-      transition={{
-        duration: 0.8,
-        delay: 0.1 + index * 0.1,
-        ease: [0.22, 1, 0.36, 1],
-      }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.05 }}
+      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
       className="h-full group"
     >
-      <Card
-        className={`
-          h-full overflow-hidden border-primary/10 backdrop-blur-sm transition-all duration-500 py-0
-          ${isHovered ? "shadow-xl border-primary/20 -translate-y-1" : "shadow-md"}
-        `}
-      >
-        {/* Image container */}
-        <div className="relative w-full h-48 overflow-hidden">
-          <motion.div
-            className="w-full h-full"
-            animate={{ scale: isHovered ? 1.05 : 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-          >
-            <Image
-              src={project.imageSrc}
-              alt={project.title}
-              fill
-              className="object-cover opacity-70 grayscale-[30%]"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-80" />
+      <Card className="h-full overflow-hidden border-primary/10 hover:border-primary/20 transition-colors duration-300 py-0 bg-card flex flex-col">
+        <div className="relative w-full h-44 overflow-hidden shrink-0">
+          <Image
+            src={project.imageSrc}
+            alt={project.title}
+            fill
+            className="object-cover opacity-65 grayscale-[20%] transition-all duration-500 group-hover:opacity-75"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-          {/* Year badge */}
-          <div className="absolute top-4 right-4">
-            <div className="flex items-center space-x-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md px-2 py-1">
-              <Calendar className="w-3 h-3" />
-              <span className="text-xs font-medium">{project.year}</span>
-            </div>
+          <div className="absolute top-3 right-3 flex items-center gap-1 bg-black/50 backdrop-blur-sm px-2 py-0.5 rounded">
+            <Calendar className="w-3 h-3 text-white/50" />
+            <span className="text-[10px] font-mono text-white/60">{project.year}</span>
           </div>
 
-          {/* Tags overlay */}
-          <div className="absolute bottom-4 left-4 right-4 flex flex-wrap gap-2">
+          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
             {project.technologies.slice(0, 3).map((tag: string) => (
               <span
                 key={tag}
-                className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md text-xs font-light"
+                className="px-2 py-0.5 bg-black/50 backdrop-blur-sm text-white/75 rounded text-[10px] font-light"
               >
                 {tag}
               </span>
             ))}
             {project.technologies.length > 3 && (
-              <span className="px-2 py-1 bg-black/40 backdrop-blur-sm text-white/90 rounded-md text-xs font-light">
+              <span className="px-2 py-0.5 bg-black/50 backdrop-blur-sm text-white/50 rounded text-[10px]">
                 +{project.technologies.length - 3}
               </span>
             )}
           </div>
         </div>
 
-        {/* Content */}
-        <div className={SPACING_STANDARDS.CARD.PADDING_SMALL}>
-          <div
-            className={`flex items-start justify-between ${SPACING_STANDARDS.CONTENT.SMALL_SPACING}`}
-          >
-            <h3 className="text-xl font-serif text-foreground/90 group-hover:text-primary/90 transition-colors duration-300">
-              {project.title}
-            </h3>
-          </div>
+        <div className="p-5 flex flex-col flex-1">
+          <h3 className="text-lg font-serif text-foreground/90 group-hover:text-foreground transition-colors duration-200 mb-1.5">
+            {project.title}
+          </h3>
 
           <motion.div
             initial={{ width: 0 }}
-            animate={isInView ? { width: "2.5rem" } : { width: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 + index * 0.1 }}
-            className="h-[1px] bg-gradient-to-r from-primary/30 to-transparent mb-4"
+            whileInView={{ width: "2rem" }}
+            viewport={{ once: true, amount: 0.05 }}
+            transition={{ duration: 0.5, delay: 0.2 + index * 0.08 }}
+            className="h-[1px] bg-gradient-to-r from-primary/25 to-transparent mb-3"
           />
 
-          <p className="text-foreground/60 text-sm font-light leading-relaxed mb-6 line-clamp-2">
+          <p className="text-foreground/50 text-sm font-light leading-relaxed mb-4 line-clamp-2">
             {project.description}
           </p>
 
-          {/* Status indicator */}
           <div className="mb-4">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 rounded-md">
-              <AlertCircle className="w-3 h-3 text-amber-500/70" />
-              <span className="text-xs text-amber-600 dark:text-amber-400 font-light">
-                Abandoned at {project.progress}
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-amber-500/8 border border-amber-500/15 rounded">
+              <AlertCircle className="w-3 h-3 text-amber-500/60" />
+              <span className="text-xs text-amber-600 dark:text-amber-400/80 font-light">
+                abandoned at {project.progress}
               </span>
             </div>
           </div>
 
-          {/* Why it was abandoned / Lessons learned toggle */}
-          {!isShowingLessons ? (
-            <div className="mb-4">
-              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">
-                Why Abandoned
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={isShowingLessons ? "lessons" : "reason"}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.2 }}
+              className="flex-1"
+            >
+              <h4 className="text-[10px] font-light text-foreground/30 uppercase tracking-wider mb-1.5">
+                {isShowingLessons ? "lessons learned" : "why abandoned"}
               </h4>
-              <p className="text-foreground/60 text-sm font-light leading-relaxed">
-                {project.reason}
+              <p className="text-foreground/55 text-sm font-light leading-relaxed">
+                {isShowingLessons ? project.lessons : project.reason}
               </p>
-            </div>
-          ) : (
-            <div className="mb-4">
-              <h4 className="text-xs font-medium text-foreground/50 uppercase tracking-wider mb-2">
-                Lessons Learned
-              </h4>
-              <p className="text-foreground/60 text-sm font-light leading-relaxed">
-                {project.lessons}
-              </p>
-            </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {project.duration && (
+            <p className="text-xs text-foreground/25 font-light mt-3 mb-4">{project.duration}</p>
           )}
 
-          {/* Project metadata */}
-          <div className="space-y-2 mb-6 border-l-2 border-primary/10 pl-4">
-            <div className="flex items-center text-xs">
-              <span className="w-16 text-foreground/40 font-light">
-                Duration
-              </span>
-              <span className="text-foreground/70">{project.duration}</span>
-            </div>
-            <div className="flex items-center text-xs">
-              <span className="w-16 text-foreground/40 font-light">Status</span>
-              <span className="text-foreground/70">Abandoned</span>
-            </div>
-          </div>
-
-          {/* Action buttons */}
-          <div className="flex items-center gap-3 mt-auto">
+          <div className="flex items-center gap-3 pt-3 border-t border-primary/8">
             {project.link && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
-                asChild
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-foreground/40 hover:text-foreground/80 transition-colors duration-200"
               >
-                <a
-                  href={project.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center"
-                >
-                  <span className="text-xs font-light">Live Site</span>
-                  <ExternalLink className="ml-1.5 h-3 w-3 text-primary/70 transition-transform duration-300 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
-                </a>
-              </Button>
+                <ExternalLink className="h-3 w-3" />
+                live
+              </a>
             )}
+            {project.link && project.repo && <div className="w-px h-3 bg-primary/10" />}
             {project.repo && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="group/btn border-primary/10 hover:bg-primary/5 hover:border-primary/20 transition-all duration-300"
-                asChild
+              <a
+                href={project.repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-foreground/40 hover:text-foreground/80 transition-colors duration-200"
               >
-                <a
-                  href={project.repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center"
-                >
-                  <span className="text-xs font-light">Code</span>
-                  <Github className="ml-1.5 h-3 w-3 text-primary/70" />
-                </a>
-              </Button>
+                <Github className="h-3 w-3" />
+                code
+              </a>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={() => setIsShowingLessons(!isShowingLessons)}
-              className="group/btn text-xs text-foreground/70 hover:text-foreground ml-auto px-2 py-1 h-auto"
+              className="ml-auto text-xs text-foreground/30 hover:text-foreground/60 transition-colors duration-200"
             >
-              {isShowingLessons ? "← Details" : "Lessons →"}
-            </Button>
+              {isShowingLessons ? "← details" : "lessons →"}
+            </button>
           </div>
-        </div>
-
-        {/* Decorative corner */}
-        <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden opacity-60">
-          <div className="absolute top-0 right-0 w-px h-16 bg-gradient-to-b from-primary/20 to-transparent" />
-          <div className="absolute top-0 right-0 h-px w-16 bg-gradient-to-l from-primary/20 to-transparent" />
-          <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors duration-300" />
         </div>
       </Card>
     </motion.div>

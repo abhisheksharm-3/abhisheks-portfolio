@@ -1,62 +1,30 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
-import {
-  ContactBackground,
-  ContactHeader,
-  ContactInfoCard,
-  ScheduleMeetingCard,
-  SendMessageCard,
-} from "@/components/sections/contact";
-import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
-import { useRef } from "react";
-import {
-  getHalfScreenPageWrapperClasses,
-  SPACING_STANDARDS,
-} from "@/lib/config/spacing-standards";
+import { ContactBackground } from "@/components/sections/contact/ContactBackground";
+import { ContactHeader } from "@/components/sections/contact/ContactHeader";
+import { SendMessageCard } from "@/components/sections/contact/ContactForm";
+import { ScheduleMeetingCard } from "@/components/sections/contact/ScheduleMeetingCard";
+import { ContactInfoCard } from "@/components/sections/contact/ContactInfoCard";
 
-/**
- * Renders the main contact page, orchestrating the animated entry of its sections.
- * @returns {JSX.Element} The ContactPage component.
- */
-const ContactPage = () => {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
-  return (
-    <AppShell>
-      <motion.div
-        ref={sectionRef}
-        variants={CONTAINER_VARIANTS}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        className={`${getHalfScreenPageWrapperClasses()} relative overflow-hidden`}
-      >
-        <ContactBackground />
+const ContactPage = () => (
+  <AppShell>
+    <div className="relative pt-36 pb-16 px-6 sm:px-10 lg:px-24">
+      <ContactBackground />
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <ContactHeader />
-        </motion.div>
+      <ContactHeader />
 
-        <div
-          className={`grid grid-cols-1 lg:grid-cols-2 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} max-w-6xl mx-auto`}
-        >
-          <motion.div variants={ITEM_VARIANTS}>
-            <SendMessageCard />
-          </motion.div>
+      <div className="mt-10 mb-10 h-px bg-primary/10" />
 
-          <div className={`flex flex-col ${SPACING_STANDARDS.GRID.GAP_MEDIUM}`}>
-            <motion.div variants={ITEM_VARIANTS}>
-              <ScheduleMeetingCard />
-            </motion.div>
-            <motion.div variants={ITEM_VARIANTS}>
-              <ContactInfoCard />
-            </motion.div>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-16 lg:gap-24">
+        <SendMessageCard />
+        <div className="flex flex-col gap-14">
+          <ScheduleMeetingCard />
+          <ContactInfoCard />
         </div>
-      </motion.div>
-    </AppShell>
-  );
-};
+      </div>
+    </div>
+  </AppShell>
+);
 
 export default ContactPage;
