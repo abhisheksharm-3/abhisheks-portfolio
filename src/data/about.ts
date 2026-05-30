@@ -57,7 +57,7 @@ export const EXPERIENCE_DATA = [
     subtitle: "Wednesday Solutions",
     date: "Feb 2026 – Present",
     description:
-      "building production systems end-to-end. shipped an autonomous multi-agent ai content pipeline (langgraph, fastapi, postgresql + pgvector), an offline ai chat app with on-device tts in react native, and a multi-tenant lms queue system on aws (ecs, sqs, terraform). passed probation. still going.",
+      "building production systems end-to-end. shipped an autonomous multi-agent ai content pipeline (langgraph, fastapi, postgresql + pgvector), contributed to off grid's tts and hands-free voice chat loop with hardware aec, and built a multi-tenant lms queue system on aws (ecs, sqs, terraform). passed probation. still going.",
   },
   {
     title: "Software Development Intern",

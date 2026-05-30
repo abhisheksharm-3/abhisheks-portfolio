@@ -39,9 +39,10 @@ export const BioCard = () => {
           </p>
           <p>
             currently at wednesday: building an autonomous ai content pipeline
-            (langgraph + fastapi + pgvector), an offline ai chat app in react
-            native with on-device tts, and a multi-tenant lms with full aws
-            infra. when i&apos;m not doing that, i&apos;m tinkering on side projects.
+            (langgraph + fastapi + pgvector), contributed to off grid&apos;s tts
+            and hands-free voice chat loop with hardware aec, and a
+            multi-tenant lms with full aws infra. when i&apos;m not doing that,
+            i&apos;m tinkering on side projects.
           </p>
         </div>
 
