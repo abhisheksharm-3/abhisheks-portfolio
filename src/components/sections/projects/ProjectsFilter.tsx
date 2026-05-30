@@ -67,15 +67,15 @@ export function ProjectsFilters({
               key={tag}
               onClick={() => setActiveFilter(tag)}
               className={`
-                px-4 py-1.5 rounded-full text-xs font-light transition-all duration-200
+                px-3 py-1 text-xs font-light transition-all duration-200 border
                 ${isActive
-                  ? "border border-primary/50 text-primary bg-transparent"
-                  : "border border-primary/15 text-foreground/50 bg-transparent hover:border-primary/30 hover:text-foreground/70"
+                  ? "border-foreground/25 text-foreground"
+                  : "border-foreground/8 text-foreground/35 hover:border-foreground/15 hover:text-foreground/55"
                 }
               `}
             >
               {tag === "all" ? "All Projects" : tag}
-              <span className={`ml-2 text-[10px] ${isActive ? "text-primary/60" : "text-foreground/30"}`}>
+              <span className={`ml-1.5 text-[10px] ${isActive ? "text-foreground/40" : "text-foreground/20"}`}>
                 {tagCounts[tag] ?? 0}
               </span>
             </button>

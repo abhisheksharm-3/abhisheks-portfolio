@@ -14,7 +14,7 @@ interface ProjectDetailImageProps {
 export function ProjectDetailImage({ src, alt }: ProjectDetailImageProps) {
   return (
     <div className="mb-12">
-      <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden rounded-xl border border-primary/10">
+      <div className="relative w-full h-[400px] md:h-[500px] overflow-hidden border border-foreground/8">
         <Image
           src={src}
           alt={alt}

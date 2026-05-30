@@ -42,8 +42,6 @@ export const ContactCard = () => {
         </div>
       </div>
 
-      <div className="h-px bg-primary/10" />
-
       <Link
         href="/contact"
         className="flex items-center gap-2 text-sm text-foreground/50 hover:text-foreground/80 transition-colors duration-200 group font-light"

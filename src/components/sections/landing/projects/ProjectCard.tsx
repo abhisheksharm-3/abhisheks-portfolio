@@ -3,138 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import {
-  CardHeader,
-  CardContent,
-  CardFooter,
-  CardTitle,
-} from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { ExternalLink, Github } from "lucide-react";
 import { ProjectType } from "@/lib/types";
-
-const ProjectImageOverlay = ({ isHovered }: { isHovered: boolean }) => (
-  <div
-    className="absolute inset-0 z-10 bg-gradient-to-br from-background/10 via-background/40 to-background/80 transition-opacity duration-500"
-    style={{ opacity: isHovered ? 0.8 : 1 }}
-  />
-);
-
-const ProjectImage = ({ project, isHovered }: { project: ProjectType; isHovered: boolean }) => (
-  <motion.div
-    className="h-full w-full"
-    animate={{ scale: isHovered ? 1.06 : 1 }}
-    transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-  >
-    <Image
-      src={project.imageSrc}
-      alt={project.title}
-      fill
-      className="object-cover will-change-transform"
-      sizes="(max-width: 1024px) 100vw, 50vw"
-      draggable={false}
-    />
-  </motion.div>
-);
-
-const ProjectTags = ({ tags, isHovered }: { tags?: string[]; isHovered: boolean }) => {
-  if (!tags?.length) return null;
-  const visibleTags = tags.slice(0, 2);
-  const remainingCount = tags.length - 2;
-
-  return (
-    <div className="absolute top-3 right-3 sm:top-5 sm:right-5 z-20 flex flex-col gap-1.5 items-end">
-      {visibleTags.map((tag) => (
-        <motion.div
-          key={tag}
-          animate={{ opacity: isHovered ? 1 : 0.85, scale: isHovered ? 1.03 : 1 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Badge
-            variant="secondary"
-            className="bg-background/90 text-foreground/70 border-border/50 backdrop-blur-md text-[10px] sm:text-xs font-medium px-2 py-0.5"
-          >
-            {tag}
-          </Badge>
-        </motion.div>
-      ))}
-      {remainingCount > 0 && (
-        <Badge
-          variant="outline"
-          className="bg-background/60 text-muted-foreground border-border/40 backdrop-blur-sm text-[10px] px-2 py-0.5"
-        >
-          +{remainingCount}
-        </Badge>
-      )}
-    </div>
-  );
-};
-
-const ProjectActions = ({ project }: { project: ProjectType }) => {
-  const { url, github } = project;
-
-  return (
-    <div className="flex items-center gap-3 h-8">
-      {url && (
-        <Link
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
-        >
-          <ExternalLink className="h-3 w-3" />
-          Visit
-        </Link>
-      )}
-      {url && github && <div className="w-px h-3 bg-border/50" />}
-      {github && (
-        <Link
-          href={github}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1.5"
-        >
-          <Github className="h-3 w-3" />
-          Code
-        </Link>
-      )}
-    </div>
-  );
-};
-
-const ProjectHeader = ({ project, isHovered }: { project: ProjectType; isHovered: boolean }) => (
-  <CardHeader className="pt-4 pb-0 px-4 sm:pt-6 sm:px-6 md:pt-8 md:px-8">
-    <div className="flex items-center justify-end mb-3">
-      <span className="text-[10px] sm:text-xs text-muted-foreground font-mono">{project.year}</span>
-    </div>
-    <CardTitle className="text-lg sm:text-2xl md:text-3xl font-serif tracking-tight leading-tight mb-3">
-      <span className={`inline-block transition-colors duration-300 ${isHovered ? "text-primary" : "text-foreground"}`}>
-        {project.title}
-      </span>
-    </CardTitle>
-    <div className="h-[1px] bg-primary/15" />
-  </CardHeader>
-);
-
-const ProjectDescription = ({ description, isHovered }: { description: string; isHovered: boolean }) => (
-  <CardContent className="pt-3 px-4 sm:pt-4 sm:px-6 md:pt-5 md:px-8 flex-1">
-    <p
-      className="text-muted-foreground text-xs sm:text-sm leading-relaxed font-light transition-opacity duration-300"
-      style={{ opacity: isHovered ? 0.95 : 0.75 }}
-    >
-      {description}
-    </p>
-  </CardContent>
-);
-
-const ProjectFooter = ({ project }: { project: ProjectType }) => (
-  <CardFooter className="px-4 pt-3 pb-4 sm:px-6 sm:pb-6 md:px-8 md:pb-8 flex justify-between items-center">
-    <span className="text-[10px] sm:text-xs text-muted-foreground font-light">
-      {project.role || "Developer"}
-    </span>
-    <ProjectActions project={project} />
-  </CardFooter>
-);
 
 export const ProjectImageContainer = ({
   project,
@@ -143,23 +13,91 @@ export const ProjectImageContainer = ({
   project: ProjectType;
   isHovered: boolean;
 }) => (
-  <div className="relative w-full h-48 sm:h-60 md:h-80 overflow-hidden rounded-t-xl sm:rounded-t-2xl">
-    <ProjectImageOverlay isHovered={isHovered} />
-    <ProjectImage project={project} isHovered={isHovered} />
-    <ProjectTags tags={project.tags} isHovered={isHovered} />
+  <div className="relative w-full h-52 sm:h-64 overflow-hidden shrink-0">
+    <motion.div
+      className="w-full h-full"
+      animate={{ scale: isHovered ? 1.03 : 1 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <Image
+        src={project.imageSrc}
+        alt={project.title}
+        fill
+        className="object-cover"
+        sizes="(max-width: 1024px) 100vw, 50vw"
+        draggable={false}
+      />
+    </motion.div>
+    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+
+    <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+      {project.tags?.slice(0, 2).map((tag) => (
+        <span
+          key={tag}
+          className="text-[10px] font-light text-white/65 bg-black/40 backdrop-blur-sm px-2 py-0.5"
+        >
+          {tag}
+        </span>
+      ))}
+      {(project.tags?.length ?? 0) > 2 && (
+        <span className="text-[10px] text-white/40 bg-black/40 backdrop-blur-sm px-2 py-0.5">
+          +{(project.tags?.length ?? 0) - 2}
+        </span>
+      )}
+    </div>
   </div>
 );
 
 export const ProjectContent = ({
   project,
-  isHovered,
 }: {
   project: ProjectType;
   isHovered: boolean;
 }) => (
-  <div className="flex flex-col flex-1">
-    <ProjectHeader project={project} isHovered={isHovered} />
-    <ProjectDescription description={project.description} isHovered={isHovered} />
-    <ProjectFooter project={project} />
+  <div className="flex flex-col flex-1 p-5 sm:p-6">
+    <div className="flex items-baseline justify-between mb-2">
+      <span className="text-[10px] text-foreground/25 font-mono">{project.year}</span>
+    </div>
+
+    <h3 className="text-xl font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-200 mb-2 leading-snug">
+      {project.title}
+    </h3>
+
+    <p className="text-foreground/50 text-sm font-light leading-relaxed flex-1 mb-4 line-clamp-3">
+      {project.description}
+    </p>
+
+    <div className="flex items-center justify-between pt-3 border-t border-foreground/8">
+      <span className="text-xs text-foreground/25 font-light">
+        {project.role || "developer"}
+      </span>
+      <div className="flex items-center gap-3">
+        {project.url && (
+          <a
+            href={project.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
+          >
+            <ExternalLink className="h-3 w-3" />
+            visit
+          </a>
+        )}
+        {project.url && project.github && (
+          <div className="w-px h-3 bg-foreground/8" />
+        )}
+        {project.github && (
+          <a
+            href={project.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
+          >
+            <Github className="h-3 w-3" />
+            code
+          </a>
+        )}
+      </div>
+    </div>
   </div>
 );

@@ -26,9 +26,7 @@ export const FooterBrandColumn = () => (
           href={platform.href}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center w-8 h-8 rounded-full border border-primary/10 bg-primary/5 text-foreground/60 hover:text-primary hover:border-primary/30 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
+          className="flex items-center justify-center w-8 h-8 border border-foreground/8 text-foreground/40 hover:text-foreground/70 hover:border-foreground/20 transition-colors duration-200"
           aria-label={platform.label}
           variants={ITEM_VARIANTS}
         >

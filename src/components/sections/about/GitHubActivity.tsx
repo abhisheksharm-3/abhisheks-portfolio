@@ -226,7 +226,7 @@ export const GitHubActivity = () => {
                             {stats.topLanguages.slice(0, 6).map((lang: string) => (
                                 <span
                                     key={lang}
-                                    className="px-3 py-1 text-xs font-light text-foreground/60 bg-primary/5 rounded-full border border-primary/10"
+                                    className="px-2.5 py-0.5 text-xs font-light text-foreground/50 border border-foreground/8"
                                 >
                                     {lang}
                                 </span>

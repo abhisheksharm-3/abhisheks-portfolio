@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 
@@ -34,16 +33,13 @@ export const ProjectsCTA = () => {
         </div>
 
         <div className="flex-shrink-0">
-          <Button
-            size="lg"
-            className="group bg-primary hover:bg-primary/90 text-primary-foreground px-7"
-            asChild
+          <Link
+            href="/contact"
+            className="group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground border border-foreground/15 hover:border-foreground/30 transition-all duration-200 px-6 py-2.5"
           >
-            <Link href="/contact" className="flex items-center gap-2">
-              Get in touch
-              <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </Link>
-          </Button>
+            Get in touch
+            <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+          </Link>
         </div>
       </div>
     </motion.div>

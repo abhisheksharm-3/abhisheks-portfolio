@@ -13,7 +13,7 @@ import { CONTACT_FORM_SCHEMA } from "@/data/contact";
 import { ContactFormDataType } from "@/lib/types";
 
 const field =
-  "border border-primary/15 bg-foreground/[0.05] rounded-sm px-3 py-3 h-auto text-base text-foreground placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-primary/40 focus-visible:bg-foreground/[0.08] transition-all duration-200";
+  "border border-foreground/10 bg-foreground/[0.03] rounded-none px-3 py-3 h-auto text-base text-foreground placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-foreground/25 focus-visible:bg-foreground/[0.06] transition-all duration-200";
 const label =
   "text-[10px] text-primary/35 uppercase tracking-[0.18em] font-light";
 
@@ -123,7 +123,7 @@ export const SendMessageCard = () => {
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors duration-200 group disabled:opacity-40 font-light border border-foreground/15 hover:border-foreground/30 px-5 py-2.5 rounded-sm"
+              className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors duration-200 group disabled:opacity-40 font-light border border-foreground/15 hover:border-foreground/30 px-5 py-2.5"
             >
               {isPending ? (
                 <>

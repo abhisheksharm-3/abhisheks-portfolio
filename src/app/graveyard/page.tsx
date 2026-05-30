@@ -3,7 +3,6 @@
 import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import {
   GraveyardBackground,
@@ -72,16 +71,13 @@ const GraveyardPage = () => {
           <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
             prefer the living
           </p>
-          <Button
-            size="lg"
-            className="group bg-primary hover:bg-primary/90 text-primary-foreground px-8"
-            asChild
+          <Link
+            href="/projects"
+            className="group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground border border-foreground/15 hover:border-foreground/30 transition-all duration-200 px-6 py-2.5"
           >
-            <Link href="/projects" className="flex items-center">
-              Escape the Graveyard
-              <ArrowRight className="h-4 w-4 ml-2 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
+            Escape the Graveyard
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
         </motion.div>
       </motion.div>
     </AppShell>

@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -30,16 +29,13 @@ export function ProjectDetailMoreProjects() {
         </div>
 
         <div className="flex-shrink-0">
-          <Button
-            size="lg"
-            className="group border border-primary/20 bg-transparent hover:bg-primary/5 text-foreground/70 hover:text-foreground px-7"
-            asChild
+          <Link
+            href="/projects"
+            className="group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground border border-foreground/15 hover:border-foreground/30 transition-all duration-200 px-6 py-2.5"
           >
-            <Link href="/projects" className="flex items-center gap-2">
-              view all projects
-              <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-            </Link>
-          </Button>
+            view all projects
+            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+          </Link>
         </div>
       </div>
     </motion.div>
