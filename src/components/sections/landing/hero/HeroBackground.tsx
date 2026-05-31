@@ -170,14 +170,14 @@ export const AbstractShapes: React.FC<{
         transition={{ duration: 8, repeat: Infinity, repeatType: "reverse" }}
       />
       <motion.div
-        className="absolute top-[25%] right-[15%] w-32 h-32 border-l border-t border-primary/20 rounded-tl-3xl"
+        className="absolute top-[25%] right-[15%] w-32 h-32 border-l border-t border-primary/20 rounded-tl-3xl hidden sm:block"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 0.6, scale: 1 }}
         transition={{ duration: 1.5, delay: 1 }}
         style={{ x: accent1X, y: accent1Y }}
       />
       <motion.div
-        className="absolute bottom-[20%] left-[20%] w-20 h-20 border-r border-b border-primary/15 rounded-br-2xl"
+        className="absolute bottom-[20%] left-[20%] w-20 h-20 border-r border-b border-primary/15 rounded-br-2xl hidden sm:block"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 0.4, scale: 1 }}
         transition={{ duration: 1.5, delay: 1.2 }}
