@@ -61,7 +61,7 @@ export const ExperienceCounter: React.FC = () => {
  * optimized for responsiveness across all screen sizes.
  */
 export const HeroName: React.FC = () => (
-  <div className="relative mb-20 sm:mb-28 md:mb-20">
+  <div className="relative mb-10 sm:mb-28 md:mb-20">
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
@@ -229,7 +229,7 @@ export const SkillsSection: React.FC<{
   );
 
   return (
-    <div className="w-full md:w-1/2 md:pl-20 mt-0 md:mt-36 relative">
+    <div className="w-full md:pl-20 mt-0 md:mt-36 relative">
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 0.2 }}

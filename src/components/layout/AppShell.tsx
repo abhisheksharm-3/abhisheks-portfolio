@@ -28,7 +28,7 @@ export const AppShell: React.FC<AppShellPropsType> = ({
       )}
     >
       {showBackground && (
-        <div className="absolute inset-0 z-0 hidden overflow-hidden lg:block">
+        <div className="absolute inset-0 z-0 hidden overflow-hidden lg:block pointer-events-none">
           <ConstellationBackground />
         </div>
       )}

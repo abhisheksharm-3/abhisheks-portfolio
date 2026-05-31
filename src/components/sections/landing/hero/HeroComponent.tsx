@@ -92,7 +92,9 @@ export const Hero = () => {
             <HeroName />
             <HeroDescription />
           </div>
-          <SkillsSection mouseX={mouseX} mouseY={mouseY} />
+          <div className="hidden md:block md:w-1/2">
+            <SkillsSection mouseX={mouseX} mouseY={mouseY} />
+          </div>
         </motion.div>
       </div>
 
