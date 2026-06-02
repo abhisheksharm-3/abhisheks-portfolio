@@ -284,7 +284,3 @@ After switching to `VOICE_COMMUNICATION`, I removed the adaptive threshold logic
 All of those were patches on top of the wrong audio source. With hardware AEC active, the only thing that reaches the RMS check is genuine ambient audio. A fixed threshold and a sustained-frames check handle it correctly.
 
 The conversational loop ran cleanly after the change. The user could interrupt mid-sentence. The assistant stopped, listened, and responded. No false triggers in testing across 3 devices: a Xiaomi 23129RN51H (Android 15), a Pixel 6, and a mid-range Samsung. The one-line audio source change was the entire fix.
-
-## Frequently asked questions
-
-The FAQs are rendered below from the post frontmatter.
