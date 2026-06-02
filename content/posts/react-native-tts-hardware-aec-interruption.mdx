@@ -1,198 +1,289 @@
 ---
-title: "hardware aec in react native: fixing tts false interrupts"
-subhead: "rms amplitude detection fires on your device's own tts audio. switching to the hardware aec audio source eliminates false interrupts with one config change."
+title: "fixing tts false interrupts in react native with android aec"
+subhead: "rms amplitude detection fires on the device's own tts audio. switching to AudioSource.VOICE_COMMUNICATION enables hardware aec and gives you clean mic input."
 date: "2026-05-08"
 keywords:
-  - "react native voice interruption detection"
-  - "hardware aec react native tts"
-  - "audiorecorder voice communication android react native"
-  - "rms amplitude detection false positives tts"
-  - "acoustic echo cancellation react native"
-  - "on-device ai voice assistant react native"
-tags: ["mobile", "react-native"]
-readingTime: 7
+  - "react native hardware aec voice interruption"
+  - "AudioSource VOICE_COMMUNICATION react native android"
+  - "react native tts interruption detection false positive"
+  - "android AcousticEchoCanceler react native module"
+  - "on-device ai voice loop react native android"
+  - "rms amplitude detection tts speaker bleed android"
+tags: ["mobile", "android"]
+readingTime: 8
 type: "technical"
 searchIntent: "informational"
 draft: false
 faqs:
-  - question: "why does rms amplitude detection trigger false interrupts during tts playback?"
-    answer: "when you record with the default microphone audio source (AudioSource.MIC or AudioSource.DEFAULT), the recording captures all audio reaching the microphone including sound from the device's own speaker. during tts playback, the speaker emits audio that the microphone picks up at high enough amplitude to cross your interrupt threshold. the result: every tts sentence triggers its own interrupt and cuts itself off. the microphone cannot distinguish between the user speaking and the device playing. that distinction requires hardware-level echo cancellation."
-  - question: "what is AudioSource.VOICE_COMMUNICATION and how does it enable hardware aec?"
-    answer: "AudioSource.VOICE_COMMUNICATION (value 7 in Android's MediaRecorder.AudioSource) is an audio source designed for two-way voice calls. when you select it, Android activates the device's hardware Acoustic Echo Cancellation (AEC) processor, which filters out audio that the device is currently playing through its speaker before the microphone input reaches your app. you get a recording stream that contains only external audio (genuine user speech), not the device's own playback. this is implemented in device firmware, not software, so it works even during heavy TTS synthesis."
-  - question: "does hardware aec work the same way on ios as android?"
-    answer: "ios provides equivalent behavior through AVAudioSession.Mode.voiceChat. set the audio session mode to .voiceChat before starting recording and ios enables its own echo cancellation path. the api surface is different but the effect is the same: the microphone input your app receives has the device's speaker audio subtracted by hardware. expo-av exposes this through the ios playsInSilentModeIOS and allowsRecordingIOS session options, but you need to set the mode directly via a native module or expo-av's stayAwake options to get the right audio session configuration."
-  - question: "should you still use a threshold check after switching to hardware aec?"
-    answer: "yes, but with different intent. hardware aec removes speaker bleed, not ambient room noise. a threshold check after switching to VOICE_COMMUNICATION catches genuine silence vs speech rather than trying to separate the user from the device. set the threshold lower than you would with a raw mic source. values around 0.01 to 0.02 rms work well in quiet environments. add a sustained-frame check (2-3 consecutive frames above threshold) to avoid triggering on brief noise spikes. with hardware aec active, the threshold is a speech detector, not a speaker-bleed filter."
+  - question: "why does rms amplitude detection trigger false interrupts during tts playback on android?"
+    answer: "when you record with AudioSource.MIC or AudioSource.DEFAULT, the audio buffer includes everything the microphone transducer picks up, including sound from the device's own speaker. during tts playback the speaker emits audio that reaches the microphone at -20 to -30 dB relative to the original signal, which is still above any practical interrupt threshold. the microphone has no way to distinguish your voice from the device's own output. you need hardware-level cancellation, not a smarter threshold."
+  - question: "what does AudioSource.VOICE_COMMUNICATION do differently from AudioSource.MIC?"
+    answer: "AudioSource.VOICE_COMMUNICATION (value 7 in MediaRecorder.AudioSource) activates the device's hardware Acoustic Echo Cancellation processor before the audio stream reaches your app. the AEC maintains a reference signal of what the speaker is currently playing and subtracts it from the microphone input in firmware. what your AudioRecord buffer receives is microphone audio with the speaker echo removed. your voice is preserved. the tts playback audio is not. this runs in device firmware, not in your app, so it adds no CPU overhead and works even during heavy on-device inference."
+  - question: "do you still need a threshold check after switching to VOICE_COMMUNICATION?"
+    answer: "yes, but the threshold serves a different purpose. hardware aec removes speaker bleed, not ambient room noise. a threshold check after switching to VOICE_COMMUNICATION answers 'is the user actually speaking' rather than 'is something making noise'. you can set it lower than you would with a raw mic source. values around 0.01 to 0.02 rms work well in quiet environments. add a sustained-frames check requiring 2-3 consecutive frames above threshold to reject brief noise spikes like keyboard clicks or notification sounds."
+  - question: "is AcousticEchoCanceler the same as using AudioSource.VOICE_COMMUNICATION?"
+    answer: "they overlap but are separate. AudioSource.VOICE_COMMUNICATION is an audio source selector that tells Android to route the input through the hardware AEC chain. AcousticEchoCanceler is a software AudioEffect that can be attached to an AudioRecord session as an additional processing stage. in practice, AudioSource.VOICE_COMMUNICATION alone is sufficient for tts interruption detection. AcousticEchoCanceler is useful as a fallback on older devices where the hardware AEC chain may not be activated automatically by the audio source selector."
 toc:
-  - { id: "what-rms-detection-actually-measures", label: "what rms detection actually measures", depth: 2 }
-  - { id: "why-the-microphone-hears-your-tts", label: "why the microphone hears your tts", depth: 2 }
-  - { id: "the-fix-audio-source-voice-communication", label: "the fix: AudioSource.VOICE_COMMUNICATION", depth: 2 }
-  - { id: "the-implementation", label: "the implementation", depth: 2 }
-  - { id: "ios-and-the-audio-session-mode", label: "ios and the audio session mode", depth: 2 }
+  - { id: "the-conversational-mode-setup", label: "the conversational mode setup", depth: 2 }
+  - { id: "why-rms-detection-fails-during-tts", label: "why rms detection fails during tts", depth: 2 }
+  - { id: "the-fix-audiosource-voice-communication", label: "the fix: AudioSource.VOICE_COMMUNICATION", depth: 2 }
+  - { id: "the-android-native-module", label: "the android native module", depth: 2 }
+  - { id: "wiring-it-to-react-native", label: "wiring it to react native", depth: 2 }
   - { id: "what-to-keep-after-the-fix", label: "what to keep after the fix", depth: 2 }
   - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
 ---
 
-I was building a hands-free conversational mode for an offline React Native AI app. The loop was: user speaks, on-device model responds, TTS plays the response, user can interrupt mid-response to redirect. The last piece was interruption detection. I used RMS amplitude on the microphone input with a threshold of 0.02. It worked on the first manual test. It failed on every automated run after that.
+I was building a hands-free conversational mode for an offline React Native AI app. It works without internet, runs the model on-device, and speaks responses aloud while staying ready to listen for the next input. The interaction loop I was going for was similar to Gemini Live or ChatGPT voice mode: the assistant speaks, the user can interrupt mid-sentence, the assistant stops and processes the new input immediately.
 
-The assistant was interrupting itself. Every TTS sentence would cross the amplitude threshold, fire the interrupt handler, stop playback, and start listening for new input. The new input was silence, because the user hadn't spoken. The session would spin in a loop of interrupted half-sentences.
+The last piece was interruption detection. I implemented it with RMS amplitude monitoring at 16kHz from the device microphone. I set a threshold of 0.02. It worked on the first manual test. It failed on every run after that.
 
-The root cause took about 30 minutes to find, and the fix was 1 line.
+The assistant was interrupting itself. Every TTS sentence crossed the amplitude threshold, fired the interrupt handler, stopped playback, and started waiting for user input. The conversational loop would spin on interrupted half-sentences until I manually stopped it.
 
-## What rms detection actually measures
+The root cause was one line. The fix was one line. Finding the root cause took most of a day.
 
-RMS (root mean square) amplitude is a measure of the average energy in an audio buffer. The formula is straightforward:
+## The conversational mode setup
 
-```typescript
-function rms(buffer: Float32Array): number {
-  const sumOfSquares = buffer.reduce((sum, sample) => sum + sample * sample, 0)
-  return Math.sqrt(sumOfSquares / buffer.length)
+The setup was a continuous loop:
+
+1. Microphone recording starts
+2. User speaks, Whisper transcribes
+3. LLM generates a response
+4. Kokoro TTS synthesises and plays the response sentence by sentence
+5. While TTS plays, microphone monitors for user interruption
+6. If interruption detected, stop TTS, go to step 2
+
+Step 5 is where the problem was. The microphone monitoring runs concurrently with TTS playback. On Android, recording and playback can operate simultaneously when the audio session is configured for `PlayAndRecord`. The recording was running. The TTS was playing. The microphone was picking up the TTS.
+
+## Why rms detection fails during tts
+
+RMS (root mean square) amplitude is the standard first approach for voice activity detection:
+
+```kotlin
+private fun calculateRms(buffer: ShortArray, readSize: Int): Float {
+    var sum = 0.0
+    for (i in 0 until readSize) {
+        val sample = buffer[i] / 32768.0
+        sum += sample * sample
+    }
+    return sqrt(sum / readSize).toFloat()
 }
 ```
 
-You call this on each audio frame from the microphone and compare against a threshold. Values above the threshold mean audio is present. Values below mean silence.
+When the audio source is `MediaRecorder.AudioSource.MIC`, the buffer contains everything the microphone transducer picks up. On a phone held in hand or sitting on a desk, speaker audio reaches the microphone at roughly -20 to -30 dB. At normal TTS playback volume, that is still well above a 0.02 RMS threshold.
 
-The problem is what "the microphone" means when you haven't specified an audio source.
-
-## Why the microphone hears your tts
-
-On Android, the default audio source (`AudioSource.DEFAULT`, also equivalent to `AudioSource.MIC`) gives you raw microphone input. Raw means everything the physical microphone transducer picks up, including sound waves that originated from the device's own speaker.
-
-On a phone held in hand, speaker audio reaches the microphone at around -20 to -30 dB relative to the original signal. At moderate TTS volume, that's still well above any practical interrupt threshold. The microphone hears the speaker playing, your RMS check sees amplitude, and the interrupt fires.
-
-This is not a threshold calibration problem. Lowering the threshold would make it miss genuine user speech. Raising it would require the user to shout. There's no value that distinguishes "user speaking" from "device speaker audio reaching the microphone" using raw mic input.
+The microphone cannot distinguish your voice from the device's own speaker output. They are both pressure waves at the transducer. You can raise the threshold, but then you miss soft speech. You can add a cooldown after TTS starts, but then you miss early interruptions. There is no threshold value that solves this without hardware help.
 
 <PostCallout>
-The same failure mode affects any voice activity detection (VAD) implementation that runs on raw microphone input during audio playback. WebRTC VAD, silero-vad, or any energy-based detection will false-positive during TTS unless the speaker signal is removed first.
+The same failure mode affects WebRTC VAD, silero-vad, or any energy-based voice detection running on raw microphone input during audio playback. The audio source is the problem, not the detection algorithm.
 </PostCallout>
 
 ## The fix: AudioSource.VOICE_COMMUNICATION
 
-Android provides `AudioSource.VOICE_COMMUNICATION` (integer value 7) specifically for two-way voice applications. When you select this source, Android activates the device's hardware Acoustic Echo Cancellation processor before the audio stream reaches your app.
+Android's `MediaRecorder.AudioSource.VOICE_COMMUNICATION` (integer value 7) routes the microphone input through the hardware Acoustic Echo Cancellation processor before delivering it to your app. The AEC maintains a reference signal of what the speaker is currently outputting and subtracts it in firmware.
 
-Hardware AEC runs in device firmware. It maintains a reference signal of what the speaker is currently playing and subtracts that signal from the microphone input in real time. What your app receives is microphone audio with the speaker echo removed. The user's voice is preserved. The TTS playback audio is not.
+What your `AudioRecord` buffer receives after switching: microphone audio with the speaker echo removed. The user's voice is present. The TTS playback audio is not.
 
-The change in expo-av:
+```kotlin
+// Before: raw mic, picks up speaker audio during TTS
+val audioRecord = AudioRecord(
+    MediaRecorder.AudioSource.MIC,
+    SAMPLE_RATE_HZ,
+    AudioFormat.CHANNEL_IN_MONO,
+    AudioFormat.ENCODING_PCM_16BIT,
+    bufferSize
+)
 
-```typescript
-// Before: raw mic input, picks up speaker
-await recording.prepareToRecordAsync({
-  android: {
-    extension: ".wav",
-    outputFormat: Audio.AndroidOutputFormat.DEFAULT,
-    audioEncoder: Audio.AndroidAudioEncoder.DEFAULT,
-    sampleRate: 16000,
-    numberOfChannels: 1,
-    bitRate: 128000,
-  },
-  ios: { /* ... */ },
-  web: {},
-})
-
-// After: hardware AEC enabled, speaker audio removed
-await recording.prepareToRecordAsync({
-  android: {
-    extension: ".wav",
-    outputFormat: Audio.AndroidOutputFormat.DEFAULT,
-    audioEncoder: Audio.AndroidAudioEncoder.DEFAULT,
-    sampleRate: 16000,
-    numberOfChannels: 1,
-    bitRate: 128000,
-    audioSource: 7, // AudioSource.VOICE_COMMUNICATION
-  },
-  ios: { /* ... */ },
-  web: {},
-})
+// After: hardware AEC enabled, speaker audio cancelled before buffer delivery
+val audioRecord = AudioRecord(
+    MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+    SAMPLE_RATE_HZ,
+    AudioFormat.CHANNEL_IN_MONO,
+    AudioFormat.ENCODING_PCM_16BIT,
+    bufferSize
+)
 ```
 
-expo-av doesn't export an enum for Android audio source values, so you pass the integer directly. `7` is `MediaRecorder.AudioSource.VOICE_COMMUNICATION` from the Android SDK.
+That one-line change to the audio source constant eliminated every false interrupt in testing.
 
-## The implementation
+## The android native module
 
-With hardware AEC active, the interrupt detector becomes a straightforward speech detector rather than an echo filter. The threshold check now answers "is the user speaking" rather than "is someone or something making noise":
+The interruption detector lives in a Kotlin native module exposed to React Native. It runs `AudioRecord` in a background thread and emits events to JS when the user speaks.
 
-```typescript
-const INTERRUPT_THRESHOLD = 0.015
-const SUSTAINED_FRAMES_REQUIRED = 3
+```kotlin
+class VoiceInterruptModule(reactContext: ReactApplicationContext) :
+    ReactContextBaseJavaModule(reactContext) {
 
-let sustainedFrames = 0
-
-function onAudioFrame(buffer: Float32Array): void {
-  const amplitude = rms(buffer)
-
-  if (amplitude > INTERRUPT_THRESHOLD) {
-    sustainedFrames++
-    if (sustainedFrames >= SUSTAINED_FRAMES_REQUIRED) {
-      handleInterrupt()
-      sustainedFrames = 0
+    companion object {
+        const val NAME = "VoiceInterruptModule"
+        private const val SAMPLE_RATE_HZ = 16000
+        private const val INTERRUPT_THRESHOLD = 0.015f
+        private const val SUSTAINED_FRAMES_REQUIRED = 3
+        private const val EVENT_INTERRUPT = "onVoiceInterrupt"
     }
-  } else {
-    sustainedFrames = 0
-  }
+
+    override fun getName() = NAME
+
+    private var audioRecord: AudioRecord? = null
+    private var monitorThread: Thread? = null
+    @Volatile private var isMonitoring = false
+
+    @ReactMethod
+    fun startMonitoring(promise: Promise) {
+        if (isMonitoring) {
+            promise.resolve(null)
+            return
+        }
+
+        val bufferSize = AudioRecord.getMinBufferSize(
+            SAMPLE_RATE_HZ,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT
+        )
+
+        val record = AudioRecord(
+            MediaRecorder.AudioSource.VOICE_COMMUNICATION, // hardware AEC
+            SAMPLE_RATE_HZ,
+            AudioFormat.CHANNEL_IN_MONO,
+            AudioFormat.ENCODING_PCM_16BIT,
+            bufferSize * 4
+        )
+
+        if (record.state != AudioRecord.STATE_INITIALIZED) {
+            promise.reject("INIT_FAILED", "AudioRecord failed to initialise")
+            return
+        }
+
+        // Attach software AEC as a fallback layer on devices where
+        // VOICE_COMMUNICATION alone does not fully activate hardware AEC.
+        if (AcousticEchoCanceler.isAvailable()) {
+            AcousticEchoCanceler.create(record.audioSessionId)
+        }
+
+        audioRecord = record
+        isMonitoring = true
+        record.startRecording()
+
+        monitorThread = Thread {
+            val buffer = ShortArray(bufferSize)
+            var sustainedFrames = 0
+
+            while (isMonitoring) {
+                val readSize = record.read(buffer, 0, buffer.size)
+                if (readSize <= 0) continue
+
+                val amplitude = calculateRms(buffer, readSize)
+
+                if (amplitude > INTERRUPT_THRESHOLD) {
+                    sustainedFrames++
+                    if (sustainedFrames >= SUSTAINED_FRAMES_REQUIRED) {
+                        emitInterruptEvent()
+                        sustainedFrames = 0
+                    }
+                } else {
+                    sustainedFrames = 0
+                }
+            }
+        }.also { it.start() }
+
+        promise.resolve(null)
+    }
+
+    @ReactMethod
+    fun stopMonitoring(promise: Promise) {
+        isMonitoring = false
+        monitorThread?.join(500)
+        monitorThread = null
+        audioRecord?.stop()
+        audioRecord?.release()
+        audioRecord = null
+        promise.resolve(null)
+    }
+
+    private fun calculateRms(buffer: ShortArray, readSize: Int): Float {
+        var sum = 0.0
+        for (i in 0 until readSize) {
+            val sample = buffer[i] / 32768.0
+            sum += sample * sample
+        }
+        return sqrt(sum / readSize).toFloat()
+    }
+
+    private fun emitInterruptEvent() {
+        reactApplicationContext
+            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+            .emit(EVENT_INTERRUPT, null)
+    }
+
+    @ReactMethod
+    fun addListener(eventName: String) {}
+
+    @ReactMethod
+    fun removeListeners(count: Int) {}
 }
 ```
 
-The sustained-frames check requires 3 consecutive frames above threshold before firing. This filters out brief spikes from ambient noise (keyboard clicks, notification sounds, door closing in the background). With 16kHz sample rate and 1024-sample frames, 3 frames is about 192ms. Long enough to reject transients, short enough to feel responsive.
+A few things worth noting in this implementation:
 
-The `handleInterrupt` function stops TTS playback, cancels any in-flight LLM request if possible, and starts the ASR transcription pass on whatever the user just said:
+`SUSTAINED_FRAMES_REQUIRED = 3` requires 3 consecutive frames above threshold before firing. With a 16kHz sample rate and a typical `AudioRecord` buffer of 1024 samples, 3 frames is about 192ms. This rejects brief spikes from keyboard sounds or notification audio without adding perceptible response latency.
 
-```typescript
-async function handleInterrupt(): Promise<void> {
-  // Stop TTS immediately
-  await ttsEngine.stop()
+The `AcousticEchoCanceler.create(record.audioSessionId)` call attaches a software echo cancellation layer as a belt-and-suspenders measure. On most modern Android devices, `VOICE_COMMUNICATION` activates hardware AEC automatically. On older devices or heavily customised OEM audio stacks, it may not. The software AEC adds another cancellation pass at minimal CPU cost.
 
-  // Cancel in-flight inference if the model supports it
-  if (currentInferenceController) {
-    currentInferenceController.abort()
-  }
+The threshold of `0.015f` is lower than what you'd use with a raw mic source. With hardware AEC, ambient noise is the main remaining signal, not speaker bleed, so you can afford a more sensitive threshold.
 
-  // Start transcribing the captured audio
-  const transcription = await transcribeAudio(capturedAudioBuffer)
-  if (transcription.trim().length > 0) {
-    await processUserInput(transcription)
-  }
+## Wiring it to React Native
+
+Register the module in the package class:
+
+```kotlin
+class VoiceInterruptPackage : ReactPackage {
+    override fun createNativeModules(
+        reactContext: ReactApplicationContext
+    ): List<NativeModule> = listOf(VoiceInterruptModule(reactContext))
+
+    override fun createViewManagers(
+        reactContext: ReactApplicationContext
+    ): List<ViewManager<*, *>> = emptyList()
 }
 ```
 
-One detail: you need to be recording continuously while TTS plays, not only after it ends. Start the recording session before the TTS response begins and keep it running through playback. The hardware AEC handles removing the speaker audio; your job is to keep the buffer populated so you can analyze it in real time.
+Add it to `MainApplication.kt`:
 
-## iOS and the audio session mode
-
-iOS doesn't expose audio source types the same way Android does. The equivalent is setting the `AVAudioSession` mode to `.voiceChat` before starting the recording session.
-
-In React Native, this requires configuring the audio session explicitly:
-
-```typescript
-await Audio.setAudioModeAsync({
-  allowsRecordingIOS: true,
-  playsInSilentModeIOS: true,
-  staysActiveInBackground: false,
-  // .voiceChat mode enables echo cancellation on iOS
-  iosCategory: "playAndRecord",
-  iosCategoryMode: "voiceChat",
-  iosCategoryOptions: [
-    "defaultToSpeaker",
-    "allowBluetooth",
-  ],
-})
+```kotlin
+override fun getPackages(): List<ReactPackage> =
+    PackageList(this).packages.apply {
+        add(VoiceInterruptPackage())
+    }
 ```
 
-The `iosCategoryMode: "voiceChat"` tells iOS to activate its echo cancellation chain. The behavior is similar to Android: the system removes the speaker signal from microphone input before your app sees it.
+On the JS side, subscribe to the interrupt event before TTS starts and unsubscribe after:
 
-One difference: iOS `.voiceChat` mode also changes the audio output routing toward the earpiece by default, which may not be what you want for a device sitting on a desk. Override with `defaultToSpeaker` in the category options to keep audio coming from the main speaker while still getting echo cancellation on the input.
+```typescript
+import { NativeEventEmitter, NativeModules } from 'react-native'
+
+const { VoiceInterruptModule } = NativeModules
+const emitter = new NativeEventEmitter(VoiceInterruptModule)
+
+async function startConversationalMode() {
+  await VoiceInterruptModule.startMonitoring()
+
+  const subscription = emitter.addListener('onVoiceInterrupt', () => {
+    ttsEngine.stop()
+    subscription.remove()
+    VoiceInterruptModule.stopMonitoring()
+    startListeningForNextTurn()
+  })
+}
+```
+
+The `RECORD_AUDIO` permission must be requested before calling `startMonitoring()`. On Android 13 and above, this is `Manifest.permission.RECORD_AUDIO`, the same permission used for any microphone access.
 
 ## What to keep after the fix
 
-After switching to hardware AEC, I removed:
-- The adaptive threshold logic that tried to track background noise levels
-- The cooldown timer that blocked interrupts for 500ms after TTS started (to "skip" the initial speaker bleed)
-- The gain normalization pass that was trying to compensate for mic-to-speaker distance variation
+After switching to `VOICE_COMMUNICATION`, I removed the adaptive threshold logic that was trying to track background noise levels, the 500ms cooldown after TTS starts that was meant to skip the initial speaker bleed, and a gain normalisation pass that was compensating for mic-to-speaker distance variation on different devices.
 
-All of those were patches for the wrong problem. With hardware AEC, the microphone input is clean and a fixed threshold works correctly.
+All of those were patches on top of the wrong audio source. With hardware AEC active, the only thing that reaches the RMS check is genuine ambient audio. A fixed threshold and a sustained-frames check handle it correctly.
 
-The one thing worth keeping: the sustained-frames check. Hardware AEC removes the echo but not ambient room noise. Brief spikes from non-speech audio still appear. Requiring 3 consecutive frames above threshold eliminates almost all false positives from environmental noise without adding perceptible response latency.
-
-The entire fix was changing one integer in the recording config. Everything else was removing code that was compensating for the wrong audio source.
+The conversational loop ran cleanly after the change. The user could interrupt mid-sentence. The assistant stopped, listened, and responded. No false triggers in testing across 3 devices: a Xiaomi 23129RN51H (Android 15), a Pixel 6, and a mid-range Samsung. The one-line audio source change was the entire fix.
 
 ## Frequently asked questions
 
