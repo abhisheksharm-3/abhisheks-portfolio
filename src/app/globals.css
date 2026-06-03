@@ -336,3 +336,42 @@
   padding: 0.15em 0.4em;
   color: color-mix(in oklch, var(--foreground) 80%, transparent);
 }
+
+/* Table styles */
+.prose-writing table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  font-size: 0.875rem;
+  font-family: var(--font-geist-mono);
+}
+
+.prose-writing thead tr {
+  border-bottom: 1px solid color-mix(in oklch, var(--primary) 20%, transparent);
+}
+
+.prose-writing th {
+  text-align: left;
+  font-weight: 500;
+  font-family: var(--font-geist-sans);
+  color: color-mix(in oklch, var(--foreground) 70%, transparent);
+  padding: 0.5rem 0.875rem 0.5rem 0;
+  font-size: 0.8125rem;
+  letter-spacing: 0.01em;
+}
+
+.prose-writing td {
+  color: color-mix(in oklch, var(--foreground) 55%, transparent);
+  border-bottom: 1px solid color-mix(in oklch, var(--primary) 8%, transparent);
+  padding: 0.5rem 0.875rem 0.5rem 0;
+  font-weight: 300;
+  vertical-align: top;
+}
+
+.prose-writing tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.prose-writing tbody tr:hover td {
+  color: color-mix(in oklch, var(--foreground) 70%, transparent);
+}

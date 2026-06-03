@@ -1,14 +1,14 @@
 ---
-title: "249 articles in one day: what it does to google indexing"
-subhead: "we published 249 articles on april 24. google indexed all of them, then dropped 247 in 2 weeks. here is what the git history and gsc data actually showed."
+title: "why 247 of 299 articles got deindexed in 2 weeks"
+subhead: "249 articles published on april 24. google indexed all of them, then dropped 247 within 2 weeks. the git history and gsc data made the cause clear."
 date: "2026-06-02"
 keywords:
   - "google deindexing content pipeline articles"
-  - "batch publishing 249 articles seo deindex"
-  - "crawled currently not indexed content pipeline"
+  - "ai content engine indexing rate vs bulk publishing"
+  - "crawled currently not indexed bulk articles"
   - "google cluster pruning similar articles"
-  - "publication date manipulation deindexing"
-  - "ai content pipeline indexing rate"
+  - "content engine vs mass publishing seo"
+  - "google honeymoon window ctr deindexing"
 tags: ["seo", "ai"]
 readingTime: 9
 type: "technical"
@@ -16,41 +16,47 @@ searchIntent: "informational"
 draft: false
 faqs:
   - question: "does google index all articles from a content pipeline on launch day?"
-    answer: "yes, but only temporarily. google gives new content a honeymoon window of roughly 7-10 days where it indexes and ranks everything to measure user engagement. during this window it collects click-through rate data. if a page gets shown in search results but users don't click, google treats that as a signal the page doesn't satisfy search intent. at the end of the evaluation window, pages with very low CTR get marked as 'crawled, currently not indexed' and removed from search results. the honeymoon index is not the same as a stable index."
+    answer: "yes, but only temporarily. google gives new content a honeymoon window of roughly 7-10 days where it indexes and ranks everything to measure engagement. during this window it collects click-through rate data. if pages get shown in search results but users do not click, google treats that as a signal the pages do not satisfy search intent. at the end of the window, pages with very low CTR get marked as 'crawled, currently not indexed' and removed from results. the initial index is a trial, not a stable state."
   - question: "what is google cluster pruning and how does it cause deindexing?"
-    answer: "when multiple articles targeting the same keyword cluster are published at the same time, google evaluates them as a group. it identifies the article with the strongest relevance and authority signals and treats it as the representative for that cluster. the others get marked as near-duplicates and dropped from the index. this is not a penalty. the dropped articles are technically accessible and have no manual action against them. google simply decided one article is enough to represent the cluster and stopped indexing the rest. the compliance cluster in our data had 24 articles published simultaneously and 23 were dropped."
+    answer: "when multiple articles targeting the same keyword cluster are published simultaneously, google evaluates them as a group. it identifies the article with the strongest relevance and authority signals and treats it as the representative for that cluster. the others get marked as near-duplicates and dropped. this is not a penalty: the dropped articles are accessible and have no manual action against them. google simply decided one article is enough to represent the cluster. the compliance cluster in our data had 24 articles published simultaneously and 23 were dropped."
   - question: "does changing publication dates after google crawls an article hurt indexing?"
-    answer: "yes, especially if done multiple times. when google first crawls a page it records the publication date from the article JSON-LD and page metadata. if that date changes in a subsequent crawl, google sees a mismatch between its crawl record and the current metadata. changing dates 4 times in 48 hours while google is actively crawling is detectable as a systematic pattern. it reduces the authenticity signal of the entire domain, not only the individual articles. google's helpful content documentation explicitly lists 'manipulating freshness dates artificially' as a quality signal."
-  - question: "how do you tell the difference between a google deindexing penalty and cluster pruning?"
-    answer: "check google search console coverage report. a manual action penalty shows under 'Manual Actions' with a specific reason. cluster pruning shows as 'Crawled, currently not indexed' with no manual action and no specific reason given. the articles remain accessible via direct URL, they return 200 status codes, and the URL inspection tool shows they can be indexed. google just chose not to. the distinction matters because penalties require fixing a policy violation, while cluster pruning requires reducing content similarity and improving CTR signals."
+    answer: "yes, especially if done multiple times. when google first crawls a page it records the publication date from the article JSON-LD. if that date changes in a subsequent crawl, google sees a mismatch. changing dates 4 times in 48 hours while google is actively crawling is detectable as a systematic pattern across the whole domain. google's helpful content documentation lists 'manipulating freshness dates artificially' as a quality signal. using the real publication date: the date the article was actually deployed: avoids this entirely."
+  - question: "if 247 articles got deindexed, can they be recovered?"
+    answer: "some can. the ones that are genuinely unique topics (not cluster variations) are recoverable through google search console url inspection and request indexing, batched at 10-15 per day. google re-evaluates and may index them if the domain has accumulated more authority since the original drop. the cluster variants are harder: google already has an indexed article representing that cluster, and the near-duplicate will keep losing the same evaluation unless it is made meaningfully different. for those, the practical options are rewriting to target a distinct angle, or consolidating into the indexed article with a 301 redirect."
 toc:
+  - { id: "the-setup", label: "the setup", depth: 2 }
   - { id: "what-the-data-showed", label: "what the data showed", depth: 2 }
   - { id: "cause-1-249-articles-in-one-day", label: "cause 1: 249 articles in one day", depth: 2 }
   - { id: "cause-2-ctr-during-the-honeymoon-window", label: "cause 2: ctr during the honeymoon window", depth: 2 }
   - { id: "cause-3-cluster-pruning", label: "cause 3: cluster pruning", depth: 2 }
   - { id: "cause-4-date-manipulation-while-google-was-crawling", label: "cause 4: date manipulation while google was crawling", depth: 2 }
-  - { id: "the-control-that-confirmed-it", label: "the control that confirmed it", depth: 2 }
-  - { id: "what-actually-fixes-it", label: "what actually fixes it", depth: 2 }
+  - { id: "what-the-data-says-about-prevention", label: "what the data says about prevention", depth: 2 }
   - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
 ---
 
-We published a content pipeline to a new domain in late April. The pipeline generates SEO articles from keyword clusters, validates quality, and publishes via GitHub pull requests to a Next.js site. On April 24 we pushed the first batch to production: 249 articles in a single day across 5 commits. Google indexed all of them within 48 hours.
+I was working on a content publishing project when I noticed the indexed page count in Search Console dropping sharply. The domain had been live a few weeks. Around 300 articles had been published before I joined. The drop started about 10 days after launch and kept going.
 
-Two weeks later, 247 of the 249 were gone.
+I spent a day investigating with a Claude session that had full access to the Git history and Search Console data. The results were precise enough to be useful beyond this specific site.
 
-I spent a day investigating with another Claude session that had access to the Git history and Search Console data. Here is what we found.
+## The setup
+
+Two distinct batches of content on the same domain, published within weeks of each other:
+
+**Bulk batch**: 249 articles published on April 24 in 5 manual commits, before the content engine was running. Dates were then modified multiple times over the following days. Google indexed all 249. Two weeks later, 247 were gone.
+
+**Engine batch**: articles published by the content engine from late April onwards, in runs of 3-5 articles at a time, with real publication dates. Every article the engine has published is still indexed.
+
+Same domain. Same technical setup. Same Next.js site. The indexing rate difference is explained entirely by how the two batches were published.
 
 ## What the data showed
 
-Google Search Console showed 247 pages in "Crawled — currently not indexed" state. No manual actions, no penalties. The pages were accessible, returned 200, and passed the URL inspection tool's eligibility check. Google had crawled them, evaluated them, and chosen not to index them.
+Google Search Console showed 247 pages in "Crawled: currently not indexed" state. No manual actions, no penalties. The pages were accessible, returned 200, and passed the URL inspection tool's check. Google had crawled them and chosen not to index them.
 
-The 2 that stayed indexed were from the April 24 batch. Both happened to be on topics with high independent search demand. The other 247 were not penalised — they were algorithmically pruned.
-
-The GSC chart showed the full shape: impressions peaked at 4,222 per day on April 27 when all 249 were indexed. By May 20 it had dropped to 509. By June 1 it was 260. The 94% drop in impressions is directly explained by going from 249 indexed pages to 2.
+The GSC impressions chart told the full shape: peak of 4,222 impressions per day on April 27 when all 249 were indexed. Down to 509 by May 20. Down to 260 by June 1. A 94% drop driven entirely by going from 249 indexed pages to 2.
 
 ## Cause 1: 249 articles in one day
 
-The Git history made this unambiguous:
+The Git history made this precise:
 
 | Commit | Articles added |
 |---|---|
@@ -62,15 +68,15 @@ The Git history made this unambiguous:
 | "Add on-device AI education article" | 1 |
 | **Total** | **249** |
 
-All 5 commits landed on April 24. Google discovered and crawled them April 25-26: a new domain that had published 249 articles overnight.
+All 5 commits on April 24. Google discovered and crawled them April 25-26: a brand new domain that had published 249 articles in a single night.
 
-Google's helpful content documentation directly addresses this: "mass-produced content by automation" is listed as a quality signal. 144 articles in a single commit is unambiguous on that dimension.
+Google's helpful content documentation lists "mass-produced content by automation" as a quality signal. 144 articles in a single commit: regardless of individual quality: reads as exactly that.
 
 ## Cause 2: CTR during the honeymoon window
 
-Google gives new pages a trial window, roughly 7-10 days, where it shows them in search results to measure whether users click. CTR during this window determines which pages survive.
+Google gives new pages a trial window of roughly 7-10 days where it shows them in results and measures engagement. CTR during this window determines which pages survive.
 
-The GSC data for the non-indexed pages during April 28 to May 5:
+GSC data for the non-indexed pages during April 28 to May 5:
 
 | Page | Impressions | Clicks | CTR |
 |---|---|---|---|
@@ -79,15 +85,13 @@ The GSC data for the non-indexed pages during April 28 to May 5:
 | mobile-apps-frontline-workers | 591 | 1 | 0.17% |
 | app-store-rejection-prevention | 551 | 1 | 0.18% |
 
-Normal CTR at position 6-7 is around 3%. These pages were getting 0.05-0.18%, roughly 20-60x below normal. Google showed them to thousands of people, almost nobody clicked, and that engagement signal drove the evaluation.
+Normal CTR at position 6-7 is around 3%. These pages were getting 0.05-0.18%, roughly 20-60x below normal. The pages that survived had CTRs of 1-5% during the same window.
 
-The pages that stayed indexed had CTRs of 1-5% during the same window.
-
-The titles and meta descriptions were the proximate cause of low CTR. Titles like "Mobile App Development for US Construction Companies: Field Apps, Safety Compliance, and AI 2026" read like a vendor brochure to someone searching "construction field service app". They described the article's contents rather than stating something useful the reader would get from clicking.
+The titles were the problem. "Mobile App Development for US Construction Companies: Field Apps, Safety Compliance, and AI 2026" describes the article. It does not give someone searching "construction field service app" a reason to click. Google showed the page to thousands of people, almost no one clicked, and the evaluation failed.
 
 ## Cause 3: cluster pruning
 
-The most striking finding was from the correlation table we built by joining the Git commit history against GSC's index status.
+The most striking finding came from joining the Git commit history against GSC's index status per cluster:
 
 | Cluster | Indexed | Total | Rate |
 |---|---|---|---|
@@ -102,53 +106,40 @@ The most striking finding was from the correlation table we built by joining the
 | Field Service / Logistics | 2 | 17 | 11% |
 | Compliance and Security | 1 | 24 | 4% |
 
-Every cluster had the same pattern. Google indexed 1-3 articles per cluster and dropped the rest. The survival rate correlated with search demand: fintech, healthcare, and logistics survived in the US industry cluster. Construction, agriculture, BPO, and hospitality did not.
+Every cluster shows the same pattern. Google indexed 1-3 articles per cluster and dropped the rest. Within each cluster, the articles targeting the highest search-demand queries survived. The rest were treated as redundant.
 
-The compliance cluster is the starkest: 24 articles published simultaneously, 1 survived (HIPAA). FERPA, FedRAMP, financial services compliance, insurance compliance. all dropped. Google picked the query with the highest search volume, indexed that article, and treated the other 23 as redundant coverage.
+The compliance cluster is the clearest example: 24 articles published simultaneously, 1 survived (HIPAA: the highest-demand query in the cluster). FERPA, FedRAMP, financial services compliance, insurance compliance: all dropped. Google picked one winner for the cluster and stopped indexing the others.
 
 <PostCallout>
-This is not a quality problem. Several of the dropped compliance articles were well-researched and substantively correct. Google did not evaluate their individual quality. It evaluated the cluster as a whole, picked a winner, and pruned the rest.
+This is not a content quality problem. Several of the dropped articles were well-researched. Google did not evaluate them individually. It evaluated the cluster as a group, picked the strongest match for the cluster's primary query, and pruned the rest as near-duplicates.
 </PostCallout>
 
 ## Cause 4: date manipulation while google was crawling
 
-The Git history revealed something we had not initially looked for: the publication dates were changed 4 times in the 48 hours after publishing, while Google was actively crawling.
+The publication dates were changed 4 times in 48 hours after publishing, while Google was actively crawling the new domain:
 
 | Date | Commit | What changed |
 |---|---|---|
 | Apr 25 | f9c9bd0 | All dates pushed back to Feb 2025 |
 | Apr 25 | c9141e2 | Same day: dates rolled back to Jan 2026 |
 | Apr 26 | 95b275b | Dates changed to Oct 2025 spread |
-| May 1 | b0334f1 | New batch: all backdated to 2025-2026 |
+| May 1 | b0334f1 | Second batch: all backdated to 2025-2026 |
 
-The intent was to make the content library look like an established site with a publishing history, not a site that had launched 249 articles overnight. The execution made things worse.
-
-Google crawls a page and stores the publication date from the article JSON-LD. When it re-crawls the same page 24 hours later and sees a different date, it stores that mismatch. When it sees 249 pages all changing their dates in the same direction on the same day, the pattern is detectable at the domain level.
+The intent was to make the content library look like it had publishing history rather than a site that launched 249 articles overnight. Google crawled the pages on April 25, then re-crawled them on April 26 and saw different datePublished values in the Article JSON-LD. Then saw them change again the following day. Across 249 pages simultaneously, this pattern is detectable at the domain level.
 
 Google's helpful content guidelines list "manipulating freshness dates artificially" as a quality signal. The commit history shows this happened to the entire batch within 48 hours of the initial crawl.
 
-The confidence on this one is lower than the others. date changes alone are common and do not reliably cause deindexing. But combined with the other 3 causes, it removed the benefit of the doubt that a new domain needs.
+## What the data says about prevention
 
-## The control that confirmed it
+The control case is in the same Git history. A run on May 4-6 published 14 articles on the same domain: small batch, no date changes after publishing. 13 of 14 are indexed. 93% rate versus 0.8% for the April batch.
 
-The May 4-6 publishing run published 14 articles. No date manipulation. Small batch. Same content pipeline, same article structure, same domain.
+The domain authority did not change between April 24 and May 4. The content quality is comparable. The only variables are batch size and date stability.
 
-13 of 14 indexed. 93% indexing rate, versus 0.8% (2/249) for the April batch.
+From the investigation, the failure modes are straightforward to avoid:
 
-The content is comparable. The domain authority did not meaningfully change between April 24 and May 4. The only differences are batch size and the absence of date manipulation. The indexing rate difference is the result.
+- Publish one article per keyword cluster per run. Google's cluster evaluation happens when multiple articles targeting the same primary intent appear simultaneously. Give it time to evaluate one before the next arrives.
+- Use the real publication date. The date the article actually deploys. No backdating to simulate publishing history.
+- Write titles for the specific query someone would type. CTR during the 7-10 day honeymoon window determines survival. A title that describes the article instead of answering the query will fail that evaluation.
+- Keep runs small. 3-5 articles, not 249. The honeymoon window needs time to do its job before the next batch competes for the same crawl attention.
 
-The May articles that published after May 15, including ones on similar topic clusters to the dropped April articles, are also holding in the index. Same topics, different publishing cadence. indexed and stable.
-
-## What actually fixes it
-
-**For future publishing:** one article per cluster per run. Publish it, let it index, let it accumulate some CTR signal, then publish the next article in that cluster. When Google evaluates the second article, the first is already established and they are treated as complementary rather than competing. The cluster pruning does not happen when Google has time to evaluate each article independently.
-
-**For the 247 dropped articles:** the ones that are genuinely unique topics are recoverable through GSC URL Inspection → Request Indexing, batched at 10-15 per day. The ones that are near-duplicate cluster variations are harder. For those, the path is either making them meaningfully different from the indexed version (unique data, different angle, different intent match) or consolidating them into the indexed article with 301 redirects.
-
-**For the domain authority gap:** the site has no external backlinks from outside its own ecosystem. Internal links from indexed pages help but the authority dilutes across too many hops to reach deep articles. Even 5 relevant external backlinks to the domain would change the indexing dynamics significantly, based on the pattern we saw in the data and confirmed by multiple SEO community reports of the same experience.
-
-The CTR issue is the most directly fixable right now. Rewriting titles to match actual search queries. not describing the article but stating the specific thing the reader gets. is what determines whether pages survive the next honeymoon window.
-
-## Frequently asked questions
-
-The FAQs are rendered below from the post frontmatter.
+These are not speculative. Each one maps directly to a measurable cause in the data above. I've been building a content engine that operates on exactly these constraints. I'll write about how that's designed separately.
