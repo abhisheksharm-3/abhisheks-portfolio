@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {}
 
   const { frontmatter } = post
-  const ogUrl = `/og?title=${encodeURIComponent(frontmatter.title)}&tag=${encodeURIComponent(frontmatter.tags[0] ?? "")}`
+  const ogUrl = `/og?title=${encodeURIComponent(frontmatter.title)}&tag=${encodeURIComponent(frontmatter.tags[0] ?? "")}&subhead=${encodeURIComponent(frontmatter.subhead)}&date=${encodeURIComponent(new Date(frontmatter.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }))}&min=${frontmatter.readingTime}`
 
   return {
     title: `${frontmatter.title} | Abhishek Sharma`,
