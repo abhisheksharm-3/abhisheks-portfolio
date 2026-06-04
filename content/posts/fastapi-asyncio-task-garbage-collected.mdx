@@ -1,0 +1,165 @@
+---
+title: "why fastapi background tasks disappear mid-execution"
+subhead: "asyncio.create_task() holds a weak reference to the task object. if nothing else does, the gc cancels the task silently while it's still running."
+date: "2026-06-04"
+keywords:
+  - "asyncio create_task garbage collected fastapi"
+  - "fastapi background task disappears silently"
+  - "asyncio weak reference task cancelled python"
+  - "fire and forget async task python fastapi"
+  - "python asyncio task destroyed but pending"
+  - "fastapi langgraph background pipeline execution"
+tags: ["backend", "python"]
+readingTime: 7
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "does asyncio.create_task() guarantee a task runs to completion?"
+    answer: "no. asyncio.create_task() schedules a coroutine as a Task and returns a Task object, but the event loop holds only a weak reference to it. if your code drops the returned Task object and no other strong reference exists, the garbage collector can collect and cancel the task before it completes. the Python docs include an explicit warning: 'Save a reference to the result of this function, to avoid a task disappearing mid-execution. The event loop only keeps weak references to tasks.' the event loop will not keep the task alive on your behalf."
+  - question: "does this affect FastAPI's built-in BackgroundTasks?"
+    answer: "no. FastAPI's BackgroundTasks runs its tasks after the response is sent, managed through the ASGI machinery rather than asyncio.create_task(). the GC problem only affects tasks you create yourself with asyncio.create_task() or asyncio.ensure_future(). if you're spawning tasks directly inside route handlers or startup events, you're exposed to the weak reference issue. if you're using add_background_task() from the BackgroundTasks dependency, you're not."
+  - question: "how do you detect this in production without asyncio debug mode?"
+    answer: "the most reliable signal is a run record that transitions to a started state and then never updates: no completion, no failure, no error log. the task stops without any exception because GC cancellation doesn't surface in the calling code. in development, PYTHONASYNCIODEBUG=1 will produce a 'Task was destroyed but it is pending!' warning at process shutdown, which confirms the issue. in production, you need run-state heartbeats or a watchdog that flags runs that haven't progressed past a timeout window."
+  - question: "what happens to fire_task tasks when FastAPI shuts down?"
+    answer: "on shutdown, the event loop cancels all pending tasks with CancelledError. if your background coroutine allocates resources (database connections, open files, external sessions), handle cancellation with a try/finally or except CancelledError block, and always re-raise CancelledError after cleanup so the event loop can complete its cancellation sequence. you can also register a shutdown handler that calls asyncio.wait(_active_tasks, timeout=N) to drain in-flight tasks before the process exits, though tasks that exceed the timeout will still be cancelled."
+toc:
+  - { id: "the-pipeline-trigger-pattern", label: "the pipeline trigger pattern", depth: 2 }
+  - { id: "what-silent-cancellation-looks-like", label: "what silent cancellation looks like", depth: 2 }
+  - { id: "why-asyncio-drops-the-task", label: "why asyncio drops the task", depth: 2 }
+  - { id: "the-fire-task-pattern", label: "the fire_task pattern", depth: 2 }
+  - { id: "task-lifecycle-and-shutdown", label: "task lifecycle and shutdown", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+---
+
+I was building the execution layer for an autonomous content pipeline: a FastAPI service that received a run trigger, launched a LangGraph graph execution, and returned immediately while the pipeline ran in the background. The trigger endpoint worked. The 202 response came back. The dashboard showed the run as started. Then nothing. No completion event, no error, no log after a certain point. Just silence.
+
+The run record stayed in a `started` state indefinitely. No exception in the logs, no database error, no LangGraph checkpoint failure. The pipeline had simply stopped existing at some point after the request handler returned.
+
+## The pipeline trigger pattern
+
+The standard pattern for fire-and-forget background work in an async FastAPI service is to call `asyncio.create_task()` inside a route handler, return a response immediately, and let the task run independently. This is the right shape for work that outlives the HTTP request. the handler doesn't block, the client gets a fast response, and the event loop processes the background task concurrently with subsequent requests.
+
+The trigger endpoint looked like this:
+
+```python
+# pipeline/router.py
+
+@router.post("/orgs/{org_id}/runs", status_code=202)
+async def trigger_pipeline_run(org_id: str, db: AsyncSession = Depends(get_db)):
+    run = await create_run(db, org_id)
+    asyncio.create_task(execute_pipeline(org_id, run.id))
+    return {"run_id": run.id, "status": "started"}
+```
+
+`execute_pipeline` is a long-running coroutine: it initializes a LangGraph graph, runs through research, writing, validation, and publishing phases, and takes anywhere from 5 to 20 minutes. The handler creates the task without awaiting it and returns the run ID immediately. This is the correct approach for this problem. The bug is not in the structure but in a detail that isn't visible here.
+
+## What silent cancellation looks like
+
+The diagnostic trail for a GC-cancelled task looks like any other silent failure: logs appear for the first few operations, then stop cleanly with no error. No stack trace. No `CancelledError` logged anywhere. The database record shows `started` until you manually update it.
+
+The absence of an error is what makes this confusing. A task cancelled by the garbage collector doesn't raise an exception in the calling code. the calling code has already returned and there is no awaiter left to receive one. The task object gets collected, its coroutine gets cleaned up, and the event loop moves on without recording anything useful.
+
+Running with asyncio debug mode enabled surfaces the warning that confirms what happened:
+
+```
+PYTHONASYNCIODEBUG=1 uvicorn main:app
+```
+
+```
+Task was destroyed but it is pending!
+task: <Task pending coro=<execute_pipeline() running at pipeline/execution.py:47>>
+```
+
+This message appears at process shutdown when the event loop finalizes, not at the moment of collection. In production, without debug mode, you won't see it at all. The only runtime signal is a run that never completes and no error to chase.
+
+## Why asyncio drops the task
+
+The Python asyncio documentation includes a warning that's easy to read past: "Save a reference to the result of this function, to avoid a task disappearing mid-execution. The event loop only keeps weak references to tasks."
+
+The event loop maintains a weak reference to every task it schedules. Weak references don't prevent garbage collection. When the GC runs and the only remaining reference to an object is a weak reference, the object gets collected. For tasks, collection means the coroutine gets finalized and the task is cancelled before it finishes.
+
+When you write `asyncio.create_task(execute_pipeline(org_id, run.id))` without storing the return value, the Task object is created, scheduled, and immediately orphaned. Python has no strong reference to it. The event loop's weak reference is the only one that exists. At some point before the coroutine finishes, the GC runs, finds no strong references, and collects the task.
+
+The timing is non-deterministic, which is why this fails inconsistently. In development with low memory pressure, the GC may not run between task creation and completion, so the pipeline appears to work. Under production load, the GC runs more aggressively, and the collection window is much harder to avoid. The same problem affects `asyncio.ensure_future()`, which is an older spelling of the same operation.
+
+## The fire_task pattern
+
+The fix is to hold a strong reference to every created task for its full lifetime. A module-level set handles this cleanly: add the task on creation, remove it via a done callback when the task finishes. Any code path that needs fire-and-forget task creation goes through this utility instead of calling `asyncio.create_task()` directly.
+
+```python
+# pipeline/tasks.py
+from __future__ import annotations
+
+import asyncio
+from collections.abc import Coroutine
+from typing import Any
+
+_active_tasks: set[asyncio.Task[Any]] = set()
+
+
+def fire_task(coro: Coroutine[Any, Any, Any], name: str | None = None) -> asyncio.Task[Any]:
+    task = asyncio.create_task(coro, name=name)
+    _active_tasks.add(task)
+    task.add_done_callback(_active_tasks.discard)
+    return task
+
+
+def active_task_count() -> int:
+    return len(_active_tasks)
+```
+
+`add_done_callback` fires when the task completes, is cancelled, or raises an exception. `set.discard` removes the task without raising if it's already absent. The set holds a strong reference to every in-flight task, preventing GC, and releases it automatically when the task exits.
+
+The trigger endpoint becomes:
+
+```python
+# pipeline/router.py
+from pipeline.tasks import fire_task
+
+@router.post("/orgs/{org_id}/runs", status_code=202)
+async def trigger_pipeline_run(org_id: str, db: AsyncSession = Depends(get_db)):
+    run = await create_run(db, org_id)
+    fire_task(execute_pipeline(org_id, run.id), name=f"pipeline:{org_id}:{run.id}")
+    return {"run_id": run.id, "status": "started"}
+```
+
+The `name` parameter on `asyncio.create_task()` makes tasks identifiable in `asyncio.all_tasks()` output. When you call `asyncio.all_tasks()` in a debugger or health endpoint, named tasks look like `pipeline:org_abc:run_xyz` instead of `execute_pipeline`, which is useful when multiple pipeline runs are in flight simultaneously.
+
+Every call site that previously used raw `asyncio.create_task()` (scheduled runs, retry handlers, trend-watch jobs, background metrics refreshes) goes through `fire_task` instead. The set becomes the single source of truth for all in-flight background work across the service.
+
+## Task lifecycle and shutdown
+
+Tasks created through `fire_task` run until their coroutine returns or until the event loop is closed. On FastAPI shutdown, the event loop cancels all pending tasks with `CancelledError`. If your pipeline allocates resources (database connections, open files, external API sessions), handle cancellation explicitly:
+
+```python
+async def execute_pipeline(org_id: str, run_id: str) -> None:
+    async with get_pipeline_session() as session:
+        try:
+            await run_pipeline_graph(session, org_id, run_id)
+        except asyncio.CancelledError:
+            await mark_run_interrupted(session, run_id)
+            raise  # always re-raise CancelledError
+```
+
+Re-raising `CancelledError` after cleanup matters. Swallowing it prevents the event loop from completing its cancellation sequence correctly, which can cause the process to hang on exit.
+
+If you need the application to drain in-flight tasks before exiting rather than cancelling them mid-run, register a shutdown handler:
+
+```python
+# main.py
+from pipeline.tasks import _active_tasks
+
+@app.on_event("shutdown")
+async def drain_background_tasks() -> None:
+    if _active_tasks:
+        await asyncio.wait(_active_tasks, timeout=30)
+```
+
+This waits up to 30 seconds for running tasks to finish naturally before the process exits. Tasks that exceed the timeout are cancelled by the event loop when it closes. For a pipeline that runs for 10+ minutes, 30 seconds won't complete a full run, but it's long enough to finish in-progress database writes and leave run state in a consistent condition.
+
+---
+
+The `fire_task` pattern is not a workaround for a Python bug. It's the correct way to use `asyncio.create_task()` for work that has no awaiter. The asyncio documentation describes the weak reference behavior explicitly. The practical problem is that the naive usage looks correct and often works during development, where GC pressure is low enough that tasks complete before they're collected. The production failure is hard to anticipate from local testing alone.
+
+The same principle applies anywhere you create tasks without storing them: `asyncio.ensure_future()`, task groups where not all tasks are joined, and any framework that exposes raw task creation. Anything you expect to keep running needs a strong reference.
