@@ -1,16 +1,16 @@
 ---
-title: "fixing tts false interrupts in react native with android aec"
-subhead: "rms amplitude detection fires on the device's own tts audio. switching to AudioSource.VOICE_COMMUNICATION enables hardware aec and gives you clean mic input."
+title: "react native tts false interrupts and synthesis latency"
+subhead: "rms fires on speaker output. VOICE_COMMUNICATION fixes android; whisper VoiceChat handles ios. piper: xnnpack + warmup. kokoro: forward() not stream()."
 date: "2026-05-08"
 keywords:
   - "react native hardware aec voice interruption"
   - "AudioSource VOICE_COMMUNICATION react native android"
   - "react native tts interruption detection false positive"
-  - "android AcousticEchoCanceler react native module"
-  - "on-device ai voice loop react native android"
   - "rms amplitude detection tts speaker bleed android"
-tags: ["mobile", "android"]
-readingTime: 8
+  - "ios AVAudioSession VoiceChat mode react native whisper"
+  - "react native piper sherpa onnx xnnpack latency"
+tags: ["mobile", "android", "ios"]
+readingTime: 14
 type: "technical"
 searchIntent: "informational"
 draft: false
@@ -19,16 +19,23 @@ faqs:
     answer: "when you record with AudioSource.MIC or AudioSource.DEFAULT, the audio buffer includes everything the microphone transducer picks up, including sound from the device's own speaker. during tts playback the speaker emits audio that reaches the microphone at -20 to -30 dB relative to the original signal, which is still above any practical interrupt threshold. the microphone has no way to distinguish your voice from the device's own output. you need hardware-level cancellation, not a smarter threshold."
   - question: "what does AudioSource.VOICE_COMMUNICATION do differently from AudioSource.MIC?"
     answer: "AudioSource.VOICE_COMMUNICATION (value 7 in MediaRecorder.AudioSource) activates the device's hardware Acoustic Echo Cancellation processor before the audio stream reaches your app. the AEC maintains a reference signal of what the speaker is currently playing and subtracts it from the microphone input in firmware. what your AudioRecord buffer receives is microphone audio with the speaker echo removed. your voice is preserved. the tts playback audio is not. this runs in device firmware, not in your app, so it adds no CPU overhead and works even during heavy on-device inference."
+  - question: "how does ios handle echo cancellation for voice interrupts?"
+    answer: "on iOS, whisper.rn's transcribeRealtime accepts an audioSessionOnStartIos configuration. setting mode to VoiceChat instructs AVAudioSession to apply hardware AEC before samples reach the microphone buffer. since whisper already has the AVAudioSession configured for PlayAndRecord, the same session controls both playback and capture. VoiceChat mode causes the OS to subtract the playback reference from mic input before Whisper or the JS-side AudioRecorder ever sees the samples."
   - question: "do you still need a threshold check after switching to VOICE_COMMUNICATION?"
-    answer: "yes, but the threshold serves a different purpose. hardware aec removes speaker bleed, not ambient room noise. a threshold check after switching to VOICE_COMMUNICATION answers 'is the user actually speaking' rather than 'is something making noise'. you can set it lower than you would with a raw mic source. values around 0.01 to 0.02 rms work well in quiet environments. add a sustained-frames check requiring 2-3 consecutive frames above threshold to reject brief noise spikes like keyboard clicks or notification sounds."
-  - question: "is AcousticEchoCanceler the same as using AudioSource.VOICE_COMMUNICATION?"
-    answer: "they overlap but are separate. AudioSource.VOICE_COMMUNICATION is an audio source selector that tells Android to route the input through the hardware AEC chain. AcousticEchoCanceler is a software AudioEffect that can be attached to an AudioRecord session as an additional processing stage. in practice, AudioSource.VOICE_COMMUNICATION alone is sufficient for tts interruption detection. AcousticEchoCanceler is useful as a fallback on older devices where the hardware AEC chain may not be activated automatically by the audio source selector."
+    answer: "yes, but the threshold serves a different purpose. hardware aec removes speaker bleed, not ambient room noise. a threshold check after switching answers 'is the user actually speaking' rather than 'is something making noise'. values around 0.02 rms work well in quiet environments. add a wall-clock hold requiring the signal to stay above threshold for at least 200ms to reject brief spikes like keyboard clicks or notification sounds."
+  - question: "why can't you use nnapi or coreml as the onnx provider for piper?"
+    answer: "nnapi causes dimension mismatches on VITS TTS models (sherpa-onnx issues #958 and #2443). coreml triggers shape inference errors with VITS and Kokoro models (#1792). xnnpack is the optimized CPU backend and is stable on both platforms. with 6 threads and a warmup synthesis at initialization, it delivers near-zero first-audio latency on 2022 midrange hardware."
+  - question: "why use forward() instead of stream() for kokoro on android?"
+    answer: "react-native-executorch's stream() hangs indefinitely on Android after streamStop(true). the native code kills the generation thread but never signals the JS async iterator as done, leaving isGenerating pinned to true forever and blocking any subsequent speak() call. forward() resets isGenerating in its own finally block, so cancellation is safe: poll isGenerating until the in-flight sentence finishes, then start the next forward() fresh."
 toc:
   - { id: "the-conversational-mode-setup", label: "the conversational mode setup", depth: 2 }
   - { id: "why-rms-detection-fails-during-tts", label: "why rms detection fails during tts", depth: 2 }
   - { id: "the-fix-audiosource-voice-communication", label: "the fix: AudioSource.VOICE_COMMUNICATION", depth: 2 }
   - { id: "the-android-native-module", label: "the android native module", depth: 2 }
-  - { id: "wiring-it-to-react-native", label: "wiring it to react native", depth: 2 }
+  - { id: "ios-aec-via-whisper-voicechat", label: "ios: aec via whisper voicechat", depth: 2 }
+  - { id: "the-interrupt-service-and-the-loop", label: "the interrupt service and the loop", depth: 2 }
+  - { id: "piper-synthesis-latency-xnnpack-and-warm-weights", label: "piper synthesis latency: xnnpack and warm weights", depth: 2 }
+  - { id: "kokoro-forward-per-sentence-and-the-drain-queue", label: "kokoro: forward() per sentence and the drain queue", depth: 2 }
   - { id: "what-to-keep-after-the-fix", label: "what to keep after the fix", depth: 2 }
   - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
 ---
@@ -39,34 +46,31 @@ The last piece was interruption detection. I implemented it with RMS amplitude m
 
 The assistant was interrupting itself. Every TTS sentence crossed the amplitude threshold, fired the interrupt handler, stopped playback, and started waiting for user input. The conversational loop would spin on interrupted half-sentences until I manually stopped it.
 
-The root cause was one line. The fix was one line. Finding the root cause took most of a day.
+The root cause was one line. The fix was one line. Finding the root cause took most of a day. Making synthesis fast enough that the loop actually felt responsive took longer.
 
 ## The conversational mode setup
 
 The setup was a continuous loop:
 
 1. Microphone recording starts
-2. User speaks, Whisper transcribes
+2. User speaks, Whisper (via `whisper.rn` running ggml models on-device) transcribes
 3. LLM generates a response
-4. Kokoro TTS synthesises and plays the response sentence by sentence
+4. TTS synthesises and plays the response sentence by sentence
 5. While TTS plays, microphone monitors for user interruption
 6. If interruption detected, stop TTS, go to step 2
 
-Step 5 is where the problem was. The microphone monitoring runs concurrently with TTS playback. On Android, recording and playback can operate simultaneously when the audio session is configured for `PlayAndRecord`. The recording was running. The TTS was playing. The microphone was picking up the TTS.
+The app supports three TTS backends: Android's native `TextToSpeech` for guaranteed availability, Piper (a VITS model served through `react-native-sherpa-onnx`), and Kokoro (an ExecuTorch model through `react-native-executorch`). The interrupt detection problem affects all three equally; it lives one layer below the synthesis engine in the microphone recording path. Step 5 is where the problem was.
+
+The microphone monitoring runs concurrently with TTS playback. On Android, recording and playback can operate simultaneously when the audio session is configured for `PlayAndRecord`. The recording was running. The TTS was playing. The microphone was picking up the TTS.
 
 ## Why rms detection fails during tts
 
 RMS (root mean square) amplitude is the standard first approach for voice activity detection:
 
 ```kotlin
-private fun calculateRms(buffer: ShortArray, readSize: Int): Float {
-    var sum = 0.0
-    for (i in 0 until readSize) {
-        val sample = buffer[i] / 32768.0
-        sum += sample * sample
-    }
-    return sqrt(sum / readSize).toFloat()
-}
+var sumSq = 0.0
+for (i in 0 until read) sumSq += (buf[i] / 32768.0) * (buf[i] / 32768.0)
+val rms = sqrt(sumSq / read).toFloat()
 ```
 
 When the audio source is `MediaRecorder.AudioSource.MIC`, the buffer contains everything the microphone transducer picks up. On a phone held in hand or sitting on a desk, speaker audio reaches the microphone at roughly -20 to -30 dB. At normal TTS playback volume, that is still well above a 0.02 RMS threshold.
@@ -87,7 +91,7 @@ What your `AudioRecord` buffer receives after switching: microphone audio with t
 // Before: raw mic, picks up speaker audio during TTS
 val audioRecord = AudioRecord(
     MediaRecorder.AudioSource.MIC,
-    SAMPLE_RATE_HZ,
+    SAMPLE_RATE,
     AudioFormat.CHANNEL_IN_MONO,
     AudioFormat.ENCODING_PCM_16BIT,
     bufferSize
@@ -96,7 +100,7 @@ val audioRecord = AudioRecord(
 // After: hardware AEC enabled, speaker audio cancelled before buffer delivery
 val audioRecord = AudioRecord(
     MediaRecorder.AudioSource.VOICE_COMMUNICATION,
-    SAMPLE_RATE_HZ,
+    SAMPLE_RATE,
     AudioFormat.CHANNEL_IN_MONO,
     AudioFormat.ENCODING_PCM_16BIT,
     bufferSize
@@ -107,138 +111,131 @@ That one-line change to the audio source constant eliminated every false interru
 
 ## The android native module
 
-The interruption detector lives in a Kotlin native module exposed to React Native. It runs `AudioRecord` in a background thread and emits events to JS when the user speaks.
+The interruption detector lives in a Kotlin native module called `AudioAECMonitorModule`. Its API is a one-shot promise: `start()` opens an `AudioRecord` session, polls for speech, and resolves the promise exactly once when speech is detected. `stop()` tears down the session and abandons any pending promise. This is intentional: the JS layer only ever needs one notification per TTS utterance, not a stream of amplitude events.
 
 ```kotlin
-class VoiceInterruptModule(reactContext: ReactApplicationContext) :
-    ReactContextBaseJavaModule(reactContext) {
+class AudioAECMonitorModule(
+    private val reactContext: ReactApplicationContext,
+) : ReactContextBaseJavaModule(reactContext) {
 
     companion object {
-        const val NAME = "VoiceInterruptModule"
-        private const val SAMPLE_RATE_HZ = 16000
-        private const val INTERRUPT_THRESHOLD = 0.015f
-        private const val SUSTAINED_FRAMES_REQUIRED = 3
-        private const val EVENT_INTERRUPT = "onVoiceInterrupt"
+        private const val NAME = "AudioAECMonitorModule"
+        private const val SAMPLE_RATE = 16_000
+        private const val CHANNEL = AudioFormat.CHANNEL_IN_MONO
+        private const val ENCODING = AudioFormat.ENCODING_PCM_16BIT
+        private const val SPEECH_THRESHOLD = 0.02f
+        private const val HOLD_MS = 200L
     }
 
-    override fun getName() = NAME
-
-    private var audioRecord: AudioRecord? = null
+    @Volatile private var recorder: AudioRecord? = null
+    @Volatile private var aec: AcousticEchoCanceler? = null
+    @Volatile private var ns: NoiseSuppressor? = null
+    @Volatile private var running = false
     private var monitorThread: Thread? = null
-    @Volatile private var isMonitoring = false
+
+    override fun getName(): String = NAME
 
     @ReactMethod
-    fun startMonitoring(promise: Promise) {
-        if (isMonitoring) {
-            promise.resolve(null)
-            return
-        }
-
-        val bufferSize = AudioRecord.getMinBufferSize(
-            SAMPLE_RATE_HZ,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT
-        )
-
-        val record = AudioRecord(
-            MediaRecorder.AudioSource.VOICE_COMMUNICATION, // hardware AEC
-            SAMPLE_RATE_HZ,
-            AudioFormat.CHANNEL_IN_MONO,
-            AudioFormat.ENCODING_PCM_16BIT,
-            bufferSize * 4
-        )
-
-        if (record.state != AudioRecord.STATE_INITIALIZED) {
-            promise.reject("INIT_FAILED", "AudioRecord failed to initialise")
-            return
-        }
-
-        // Attach software AEC as a fallback layer on devices where
-        // VOICE_COMMUNICATION alone does not fully activate hardware AEC.
-        if (AcousticEchoCanceler.isAvailable()) {
-            AcousticEchoCanceler.create(record.audioSessionId)
-        }
-
-        audioRecord = record
-        isMonitoring = true
-        record.startRecording()
-
-        monitorThread = Thread {
-            val buffer = ShortArray(bufferSize)
-            var sustainedFrames = 0
-
-            while (isMonitoring) {
-                val readSize = record.read(buffer, 0, buffer.size)
-                if (readSize <= 0) continue
-
-                val amplitude = calculateRms(buffer, readSize)
-
-                if (amplitude > INTERRUPT_THRESHOLD) {
-                    sustainedFrames++
-                    if (sustainedFrames >= SUSTAINED_FRAMES_REQUIRED) {
-                        emitInterruptEvent()
-                        sustainedFrames = 0
-                    }
-                } else {
-                    sustainedFrames = 0
-                }
+    fun start(promise: Promise) {
+        stopInternal()
+        try {
+            val minBuf = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL, ENCODING)
+            if (minBuf == AudioRecord.ERROR_BAD_VALUE || minBuf == AudioRecord.ERROR) {
+                promise.reject("AEC_INIT", "AudioRecord not supported on this device")
+                return
             }
-        }.also { it.start() }
+            val bufSize = minBuf.coerceAtLeast(4096)
 
-        promise.resolve(null)
-    }
+            val rec = AudioRecord(
+                MediaRecorder.AudioSource.VOICE_COMMUNICATION,
+                SAMPLE_RATE, CHANNEL, ENCODING, bufSize,
+            )
+            if (rec.state != AudioRecord.STATE_INITIALIZED) {
+                rec.release()
+                promise.reject("AEC_INIT", "AudioRecord failed to initialize")
+                return
+            }
 
-    @ReactMethod
-    fun stopMonitoring(promise: Promise) {
-        isMonitoring = false
-        monitorThread?.join(500)
-        monitorThread = null
-        audioRecord?.stop()
-        audioRecord?.release()
-        audioRecord = null
-        promise.resolve(null)
-    }
+            // Hardware AEC removes speaker echo from the mic signal.
+            if (AcousticEchoCanceler.isAvailable()) {
+                val canceler = AcousticEchoCanceler.create(rec.audioSessionId)
+                if (canceler != null) { canceler.enabled = true; aec = canceler }
+            }
 
-    private fun calculateRms(buffer: ShortArray, readSize: Int): Float {
-        var sum = 0.0
-        for (i in 0 until readSize) {
-            val sample = buffer[i] / 32768.0
-            sum += sample * sample
+            // Noise suppressor removes steady-state ambient noise (HVAC, fans).
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN
+                && NoiseSuppressor.isAvailable()) {
+                val suppressor = NoiseSuppressor.create(rec.audioSessionId)
+                if (suppressor != null) { suppressor.enabled = true; ns = suppressor }
+            }
+
+            recorder = rec
+            running = true
+            rec.startRecording()
+
+            monitorThread = Thread {
+                val buf = ShortArray(bufSize / 2)
+                var aboveThresholdSince = -1L
+
+                while (running) {
+                    val read = rec.read(buf, 0, buf.size)
+                    if (read <= 0) continue
+
+                    var sumSq = 0.0
+                    for (i in 0 until read) sumSq += (buf[i] / 32768.0) * (buf[i] / 32768.0)
+                    val rms = sqrt(sumSq / read).toFloat()
+
+                    val now = System.currentTimeMillis()
+                    if (rms > SPEECH_THRESHOLD) {
+                        if (aboveThresholdSince < 0) aboveThresholdSince = now
+                        else if (now - aboveThresholdSince >= HOLD_MS) {
+                            stopInternal()
+                            promise.resolve(null)
+                            return@Thread
+                        }
+                    } else {
+                        aboveThresholdSince = -1L
+                    }
+                }
+            }.also { it.isDaemon = true; it.start() }
+
+        } catch (e: SecurityException) {
+            promise.reject("AEC_PERMISSION", "Microphone permission denied")
+        } catch (e: Exception) {
+            promise.reject("AEC_ERROR", e.message ?: "Unknown error")
         }
-        return sqrt(sum / readSize).toFloat()
-    }
-
-    private fun emitInterruptEvent() {
-        reactApplicationContext
-            .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-            .emit(EVENT_INTERRUPT, null)
     }
 
     @ReactMethod
-    fun addListener(eventName: String) {}
+    fun stop() { stopInternal() }
 
-    @ReactMethod
-    fun removeListeners(count: Int) {}
+    private fun stopInternal() {
+        running = false
+        monitorThread?.interrupt()
+        monitorThread = null
+        aec?.release(); aec = null
+        ns?.release(); ns = null
+        try { recorder?.stop() } catch (_: Exception) {}
+        recorder?.release(); recorder = null
+    }
+
+    override fun invalidate() { stopInternal(); super.invalidate() }
 }
 ```
 
-A few things worth noting in this implementation:
+The hold detection uses wall-clock time rather than frame counting. `aboveThresholdSince` is a timestamp and the speech event fires once the signal has stayed above `SPEECH_THRESHOLD` for 200 consecutive milliseconds. Frame counting would produce different durations depending on the buffer size the OS allocates, which varies across devices. Wall-clock time is consistent regardless of buffer shape.
 
-`SUSTAINED_FRAMES_REQUIRED = 3` requires 3 consecutive frames above threshold before firing. With a 16kHz sample rate and a typical `AudioRecord` buffer of 1024 samples, 3 frames is about 192ms. This rejects brief spikes from keyboard sounds or notification audio without adding perceptible response latency.
+`NoiseSuppressor` runs alongside `AcousticEchoCanceler`. AEC removes speaker echo. `NoiseSuppressor` removes steady-state ambient noise: HVAC, desk fans, road noise from a car mount. After both effects are applied, the buffer contains the microphone signal with two categories of unwanted audio removed. The 0.02 threshold sits comfortably above the residual floor in most environments.
 
-The `AcousticEchoCanceler.create(record.audioSessionId)` call attaches a software echo cancellation layer as a belt-and-suspenders measure. On most modern Android devices, `VOICE_COMMUNICATION` activates hardware AEC automatically. On older devices or heavily customised OEM audio stacks, it may not. The software AEC adds another cancellation pass at minimal CPU cost.
+The monitoring thread is marked as a daemon thread. The JVM will not wait for it to finish when the app process exits normally, which prevents hangs during app shutdown if `stopInternal` is called late in the lifecycle.
 
-The threshold of `0.015f` is lower than what you'd use with a raw mic source. With hardware AEC, ambient noise is the main remaining signal, not speaker bleed, so you can afford a more sensitive threshold.
-
-## Wiring it to React Native
-
-Register the module in the package class:
+Register the module in the package class and add it to `MainApplication.kt`:
 
 ```kotlin
-class VoiceInterruptPackage : ReactPackage {
+class AudioAECMonitorPackage : ReactPackage {
     override fun createNativeModules(
         reactContext: ReactApplicationContext
-    ): List<NativeModule> = listOf(VoiceInterruptModule(reactContext))
+    ): List<NativeModule> = listOf(AudioAECMonitorModule(reactContext))
 
     override fun createViewManagers(
         reactContext: ReactApplicationContext
@@ -246,41 +243,266 @@ class VoiceInterruptPackage : ReactPackage {
 }
 ```
 
-Add it to `MainApplication.kt`:
-
 ```kotlin
-override fun getPackages(): List<ReactPackage> =
-    PackageList(this).packages.apply {
-        add(VoiceInterruptPackage())
-    }
-```
-
-On the JS side, subscribe to the interrupt event before TTS starts and unsubscribe after:
-
-```typescript
-import { NativeEventEmitter, NativeModules } from 'react-native'
-
-const { VoiceInterruptModule } = NativeModules
-const emitter = new NativeEventEmitter(VoiceInterruptModule)
-
-async function startConversationalMode() {
-  await VoiceInterruptModule.startMonitoring()
-
-  const subscription = emitter.addListener('onVoiceInterrupt', () => {
-    ttsEngine.stop()
-    subscription.remove()
-    VoiceInterruptModule.stopMonitoring()
-    startListeningForNextTurn()
-  })
+// MainApplication.kt
+override val reactHost: ReactHost by lazy {
+    getDefaultReactHost(
+        context = applicationContext,
+        packageList = PackageList(this).packages.apply {
+            add(NativeTTSPackage())
+            add(AudioAECMonitorPackage())
+        },
+    )
 }
 ```
 
-The `RECORD_AUDIO` permission must be requested before calling `startMonitoring()`. On Android 13 and above, this is `Manifest.permission.RECORD_AUDIO`, the same permission used for any microphone access.
+## iOS: aec via whisper voicechat
+
+iOS does not have an equivalent of `AudioSource.VOICE_COMMUNICATION`. The AEC configuration lives in `AVAudioSession` mode rather than in the recording source. Setting the session mode to `VoiceChat` before opening the microphone instructs the OS to maintain a speaker reference and subtract it from mic input, the same firmware-level operation that `VOICE_COMMUNICATION` triggers on Android.
+
+The app uses `whisper.rn` for on-device transcription. The `transcribeRealtime` API accepts an `audioSessionOnStartIos` configuration that sets the `AVAudioSession` category and mode before the session opens:
+
+```typescript
+const { stop, subscribe } = await whisperContext.transcribeRealtime({
+  language: 'en',
+  realtimeAudioSec: 30,
+  realtimeAudioSliceSec: 2, // 1s is too short on Android, causes immediate empty completion
+  audioSessionOnStartIos: {
+    category: 'PlayAndRecord',
+    options: ['AllowBluetooth', 'DefaultToSpeaker'],
+    mode: 'VoiceChat',   // hardware AEC, same mechanism Siri and FaceTime use
+  },
+  audioSessionOnStopIos: 'restore',
+});
+```
+
+`VoiceChat` mode is what Siri, FaceTime, and ChatGPT Voice Mode use on iOS. The OS handles the playback reference subtraction before any samples reach `whisper.rn`'s buffer or the `AudioRecorder` used for interrupt detection. No additional iOS-specific native module is needed.
+
+The interrupt monitor on iOS uses `react-native-audio-api`'s `AudioRecorder` directly in JavaScript. Since the `AVAudioSession` is already in `VoiceChat` mode when Whisper's `transcribeRealtime` is active, echo cancellation is active when the JS recorder opens the microphone. The same 0.02 threshold and 200ms wall-clock hold apply, identical logic to the Kotlin module applied in JS against an already-cancelled buffer.
+
+## The interrupt service and the loop
+
+Both platform paths are wrapped in a single `AudioLevelMonitor` service. The UI layer calls `start(onSpeechDetected)` and `stop()` without knowing which platform it is on:
+
+```typescript
+// src/services/audioLevelMonitor.ts
+
+const SPEECH_THRESHOLD = 0.02;
+const HOLD_MS = 200;
+
+class AudioLevelMonitor {
+  private recorder: AudioRecorder | null = null;
+  private aboveThresholdSince: number | null = null;
+  private nativeActive = false;
+
+  start(onSpeechDetected: () => void): void {
+    this.stop();
+    if (Platform.OS === 'android') {
+      this.startNative(onSpeechDetected);
+    } else {
+      this.startJS(onSpeechDetected);
+    }
+  }
+
+  private startNative(onSpeechDetected: () => void): void {
+    const mod = NativeModules.AudioAECMonitorModule as NativeAECModule | undefined;
+    if (!mod) {
+      // Native module absent, fall back to JS monitor (dev builds without native rebuild)
+      this.startJS(onSpeechDetected);
+      return;
+    }
+    this.nativeActive = true;
+    mod.start().then(() => {
+      if (this.nativeActive) { this.nativeActive = false; onSpeechDetected(); }
+    }).catch(() => { this.nativeActive = false; });
+  }
+
+  private startJS(onSpeechDetected: () => void): void {
+    this.aboveThresholdSince = null;
+    const rec = new AudioRecorder();
+    rec.onAudioReady(
+      { sampleRate: 16000, bufferLength: 512, channelCount: 1 },
+      (event) => {
+        const samples = event.buffer.getChannelData(0);
+        let sumSq = 0;
+        for (let i = 0; i < samples.length; i++) sumSq += samples[i] * samples[i];
+        const rms = Math.sqrt(sumSq / samples.length);
+        const now = Date.now();
+        if (rms > SPEECH_THRESHOLD) {
+          if (!this.aboveThresholdSince) this.aboveThresholdSince = now;
+          else if (now - this.aboveThresholdSince >= HOLD_MS) {
+            this.stopJS(); onSpeechDetected();
+          }
+        } else { this.aboveThresholdSince = null; }
+      },
+    );
+    rec.start();
+    this.recorder = rec;
+  }
+
+  stop(): void {
+    if (this.nativeActive) {
+      this.nativeActive = false;
+      (NativeModules.AudioAECMonitorModule as NativeAECModule | undefined)?.stop();
+    }
+    this.stopJS();
+  }
+}
+
+export const audioLevelMonitor = new AudioLevelMonitor();
+```
+
+The `useAgenticLoop` hook wires this into the TTS lifecycle. The monitor starts when `isSpeaking` becomes true and stops the moment it becomes false. When speech is detected, the hook stops TTS, waits 150ms for the audio system to settle, then opens the mic for the next turn:
+
+```typescript
+useEffect(() => {
+  if (!isActive || !isSpeaking) {
+    audioLevelMonitor.stop();
+    return;
+  }
+  audioLevelMonitor.start(() => {
+    useTTSStore.getState().stop();
+    setTimeout(() => {
+      if (!stateRef.current.isRecording) tryStartRecording();
+    }, 150);
+  });
+  return () => audioLevelMonitor.stop();
+}, [isActive, isSpeaking]);
+```
+
+After TTS finishes normally (not interrupted), an 800ms timer fires before the next recording cycle. This gap clears room reverberation that persists briefly after playback stops. Even with AEC active, the speaker physically rings for a fraction of a second after the last sample plays.
+
+The loop also uses text-based VAD to decide when the user has finished speaking. Whisper fires partial results every 2 seconds (`realtimeAudioSliceSec: 2`). `[BLANK_AUDIO]` tokens indicate silence in that slice. After real speech has been detected in the current recording, one blank slice triggers `stopRecording()`. Two seconds of trailing silence is enough to assume the utterance is complete. If the recording has been all-blank since it started, two blank slices (4 seconds) trigger a discard and restart, preventing the loop from hanging on ambient noise.
+
+## Piper synthesis latency: xnnpack and warm weights
+
+Interrupt detection is only half the problem. If TTS synthesis is slow, the loop feels unresponsive even when interruptions work correctly. The user interrupts, the mic opens, Whisper transcribes, the LLM responds. Then there is a long silence before the first audio plays.
+
+Piper runs as a VITS model via `react-native-sherpa-onnx`. The ONNX inference provider matters significantly. Three candidates exist: `nnapi`, `coreml`, and `xnnpack`. NNAPI causes dimension mismatches on VITS TTS models (sherpa-onnx issues #958 and #2443). CoreML triggers shape inference errors with VITS and Kokoro models (#1792). `xnnpack` is the optimized CPU backend and is stable on both platforms:
+
+```typescript
+function getProviderCandidates(): string[] {
+  // nnapi crashes on TTS with dimension mismatches (sherpa-onnx #958, #2443).
+  // coreml has shape inference errors with Kokoro/VITS (sherpa-onnx #1792).
+  // xnnpack is the optimized CPU backend and is stable on both platforms.
+  if (Platform.OS === 'ios') return ['xnnpack', 'cpu'];
+  if (Platform.OS === 'android') return ['xnnpack', 'cpu'];
+  return ['cpu'];
+}
+```
+
+After the engine initializes, a warmup synthesis runs immediately before any user-facing `speak()` call:
+
+```typescript
+private async _warmUpStreamingTts(): Promise<void> {
+  const tts = this._streamTts;
+  if (!tts) return;
+
+  await new Promise<void>((resolve, reject) => {
+    tts.generateSpeechStream(
+      'Hello, how are you today?',
+      { sid: this._getSidForVoice(), speed: 1.0 },
+      { onEnd: () => resolve(), onError: event => reject(new Error(event.message)) },
+    ).catch(reject);
+  });
+}
+```
+
+This ensures the ONNX model weights are loaded into the CPU cache and xnnpack's internal buffers are allocated before the first real `speak()` call arrives. On 2022 midrange Android hardware (Cortex-A55/A78 class SoCs), first-audio latency after warmup is near zero: the model emits audio chunks almost immediately after `generateSpeechStream` is called, because the streaming VITS decoder starts producing samples before synthesis is complete and the first chunk is scheduled to `audioCtx.currentTime` for immediate playback.
+
+The `AudioContext` must be pinned to the model's native sample rate (22,050 Hz for Piper):
+
+```typescript
+if (!this._audioCtx || this._audioCtx.state === 'closed') {
+  this._audioCtx = new AudioContext({ sampleRate });
+}
+```
+
+`react-native-audio-api` on Android does not resample: it plays buffers against the native audio rate and ignores any mismatch between the AudioContext sample rate and the buffer sample rate. A 22,050 Hz buffer in a 44,100 Hz context plays at 2x speed. Pinning the context to `sampleRate` (from `tts.getSampleRate()` after initialization) prevents this. The value is cached in `_sampleRate` so no native round-trip is needed on each `speak()` call.
+
+Short consecutive sentences are merged before synthesis. Sentences shorter than 70 characters get merged into the next one, replacing sentence-final punctuation with a comma at the join point:
+
+```typescript
+const MIN_MERGE_LEN = 70;
+let mergeBuf = '';
+for (const s of rawSentences) {
+  mergeBuf = mergeBuf ? `${mergeBuf.replace(/[;!?,.]+$/, ',')} ${s}` : s;
+  if (mergeBuf.length >= MIN_MERGE_LEN) {
+    mergedSentences.push(mergeBuf);
+    mergeBuf = '';
+  }
+}
+```
+
+The merging keeps per-unit synthesis time proportional to audio duration, which keeps AudioContext scheduling gap-free. When sentences are very short, synthesis time exceeds playback duration and the scheduler has to wait. Merging avoids that.
+
+## Kokoro: forward() per sentence and the drain queue
+
+Kokoro uses `react-native-executorch`'s ExecuTorch runtime rather than ONNX, and runs at 24,000 Hz. The `useTextToSpeech` hook exposes two synthesis modes: `stream()` (an async iterator over audio chunks) and `forward()` (synthesises one text input, returns a `Float32Array`). `stream()` looks like the natural choice for sentence-by-sentence synthesis, but it has a critical bug on Android.
+
+After calling `streamStop(true)` to cancel an in-flight stream, the native code kills the generation thread but never signals the JS async iterator as done. The `for-await` loop hangs indefinitely, leaving `isGenerating` pinned to `true`. Any subsequent `speak()` call that checks `isGenerating` before issuing the next `forward()` either blocks forever or throws `"currently generating"`.
+
+`forward()` does not have this problem. It resets `isGenerating` in its own `finally` block regardless of how it exits. The bridge uses `forward()` one sentence at a time, with a poll loop to wait for any in-flight call to complete before issuing the next:
+
+```typescript
+// forward()'s finally calls setIsGenerating(false) as an async React state update,
+// so the re-render may not be visible yet on the next event-loop tick.
+if (ttsRef.current.isGenerating) {
+  const settle = Date.now() + 500;
+  while (ttsRef.current.isGenerating && Date.now() < settle) {
+    await new Promise<void>(r => setTimeout(r, 10));
+  }
+}
+const raw = await ttsRef.current.forward({ text: sentence, speed });
+```
+
+The gap between sentences is eliminated by overlapping synthesis with playback. Completed sentence chunks are pushed onto a queue; a `drainQueue` loop pulls from the queue and calls `playSamples()` concurrently with the synthesis loop, so sentence N+1 is being generated while sentence N plays:
+
+```typescript
+const drainQueue = async (): Promise<void> => {
+  while (playQueueRef.current.length > 0 && isMine() && !isStoppedRef.current) {
+    const samples = playQueueRef.current.shift()!;
+    await playSamples(ctx, samples);
+  }
+};
+
+// After each forward() returns:
+playQueueRef.current.push(samples);
+if (!drainHolder.p) {
+  drainHolder.p = drainQueue().finally(() => { drainHolder.p = null; });
+}
+```
+
+On 2022 midrange hardware, Kokoro synthesis takes 2-3 seconds per sentence. A five-sentence response plays without gaps because the synthesis time for each sentence roughly matches the playback duration of the previous one; the drain queue stays one sentence ahead.
+
+ExecuTorch native callbacks return JSI host objects that look like `Float32Array` but lack a real `ArrayBuffer`. Calling `copyToChannel` on them throws `"getPropertyAsObject: property 'buffer' is undefined"` on Android. A copy into a standard JS-heap `Float32Array` is required before scheduling audio:
+
+```typescript
+function toJsFloat32Array(src: Float32Array): Float32Array {
+  const dst = new Float32Array(src.length);
+  dst.set(src);
+  return dst;
+}
+
+const samples = trimTrailingSilence(toJsFloat32Array(raw as unknown as Float32Array));
+```
+
+`trimTrailingSilence` walks backward from the end of each chunk and removes trailing samples below 0.001 amplitude, provided at least 1,200 samples would be removed. ExecuTorch's Kokoro implementation pads the tail of each `forward()` result with silence, and without trimming, inter-sentence gaps accumulate visibly across longer responses.
+
+`source.onEnded` does not fire reliably on Android. `playSamples` uses a 300ms grace timeout as a fallback so the drain loop always makes progress:
+
+```typescript
+const durationMs = (samples.length / 24000) * 1000;
+const timeout = setTimeout(() => { cleanup(); resolve(); }, durationMs + 300);
+source.onEnded = () => { clearTimeout(timeout); cleanup(); resolve(); };
+```
+
+The `AudioContext` is created at 24,000 Hz to match Kokoro's output rate, for the same reason as Piper: mismatched rates on Android produce incorrect playback speed without an error.
 
 ## What to keep after the fix
 
-After switching to `VOICE_COMMUNICATION`, I removed the adaptive threshold logic that was trying to track background noise levels, the 500ms cooldown after TTS starts that was meant to skip the initial speaker bleed, and a gain normalisation pass that was compensating for mic-to-speaker distance variation on different devices.
+After the AEC changes landed, several workarounds became dead weight. The adaptive threshold logic that tracked background noise levels was removed. The 500ms cooldown after TTS starts (meant to skip initial speaker bleed) was removed. The gain normalisation pass that compensated for mic-to-speaker distance variation on different devices was removed. All of those were patches on top of the wrong audio source.
 
-All of those were patches on top of the wrong audio source. With hardware AEC active, the only thing that reaches the RMS check is genuine ambient audio. A fixed threshold and a sustained-frames check handle it correctly.
+What remains is three things: the 0.02 threshold (now serving as a floor for genuine ambient noise rather than a ceiling below speaker bleed), the 200ms hold (rejecting keyboard clicks and notification sounds), and the 800ms post-TTS delay before the next recording cycle (clearing room reverberation that persists briefly after playback stops).
 
-The conversational loop ran cleanly after the change. The user could interrupt mid-sentence. The assistant stopped, listened, and responded. No false triggers in testing across 3 devices: a Xiaomi 23129RN51H (Android 15), a Pixel 6, and a mid-range Samsung. The one-line audio source change was the entire fix.
+The conversational loop ran cleanly after all of these changes. The assistant speaks, the user can interrupt mid-sentence, playback stops within 150ms, and the mic opens for the next turn. Piper responds in near-zero time after the warmup fires. Kokoro's first sentence takes 2-3 seconds on 2022 midrange hardware, but the drain queue keeps subsequent sentences gap-free. Testing covered a Nothing Phone 1 running Android 15, a Pixel 6, and a mid-range Samsung.
