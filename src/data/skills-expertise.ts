@@ -14,7 +14,8 @@ import {
 export const HERO_SKILLS = [
   "Frontend Engineering (React & Next.js)",
   "Backend & APIs (Node.js, Go, FastAPI)",
-  "Cloud & DevOps (AWS, Docker, Firebase)",
+  "AI Agents & Pipelines (LangGraph, LiteLLM)",
+  "Cloud & DevOps (AWS, GCP, Docker, Firebase)",
   "Mobile Development (Jetpack Compose, React Native)",
 ] as const;
 

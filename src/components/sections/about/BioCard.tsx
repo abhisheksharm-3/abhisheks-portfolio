@@ -38,11 +38,19 @@ export const BioCard = () => {
             what i&apos;m into right now
           </p>
           <p>
-            currently at wednesday: building an autonomous ai content pipeline
-            (langgraph + fastapi + pgvector), contributed to off grid&apos;s tts
-            and hands-free voice chat loop with hardware aec, and a
-            multi-tenant lms with full aws infra. when i&apos;m not doing that,
-            i&apos;m tinkering on side projects.
+            forward deployed engineer at{" "}
+            <a
+              href="https://wednesday.is"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-foreground/55 underline underline-offset-2 hover:text-foreground/80 transition-colors duration-200"
+            >
+              wednesday.is
+            </a>
+            : own problems from discovery to deployment. right now that means
+            an autonomous ai content pipeline (langgraph + fastapi + pgvector),
+            off grid&apos;s tts and voice loop with hardware aec, and a
+            multi-tenant lms on aws.
           </p>
         </div>
 

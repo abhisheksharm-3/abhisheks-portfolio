@@ -118,9 +118,9 @@ export const HeroName: React.FC = () => (
  */
 export const HeroDescription: React.FC = () => {
   const descriptionLines = [
-    { text: "full-stack dev", gradient: true },
-    { text: "building things by day,", gradient: false },
-    { text: "exploring ideas past midnight", gradient: false },
+    { text: "software engineer", gradient: true },
+    { text: "ai systems, mobile builds,", gradient: false },
+    { text: "side projects past midnight.", gradient: false },
   ];
 
   return (
@@ -155,12 +155,19 @@ export const HeroDescription: React.FC = () => {
         transition={{ duration: 0.8, delay: 1.6 }}
         className="text-sm sm:text-base text-foreground/50 font-light leading-relaxed max-w-lg"
       >
-        cs grad who started coding in{" "}
-        <span className="text-foreground/70">8th grade</span>. i&apos;ve built
-        everything from{" "}
-        <span className="text-primary/80">ai scheduling apps </span>
-        to <span className="text-primary/80">minimal mobile tools</span>. i make
-        stuff that feels smooth, intentional, and a little clever.
+        started coding in{" "}
+        <span className="text-foreground/70">8th grade</span>. forward
+        deployed engineer at{" "}
+        <a
+          href="https://wednesday.is"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-foreground/70 underline underline-offset-2 hover:text-primary/80 transition-colors duration-200"
+        >
+          wednesday.is
+        </a>
+        : own it from discovery to deployment. i write about the parts
+        that don&apos;t show up in the docs.
       </motion.p>
     </div>
   );
