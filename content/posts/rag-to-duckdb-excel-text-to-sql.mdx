@@ -1,0 +1,231 @@
+---
+title: "the data wasn't in documents"
+subhead: "designed a pageindex tree index and graphrag pipeline for organizational knowledge. discovered the data was all excel rows. rebuilt around duckdb and text-to-sql."
+date: "2026-06-08"
+keywords:
+  - "text to sql natural language excel python"
+  - "duckdb natural language query llm"
+  - "graphrag vs text to sql structured data"
+  - "pageindex graphrag excel spreadsheet fails"
+  - "excel files natural language query claude"
+  - "parquet duckdb analytics pipeline python"
+tags: ["backend", "python", "ai"]
+readingTime: 11
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "why convert Excel to Parquet instead of querying it directly?"
+    answer: "pandas can read .xlsx files directly, but DuckDB's native Parquet reader is significantly faster for analytical queries because Parquet is a columnar format. DuckDB uses predicate pushdown on Parquet: it reads only the columns and row groups that the query actually needs, rather than deserialising the entire file. for a 50,000-row feedback tracker with a date range filter and a GROUP BY, the difference is between a 40-50ms response and a 2-4 second one. the conversion is a one-line call on ingest: df.to_parquet(path). after that, the original Excel file is still there unchanged, and the Parquet file is only ever read by DuckDB."
+  - question: "what happens when Claude generates invalid SQL?"
+    answer: "the first layer of defence is the prompt itself: passing column names, inferred types, and unique values for categorical columns makes hallucinated column names very rare. when a query does fail, duckdb raises a descriptive exception that includes which column or function is the problem. the retry flow sends the original question, the failed SQL, and the DuckDB error message back to Claude and asks it to correct the query. in practice this handles the most common failures: a slightly wrong column name, a date format mismatch between the data and the filter, or a function that DuckDB spells differently from Postgres. a second failure is surfaced to the user rather than retried again, so a persistent schema issue gets exposed rather than silently swallowed."
+  - question: "how do you handle Excel files with merged cells or inconsistent formatting?"
+    answer: "merged cells are the most common structural problem in real-world spreadsheets. pandas.read_excel() with the default engine will forward-fill the first value from a merged cell range into subsequent rows, which produces a usable DataFrame in most cases but silently changes the data. the ingest pipeline adds a post-read validation step: if more than 20% of rows in any column contain the same value, that column is flagged in the catalog with a 'possible merged cell or low-variance' warning. the operator can then inspect it before queries use it. inconsistent headers  -  two rows of merged header cells, metadata rows before the actual data  -  are handled by scanning the first 10 rows to find where the first fully-populated row is, then using that as the header. this catches most real-world formatting patterns without requiring manual cleanup."
+  - question: "can this work alongside prose documents if the organisation has both?"
+    answer: "yes, and most organisations do have both. the routing layer is a single Claude call that receives a description of every indexed source  -  both sheet schemas and document trees  -  and picks the relevant ones for a given question. quantitative questions route to sheets and get answered with DuckDB. narrative questions route to documents and get answered with section retrieval. compound questions that need both  -  'which locations have the most complaints, and what do our process docs say we should do about it?'  -  trigger both paths, and the response synthesises the SQL result with the retrieved document sections. the two pipelines share the same catalog and the same agent tool surface; the only difference is what the tool does when it runs."
+  - question: "why DuckDB instead of SQLite for this use case?"
+    answer: "SQLite is a row-oriented database optimised for transactional workloads  -  lookups by primary key, small updates, concurrent reads. DuckDB is a columnar analytical database optimised for the queries that come from natural language questions over spreadsheet data: GROUP BY, aggregations, window functions, time-series computations, and multi-file joins. for a question like 'show CSAT by location for the last 90 days, month by month', SQLite scans every row in the table regardless of the date filter. DuckDB pushes the date predicate into the Parquet reader and only deserialises matching row groups. DuckDB also has first-class support for reading Parquet, CSV, and JSON files directly in SQL without importing them into a database first, which maps cleanly onto the per-file storage layout of a synced Excel directory."
+toc:
+  - { id: "what-the-data-actually-was", label: "what the data actually was", depth: 2 }
+  - { id: "why-pageindex-and-graphrag-fail-on-rows", label: "why pageindex and graphrag fail on rows", depth: 2 }
+  - { id: "the-catalog-layer", label: "the catalog layer", depth: 2 }
+  - { id: "parquet-and-duckdb", label: "parquet and duckdb", depth: 2 }
+  - { id: "the-two-step-query-flow", label: "the two-step query flow", depth: 2 }
+  - { id: "the-sync-agent", label: "the sync agent", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "langgraph-hitl-postgres-checkpoints-sse"
+    title: "langgraph hitl with postgres checkpoints and sse"
+    readingTime: 13
+    date: "2026-06-05"
+  - slug: "fastapi-asyncio-task-garbage-collected"
+    title: "why fastapi background tasks disappear mid-execution"
+    readingTime: 7
+    date: "2026-06-04"
+---
+
+The first week I designed a fairly sophisticated knowledge system: a PageIndex-style vectorless tree index for navigating prose documents without embeddings, a GraphRAG entity extraction layer to build a knowledge graph of how things connected across sources, and an LLM agent with tools to traverse both. I evaluated Microsoft's GraphRAG, the PageIndex filesystem approach for scaling to tens of thousands of documents, and hybrid query routing between the two indexes. A reasonable architecture for the problem as stated.
+
+When I actually looked at the data, almost all of it was local Excel files  -  row-level customer feedback entries, CSAT scores by location and month, QA audit outputs by region. Neither a tree index nor a knowledge graph helps when the knowledge isn't in documents. It's in rows. The right tool is not a retrieval system. It's a query engine.
+
+The production system ended up being three pieces: a sync agent that watches a directory for changed Excel files, an ingestion step that converts sheets to Parquet and generates a schema catalog, and a chat layer where Claude picks relevant sheets from the catalog, writes DuckDB SQL, and executes it against the actual data. No vector database. No embedding model. No chunking. The answers are exact because they come from running real queries on real rows.
+
+## What the data actually was
+
+Fragmented organizational knowledge can mean a lot of things. Prose reports, meeting notes, internal wikis. What I found was almost entirely tabular: customer feedback trackers, satisfaction scores by location and month, QA audit outputs, regional performance summaries. Each as a local `.xlsx` file, typically with multiple tabs, sitting on a shared network drive.
+
+The questions the team needed to answer were things like:
+
+- Which locations generate the most complaints this month?
+- Show the CSAT trend for the last 90 days
+- What are the top complaint categories in a given region?
+- Which initiatives historically improved satisfaction scores?
+
+These look like knowledge retrieval questions. They are not. "Which locations generate the most complaints" is `SELECT location, COUNT(*) FROM feedback WHERE date >= ... GROUP BY location ORDER BY count DESC`. The answer is a number and a ranking, not a passage of text. It doesn't exist in any row until a query computes it across all of them.
+
+## Why PageIndex and GraphRAG fail on rows
+
+PageIndex builds a hierarchical tree index from document structure: headings, sections, page ranges. The retrieval agent navigates that tree to find relevant sections and fetches exact page content. It achieves 98.7% accuracy on structured document benchmarks precisely because documents have natural hierarchy that the tree exploits. Spreadsheets have no hierarchy. A feedback tracker with 50,000 rows and 6 columns has no sections, no headings, no logical structure to parse into a tree. PageIndex has nothing to index.
+
+GraphRAG extracts named entities and typed relationships from text: `Bangalore -> has issue -> Response Time`, `Proactive Check-in -> improved -> CSAT Score`. It builds a knowledge graph where queries traverse relationship edges rather than searching for similar passages. For spreadsheet data, the entity extraction step does produce nodes, `"Bangalore"` and `"Rating"` are recognizable entities from a feedback row. But it loses everything quantitative in the process. The graph knows that Bangalore appears frequently alongside low ratings. It cannot tell you that there were 847 such rows in March, or that the count is up 34% month-over-month. The graph encodes the structure of knowledge. The numbers that make the knowledge actionable don't survive the extraction.
+
+Both approaches solve a retrieval problem: finding the right content. Operational spreadsheet data has a query problem: the content is fully present, uniformly structured, and the challenge is computing over it correctly. Retrieval returns approximate matches. The required answers are exact aggregations.
+
+**The correct answer is a number.** For document retrieval, returning the most relevant passage is appropriate  -  the answer might be phrased differently across sources. For tabular data, an approximate answer is a wrong answer. If there are 847 complaints from Bangalore in March, the answer is 847. "Around 800" or "several rows mentioning Bangalore in Q1" is not a degraded version of the right answer. It is a wrong answer with false confidence attached.
+
+## The catalog layer
+
+The insight that makes text-to-SQL tractable at scale is separating two distinct operations: figuring out which datasets are relevant to a question, and querying those datasets with SQL.
+
+At ingest time, for every sheet in every uploaded Excel file, the pipeline generates a catalog entry: column names, inferred types, row count, a sample of five rows, unique values for any column with fewer than 50 distinct values (location names, category labels, status codes), and a date range if any datetime column is present. It then makes a single Claude call to produce a one- or two-sentence plain-English description of what the sheet contains and what questions it can answer.
+
+```python
+def build_catalog_entry(
+    df: pd.DataFrame, sheet_name: str, filename: str
+) -> dict:
+    schema = {
+        "columns": list(df.columns),
+        "dtypes": df.dtypes.astype(str).to_dict(),
+        "row_count": len(df),
+        "sample_rows": df.head(5).to_dict("records"),
+        "unique_values": {
+            col: df[col].dropna().unique().tolist()[:20]
+            for col in df.columns
+            if df[col].nunique() < 50
+        },
+    }
+
+    date_cols = df.select_dtypes(include=["datetime64"]).columns
+    if len(date_cols) > 0:
+        schema["date_range"] = {
+            "from": df[date_cols[0]].min().isoformat(),
+            "to": df[date_cols[0]].max().isoformat(),
+        }
+
+    description = claude.ask(f"""
+        Excel sheet "{sheet_name}" from file "{filename}".
+        Columns: {schema['columns']}
+        Sample rows: {schema['sample_rows'][:3]}
+        Row count: {schema['row_count']}
+
+        Write two sentences: what data does this sheet contain,
+        and what kinds of business questions can it answer?
+    """)
+
+    return {**schema, "description": description}
+```
+
+This runs once per sheet at ingest. The description is regenerated only if the column structure changes on a subsequent sync, which for operational spreadsheets rarely happens  -  rows accumulate but the schema stays stable. The total catalog for 50 sheets fits well under 10k tokens and lands in a single context window.
+
+At query time the agent receives the full catalog  -  sheet names, filenames, row counts, and one-line descriptions  -  and picks the relevant sheets before any SQL is generated or any Parquet file is opened. For most questions this is a single sheet. For cross-dimensional questions it might be two.
+
+## Parquet and DuckDB
+
+Parquet is a columnar binary format. The conversion at ingest is one line:
+
+```python
+df.to_parquet(f"data/{source_id}/{tab_name}.parquet", index=False)
+```
+
+The original Excel file is untouched. The Parquet file is only ever read by DuckDB. It exists because DuckDB's Parquet reader uses predicate pushdown  -  when a query filters by date range and groups by location, DuckDB reads only the row groups and columns that the query actually touches, not the entire file. For a 50,000-row feedback tracker, that is the difference between a 40ms response and a 3-second scan.
+
+DuckDB runs as a Python library inside the same process as the FastAPI application. There is no server, no connection string, no port. The entire in-process setup is:
+
+```python
+import duckdb
+
+def run_query(sql: str) -> pd.DataFrame:
+    return duckdb.execute(sql).fetchdf()
+```
+
+DuckDB SQL references the Parquet file directly by path. This makes the generated SQL self-contained  -  no table import step, no database state to maintain:
+
+```sql
+SELECT location, COUNT(*) AS complaints
+FROM 'data/a3f4c8/Feedback.parquet'
+WHERE strftime(date_col, '%Y-%m') = '2025-06'
+GROUP BY location
+ORDER BY complaints DESC
+```
+
+Multi-file joins work the same way. DuckDB resolves each path independently at execution time:
+
+```sql
+SELECT f.location,
+       AVG(f.rating)    AS avg_csat,
+       COUNT(q.issue)   AS qa_flags
+FROM 'data/a3f4c8/Feedback.parquet'   f
+LEFT JOIN 'data/b7e291/QA_Audit.parquet' q
+  ON f.location = q.location
+GROUP BY f.location
+```
+
+## The two-step query flow
+
+Each user question makes two Claude calls.
+
+**Call 1  -  sheet selection.** Claude receives the full catalog and the question. It returns the identifiers of the relevant sheets. The prompt is minimal because the catalog descriptions do the work  -  a sheet described as "row-level customer feedback with rating, location, category, and comment fields; covers Jan 2024 to present" is unambiguous when a user asks about complaint volumes.
+
+**Call 2  -  SQL generation.** For each selected sheet, Claude receives the column list, inferred types, unique values for every categorical column, a sample of rows, and the question. The sample rows are what make the SQL reliable in practice  -  Claude can see that `Location` contains `"Bangalore"` and `"Hyderabad"` rather than inferring the format from the column name alone, and it can see that `Rating` is an integer from 1 to 5 rather than a decimal or a string.
+
+```python
+sql = claude.ask(f"""
+    Write a DuckDB SQL query to answer: "{question}"
+
+    Parquet file path: '{parquet_path}'
+    Columns and types: {schema['dtypes']}
+    Categorical values: {schema['unique_values']}
+    Sample rows: {schema['sample_rows']}
+
+    Return only the SQL statement. Use strftime() for date filtering.
+    Reference the parquet path directly in the FROM clause.
+    Do not add LIMIT unless the question asks for top N results.
+""")
+
+result = duckdb.execute(sql).fetchdf()
+```
+
+The result type determines how the response renders. A single-row single-column result becomes a stat card. A multi-row result with a numeric aggregation column paired with a categorical column becomes a bar chart. A date column paired with a numeric column becomes a line chart. Raw text rows  -  individual comments, notes fields  -  get summarized by a third Claude call before display.
+
+When a query fails, the retry flow sends the original question, the failed SQL, and the DuckDB error message back to Claude and asks for a correction. DuckDB's error messages are specific enough that a single retry resolves most failures: a slightly wrong column name, a date format mismatch, a function spelled differently from Postgres. A second failure is surfaced to the user rather than retried again.
+
+## The sync agent
+
+The files live on a local machine and a shared network drive. Rather than building a manual upload interface, a Python script runs on schedule and pushes only changed files to the backend.
+
+The agent compares two signals per file: OS modification time and an MD5 hash of the file contents. The mtime check is cheap  -  a single `os.path.getmtime()` call. Only files whose mtime has changed since the last run get hashed. Only files whose hash differs from the stored hash get re-uploaded. On networked drives, backup tools and version-control software routinely touch timestamps without changing file contents; the hash comparison prevents unnecessary re-ingestion.
+
+```python
+def should_sync(path: str, state: dict) -> bool:
+    current_mtime = os.path.getmtime(path)
+    stored = state.get(path, {})
+
+    if stored.get("mtime") == current_mtime:
+        return False  # mtime unchanged, skip hash entirely
+
+    current_hash = file_hash(path)
+    return stored.get("hash") != current_hash
+
+
+def file_hash(path: str) -> str:
+    h = hashlib.md5()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
+```
+
+One filter that caused failures before it was added: Excel creates a temporary lock file prefixed with `~$` whenever a workbook is open. The sync agent tries to read it on the next cycle and gets a permission error. Filtering any path whose filename starts with `~$` is sufficient.
+
+The sync state is a JSON file written next to the script. If it gets deleted, the next run re-processes everything  -  a safe degraded mode that costs a few extra Claude description calls on the next cycle but doesn't break anything downstream.
+
+The script runs via the OS scheduler. On Windows, Task Scheduler triggers it every 15 minutes. The script runs, finishes, and exits. Compared to keeping a daemon running, this is more resilient across machine restarts, user sessions, and the irregular sleep cycles that happen on corporate laptops.
+
+## What I would change
+
+**Column-level schema drift detection.** The sync logic currently re-processes a file whenever any content changes. If someone adds a column to a feedback tracker  -  a common occurrence as teams add new fields to their forms  -  the Parquet schema changes silently. Existing SQL queries that reference the old column list execute fine until they don't, and the failure mode is a DuckDB error at query time rather than a warning at sync time. Adding a check that compares the current column list against the stored catalog on each sync would catch this immediately and trigger both a catalog regeneration and a visible warning before a user hits the failure.
+
+**Query result caching.** Operational questions recur. "Top complaints this month" gets asked multiple times per day against the same unchanged data. Caching `(normalized_question_hash, parquet_hash) → result` with a short TTL would eliminate redundant DuckDB executions for identical queries between file updates. The hash comparison on sync already gives you the invalidation signal for free  -  if the Parquet file hash changes, the cache entries for that sheet are stale.
+
+**Explicit multi-sheet join prompting.** The current SQL generation prompt works well for single-sheet questions and occasionally produces correct joins for two-sheet questions, but it is not reliable for cross-file joins when the schemas have no obvious shared key. Detecting at the sheet-selection stage that two schemas likely need joining  -  the same location-name values appearing in both `unique_values` dictionaries, for example  -  and constructing the join prompt explicitly would make compound questions consistently answerable rather than hit-or-miss.
