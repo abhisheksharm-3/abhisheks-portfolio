@@ -10,28 +10,29 @@ keywords:
   - "stripe subscription past_due dunning configuration"
   - "stripe test clock ach settlement simulation"
 tags: ["backend", "payments"]
-readingTime: 11
+readingTime: 12
 type: "technical"
 searchIntent: "informational"
 draft: false
 faqs:
   - question: "why provision access on payment_intent.processing instead of payment_intent.succeeded for ACH?"
-    answer: "ACH debits settle in several business days, not instantly. If you wait for payment_intent.succeeded, a customer who just paid waits days before getting access to what they bought, which is unacceptable for a high-value subscription. ACH has a high eventual success rate, so the practical pattern is optimistic provisioning: grant access when the PaymentIntent enters the processing state, then handle the rare payment_intent.payment_failed event that arrives days later as a recovery case rather than a denial. The risk you accept is a short window where a customer who will ultimately fail their debit has access, which for high-touch accounts is preferable to making every paying customer wait for settlement."
+    answer: "ACH debits settle in two to five business days, not instantly. If you wait for payment_intent.succeeded, a customer who just paid waits days before getting access to what they bought, which is unacceptable for a high-value subscription. ACH has a high eventual success rate, so the practical pattern is optimistic provisioning: grant access the moment the PaymentIntent enters the processing state, then treat the rare payment_intent.payment_failed that arrives days later as a recovery case rather than a denial. The risk you accept is a short window where a customer who will ultimately fail their debit has access, which for high-touch accounts is preferable to making every paying customer wait for settlement."
   - question: "what is the difference between payment_intent.processing and payment_intent.succeeded?"
-    answer: "For instant payment methods like cards, a confirmed PaymentIntent moves straight to succeeded. For delayed-notification methods like ACH Direct Debit (us_bank_account), confirmation moves the PaymentIntent to processing, meaning the debit has been submitted to the bank but has not cleared. The PaymentIntent then transitions to succeeded when the funds settle, typically four to five business days later, or to a failed state if the debit is returned for insufficient funds or a closed account. Your webhook handler has to treat processing as the provisioning signal and succeeded as confirmation, rather than treating succeeded as the moment access begins."
+    answer: "For instant payment methods like cards, a confirmed PaymentIntent moves straight to succeeded. For delayed-notification methods like ACH Direct Debit (us_bank_account), confirmation moves the PaymentIntent to processing, meaning the debit has been submitted to the bank but has not cleared. The PaymentIntent then transitions to succeeded when the funds settle, typically two to five business days later, or to a failed state if the debit is returned for insufficient funds or a closed account. Your webhook handler has to treat processing as the earliest provisioning signal and succeeded as confirmation, rather than treating succeeded as the moment access begins."
   - question: "how do you stop Stripe from automatically canceling a subscription when an ACH payment fails?"
-    answer: "By default, Stripe's dunning settings retry failed payments on a schedule and can eventually cancel or mark the subscription unpaid. For a high-value tier where a failed debit should trigger manual recovery rather than automatic teardown, you change the subscription lifecycle setting so that an exhausted retry sequence leaves the subscription in past_due rather than canceling it. The subscription stays past_due, the customer keeps access through a defined grace window, and an operations or sales team handles recovery directly. A separate cron job is what eventually suspends access if the grace window expires without resolution, so the cancellation decision lives in your code, not in Stripe's automatic dunning."
-  - question: "why does the same Concierge credit get allocated twice on re-subscription?"
-    answer: "If credit allocation is keyed on the subscription creation event, then a customer who cancels and re-subscribes inside the same annual term triggers a second full allocation, because a new subscription object was created. The fix is to key entitlement on the billing term rather than the subscription object. A 360-day entitlement guard checks whether a full allocation has already been granted within the current annual window for that customer, and skips the grant if one exists. This decouples how many Stripe subscription objects a customer churns through from how many times they receive their annual credit allotment."
+    answer: "Configure Stripe's dunning so an exhausted retry sequence leaves the subscription in past_due rather than canceling or marking it unpaid. The subscription stays past_due and Stripe stops retrying, but it never tears anything down on its own. Access during the grace window is driven by your own database state, and a separate scheduled job is the only thing that revokes access once the grace deadline passes. Critically, that teardown job only zeroes the account in your own database and emails the operations team; it does not cancel the Stripe subscription. A human cancels the Stripe side manually, so the irreversible billing action is never automated."
+  - question: "how do you avoid provisioning a subscription twice when both a synthesized and a real invoice event fire?"
+    answer: "Optimistic provisioning forwards a synthesized invoice.payment_succeeded event the moment ACH enters processing, and Stripe also delivers the real invoice.payment_succeeded days later at settlement. Both carry the same invoice id. The provisioning handler is made idempotent on that invoice id: the first event grants the allotment, and the settlement-time event plus any webhook redelivery become no-ops because that invoice has already been provisioned. Stripe delivers webhooks at least once rather than exactly once, so any handler that grants tokens or credits has to be idempotent on something stable like the invoice id, never on the fact that an event arrived."
   - question: "how do you test ACH settlement timelines without waiting days for real payments?"
-    answer: "Stripe Test Clocks let you create a customer and subscription bound to a simulated clock, then advance time programmatically to fast-forward through the ACH settlement window, grace periods, and renewal cycles. You can simulate a debit entering processing, advance the clock several days, and trigger either a success or a failure to validate that your provisioning, grace-entry, and suspension logic all fire correctly. Test Clocks are essential here because the bugs in delayed-settlement billing live in the gaps between events that are days apart in production, and there is no other practical way to exercise a two-month grace period end to end during development."
+    answer: "Stripe Test Clocks let you bind a test customer and subscription to a simulated clock, then advance time programmatically to fast-forward through the ACH settlement window, the grace period, and renewal cycles. You can simulate a debit entering processing, advance the clock several days, and trigger either a success or a failure to verify that provisioning, grace entry, and the teardown cron all fire correctly. Test Clocks are essential here because the bugs in delayed-settlement billing live in the gaps between events that are days apart in production, and there is no other practical way to exercise a two-month grace period end to end during development."
 toc:
   - { id: "what-ach-changes-about-billing", label: "what ACH changes about billing", depth: 2 }
-  - { id: "provision-on-processing-not-succeeded", label: "provision on processing, not succeeded", depth: 2 }
-  - { id: "the-grace-period-for-failures", label: "the grace period for failures", depth: 2 }
-  - { id: "the-entitlement-guard", label: "the entitlement guard", depth: 2 }
-  - { id: "the-payment-method-leak", label: "the payment method leak", depth: 2 }
-  - { id: "testing-with-test-clocks", label: "testing with test clocks", depth: 2 }
+  - { id: "provisioning-before-the-money-arrives", label: "provisioning before the money arrives", depth: 2 }
+  - { id: "scoping-the-whole-path-to-one-tier", label: "scoping the whole path to one tier", depth: 2 }
+  - { id: "the-grace-period-that-survives-a-retry", label: "the grace period that survives a retry", depth: 2 }
+  - { id: "why-a-cron-suspends-not-the-webhook", label: "why a cron suspends, not the webhook", depth: 2 }
+  - { id: "provisioning-exactly-once", label: "provisioning exactly once", depth: 2 }
+  - { id: "testing-events-that-are-days-apart", label: "testing events that are days apart", depth: 2 }
   - { id: "what-i-would-change", label: "what i would change", depth: 2 }
   - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
 relatedPosts:
@@ -45,139 +46,147 @@ relatedPosts:
     date: "2026-04-20"
 ---
 
-I inherited an ACH payments feature that had been built and then disabled. The immediate business need was supporting bank debits for subscriptions over $5,000 per month, where a 2.9% card fee is real money and customers prefer ACH anyway. The previous developer had wired most of the Stripe integration and left it dormant, and nobody could confirm whether it was production-ready. The first day was an audit: which code paths were live, which were scaffolding, and which assumptions about the payment lifecycle were wrong.
+I inherited an ACH payments feature that had been built and then left disabled. The business need was bank debits for a premium subscription tier billed at over $5,000 per month, where a 2.9% card fee is real money and customers prefer ACH anyway. The previous developer had wired most of the Stripe integration and commented the ACH path out, and nobody could confirm whether it was production-ready. The first day was an audit: which code paths were live, which were scaffolding, and which assumptions about the payment lifecycle were wrong.
 
-The wrong assumption was the important one. The dormant code treated ACH like a card: confirm the payment, wait for success, grant access. That works for cards because confirmation and settlement happen in the same second. For ACH it produces a subscription that a customer has paid for but cannot use for the better part of a week. Fixing that meant rebuilding the provisioning logic around the part of the payment lifecycle that ACH actually has and cards do not: a multi-day gap between submitting a debit and knowing whether it cleared.
+The wrong assumption was the important one. The dormant code treated ACH like a card: confirm the payment, wait for success, grant access. That works for cards because confirmation and settlement happen in the same second. For ACH it produces a subscription that a customer has paid for but cannot use for the better part of a week. Re-enabling the feature meant rebuilding the provisioning logic around the part of the payment lifecycle that ACH actually has and cards do not: a multi-day gap between submitting a debit and knowing whether it cleared.
 
-## What ACH changes about billing
+## what ACH changes about billing
 
-Stripe's `us_bank_account` payment method is ACH Direct Debit. When you confirm a PaymentIntent against a card, it moves to `succeeded` almost immediately, and your webhook handler can safely treat `payment_intent.succeeded` as the moment to grant access. ACH does not work that way. Confirming an ACH debit moves the PaymentIntent into the `processing` state, which means the debit has been submitted to the customer's bank but has not cleared. Settlement takes four to five business days. Only then does the PaymentIntent transition to `succeeded`, or to a failed state if the debit is returned.
+Stripe's `us_bank_account` payment method is ACH Direct Debit. When you confirm a PaymentIntent against a card, it moves to `succeeded` almost immediately, and a webhook handler can safely treat `payment_intent.succeeded` as the moment to grant access. ACH does not work that way. Confirming an ACH debit moves the PaymentIntent into the `processing` state, which means the debit has been submitted to the customer's bank but has not cleared. Settlement takes two to five business days. Only then does the PaymentIntent transition to `succeeded`, or to a failed state if the debit is returned.
 
-This single difference cascades through the whole subscription lifecycle. The first invoice's payment does not settle at checkout time, so a subscription created with the default payment behavior would sit in an incomplete state waiting for money that is days away. Renewal payments fail days after the renewal date rather than on it. A failed payment is not a card decline you can surface in the checkout UI; it is an asynchronous event that arrives long after the customer has left the page. Every piece of logic that assumed payment confirmation was synchronous had to be re-examined against a timeline measured in days.
+This single difference cascades through the whole subscription lifecycle. The first invoice's payment does not settle at checkout time, so any logic that assumed money had arrived by the time the customer left the checkout page is wrong by days. Renewal payments fail days after the renewal date rather than on it. A failed payment is not a card decline you can surface in the checkout UI; it is an asynchronous event that arrives long after the session ended. Every piece of logic that assumed payment confirmation was synchronous had to be re-examined against a timeline measured in days rather than milliseconds.
 
-## Provision on processing, not succeeded
+## provisioning before the money arrives
 
 The core decision was to provision access optimistically when the PaymentIntent enters `processing`, rather than waiting for `succeeded`. ACH has a high eventual success rate, and for a high-value managed tier, making a paying customer wait five days for access is a worse outcome than the rare case of provisioning someone whose debit later fails. The failure becomes a recovery problem handled after the fact, not a gate on access.
 
-That means the webhook handler keys provisioning on `payment_intent.processing` and treats `payment_intent.succeeded` as confirmation rather than activation:
+Two things happen when the processing event arrives. First, the account's online flags are flipped directly in the database, because access here is gated by the application's own subscription state, not by Stripe's view of whether the invoice is paid. Second, and this is the part that matters, the handler forwards a synthesized `invoice.payment_succeeded` event into the existing subscription handler so the account gets fully provisioned (plan, token allotment, editing credits) at the earliest possible signal:
 
 ```typescript
-// stripe-webhook/handlers.ts
+// stripe-webhook gateway: payment_intent.processing branch
+if (event.type === "payment_intent.processing") {
+  const invoiceId =
+    invoice?.id ??
+    (typeof subscription?.latest_invoice === "string"
+      ? subscription.latest_invoice
+      : subscription?.latest_invoice?.id);
 
-async function handlePaymentIntentProcessing(pi: Stripe.PaymentIntent) {
-  // ACH debit submitted, not yet cleared. Provision now.
-  if (pi.payment_method_types.includes("us_bank_account")) {
-    const sub = await resolveSubscription(pi);
-    await provisionAccess(sub, { settlementPending: true });
-  }
-}
-
-async function handlePaymentIntentSucceeded(pi: Stripe.PaymentIntent) {
-  // Funds cleared. Confirm provisioning, clear the pending flag.
-  const sub = await resolveSubscription(pi);
-  await confirmSettlement(sub);
-}
-```
-
-The `settlementPending` flag matters for reconciliation. Access is live, but the record carries the knowledge that the money has not actually arrived yet, so reporting and downstream logic can distinguish a confirmed-paid account from a provisioned-but-pending one. When `payment_intent.succeeded` arrives days later, `confirmSettlement` clears the flag and the account becomes a normal paid subscription.
-
-For the subscription to stay active while the first payment is still processing rather than dropping into an incomplete state, the creation flow uses a payment behavior suited to delayed-notification methods. Stripe's payment behavior settings control exactly this: whether a subscription whose payment has not yet succeeded is treated as active or held incomplete. Choosing the behavior that keeps the subscription active during processing is what makes optimistic provisioning coherent with Stripe's own view of the subscription state, rather than fighting it.
-
-## The grace period for failures
-
-The failure case is where the design earns its complexity. An ACH debit can fail days after submission, most commonly for insufficient funds. By default, Stripe's dunning runs a retry schedule and can eventually cancel the subscription or mark it `unpaid`. For these accounts, automatic cancellation is the wrong behavior. A failed debit on a $5,000-plus subscription is a relationship event that a human should handle, not a trigger for silently tearing down access.
-
-The business rule, confirmed with stakeholders, was that a failed ACH payment should never immediately suspend the customer. Instead they enter a two-month grace window during which they keep full access while recovery is handled manually. Implementing that meant taking the cancellation decision away from Stripe's automatic dunning and moving it into our own code. Stripe's retry settings were configured to leave an exhausted subscription in `past_due` rather than canceling it, so Stripe stops trying but does not tear anything down.
-
-The grace logic itself is three pieces: a marker written on entry, webhook-driven restoration, and a cron-driven suspension at expiry.
-
-```typescript
-// On invoice.payment_failed (after Stripe's retries are exhausted)
-async function handlePaymentFailed(invoice: Stripe.Invoice) {
-  const sub = await resolveSubscription(invoice);
-  if (!sub.graceExpiresAt) {
-    await enterGrace(sub, {
-      graceExpiresAt: addDays(now(), 60),
-      reason: "ach_payment_failed",
-    });
-    await notifyOps(sub); // sales/ops handle recovery manually
-  }
-}
-
-// On invoice.paid (customer or ops resolves the payment)
-async function handleInvoicePaid(invoice: Stripe.Invoice) {
-  const sub = await resolveSubscription(invoice);
-  if (sub.graceExpiresAt) {
-    await exitGrace(sub); // clear marker, restore normal state
+  if (invoiceId) {
+    const fullInvoice = await stripe.invoices.retrieve(invoiceId);
+    // reuse the real provisioning path by handing it a real invoice object
+    await routeToHandler(
+      { type: "invoice.payment_succeeded", data: { object: fullInvoice } },
+      organizationId ? "organization" : "individual"
+    );
   }
 }
 ```
 
-The marker is written once. The `if (!sub.graceExpiresAt)` guard means a second failure event inside an existing grace window does not extend or reset the clock, which keeps webhook replays and Stripe's own retry events from corrupting the deadline. Restoration is driven by `invoice.paid`: when the customer's bank account is funded and the retry succeeds, or when ops collects payment another way, the grace marker is cleared and the subscription returns to normal. Nothing suspends access on the failure event itself.
+Synthesizing the event rather than writing a parallel provisioning path is deliberate. The subscription handler already knows how to read product metadata, grant the annual allotment (594,000 tokens and 400 editing credits, in this case), and write the balance transactions. Forwarding a real retrieved invoice object lets ACH reuse that exact code rather than duplicating it. This forwarding happens only on `processing`, the ACH-specific early signal. On `succeeded`, and for cards which never emit a processing event, the real `invoice.payment_succeeded` already does the provisioning, so forwarding there would be a redundant second path racing the real event.
 
-Suspension is a separate cron job that runs daily and acts only on subscriptions whose grace window has actually expired:
+## scoping the whole path to one tier
+
+ACH is enabled only on the premium checkout flow. Everything else (the standard tier, all one-time add-ons, and premium customers who paid by card) must never touch the ACH handler. A production issue earlier had been ACH leaking into checkout flows it did not belong in, traced to Stripe payment method configuration inheritance at the account level, so the invariant matters and is enforced as defense in depth on the webhook side too.
+
+The pre-filter is a cheap check that runs before the expensive subscription lookup:
 
 ```typescript
-// suspend-expired-grace (daily cron)
-const expired = await db.subscriptions.where({
-  graceExpiresAt: { lt: now() },
-  status: "past_due",
-});
+// ACH (us_bank_account) is enabled only for premium checkouts, so a card-only
+// PaymentIntent never needs this handler. This guard can only drop events that
+// don't need handling: payment_intent.processing fires only for async methods,
+// and a real ACH charge always lists us_bank_account in payment_method_types.
+const isAchPayment =
+  event.type === "payment_intent.processing" ||
+  (Array.isArray(pi.payment_method_types) &&
+    pi.payment_method_types.includes("us_bank_account"));
 
-for (const sub of expired) {
-  await suspendAccess(sub);
-  await cancelStripeSubscription(sub.stripeId);
+if (!isAchPayment) {
+  return { processed: "payment_intent_skipped_not_ach", type: event.type };
 }
 ```
 
-Splitting the decision this way is deliberate. The failure webhook only ever opens a window. The cron is the only thing that closes it. That separation made the behavior far easier to reason about during testing, because suspension is not tangled up in the timing of asynchronous Stripe events.
+Identifying which payments are premium has its own wrinkle. At `payment_intent` time the database `is_concierge` flag is not reliable, because for an ACH signup that flag only gets set later, at settlement, by the very provisioning the processing event is trying to trigger. The fix was to stamp the tier into the subscription metadata at checkout (`plan_type` of `concierge` or `teams_concierge`) so the payment is recognized from the event payload itself, with a database lookup only as a fallback. The handler resolves the tier from metadata first and never depends on a flag that may not exist yet.
 
-## The entitlement guard
+## the grace period that survives a retry
 
-The premium tier grants a fixed allotment of editing credits per annual term. The dormant code allocated those credits on subscription creation, which is correct exactly once. The bug surfaced when a customer cancels and re-subscribes inside the same annual term: a new subscription object is created, the creation handler fires again, and the customer receives a second full annual allotment they did not pay for.
+The failure case is where the design earns its complexity. An ACH debit can fail days after submission, most commonly for insufficient funds. The business rule, confirmed with stakeholders, was that a failed payment must never immediately suspend a premium customer. Instead the account enters a two-month grace window during which it keeps full access while the operations team handles recovery manually. On failure the handler emails ops and writes a grace marker, and suspends nothing.
 
-The root cause is keying entitlement on the wrong thing. The number of Stripe subscription objects a customer churns through is unrelated to how many annual allotments they are owed. Keying credit allocation on the subscription creation event conflates the two. The fix was a 360-day entitlement guard that keys allocation on the billing term instead:
+The subtle bug is in how a retry interacts with grace. When a customer retries a failed invoice, the retry fires `payment_intent.processing` first, which is the keep-online path. That path flips the subscription status back to `active` and clears the `grace_expiry` column. So if the retry then also fails, the obvious signals (status and `grace_expiry`) no longer tell you the account was already in grace, and a naive handler would start a fresh two-month clock on every retry. The grace period would never actually expire.
+
+The fix is to persist the deadline somewhere the keep-online path does not touch, and key idempotency on the specific failed invoice:
 
 ```typescript
-async function allocateAnnualCredits(customerId: string, sub: Subscription) {
-  const recent = await db.creditGrants.findFirst({
-    where: {
-      customerId,
-      type: "annual_allotment",
-      grantedAt: { gt: subDays(now(), 360) },
+const failedId = graceInvoiceId ?? null;
+const meta = sub.renewal_metadata ?? {};
+
+// Same invoice already graced? Reuse its stored deadline. Never extend it.
+const alreadyGracedForInvoice =
+  failedId !== null && meta.grace_invoice_id === failedId;
+
+const graceExpiryIso =
+  alreadyGracedForInvoice && typeof meta.grace_until === "string"
+    ? meta.grace_until
+    : addDays(now(), 60).toISOString();
+
+await supabase
+  .from("user_subscriptions")
+  .update({
+    subscription_status: "past_due",
+    grace_expiry: graceExpiryIso,
+    subscription_expiry: graceExpiryIso, // keep the date-based access query returning this row
+    renewal_metadata: {
+      ...meta,
+      grace_invoice_id: failedId,
+      grace_until: graceExpiryIso,
     },
-  });
+  })
+  .eq("id", sub.id);
+```
 
-  if (recent) {
-    log.info("annual allotment already granted in current term, skipping", {
-      customerId,
-      previousGrant: recent.id,
-    });
-    return;
-  }
+Two details make this correct. The deadline lives in `renewal_metadata.grace_until`, which the keep-online reactivation path leaves alone, so it survives the status flip that clears the `grace_expiry` column. And grace is keyed on `grace_invoice_id`: a second failure of the same invoice reuses the stored deadline and never extends it, while a genuinely new invoice in the next billing cycle has no matching marker and correctly starts a fresh grace window. Setting `subscription_expiry` equal to the grace deadline is what keeps the account online during grace, because access is a date-based query against that column.
 
-  await db.creditGrants.create({ customerId, type: "annual_allotment", sub });
+## why a cron suspends, not the webhook
+
+No webhook event ever suspends a premium account. The failure handler only ever opens a grace window. Closing it is the job of a single scheduled function that runs daily, and it acts only on accounts whose grace deadline has actually passed. Splitting the decision this way means suspension is never tangled up in the timing of asynchronous Stripe events, which made the whole thing far easier to reason about during testing.
+
+There are two separate crons because the two populations have opposite rules. The standard expiry sweep explicitly excludes premium accounts, loading their ids and skipping them, because they must never be auto-suspended on a payment issue. A second function owns premium grace teardown: it queries subscriptions that are `past_due` with a `grace_expiry` in the past, zeroes the resource pool, revokes any per-member allocations for team accounts, and marks the account torn down.
+
+The teardown deliberately stops at the database boundary:
+
+```typescript
+// grace-teardown cron: act only on genuinely expired grace
+const { data: expired } = await supabase
+  .from("organization_subscriptions")
+  .select("id, organization_id, grace_expiry, stripe_subscription_id")
+  .eq("subscription_status", "past_due")
+  .not("grace_expiry", "is", null)
+  .lt("grace_expiry", now.toISOString());
+
+for (const sub of expired ?? []) {
+  await zeroResourcePool(sub.organization_id);   // tokens + credits to 0, revoke allocations
+  await markToreDown(sub.id);
+  await emailOpsToCancelInStripe(sub);           // the Stripe subscription is NOT cancelled here
 }
 ```
 
-A re-subscription inside the window finds the prior grant and skips. A genuine renewal after the term finds nothing within 360 days and allocates correctly. The same idempotency principle, keying on the invoice rather than the event delivery, protects against webhook replays granting credits twice for a single legitimate payment. Stripe delivers webhooks at least once, not exactly once, so any handler that mutates entitlement has to be idempotent on something stable, never on the fact that an event arrived.
+The cron tears down only the application side. The Stripe subscription is left intact, because dunning is configured to leave it `past_due` rather than cancel, and the email to ops is the signal that a human still needs to cancel it manually in Stripe. The irreversible billing action stays with a person, never the cron. This is the same principle as the failure path: the system automates everything reversible and stops short of the one step that is not.
 
-## The payment method leak
+## provisioning exactly once
 
-During production validation I found that ACH was being offered as a payment option to customers who were not on the premium tier. ACH was meant to be available only on the high-value checkout flow, and it was showing up everywhere. The cause was Stripe payment method configuration inheritance: enabling `us_bank_account` at the account's default configuration level meant it propagated to checkout sessions that were supposed to be card-only.
+Optimistic provisioning creates a duplication hazard. The synthesized `invoice.payment_succeeded` fires when ACH enters processing, and Stripe delivers the real `invoice.payment_succeeded` days later at settlement. Without protection, the customer would receive the full annual allotment twice. Both events reference the same invoice, so the provisioning handler is made idempotent on the invoice id: the first event grants the allotment and records the invoice, and the settlement-time event finds it already provisioned and no-ops.
 
-The fix was to stop relying on the default configuration and instead scope payment methods explicitly per checkout flow, so ACH is enabled only on the premium path and the standard path stays card-only. This is the kind of issue that does not appear in any code path you would test in isolation, because the leak lives in account-level configuration rather than in the checkout code itself. It only showed up by actually walking the non-premium checkout in production and noticing an option that should not have been there.
+That same idempotency absorbs Stripe's delivery guarantees. Stripe delivers webhooks at least once, not exactly once, and will redeliver on any non-2xx response or timeout. A handler that mutates entitlement therefore cannot key on the arrival of an event; it has to key on something stable in the payload. Keying on the invoice id means the synthesized event, the real settlement event, and any redelivery of either all collapse to a single grant. The annual allotment is granted once per billing term regardless of how many times an equivalent event is delivered.
 
-## Testing with test clocks
+## testing events that are days apart
 
-None of the grace-period behavior can be validated on a normal development timeline, because the events that matter are days apart. Stripe Test Clocks solve this. You bind a test customer and subscription to a simulated clock and advance time programmatically, fast-forwarding through the ACH settlement window, the grace period, and renewal cycles in seconds.
+None of the grace behavior can be validated on a normal development timeline, because the events that matter are days apart. Stripe Test Clocks solve this. You bind a test customer and subscription to a simulated clock and advance time programmatically, fast-forwarding through the ACH settlement window, the grace period, and renewal cycles in seconds rather than weeks.
 
-The scenarios I ran through Test Clocks covered the full lifecycle for both individual and team accounts: a debit entering `processing` and being provisioned, the clock advanced to settlement with a forced success, then a separate run with a forced failure to verify grace entry, then advancing the clock past 60 days to confirm the suspension cron fired exactly once at expiry. I also tested re-subscription inside the term against the entitlement guard, and recovery via `invoice.paid` mid-grace to confirm restoration cleared the marker. The bugs in delayed-settlement billing hide in the gaps between events, and Test Clocks are the only practical way to compress those gaps enough to exercise them deliberately.
+The scenarios I ran through Test Clocks covered the full lifecycle for both individual and team accounts: a debit entering `processing` and provisioning at day zero, the clock advanced to settlement with a forced success to confirm no double allotment, then a separate run with a forced failure to verify grace entry kept the account online and emailed ops. From there I advanced the clock past the 60-day deadline to confirm the teardown cron fired exactly once and left the Stripe subscription intact, and tested a retry mid-grace to confirm the clock did not reset. The bugs in delayed-settlement billing hide in the gaps between events, and Test Clocks are the only practical way to compress those gaps enough to exercise them deliberately.
 
-## What I would change
+## what i would change
 
-**Make the grace window configurable per tier rather than a hardcoded 60 days.** The two-month window was the right call for the highest-value accounts, but a team tier and an individual tier do not necessarily warrant the same recovery runway. Moving `graceExpiresAt` derivation onto a per-plan setting would let the business tune recovery aggressiveness without a code change, and would make the cron's behavior depend on data rather than a constant buried in a handler.
+**Make the grace window configurable per tier rather than a hardcoded 60 days.** The two-month window was the right call for the highest-value accounts, but a team tier and an individual tier do not necessarily warrant the same recovery runway. Moving the deadline derivation onto a per-plan setting would let the business tune recovery aggressiveness without a code change, and would make the cron's behavior depend on data rather than a constant living inside a handler.
 
-**Add a reconciliation job for stuck pending settlements.** Optimistic provisioning leaves a `settlementPending` flag that is cleared by `payment_intent.succeeded`. If that event is ever missed, a subscription stays pending-paid indefinitely while behaving as fully paid. A daily reconciliation that queries Stripe for the actual PaymentIntent status of any account that has been pending past the normal settlement window would catch dropped webhooks before they become silent revenue discrepancies, the same way a watchdog catches a background job that stopped reporting.
+**Add a reconciliation job for stuck provisioning.** Optimistic provisioning assumes the settlement-time `invoice.payment_succeeded` eventually arrives to confirm the money landed. If that event is ever dropped, an account stays provisioned while never having truly settled, and nothing notices. A daily reconciliation that asks Stripe for the actual PaymentIntent status of any account provisioned past the normal settlement window would catch a missed settlement before it becomes a silent revenue discrepancy, the same way a watchdog catches a background job that stopped reporting.
 
-**Track the manual recovery outcome, not just the grace state.** Right now the system knows a subscription is in grace and knows when it exits, but it does not record why: whether ops recovered the payment, whether the customer fixed their bank account, or whether it expired into suspension. Capturing that outcome would turn the grace period from an operational stopgap into a dataset about why high-value ACH payments fail, which is exactly the kind of signal worth having before the next pricing change.
+**Track the grace outcome, not just the grace state.** The system knows an account is in grace and knows when it exits, but it does not record why: whether ops recovered the payment, whether the customer fixed their bank account, or whether it expired into teardown. Capturing that outcome would turn the grace period from an operational stopgap into a dataset about why high-value ACH payments fail, which is exactly the kind of signal worth having before the next pricing change.
