@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/layout/AppShell"
-import { getAllPosts } from "@/lib/posts"
-import { WritingListClient } from "./WritingListClient"
+import { getAllPosts } from "@/lib/content/loader"
+import { WritingList } from "@/components/sections/writing/WritingList"
 
 const WritingPage = async () => {
   const allPosts = await getAllPosts({ includeDrafts: true })
@@ -9,7 +9,7 @@ const WritingPage = async () => {
 
   return (
     <AppShell>
-      <WritingListClient posts={posts} draftPosts={draftPosts} />
+      <WritingList posts={posts} draftPosts={draftPosts} />
     </AppShell>
   )
 }

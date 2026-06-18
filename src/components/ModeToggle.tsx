@@ -1,28 +1,30 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useTheme } from "next-themes";
 import { MoonIcon, SunIcon, MonitorIcon } from "lucide-react";
 
 const THEMES = ["system", "light", "dark"] as const;
-type Theme = (typeof THEMES)[number];
+type ThemeType = (typeof THEMES)[number];
 
-const ICONS: Record<Theme, React.ElementType> = {
+const ICONS: Record<ThemeType, React.ElementType> = {
   system: MonitorIcon,
   light: SunIcon,
   dark: MoonIcon,
 };
 
+const subscribe = () => () => {};
+
 export const ModeToggle = () => {
   const { setTheme, theme } = useTheme();
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
   const cycle = () => {
-    const current = (theme as Theme) ?? "system";
+    const current = (theme as ThemeType) ?? "system";
     const next = THEMES[(THEMES.indexOf(current) + 1) % THEMES.length];
     setTheme(next);
   };
@@ -31,7 +33,7 @@ export const ModeToggle = () => {
     return <span className="h-4 w-4 block" />;
   }
 
-  const Icon = ICONS[(theme as Theme) ?? "system"];
+  const Icon = ICONS[(theme as ThemeType) ?? "system"];
 
   return (
     <button

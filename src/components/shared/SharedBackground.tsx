@@ -1,11 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AnimatedPathPropsType } from "@/lib/types";
+import { AnimatedPathPropsType, InViewPropsType } from "@/lib/types";
 import {
   SHARED_GRID_CONFIG,
   SHARED_SVG_PATHS,
 } from "@/lib/config/landing-background";
+
+interface SharedBackgroundPropsType extends InViewPropsType {
+  noiseFilterId: string;
+}
 
 /** Renders and animates an SVG path. */
 const AnimatedPath = ({
@@ -73,7 +77,7 @@ const AsymmetricalGrid = () => (
 );
 
 /** Renders animated decorative SVG paths. */
-const DecorativePaths = ({ isInView }: { isInView: boolean }) => (
+const DecorativePaths = ({ isInView }: InViewPropsType) => (
   <>
     <motion.div
       initial={{ opacity: 0 }}
@@ -96,15 +100,11 @@ const DecorativePaths = ({ isInView }: { isInView: boolean }) => (
 
 /**
  * A shared, reusable component for rendering the standard background elements.
- * @param {{ isInView: boolean; noiseFilterId: string }} props - Props to control animation and ensure unique filter IDs.
  */
 export const SharedBackground = ({
   isInView,
   noiseFilterId,
-}: {
-  isInView: boolean;
-  noiseFilterId: string;
-}) => (
+}: SharedBackgroundPropsType) => (
   <div className="absolute inset-0 -mx-6 sm:-mx-8 lg:-mx-32 pointer-events-none">
     <NoiseTexture filterId={noiseFilterId} />
     <AsymmetricalGrid />

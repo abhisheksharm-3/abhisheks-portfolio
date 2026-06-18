@@ -5,7 +5,7 @@ import { notFound, useParams } from "next/navigation";
 import Link from "next/link";
 import { AppShell } from "@/components/layout/AppShell";
 import { ArrowLeft } from "lucide-react";
-import { projects } from "@/data/project";
+import { projects } from "@/data/projects";
 import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
 import { ProjectDetailSidebar } from "@/components/sections/projects/ProjectDetailsSidebar";
 import { ProjectDetailImage } from "@/components/sections/projects/ProjectDetailImage";

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import type { InViewPropsType } from "@/lib/types";
 
 const PRINCIPLES = [
   {
@@ -28,7 +29,7 @@ const PRINCIPLES = [
 /**
  * Renders the central blockquote for the philosophy section.
  */
-export const PhilosophyQuote = ({ isInView }: { isInView: boolean }) => (
+export const PhilosophyQuote = ({ isInView }: InViewPropsType) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -67,7 +68,7 @@ export const PhilosophyQuote = ({ isInView }: { isInView: boolean }) => (
 /**
  * Renders the philosophy principles as a clean numbered list.
  */
-export const PhilosophyPrinciples = ({ isInView }: { isInView: boolean }) => (
+export const PhilosophyPrinciples = ({ isInView }: InViewPropsType) => (
   <div>
     <div className="flex items-center gap-4 mb-8">
       <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
@@ -109,30 +110,3 @@ export const PhilosophyPrinciples = ({ isInView }: { isInView: boolean }) => (
     </div>
   </div>
 );
-
-/**
- * @deprecated Use PhilosophyQuote and PhilosophyPrinciples instead.
- * Kept for backward compatibility.
- */
-export const QuoteBlock = ({ isInView }: { isInView: boolean }) => (
-  <PhilosophyQuote isInView={isInView} />
-);
-
-/**
- * @deprecated No longer used.
- */
-export const DecorativeDivider = ({ isInView: _isInView }: { isInView: boolean }) => (
-  <div className="h-px bg-primary/10 my-12" />
-);
-
-/**
- * @deprecated Use PhilosophyPrinciples instead.
- */
-export const PhilosophyDescription = ({ isInView }: { isInView: boolean }) => (
-  <PhilosophyPrinciples isInView={isInView} />
-);
-
-/**
- * @deprecated Corner accents removed per design spec.
- */
-export const CardCornerAccent = () => null;

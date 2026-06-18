@@ -10,7 +10,7 @@ import {
   GraveyardProjectCard,
   GraveyardSectionHeader,
 } from "@/components/sections/graveyard";
-import { deadProjects } from "@/data/project";
+import { deadProjects } from "@/data/projects";
 import { ArrowRight } from "lucide-react";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Calendar, ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import { Card } from "@/components/ui/card";
-import { DeadProjectType } from "@/data/project";
+import { DeadProjectType } from "@/data/projects";
 
 interface GraveyardProjectCardProps {
   project: DeadProjectType;

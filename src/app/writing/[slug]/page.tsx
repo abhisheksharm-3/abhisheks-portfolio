@@ -3,7 +3,7 @@ import type { Metadata } from "next"
 import Link from "next/link"
 import { ArrowLeft } from "lucide-react"
 import { AppShell } from "@/components/layout/AppShell"
-import { getAllPosts, getPostBySlug } from "@/lib/posts"
+import { getAllPosts, getPostBySlug } from "@/lib/content/loader"
 import { PostCta } from "@/components/writing/PostCta"
 
 type Props = {

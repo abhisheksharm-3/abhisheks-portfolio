@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next"
-import { projects } from "@/data/project"
-import { getAllPosts } from "@/lib/posts"
+import { projects } from "@/data/projects"
+import { getAllPosts } from "@/lib/content/loader"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts()
@@ -27,7 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     url: `${baseUrl}/projects/${project.slug}`,
     lastModified: siteUpdatedAt,
     changeFrequency: "yearly",
-    priority: project.featured ? 0.8 : 0.6,
+    priority: project.isFeatured ? 0.8 : 0.6,
   })) satisfies MetadataRoute.Sitemap
 
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({

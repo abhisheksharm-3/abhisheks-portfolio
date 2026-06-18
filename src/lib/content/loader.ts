@@ -7,7 +7,7 @@ import { compileMDX } from "next-mdx-remote/rsc"
 import rehypePrettyCode from "rehype-pretty-code"
 import rehypeSlug from "rehype-slug"
 import remarkGfm from "remark-gfm"
-import { PostFrontmatter, type PostFrontmatterType } from "./post-schema"
+import { PostFrontmatter, type PostFrontmatterType } from "./schema"
 import { PostCallout } from "@/components/writing/PostCallout"
 
 const POSTS_DIR = path.resolve(process.cwd(), "content/posts")

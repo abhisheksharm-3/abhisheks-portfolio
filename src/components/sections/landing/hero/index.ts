@@ -8,9 +8,8 @@ export {
 } from "./HeroBackground";
 export {
   ExperienceCounter,
-  SkillItem,
   ScrollIndicator,
   HeroName,
   HeroDescription,
-  SkillsSection as HeroSkillsSection,
 } from "./HeroContent";
+export { SkillItem, SkillsSection as HeroSkillsSection } from "./HeroSkills";

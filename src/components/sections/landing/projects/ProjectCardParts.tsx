@@ -1,18 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
 import { ProjectType } from "@/lib/types";
 
+interface ProjectCardPartPropsType {
+  project: ProjectType;
+  isHovered: boolean;
+}
+
 export const ProjectImageContainer = ({
   project,
   isHovered,
-}: {
-  project: ProjectType;
-  isHovered: boolean;
-}) => (
+}: ProjectCardPartPropsType) => (
   <div className="relative w-full h-52 sm:h-64 overflow-hidden shrink-0">
     <motion.div
       className="w-full h-full"
@@ -48,12 +49,7 @@ export const ProjectImageContainer = ({
   </div>
 );
 
-export const ProjectContent = ({
-  project,
-}: {
-  project: ProjectType;
-  isHovered: boolean;
-}) => (
+export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
   <div className="flex flex-col flex-1 p-5 sm:p-6">
     <div className="flex items-baseline justify-between mb-2">
       <span className="text-[10px] text-foreground/25 font-mono">{project.year}</span>

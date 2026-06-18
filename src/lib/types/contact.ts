@@ -9,7 +9,15 @@ export interface MailConfigType {
 
 /** Contact form submission result */
 export interface ContactSubmissionResultType {
-    success?: boolean;
+    isSuccess?: boolean;
     message?: string;
     error?: string;
+}
+
+/** Anti-spam metadata accompanying a contact form submission */
+export interface ContactAntiSpamType {
+    /** Hidden honeypot value; non-empty indicates an automated submission */
+    honeypot: string;
+    /** Epoch milliseconds when the form mounted, used to reject instant submissions */
+    renderedAt: number;
 }

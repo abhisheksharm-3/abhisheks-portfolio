@@ -20,8 +20,8 @@ import {
   HeroDescription,
   HeroName,
   ScrollIndicator,
-  SkillsSection,
 } from "./HeroContent";
+import { SkillsSection } from "./HeroSkills";
 
 /**
  * The main hero section for the homepage.

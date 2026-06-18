@@ -8,10 +8,7 @@ import {
 } from "./DevPhilosophyComponents";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SectionHeader } from "@/components/shared/SectionHeader";
-import {
-  getSectionClasses,
-  SPACING_STANDARDS,
-} from "@/lib/config/spacing-standards";
+import { getSectionClasses } from "@/lib/config/spacing-standards";
 
 /**
  * The main component for the Philosophy section.

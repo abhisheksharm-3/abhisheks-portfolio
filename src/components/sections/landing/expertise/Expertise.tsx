@@ -9,10 +9,7 @@ import {
   SecondarySkillsGrid,
 } from "./ExpertiseComponents";
 import { SectionHeader } from "@/components/shared/SectionHeader";
-import {
-  getSectionClasses,
-  SPACING_STANDARDS,
-} from "@/lib/config/spacing-standards";
+import { getSectionClasses } from "@/lib/config/spacing-standards";
 
 /**
  * The main component for the Skills/Expertise section.

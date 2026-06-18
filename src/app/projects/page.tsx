@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition, useMemo } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
-import { projects } from "@/data/project";
+import { projects } from "@/data/projects";
 import {
   ProjectsHeader,
   ProjectsFilters,

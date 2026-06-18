@@ -5,15 +5,23 @@ import { motion, useInView } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { featuredProjects } from "@/data/project";
-import { ProjectsPropsType, LandingProjectCardPropsType } from "@/lib/types";
+import { featuredProjects } from "@/data/projects";
+import {
+  ProjectsPropsType,
+  LandingProjectCardPropsType,
+  InViewPropsType,
+} from "@/lib/types";
 import { PROJECT_ANIMATIONS } from "@/data/animations";
-import { ProjectImageContainer, ProjectContent } from "./ProjectCard";
+import { ProjectImageContainer, ProjectContent } from "./ProjectCardParts";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { getSectionClasses } from "@/lib/config/spacing-standards";
 
-const ViewAllLink = ({ isInView }: { isInView: boolean }) => (
+interface ProjectsHeaderPropsType extends InViewPropsType {
+  headline: string;
+}
+
+const ViewAllLink = ({ isInView }: InViewPropsType) => (
   <motion.div
     initial={{ opacity: 0, y: 10 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -30,13 +38,7 @@ const ViewAllLink = ({ isInView }: { isInView: boolean }) => (
   </motion.div>
 );
 
-const ProjectsHeader = ({
-  headline,
-  isInView,
-}: {
-  headline: string;
-  isInView: boolean;
-}) => (
+const ProjectsHeader = ({ headline, isInView }: ProjectsHeaderPropsType) => (
   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 md:mb-16 lg:mb-20 relative z-10">
     <div className="flex-1">
       <SectionHeader subtitle="stuff i've built" isInView={isInView}>
@@ -49,7 +51,7 @@ const ProjectsHeader = ({
   </div>
 );
 
-const CTASection = ({ isInView }: { isInView: boolean }) => (
+const CTASection = ({ isInView }: InViewPropsType) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -97,7 +99,7 @@ const ProjectCard = ({
 
 export const Projects = ({
   headline = "stuff i'm proud of",
-  cta = true,
+  showCta = true,
 }: ProjectsPropsType) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -129,7 +131,7 @@ export const Projects = ({
           ))}
         </motion.div>
 
-        {cta && <CTASection isInView={isInView} />}
+        {showCta && <CTASection isInView={isInView} />}
       </div>
     </section>
   );

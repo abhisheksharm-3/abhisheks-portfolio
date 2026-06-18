@@ -1,9 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useGitHubStats } from "@/hooks/useGitHubStats";
 import type { ContributionDayType, ContributionWeekType } from "@/lib/types/stats";
+
+interface MonthLabelType {
+    label: string;
+    position: number;
+}
+
+interface ContributionGraphType {
+    weeks: ContributionWeekType[];
+    monthLabels: MonthLabelType[];
+    peakDay: number;
+}
 
 /**
  * Formats a date string for display in tooltip.
@@ -30,58 +41,58 @@ function getContributionColor(count: number): string {
 }
 
 /**
+ * Builds the weekly contribution grid, month labels, and peak-day count from the calendar.
+ */
+function buildContributionGraph(
+    calendar: ContributionWeekType[] | undefined
+): ContributionGraphType {
+    if (!calendar) return { weeks: [], monthLabels: [], peakDay: 0 };
+
+    const monthLabels: MonthLabelType[] = [];
+    let lastMonth = "";
+    let peakDay = 0;
+
+    calendar.forEach((week, index) => {
+        if (week.contributionDays.length === 0) return;
+
+        const date = new Date(week.contributionDays[0].date);
+        const monthName = date
+            .toLocaleDateString("en-US", { month: "short" })
+            .toUpperCase();
+
+        if (monthName !== lastMonth) {
+            monthLabels.push({ label: monthName, position: (index / calendar.length) * 100 });
+            lastMonth = monthName;
+        }
+
+        for (const day of week.contributionDays) {
+            if (day.contributionCount > peakDay) peakDay = day.contributionCount;
+        }
+    });
+
+    return { weeks: calendar, monthLabels, peakDay };
+}
+
+/**
  * GitHub activity section displaying contribution graph and statistics.
  * Uses React Query for data fetching with automatic caching.
  */
 export const GitHubActivity = () => {
-    const { data: stats, isLoading, isError } = useGitHubStats();
+    const { data: stats, isLoading } = useGitHubStats();
     const [hoveredDay, setHoveredDay] = useState<ContributionDayType | null>(null);
 
-    const displayStats = useMemo(
-        () => [
-            { label: "public repos", value: stats?.publicRepos ?? "—" },
-            {
-                label: "contributions",
-                value: stats?.contributions ? stats.contributions.toLocaleString() : "—",
-            },
-            { label: "stars earned", value: stats?.totalStars ?? "—" },
-        ],
-        [stats]
+    const displayStats = [
+        { label: "public repos", value: stats?.publicRepos ?? "—" },
+        {
+            label: "contributions",
+            value: stats?.contributions ? stats.contributions.toLocaleString() : "—",
+        },
+        { label: "stars earned", value: stats?.totalStars ?? "—" },
+    ];
+
+    const { weeks, monthLabels, peakDay } = buildContributionGraph(
+        stats?.contributionCalendar
     );
-
-    const { weeks, monthLabels, peakDay } = useMemo(() => {
-        if (!stats?.contributionCalendar)
-            return { weeks: [], monthLabels: [], peakDay: 0 };
-
-        const allWeeks = stats.contributionCalendar;
-        const labels: { label: string; position: number }[] = [];
-        let lastMonth = "";
-        let maxContributions = 0;
-
-        allWeeks.forEach((week: ContributionWeekType, index: number) => {
-            if (week.contributionDays.length > 0) {
-                const firstDay = week.contributionDays[0];
-                const date = new Date(firstDay.date);
-                const monthName = date
-                    .toLocaleDateString("en-US", { month: "short" })
-                    .toUpperCase();
-
-                if (monthName !== lastMonth) {
-                    const position = (index / allWeeks.length) * 100;
-                    labels.push({ label: monthName, position });
-                    lastMonth = monthName;
-                }
-
-                week.contributionDays.forEach((day: ContributionDayType) => {
-                    if (day.contributionCount > maxContributions) {
-                        maxContributions = day.contributionCount;
-                    }
-                });
-            }
-        });
-
-        return { weeks: allWeeks, monthLabels: labels, peakDay: maxContributions };
-    }, [stats?.contributionCalendar]);
 
     return (
         <div className="relative">

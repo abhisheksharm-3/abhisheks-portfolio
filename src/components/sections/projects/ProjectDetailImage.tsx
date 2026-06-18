@@ -19,6 +19,7 @@ export function ProjectDetailImage({ src, alt }: ProjectDetailImageProps) {
           src={src}
           alt={alt}
           fill
+          priority
           className="object-cover"
           sizes="(max-width: 768px) 100vw, 1200px"
         />

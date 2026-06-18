@@ -6,7 +6,7 @@ export interface ChildrenPropsType {
 }
 
 /** Props for the Providers component */
-export interface ProvidersPropsType extends ChildrenPropsType { }
+export type ProvidersPropsType = ChildrenPropsType;
 
 /** Props for the RootLayout component */
-export interface RootLayoutPropsType extends ChildrenPropsType { }
+export type RootLayoutPropsType = ChildrenPropsType;

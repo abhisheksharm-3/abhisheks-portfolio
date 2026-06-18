@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
-import type { PostFrontmatterType } from "@/lib/post-schema"
+import type { PostFrontmatterType } from "@/lib/content/schema"
 
 type PostCtaProps = {
   searchIntent: PostFrontmatterType["searchIntent"]

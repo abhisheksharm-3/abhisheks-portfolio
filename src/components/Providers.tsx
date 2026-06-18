@@ -1,6 +1,7 @@
 "use client";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MotionConfig } from "framer-motion";
 import { ThemeProvider } from "./ThemeProvider";
 import { useState } from "react";
 import type { ProvidersPropsType } from "@/lib/types";
@@ -29,7 +30,7 @@ export function Providers({ children }: ProvidersPropsType) {
                 enableSystem
                 disableTransitionOnChange
             >
-                {children}
+                <MotionConfig reducedMotion="user">{children}</MotionConfig>
             </ThemeProvider>
         </QueryClientProvider>
     );

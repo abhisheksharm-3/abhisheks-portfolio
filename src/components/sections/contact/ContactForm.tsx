@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -20,6 +20,8 @@ const label =
 export const SendMessageCard = () => {
   const [isPending, startTransition] = useTransition();
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
+  const [renderedAt] = useState(() => Date.now());
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<ContactFormDataType>({
     resolver: zodResolver(CONTACT_FORM_SCHEMA),
@@ -30,7 +32,10 @@ export const SendMessageCard = () => {
     setSubmitStatus(null);
     startTransition(async () => {
       try {
-        const result = await submitContactForm(data);
+        const result = await submitContactForm(data, {
+          honeypot: honeypotRef.current?.value ?? "",
+          renderedAt,
+        });
         if (result.error) {
           setSubmitStatus("error");
         } else {
@@ -57,6 +62,19 @@ export const SendMessageCard = () => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-9">
+          {/* Honeypot: hidden from people, attracts automated submissions */}
+          <div aria-hidden="true" className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden">
+            <label htmlFor="company">Company</label>
+            <input
+              ref={honeypotRef}
+              id="company"
+              name="company"
+              type="text"
+              tabIndex={-1}
+              autoComplete="off"
+            />
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-9">
             <FormField
               control={form.control}
@@ -123,7 +141,7 @@ export const SendMessageCard = () => {
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors duration-200 group disabled:opacity-40 font-light border border-foreground/15 hover:border-foreground/30 px-5 py-2.5"
+              className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors duration-200 group disabled:opacity-40 disabled:cursor-default cursor-pointer font-light border border-foreground/15 hover:border-foreground/30 focus-visible:outline-none focus-visible:border-foreground/45 px-5 py-2.5"
             >
               {isPending ? (
                 <>
@@ -139,6 +157,7 @@ export const SendMessageCard = () => {
             </button>
           </div>
 
+          <div aria-live="polite" role="status">
           <AnimatePresence>
             {submitStatus === "success" && (
               <motion.p
@@ -163,6 +182,7 @@ export const SendMessageCard = () => {
               </motion.p>
             )}
           </AnimatePresence>
+          </div>
         </form>
       </Form>
     </motion.div>

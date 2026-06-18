@@ -6,11 +6,11 @@ import { cn } from "@/lib/utils";
 import { NAVIGATION_ITEMS } from "@/data/navigation";
 import { ModeToggle } from "@/components/ModeToggle";
 
-export const DesktopNavbar = ({
-  activeItem,
-}: {
+interface DesktopNavbarPropsType {
   activeItem: string | null;
-}) => (
+}
+
+export const DesktopNavbar = ({ activeItem }: DesktopNavbarPropsType) => (
   <nav className="hidden xl:flex items-center gap-6">
     <ul className="flex items-center gap-6">
       {NAVIGATION_ITEMS.map((item) => (

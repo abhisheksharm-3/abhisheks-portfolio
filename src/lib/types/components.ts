@@ -8,6 +8,11 @@ export interface MousePositionType {
     y: number;
 }
 
+/** Props for components that animate based on scroll-into-view state */
+export interface InViewPropsType {
+    isInView: boolean;
+}
+
 export interface MobileNavLinkPropsType {
     item: NavigationItemType;
     isActive: boolean;
@@ -29,16 +34,16 @@ export interface ProjectType {
     year: string;
     url?: string;
     github?: string;
-    featured: boolean;
+    isFeatured: boolean;
     role?: string;
     client?: string;
     duration?: string;
-    building?: boolean;
+    isBuilding?: boolean;
 }
 
 export interface ProjectsPropsType {
     headline?: string;
-    cta?: boolean;
+    showCta?: boolean;
 }
 
 export interface ProjectCardPropsType {

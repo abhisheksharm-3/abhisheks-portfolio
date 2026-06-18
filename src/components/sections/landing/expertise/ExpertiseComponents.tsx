@@ -1,5 +1,3 @@
-// src/components/sections/landing/skills/SkillsComponents.tsx
-
 "use client";
 
 import { motion } from "framer-motion";
@@ -8,17 +6,25 @@ import { ArrowRight } from "lucide-react";
 import { ExpertiseType } from "@/lib/types";
 import { SKILLS_ANIMATIONS } from "@/data/animations";
 
-/**
- * Renders a single expertise row in the editorial list.
- * @param {{ service: ExpertiseType; index: number }} props
- */
-const SkillRow = ({
-  service,
-  index,
-}: {
+interface SkillRowPropsType {
   service: ExpertiseType;
   index: number;
-}) => (
+}
+
+interface FeaturedSkillsSectionPropsType {
+  mainServices: ExpertiseType[];
+  isInView: boolean;
+}
+
+interface SecondarySkillsGridPropsType {
+  additionalServices: ExpertiseType[];
+  isInView: boolean;
+}
+
+/**
+ * Renders a single expertise row in the editorial list.
+ */
+const SkillRow = ({ service, index }: SkillRowPropsType) => (
   <motion.div
     variants={SKILLS_ANIMATIONS.item}
     className="group"
@@ -67,15 +73,11 @@ const SkillRow = ({
 
 /**
  * Renders the featured skills area as an editorial list with a description aside.
- * @param {{ mainServices: ExpertiseType[]; isInView: boolean }} props
  */
 export const FeaturedSkillsSection = ({
   mainServices,
   isInView,
-}: {
-  mainServices: ExpertiseType[];
-  isInView: boolean;
-}) => (
+}: FeaturedSkillsSectionPropsType) => (
   <div className="mb-16">
     {/* Section intro row */}
     <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 mb-10">
@@ -138,15 +140,11 @@ export const FeaturedSkillsSection = ({
 
 /**
  * Renders a minimal two-column list of secondary skills.
- * @param {{ additionalServices: ExpertiseType[]; isInView: boolean }} props
  */
 export const SecondarySkillsGrid = ({
   additionalServices,
   isInView,
-}: {
-  additionalServices: ExpertiseType[];
-  isInView: boolean;
-}) => (
+}: SecondarySkillsGridPropsType) => (
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}

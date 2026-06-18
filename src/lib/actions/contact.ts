@@ -6,10 +6,16 @@ import { ContactEmailTemplate } from "@/components/emails/ContactEmailTemplate";
 import React from "react";
 import { CONTACT_FORM_SCHEMA } from "@/data/contact";
 import type {
+    ContactAntiSpamType,
     ContactFormDataType,
     MailConfigType,
     ContactSubmissionResultType,
 } from "@/lib/types";
+
+const MIN_SUBMIT_MS = 2_000;
+
+const sanitizeHeader = (value: string): string =>
+    value.replace(/[\r\n]+/g, " ").trim();
 
 const getMailConfig = (): MailConfigType => {
     const config = {
@@ -51,7 +57,8 @@ const getTransporter = (): nodemailer.Transporter => {
 };
 
 export async function submitContactForm(
-    data: ContactFormDataType
+    data: ContactFormDataType,
+    antiSpam: ContactAntiSpamType
 ): Promise<ContactSubmissionResultType> {
     const validation = CONTACT_FORM_SCHEMA.safeParse(data);
 
@@ -59,14 +66,25 @@ export async function submitContactForm(
         return { error: "Invalid input. Please check your form data." };
     }
 
+    const isAutomated =
+        antiSpam.honeypot.trim() !== "" ||
+        Date.now() - antiSpam.renderedAt < MIN_SUBMIT_MS;
+
+    if (isAutomated) {
+        console.warn("Contact form: submission rejected by anti-spam gate");
+        return { isSuccess: true, message: "Email sent successfully." };
+    }
+
     let mailConfig: MailConfigType;
     try {
         mailConfig = getMailConfig();
-    } catch {
+    } catch (error) {
+        console.error("Contact form: mail service is not configured", error);
         return { error: "Mail service is not configured. Please email directly at abhishek@abhisheksan.com" };
     }
 
-    const safeName = validation.data.name.replace(/[\r\n<>"]/g, "").trim();
+    const safeName = sanitizeHeader(validation.data.name).replace(/["<>]/g, "");
+    const safeSubject = sanitizeHeader(validation.data.subject);
 
     const emailHtml = await render(
         React.createElement(ContactEmailTemplate, {
@@ -88,12 +106,13 @@ export async function submitContactForm(
             to: mailConfig.recipient,
             replyTo: validation.data.email,
             priority: "high",
-            subject: `New Portfolio Message: ${validation.data.subject}`,
+            subject: `New Portfolio Message: ${safeSubject}`,
             html: emailHtml,
         });
-    } catch {
+    } catch (error) {
+        console.error("Contact form: failed to send email", error);
         return { error: "Failed to send. Please email directly at abhishek@abhisheksan.com" };
     }
 
-    return { success: true, message: "Email sent successfully." };
+    return { isSuccess: true, message: "Email sent successfully." };
 }

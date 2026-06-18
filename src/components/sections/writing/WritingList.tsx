@@ -3,14 +3,14 @@
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
-import type { PostMeta } from "@/lib/posts"
+import type { PostMeta } from "@/lib/content/loader"
 
-type Props = {
+type WritingListPropsType = {
   posts: PostMeta[]
   draftPosts: PostMeta[]
 }
 
-export function WritingListClient({ posts, draftPosts }: Props) {
+export function WritingList({ posts, draftPosts }: WritingListPropsType) {
   return (
     <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 max-w-[2000px] mx-auto">
       <motion.div

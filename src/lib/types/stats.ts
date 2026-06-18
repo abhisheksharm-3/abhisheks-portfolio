@@ -1,34 +1,4 @@
 /**
- * Statistics for portfolio projects derived from project data.
- */
-export interface ProjectStatsType {
-  totalProjects: number;
-  activeProjects: number;
-  yearlyBreakdown: YearlyBreakdownType[];
-  technologyBreakdown: TechnologyBreakdownType[];
-  diversityScore: number;
-  currentInternshipStatus: string;
-  mostActiveYear: string;
-}
-
-/**
- * Yearly project breakdown data.
- */
-export interface YearlyBreakdownType {
-  year: string;
-  count: number;
-}
-
-/**
- * Technology usage breakdown data.
- */
-export interface TechnologyBreakdownType {
-  technology: string;
-  count: number;
-  percentage: number;
-}
-
-/**
  * Single day of GitHub contributions.
  */
 export interface ContributionDayType {
@@ -95,21 +65,3 @@ export interface GitHubStatsType {
   following: number;
 }
 
-/**
- * Technical skill expertise data.
- */
-export interface TechnicalExpertiseType {
-  technology: string;
-  fullName: string;
-  value: number;
-  normalized: number;
-}
-
-/**
- * Combined statistics from all sources.
- */
-export interface CombinedStatsType {
-  projectStats: ProjectStatsType;
-  githubStats: GitHubStatsType;
-  technicalExpertise: TechnicalExpertiseType[];
-}

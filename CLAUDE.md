@@ -85,8 +85,8 @@ src/app/           — Next.js App Router pages
   writing/[slug]   — MDX post renderer
   og/              — OG image generation
 src/components/    — Shared UI components (Radix + Tailwind)
-src/data/          — Static data (project.ts — source of truth for projects)
-src/lib/           — Utilities: posts.ts (MDX loading), post-schema.ts (Zod frontmatter validation)
+src/data/          — Static data (projects.ts — source of truth for projects)
+src/lib/           — Utilities: content/loader.ts (MDX loading), content/schema.ts (Zod frontmatter validation)
 src/hooks/         — React hooks
 content/posts/     — MDX writing content (*.mdx)
 scripts/           — check-post.mjs pre-publish validator
@@ -106,5 +106,5 @@ public/images/     — Static assets
 
 - All MDX frontmatter is Zod-validated via `src/lib/post-schema.ts` — run `npm run check-post` before publishing a new post or the build will fail
 - Tailwind v4 uses `@tailwindcss/postcss`; there is no `tailwind.config.js` — utility classes are configured via CSS
-- Project data lives in `src/data/project.ts` — this is the single source of truth; don't duplicate project info in MDX or elsewhere
+- Project data lives in `src/data/projects.ts` — this is the single source of truth; don't duplicate project info in MDX or elsewhere
 - Contact form uses a Next.js server action; email is sent via nodemailer — requires `SMTP_*` env vars at runtime

@@ -1,12 +1,10 @@
-"use server";
-
 import {
     GitHubStatsType,
     GitHubUserType,
     RepositoryType,
 } from "@/lib/types/stats";
 
-const GITHUB_USERNAME = "abhisheksharm-3";
+const GITHUB_USERNAME = process.env.GITHUB_USERNAME ?? "abhisheksharm-3";
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
 const ONE_YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 const CACHE_REVALIDATE_SECONDS = 3600;
