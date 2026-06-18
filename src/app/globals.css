@@ -248,10 +248,10 @@
  */
 
 .prose-writing {
-  color: color-mix(in oklch, var(--foreground) 65%, transparent);
+  color: color-mix(in oklch, var(--foreground) 78%, transparent);
   font-weight: 300;
   line-height: 1.8;
-  font-size: 0.9375rem;
+  font-size: 1rem;
 }
 
 .prose-writing p {

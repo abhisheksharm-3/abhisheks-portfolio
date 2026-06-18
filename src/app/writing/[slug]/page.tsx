@@ -110,7 +110,7 @@ export default async function PostPage({ params }: Props) {
   })
 
   return (
-    <AppShell>
+    <AppShell showBackground={false}>
       {schemas && (
         <>
           <script
@@ -145,7 +145,7 @@ export default async function PostPage({ params }: Props) {
             {frontmatter.title}
           </h1>
 
-          <p className="text-foreground/50 font-light leading-relaxed mb-8">
+          <p className="text-foreground/60 font-light leading-relaxed mb-8">
             {frontmatter.subhead}
           </p>
 
@@ -165,10 +165,10 @@ export default async function PostPage({ params }: Props) {
                 <div className="space-y-6">
                   {frontmatter.faqs.map((faq, i) => (
                     <div key={i}>
-                      <p className="text-sm text-foreground/70 font-light mb-2">
+                      <p className="text-sm text-foreground/80 font-light mb-2">
                         {faq.question}
                       </p>
-                      <p className="text-sm text-foreground/50 font-light leading-relaxed">
+                      <p className="text-sm text-foreground/65 font-light leading-relaxed">
                         {faq.answer}
                       </p>
                     </div>
