@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import type { InViewPropsType } from "@/lib/types";
+import type { InViewPropsType } from "@/lib/types/components";
 
 const PRINCIPLES = [
   {

@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import { SectionHeaderPropsType } from "@/lib/types";
+import { SectionHeaderPropsType } from "@/lib/types/components";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**

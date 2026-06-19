@@ -1,7 +1,7 @@
 "use client";
 
 import { SOCIAL_LINKS } from "@/data/contact";
-import { Logo } from "../navbar";
+import { Logo } from "../navbar/Logo";
 
 export const MobileMenuFooter = () => (
   <div className="w-full pt-8 flex flex-col items-center">

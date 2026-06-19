@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion, useTransform, MotionValue } from "framer-motion";
-import { SkillItemPropsType } from "@/lib/types";
+import { SkillItemPropsType } from "@/lib/types/components";
 import { HERO_ANIMATIONS as ANIMATION_CONFIG } from "@/data/animations";
 import { HERO_SKILLS as SKILLS } from "@/data/skills-expertise";
 

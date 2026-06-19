@@ -1,5 +1,5 @@
 import { EDUCATION_DATA, EXPERIENCE_DATA } from "@/data/about";
-import { TimelineCardPropsType } from "@/lib/types";
+import { TimelineCardPropsType } from "@/lib/types/components";
 import { Briefcase, GraduationCap } from "lucide-react";
 
 /**

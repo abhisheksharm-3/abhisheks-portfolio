@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { MotionConfig } from "framer-motion";
 import { ThemeProvider } from "./ThemeProvider";
 import { useState } from "react";
-import type { ProvidersPropsType } from "@/lib/types";
+import type { ProvidersPropsType } from "@/lib/types/layout";
 
 /**
  * Root providers wrapper combining React Query and Theme providers.

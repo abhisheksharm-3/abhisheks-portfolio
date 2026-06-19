@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
-import { AppShellPropsType } from "@/lib/types";
+import { AppShellPropsType } from "@/lib/types/components";
 import { ConstellationBackground } from "./ConstellationBackground";
-import { Footer } from "./footer";
-import { Navbar } from "./navbar";
+import { Footer } from "./footer/Footer";
+import { Navbar } from "./navbar/Navbar";
 
 /**
  * Provides the main application shell and consistent page layout.

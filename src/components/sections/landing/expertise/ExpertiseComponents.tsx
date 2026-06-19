@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { ExpertiseType } from "@/lib/types";
+import { ExpertiseType } from "@/lib/types/components";
 import { SKILLS_ANIMATIONS } from "@/data/animations";
 
 interface SkillRowPropsType {

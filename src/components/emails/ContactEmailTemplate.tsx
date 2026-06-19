@@ -1,4 +1,4 @@
-import { ContactEmailPropsType } from "@/lib/types";
+import { ContactEmailPropsType } from "@/lib/types/components";
 import {
   Body,
   Container,

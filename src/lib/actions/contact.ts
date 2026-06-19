@@ -5,12 +5,12 @@ import nodemailer from "nodemailer";
 import { ContactEmailTemplate } from "@/components/emails/ContactEmailTemplate";
 import React from "react";
 import { CONTACT_FORM_SCHEMA } from "@/data/contact";
+import type { ContactFormDataType } from "@/lib/types/components";
 import type {
     ContactAntiSpamType,
-    ContactFormDataType,
     MailConfigType,
     ContactSubmissionResultType,
-} from "@/lib/types";
+} from "@/lib/types/contact";
 
 const MIN_SUBMIT_MS = 2_000;
 

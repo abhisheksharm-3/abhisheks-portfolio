@@ -4,13 +4,11 @@ import { useRef, useState, useTransition, useMemo } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import { projects } from "@/data/projects";
-import {
-  ProjectsHeader,
-  ProjectsFilters,
-  ProjectsCTA,
-  ProjectCard,
-  ProjectsPageBackground,
-} from "@/components/sections/projects";
+import { ProjectsHeader } from "@/components/sections/projects/ProjectsHeader";
+import { ProjectsFilters } from "@/components/sections/projects/ProjectsFilter";
+import { ProjectsCTA } from "@/components/sections/projects/ProjectsCTA";
+import { ProjectCard } from "@/components/sections/projects/ProjectCard";
+import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 

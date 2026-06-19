@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { AnimatedPathPropsType, InViewPropsType } from "@/lib/types";
+import { AnimatedPathPropsType, InViewPropsType } from "@/lib/types/components";
 import {
   SHARED_GRID_CONFIG,
   SHARED_SVG_PATHS,
