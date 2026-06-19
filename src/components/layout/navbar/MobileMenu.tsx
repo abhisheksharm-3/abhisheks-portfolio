@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MobileMenuPropsType } from "@/lib/types";
+import { MobileMenuPropsType } from "@/lib/types/components";
 import { MobileNavLink } from "./MobileNavLink";
 import { Logo } from "./Logo";
 import { ArrowRight, X } from "lucide-react";

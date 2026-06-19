@@ -6,7 +6,7 @@ import { Menu } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { MobileMenu } from "./MobileMenu";
-import { NavigationItemType } from "@/lib/types";
+import { NavigationItemType } from "@/lib/types/components";
 import { NAVIGATION_ITEMS as navigationItems } from "@/data/navigation";
 import { NavbarBackground } from "./NavbarBackground";
 import { Logo } from "./Logo";

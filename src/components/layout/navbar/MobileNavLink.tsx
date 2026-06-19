@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { MobileNavLinkPropsType } from "@/lib/types";
+import { MobileNavLinkPropsType } from "@/lib/types/components";
 
 export const MobileNavLink = ({
   item,

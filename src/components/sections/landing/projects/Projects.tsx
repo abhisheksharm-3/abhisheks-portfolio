@@ -10,7 +10,7 @@ import {
   ProjectsPropsType,
   LandingProjectCardPropsType,
   InViewPropsType,
-} from "@/lib/types";
+} from "@/lib/types/components";
 import { PROJECT_ANIMATIONS } from "@/data/animations";
 import { ProjectImageContainer, ProjectContent } from "./ProjectCardParts";
 import { SharedBackground } from "@/components/shared/SharedBackground";

@@ -3,7 +3,7 @@ import { Geist_Mono, Space_Grotesk, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
-import type { RootLayoutPropsType } from "@/lib/types";
+import type { RootLayoutPropsType } from "@/lib/types/layout";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-geist-sans",

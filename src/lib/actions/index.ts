@@ -1,1 +1,0 @@
-export { submitContactForm } from "./contact";

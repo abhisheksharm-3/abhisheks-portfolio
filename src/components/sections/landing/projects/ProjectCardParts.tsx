@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
-import { ProjectType } from "@/lib/types";
+import { ProjectType } from "@/lib/types/components";
 
 interface ProjectCardPartPropsType {
   project: ProjectType;

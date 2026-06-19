@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { motion } from "framer-motion";
-import { ProjectType } from "@/lib/types";
+import { ProjectType } from "@/lib/types/components";
 
 interface ProjectsFiltersProps {
   allTags: string[];

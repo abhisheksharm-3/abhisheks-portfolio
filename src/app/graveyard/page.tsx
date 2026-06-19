@@ -4,12 +4,10 @@ import { useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import { AppShell } from "@/components/layout/AppShell";
 import Link from "next/link";
-import {
-  GraveyardBackground,
-  GraveyardIntroCard,
-  GraveyardProjectCard,
-  GraveyardSectionHeader,
-} from "@/components/sections/graveyard";
+import { GraveyardBackground } from "@/components/sections/graveyard/GraveyardBackground";
+import { GraveyardIntroCard } from "@/components/sections/graveyard/GraveyardIntroCard";
+import { GraveyardProjectCard } from "@/components/sections/graveyard/GraveyardProjectCard";
+import { GraveyardSectionHeader } from "@/components/sections/graveyard/GraveyardSectionHeader";
 import { deadProjects } from "@/data/projects";
 import { ArrowRight } from "lucide-react";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";

@@ -8,9 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Loader2, ArrowRight, CheckCircle, AlertTriangle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { submitContactForm } from "@/lib/actions";
+import { submitContactForm } from "@/lib/actions/contact";
 import { CONTACT_FORM_SCHEMA } from "@/data/contact";
-import { ContactFormDataType } from "@/lib/types";
+import { ContactFormDataType } from "@/lib/types/components";
 
 const field =
   "border border-foreground/10 bg-foreground/[0.03] rounded-none px-3 py-3 h-auto text-base text-foreground placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-foreground/25 focus-visible:bg-foreground/[0.06] transition-all duration-200";

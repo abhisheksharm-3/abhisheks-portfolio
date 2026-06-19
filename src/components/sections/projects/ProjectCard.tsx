@@ -6,7 +6,7 @@ import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
-import type { ProjectCardPropsType } from "@/lib/types";
+import type { ProjectCardPropsType } from "@/lib/types/components";
 
 export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
   const cardRef = useRef<HTMLDivElement>(null);

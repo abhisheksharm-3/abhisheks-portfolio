@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, Github } from "lucide-react";
-import { ProjectType } from "@/lib/types";
+import { ProjectType } from "@/lib/types/components";
 
 /**
  * Renders a minimal metadata sidebar for a project detail page.

@@ -1,15 +1,14 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { Particle, drawConnections, drawGridSystem } from "@/lib/canvas";
+import { Particle } from "@/lib/canvas/particle";
+import { drawConnections, drawGridSystem } from "@/lib/canvas/draw-helpers";
 import type { PositionType, WindowSizeType } from "@/lib/types/canvas";
-import {
-  NoiseTexture,
-  ScanLines,
-  InteractiveElement,
-  ColorBlobs,
-  LightBeams,
-} from "./background";
+import { NoiseTexture } from "./background/NoiseTexture";
+import { ScanLines } from "./background/ScanLines";
+import { InteractiveElement } from "./background/InteractiveElement";
+import { ColorBlobs } from "./background/ColorBlobs";
+import { LightBeams } from "./background/LightBeams";
 
 const HOVER_TIMEOUT_MS = 2000;
 

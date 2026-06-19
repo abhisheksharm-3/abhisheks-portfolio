@@ -1,5 +1,5 @@
 import { Variants } from "framer-motion";
-import { NavigationItemType } from "@/lib/types";
+import { NavigationItemType } from "@/lib/types/components";
 
 /**
  * Centralized navigation configuration

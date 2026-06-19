@@ -4,16 +4,14 @@ import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { AppShell } from "@/components/layout/AppShell";
-import {
-  AboutPageCTA,
-  AboutPageHeader,
-  BioCard,
-  ContactCard,
-  ExperienceEducationSection,
-  InterestsSection,
-  SkillsSection,
-  GitHubActivity,
-} from "@/components/sections/about";
+import { AboutPageCTA } from "@/components/sections/about/AboutPageCTA";
+import { AboutPageHeader } from "@/components/sections/about/AboutPageHeader";
+import { BioCard } from "@/components/sections/about/BioCard";
+import { ContactCard } from "@/components/sections/about/ContactCard";
+import { ExperienceEducationSection } from "@/components/sections/about/ExperienceEducationSection";
+import { InterestsSection } from "@/components/sections/about/InterestsSection";
+import { SkillsSection } from "@/components/sections/about/SkillsSection";
+import { GitHubActivity } from "@/components/sections/about/GitHubActivity";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 

@@ -1,4 +1,4 @@
-import { ProjectType } from "@/lib/types";
+import { ProjectType } from "@/lib/types/components";
 
 /**
  * Array of all projects containing information about each project.
