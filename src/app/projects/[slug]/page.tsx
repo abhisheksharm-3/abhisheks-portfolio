@@ -7,7 +7,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { ArrowLeft } from "lucide-react";
 import { projects } from "@/data/projects";
 import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
-import { ProjectDetailSidebar } from "@/components/sections/projects/ProjectDetailsSidebar";
+import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
 import { ProjectDetailImage } from "@/components/sections/projects/ProjectDetailImage";
 import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDetailOverview";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
@@ -37,27 +37,23 @@ const DetailedProjectPage = () => {
       >
         <ProjectsPageBackground />
 
-        <motion.div variants={ITEM_VARIANTS} className="mb-8">
+        <motion.div variants={ITEM_VARIANTS} className="mb-10">
           <Link
             href="/projects"
-            className="group inline-flex items-center gap-2 text-xs text-foreground/40 hover:text-foreground/70 transition-colors duration-200 border border-foreground/10 hover:border-foreground/20 px-3 py-1.5"
+            className="group inline-flex items-center gap-2 text-xs text-foreground/40 hover:text-foreground/70 transition-colors duration-200"
           >
             <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
             back to projects
           </Link>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-          <motion.div variants={ITEM_VARIANTS} className="lg:col-span-2">
-            <ProjectDetailHeader
-              title={project.title}
-              description={project.description}
-            />
-          </motion.div>
-          <motion.div variants={ITEM_VARIANTS}>
-            <ProjectDetailSidebar project={project} />
-          </motion.div>
-        </div>
+        <motion.div variants={ITEM_VARIANTS} className="mb-10">
+          <ProjectDetailHeader project={project} />
+        </motion.div>
+
+        <motion.div variants={ITEM_VARIANTS} className="mb-12">
+          <ProjectDetailMeta project={project} />
+        </motion.div>
 
         <motion.div variants={ITEM_VARIANTS}>
           <ProjectDetailImage src={project.imageSrc} alt={project.title} />
