@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Geist_Mono, Space_Grotesk, Playfair_Display } from "next/font/google";
+import { Geist_Mono, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
@@ -16,11 +17,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const playfairDisplay = Playfair_Display({
-  variable: "--font-newsreader",
-  subsets: ["latin"],
-  style: ["normal", "italic"],
-  weight: ["400", "500", "700", "900"],
+const basteleur = localFont({
+  variable: "--font-basteleur",
+  src: [
+    { path: "./fonts/Basteleur-Moonlight.woff2", weight: "400", style: "normal" },
+    { path: "./fonts/Basteleur-Bold.woff2", weight: "700", style: "normal" },
+  ],
 });
 
 /**
@@ -65,7 +67,7 @@ export const metadata: Metadata = {
 const RootLayout = ({ children }: Readonly<RootLayoutPropsType>) => (
   <html lang="en" suppressHydrationWarning>
     <body
-      className={`${spaceGrotesk.variable} ${geistMono.variable} ${playfairDisplay.variable} antialiased`}
+      className={`${spaceGrotesk.variable} ${geistMono.variable} ${basteleur.variable} antialiased`}
     >
       <Providers>
         {children}

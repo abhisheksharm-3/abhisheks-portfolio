@@ -12,7 +12,7 @@ export const ContactHeader = () => (
       get in touch
     </p>
 
-    <h1 className="text-5xl sm:text-6xl md:text-7xl xl:text-[6.5rem] font-serif italic tracking-tight leading-[1.02] text-foreground mb-7">
+    <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif tracking-tight leading-tight text-foreground mb-7">
       let&apos;s connect
     </h1>
 

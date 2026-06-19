@@ -22,7 +22,7 @@ export function ProjectDetailHeader({
       transition={{ duration: 0.6, ease: "easeOut" }}
       className="mb-4"
     >
-      <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-tight text-primary mb-6">
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-primary mb-6">
         {title}
       </h1>
 

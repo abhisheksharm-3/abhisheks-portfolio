@@ -42,7 +42,7 @@ const ProjectsHeader = ({ headline, isInView }: ProjectsHeaderPropsType) => (
   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 md:mb-16 lg:mb-20 relative z-10">
     <div className="flex-1">
       <SectionHeader subtitle="stuff i've built" isInView={isInView}>
-        <span className="font-serif italic text-foreground select-none pr-3">
+        <span className="font-serif text-foreground select-none pr-3">
           {headline}
         </span>
       </SectionHeader>

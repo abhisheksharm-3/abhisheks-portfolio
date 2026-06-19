@@ -23,7 +23,7 @@ export const ProjectsCTA = () => {
           <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light block mb-4">
             work together
           </span>
-          <h3 className="text-2xl sm:text-3xl font-serif italic text-primary leading-tight">
+          <h3 className="text-2xl sm:text-3xl font-serif text-primary leading-tight">
             have a project in mind?
           </h3>
           <p className="text-foreground/50 text-sm font-light leading-relaxed mt-3 max-w-md">

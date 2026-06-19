@@ -32,7 +32,7 @@ export const Skills = () => {
         className="relative z-10 w-full"
       >
         <SectionHeader subtitle="expertise" isInView={isInView}>
-          <span className="font-serif italic text-foreground select-none pr-4">
+          <span className="font-serif text-foreground select-none pr-4">
             what i do best
           </span>
         </SectionHeader>

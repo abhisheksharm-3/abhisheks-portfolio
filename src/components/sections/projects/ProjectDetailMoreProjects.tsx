@@ -23,7 +23,7 @@ export function ProjectDetailMoreProjects() {
           <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light block mb-4">
             what&apos;s next
           </span>
-          <h3 className="text-2xl sm:text-3xl font-serif italic text-primary leading-tight">
+          <h3 className="text-2xl sm:text-3xl font-serif text-primary leading-tight">
             explore more projects
           </h3>
         </div>

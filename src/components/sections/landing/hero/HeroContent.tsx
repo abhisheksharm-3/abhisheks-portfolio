@@ -84,7 +84,7 @@ export const HeroName: React.FC = () => (
       initial={{ opacity: 0, y: 50 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 1, delay: 0.4 }}
-      className="relative z-10 md:ml-[25%]"
+      className="relative z-10 md:ml-[8%]"
     >
       <div className="overflow-hidden text-center md:text-left">
         <motion.span
@@ -92,7 +92,7 @@ export const HeroName: React.FC = () => (
           animate={{ y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           className={cn(
-            "block text-6xl font-serif italic tracking-tighter text-primary/80",
+            "block text-6xl font-serif tracking-tighter text-primary/80",
             "sm:text-7xl md:inline-block md:pr-8 lg:text-8xl xl:text-9xl",
           )}
         >
