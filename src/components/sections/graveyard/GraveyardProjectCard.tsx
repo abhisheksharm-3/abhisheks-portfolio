@@ -29,7 +29,7 @@ export const GraveyardProjectCard = ({ project, index }: GraveyardProjectCardPro
           src={project.imageSrc}
           alt={project.title}
           fill
-          className="object-cover opacity-60 grayscale-[15%] transition-opacity duration-500 group-hover:opacity-70"
+          className="object-cover grayscale brightness-75 transition-all duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
           sizes="(max-width: 768px) 100vw, 50vw"
           loading="lazy"
         />
