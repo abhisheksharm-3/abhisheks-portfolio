@@ -16,7 +16,7 @@ export const ProjectImageContainer = ({
 }: ProjectCardPartPropsType) => (
   <div className="relative w-full h-52 sm:h-64 overflow-hidden shrink-0">
     <motion.div
-      className="w-full h-full"
+      className="relative w-full h-full"
       animate={{ scale: isHovered ? 1.03 : 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >

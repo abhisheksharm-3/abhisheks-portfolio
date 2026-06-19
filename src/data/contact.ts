@@ -1,11 +1,4 @@
-import {
-  Mail,
-  Code,
-  ExternalLink,
-  Github,
-  Linkedin,
-  Instagram,
-} from "lucide-react";
+import { Mail, Github, Linkedin, Instagram } from "lucide-react";
 import { RiGithubFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
 import z from "zod";
 
@@ -28,30 +21,6 @@ export const CONTACT_INFO = {
     url: "https://x.com/iabhisheksan",
   },
 } as const;
-
-/**
- * Contact channels for CTA sections
- */
-export const CONTACT_CHANNELS = [
-  {
-    icon: Mail,
-    label: "Email",
-    value: CONTACT_INFO.email,
-    href: `mailto:${CONTACT_INFO.email}`,
-  },
-  {
-    icon: Code,
-    label: "GitHub",
-    value: CONTACT_INFO.github.username,
-    href: CONTACT_INFO.github.url,
-  },
-  {
-    icon: ExternalLink,
-    label: "Website",
-    value: CONTACT_INFO.website,
-    href: `https://${CONTACT_INFO.website}`,
-  },
-] as const;
 
 /**
  * Social media links with consistent styling

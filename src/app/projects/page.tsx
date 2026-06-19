@@ -79,7 +79,7 @@ const ProjectsPage = () => {
           className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}
         >
           <AnimatePresence initial={false}>
-            {filteredProjects.map((project) => (
+            {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.title}
                 layout
@@ -88,7 +88,7 @@ const ProjectsPage = () => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
               >
-                <ProjectCard project={project} />
+                <ProjectCard project={project} priority={index === 0} />
               </motion.div>
             ))}
           </AnimatePresence>
