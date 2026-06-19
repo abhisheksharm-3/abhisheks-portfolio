@@ -43,7 +43,7 @@ export const GraveyardSectionHeader = ({ quote }: { quote: string }) => {
 
       <motion.h1
         variants={itemVariants}
-        className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-tight text-foreground mb-6"
+        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground mb-6"
       >
         the project graveyard
       </motion.h1>

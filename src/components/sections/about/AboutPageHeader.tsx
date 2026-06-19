@@ -26,7 +26,7 @@ export const AboutPageHeader = () => {
 
       <motion.h1
         variants={STAGGER_ITEM_VARIANTS}
-        className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-tight text-foreground mb-6"
+        className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground mb-6"
       >
         Abhishek Sharma
       </motion.h1>

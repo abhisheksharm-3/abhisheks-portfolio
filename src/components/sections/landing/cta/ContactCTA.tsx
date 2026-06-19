@@ -19,7 +19,7 @@ export const ContactCTA = () => {
 
       <div className="relative z-10 w-full">
         <SectionHeader subtitle="reach out" isInView={isInView}>
-          <span className="font-serif italic text-foreground select-none pr-4">
+          <span className="font-serif text-foreground select-none pr-4">
             let&apos;s make cool stuff
           </span>
         </SectionHeader>

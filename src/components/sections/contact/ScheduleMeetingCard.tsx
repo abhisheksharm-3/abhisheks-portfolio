@@ -12,7 +12,7 @@ export const ScheduleMeetingCard = () => (
     <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] mb-4 font-light">
       prefer to talk?
     </p>
-    <h3 className="font-serif italic text-xl text-foreground mb-1.5">
+    <h3 className="font-serif text-xl text-foreground mb-1.5">
       Schedule a call
     </h3>
     <p className="text-foreground/35 text-sm font-light mb-5">

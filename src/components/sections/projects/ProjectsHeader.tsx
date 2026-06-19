@@ -18,7 +18,7 @@ export const ProjectsHeader = () => {
         project archive
       </span>
 
-      <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-tight text-primary mb-6">
+      <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-primary mb-6">
         things i&apos;ve built
       </h1>
 

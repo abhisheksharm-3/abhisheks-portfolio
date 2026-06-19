@@ -17,7 +17,7 @@ export const AboutPageCTA = () => {
         href="/projects"
         className="flex items-center gap-2 text-foreground/60 hover:text-foreground/90 transition-colors duration-200 group font-light text-base"
       >
-        <span className="font-serif italic text-2xl sm:text-3xl text-foreground/80 group-hover:text-foreground transition-colors duration-200">
+        <span className="font-serif text-2xl sm:text-3xl text-foreground/80 group-hover:text-foreground transition-colors duration-200">
           view my projects
         </span>
         <ArrowRight className="h-5 w-5 text-primary/40 group-hover:text-primary/70 transform transition-all duration-200 group-hover:translate-x-1" />

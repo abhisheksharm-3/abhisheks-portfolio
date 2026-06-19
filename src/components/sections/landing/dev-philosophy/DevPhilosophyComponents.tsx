@@ -37,7 +37,7 @@ export const PhilosophyQuote = ({ isInView }: InViewPropsType) => (
     className="flex flex-col lg:flex-row gap-10 lg:gap-20"
   >
     <div className="lg:w-1/2">
-      <blockquote className="text-2xl sm:text-3xl font-serif italic text-foreground leading-snug mb-6">
+      <blockquote className="text-2xl sm:text-3xl font-serif text-foreground leading-snug mb-6">
         i don&apos;t worship perfect code. i care about code that ships, scales,
         and actually makes life easier.
       </blockquote>

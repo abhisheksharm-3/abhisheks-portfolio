@@ -24,7 +24,7 @@ export const Footer = () => (
         <motion.div variants={ITEM_VARIANTS}>
           <Link href="/" className="inline-block mb-5">
             <span className="text-2xl font-light tracking-tighter">
-              <span className="text-primary font-serif italic">A</span>
+              <span className="text-primary font-serif">A</span>
               <span className="font-extralight">BHK</span>
               <span className="text-primary/70 align-super text-[10px]">®</span>
             </span>

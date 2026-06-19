@@ -8,7 +8,7 @@ export const BioCard = () => {
         biography
       </p>
 
-      <h2 className="text-2xl font-serif italic text-foreground mb-8">
+      <h2 className="text-2xl font-serif text-foreground mb-8">
         A bit about me
       </h2>
 

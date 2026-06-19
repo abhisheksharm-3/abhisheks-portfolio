@@ -141,7 +141,7 @@ export default async function PostPage({ params }: Props) {
             {frontmatter.tags[0]} / {formattedDate} / {frontmatter.readingTime} min
           </p>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif italic leading-tight text-foreground mb-4">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif leading-tight text-foreground mb-4">
             {frontmatter.title}
           </h1>
 
@@ -159,7 +159,7 @@ export default async function PostPage({ params }: Props) {
             <>
               <div className="h-px bg-primary/10 w-full mt-12 mb-10" />
               <div id="frequently-asked-questions">
-                <h2 className="text-lg font-serif italic text-foreground/80 mb-6">
+                <h2 className="text-lg font-serif text-foreground/80 mb-6">
                   frequently asked questions
                 </h2>
                 <div className="space-y-6">

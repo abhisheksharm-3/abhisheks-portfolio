@@ -99,7 +99,7 @@ export const GitHubActivity = () => {
                 <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
                     development activity
                 </p>
-                <h3 className="text-2xl font-serif italic text-foreground mb-6">
+                <h3 className="text-2xl font-serif text-foreground mb-6">
                     GitHub Activity
                 </h3>
                 <div className="h-px bg-primary/10 mb-8" />

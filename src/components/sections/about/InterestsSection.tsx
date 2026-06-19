@@ -16,7 +16,7 @@ export const InterestsSection = () => {
       <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
         beyond code
       </p>
-      <h3 className="text-2xl font-serif italic text-foreground mb-8">
+      <h3 className="text-2xl font-serif text-foreground mb-8">
         What keeps me going
       </h3>
       <div className="h-px bg-primary/10 mb-10" />

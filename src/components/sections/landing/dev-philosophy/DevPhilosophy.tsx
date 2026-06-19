@@ -29,7 +29,7 @@ export const Philosophy = () => {
         className="relative z-10 w-full"
       >
         <SectionHeader subtitle="how i think about dev" isInView={isInView}>
-          <span className="font-serif italic text-foreground select-none pr-4">
+          <span className="font-serif text-foreground select-none pr-4">
             not a manifesto, just how i build
           </span>
         </SectionHeader>

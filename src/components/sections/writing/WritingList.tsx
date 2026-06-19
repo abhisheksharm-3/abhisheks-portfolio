@@ -22,7 +22,7 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
         <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
           writing
         </p>
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-serif italic leading-tight text-foreground mb-6">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground mb-6">
           thoughts & notes
         </h1>
         <div className="h-px bg-primary/10 w-full mb-6" />
