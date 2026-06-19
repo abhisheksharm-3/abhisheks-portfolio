@@ -4,7 +4,7 @@ import { render } from "@react-email/render";
 import nodemailer from "nodemailer";
 import { ContactEmailTemplate } from "@/components/emails/ContactEmailTemplate";
 import React from "react";
-import { CONTACT_FORM_SCHEMA } from "@/data/contact";
+import { CONTACT_FORM_SCHEMA, CONTACT_INFO } from "@/data/contact";
 import type { ContactFormDataType } from "@/lib/types/components";
 import type {
     ContactAntiSpamType,
@@ -13,6 +13,9 @@ import type {
 } from "@/lib/types/contact";
 
 const MIN_SUBMIT_MS = 2_000;
+
+const PUBLIC_CONTACT_EMAIL =
+    process.env.CONTACT_PUBLIC_EMAIL ?? CONTACT_INFO.email;
 
 const sanitizeHeader = (value: string): string =>
     value.replace(/[\r\n]+/g, " ").trim();
@@ -80,7 +83,7 @@ export async function submitContactForm(
         mailConfig = getMailConfig();
     } catch (error) {
         console.error("Contact form: mail service is not configured", error);
-        return { error: "Mail service is not configured. Please email directly at abhishek@abhisheksan.com" };
+        return { error: `Mail service is not configured. Please email directly at ${PUBLIC_CONTACT_EMAIL}` };
     }
 
     const safeName = sanitizeHeader(validation.data.name).replace(/["<>]/g, "");
@@ -111,7 +114,7 @@ export async function submitContactForm(
         });
     } catch (error) {
         console.error("Contact form: failed to send email", error);
-        return { error: "Failed to send. Please email directly at abhishek@abhisheksan.com" };
+        return { error: `Failed to send. Please email directly at ${PUBLIC_CONTACT_EMAIL}` };
     }
 
     return { isSuccess: true, message: "Email sent successfully." };

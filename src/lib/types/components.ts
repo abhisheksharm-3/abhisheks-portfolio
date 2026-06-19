@@ -3,11 +3,6 @@ import type { ReactNode } from "react";
 import type { CONTACT_FORM_SCHEMA } from "@/data/contact";
 import type z from "zod";
 
-export interface MousePositionType {
-    x: number;
-    y: number;
-}
-
 /** Props for components that animate based on scroll-into-view state */
 export interface InViewPropsType {
     isInView: boolean;
@@ -49,6 +44,7 @@ export interface ProjectsPropsType {
 export interface ProjectCardPropsType {
     project: ProjectType;
     delay?: number;
+    priority?: boolean;
 }
 
 /** Props for landing page project card with hover state management */
@@ -73,27 +69,6 @@ export interface AnimatedPathPropsType {
     className?: string;
     pathD?: string;
     delay?: number;
-}
-
-export interface ContactChannelType {
-    readonly icon: LucideIcon;
-    readonly label: string;
-    readonly value: string;
-    readonly href: string;
-}
-
-export interface PersonalInterestType {
-    readonly category: string;
-    readonly icon: LucideIcon;
-    readonly description: string;
-    readonly tags: readonly string[];
-}
-
-export interface SocialLinkType {
-    readonly label: string;
-    readonly icon: React.ComponentType<{ className?: string }>;
-    readonly href: string;
-    readonly displayUrl: string;
 }
 
 export interface TimelineItemType {

@@ -104,7 +104,7 @@ public/images/     — Static assets
 
 ## Gotchas
 
-- All MDX frontmatter is Zod-validated via `src/lib/post-schema.ts` — run `npm run check-post` before publishing a new post or the build will fail
+- All MDX frontmatter is Zod-validated via `src/lib/content/schema.ts` — run `npm run check-post` before publishing a new post or the build will fail
 - Tailwind v4 uses `@tailwindcss/postcss`; there is no `tailwind.config.js` — utility classes are configured via CSS
 - Project data lives in `src/data/projects.ts` — this is the single source of truth; don't duplicate project info in MDX or elsewhere
-- Contact form uses a Next.js server action; email is sent via nodemailer — requires `SMTP_*` env vars at runtime
+- Contact form uses a Next.js server action; email is sent via nodemailer using Gmail OAuth2 — requires `MAIL_USER`, `MAIL_CLIENT_ID`, `MAIL_CLIENT_SECRET`, `MAIL_REFRESH_TOKEN`, and `MY_MAIL` (recipient) env vars at runtime. The public-facing fallback address shown in error messages is overridable via `CONTACT_PUBLIC_EMAIL` (defaults to `CONTACT_INFO.email`)

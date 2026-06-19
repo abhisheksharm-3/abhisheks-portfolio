@@ -8,7 +8,11 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import type { ProjectCardPropsType } from "@/lib/types/components";
 
-export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
+export const ProjectCard = ({
+  project,
+  delay = 0,
+  priority = false,
+}: ProjectCardPropsType) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(cardRef, { once: true, amount: 0.01 });
 
@@ -28,7 +32,8 @@ export const ProjectCard = ({ project, delay = 0 }: ProjectCardPropsType) => {
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          loading="lazy"
+          priority={priority}
+          loading={priority ? undefined : "lazy"}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
