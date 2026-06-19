@@ -16,56 +16,46 @@ import {
   NoiseBackground,
 } from "./HeroBackground";
 import {
-  ExperienceCounter,
-  HeroDescription,
+  HeroEyebrow,
   HeroName,
+  HeroSkillsStrip,
+  HeroTagline,
   ScrollIndicator,
 } from "./HeroContent";
-import { SkillsSection } from "./HeroSkills";
 
 /**
- * The main hero section for the homepage.
+ * The homepage hero: a single name-dominant editorial column over the
+ * interactive constellation background.
  *
- * This component orchestrates a complex visual experience by combining:
- * 1.  **Mouse Parallax**: Tracks mouse movement for a 3D depth effect.
- * 2.  **Scroll Animation**: Fades out and moves content up on scroll.
- * 3.  **Content Layout**: Structures the hero's name, description, and skills.
- *
- * @returns {JSX.Element} The fully rendered and interactive hero section.
+ * 1.  **Mouse Parallax**: tracks mouse movement to drive the background depth.
+ * 2.  **Scroll Animation**: fades and lifts the content as the user scrolls past.
+ * 3.  **Content**: eyebrow, name, lede, and a quiet "what i do best" strip.
  */
 export const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Set up a performant mouse move listener to track mouse position
-  // relative to the center of the hero section.
+  // Track mouse position relative to the hero's center for the background parallax.
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const { current: el } = containerRef;
       if (!el) return;
 
-      const { clientX, clientY } = e;
       const { left, top, width, height } = el.getBoundingClientRect();
-
-      const x = clientX - (left + width / 2);
-      const y = clientY - (top + height / 2);
-
-      mouseX.set(x);
-      mouseY.set(y);
+      mouseX.set(e.clientX - (left + width / 2));
+      mouseY.set(e.clientY - (top + height / 2));
     };
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  // Track scroll progress relative to the hero section.
+  // Fade and lift the content as the hero scrolls out of view.
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
-
-  // Create spring-smoothed animations based on scroll progress.
   const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
   const smoothY = useSpring(y, { damping: 15, stiffness: 100 });
   const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
@@ -81,20 +71,12 @@ export const Hero = () => {
       <AnimatedPaths />
       <AsymmetricalDecoration mouseX={mouseX} mouseY={mouseY} />
 
-      <ExperienceCounter />
-
-      <div className="relative z-10 mx-auto min-h-screen w-full max-w-7xl px-6 flex">
-        <motion.div
-          style={{ y: smoothY, opacity }}
-          className="flex w-full flex-col items-start justify-center py-20 md:flex-row"
-        >
-          <div className="flex w-full flex-col md:mt-16 md:w-1/2">
-            <HeroName />
-            <HeroDescription />
-          </div>
-          <div className="hidden md:block md:w-1/2">
-            <SkillsSection mouseX={mouseX} mouseY={mouseY} />
-          </div>
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-start px-6 pb-14 pt-28 md:pt-40">
+        <motion.div style={{ y: smoothY, opacity }} className="flex flex-col">
+          <HeroEyebrow />
+          <HeroName />
+          <HeroTagline />
+          <HeroSkillsStrip />
         </motion.div>
       </div>
 
