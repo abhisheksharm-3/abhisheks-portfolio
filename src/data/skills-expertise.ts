@@ -12,11 +12,11 @@ import {
  * Skills displayed in the Hero section
  */
 export const HERO_SKILLS = [
-  "frontend engineering (React & Next.js)",
-  "backend & apis (Node.js, Go, FastAPI)",
-  "ai agents & pipelines (LangGraph, LiteLLM)",
-  "cloud & devops (AWS, GCP, Docker, Firebase)",
-  "mobile development (Jetpack Compose, React Native)",
+  "frontend",
+  "backend & apis",
+  "ai agents",
+  "cloud & devops",
+  "mobile",
 ] as const;
 
 /**

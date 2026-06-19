@@ -14,11 +14,6 @@ export interface MobileNavLinkPropsType {
     onClick: () => void;
 }
 
-export interface SkillItemPropsType {
-    skill: string;
-    index: number;
-}
-
 export interface ProjectType {
     title: string;
     slug: string;
