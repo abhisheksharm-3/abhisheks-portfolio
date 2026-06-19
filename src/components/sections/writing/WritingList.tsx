@@ -3,6 +3,7 @@
 import { motion } from "framer-motion"
 import Link from "next/link"
 import { ArrowUpRight } from "lucide-react"
+import { PageHeader } from "@/components/shared/PageHeader"
 import type { PostMeta } from "@/lib/content/loader"
 
 type WritingListPropsType = {
@@ -12,25 +13,12 @@ type WritingListPropsType = {
 
 export function WritingList({ posts, draftPosts }: WritingListPropsType) {
   return (
-    <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 max-w-[2000px] mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-        className="mb-10 sm:mb-12"
-      >
-        <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
-          writing
-        </p>
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground mb-6">
-          thoughts & notes
-        </h1>
-        <div className="h-px bg-primary/10 w-full mb-6" />
-        <p className="text-foreground/55 max-w-2xl text-sm sm:text-base font-light leading-relaxed">
-          write-ups from production work. things that bit me, how i diagnosed
-          them, and what i would do differently.
-        </p>
-      </motion.div>
+    <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24">
+      <PageHeader
+        eyebrow="writing"
+        title="thoughts & notes"
+        intro="write-ups from production work. things that bit me, how i diagnosed them, and what i would do differently."
+      />
 
       {posts.length > 0 && (
         <motion.div
