@@ -83,7 +83,7 @@ export const SkillsSection = ({ mouseX, mouseY }: MouseParallaxPropsType) => {
         transition={{ duration: 0.8, delay: 1.5 }}
         className="mb-10 flex items-center"
       >
-        <span className="text-sm uppercase tracking-wider text-foreground/40 font-light">
+        <span className="text-[11px] uppercase tracking-[0.2em] text-primary/35 font-light">
           what i do best
         </span>
         <div className="ml-4 h-[1px] w-12 bg-primary/20"></div>

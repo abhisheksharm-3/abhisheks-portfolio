@@ -14,8 +14,6 @@ const ContactPage = () => (
 
       <ContactHeader />
 
-      <div className="mt-10 mb-10 h-px bg-primary/10" />
-
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-16 lg:gap-24">
         <SendMessageCard />
         <div className="flex flex-col gap-14">
