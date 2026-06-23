@@ -1,0 +1,165 @@
+---
+title: "facebook reels isn't a platform, it's a flag"
+subhead: "facebook shorts isn't a real format. the work was modeling one publish target reached two ways, kept coherent with a reel flag and a mutual-exclusivity rule."
+date: "2026-06-23"
+keywords:
+  - "ayrshare facebook reels api publishing"
+  - "facebook reels vs feed mutual exclusivity"
+  - "ayrshare facebookOptions reels flag"
+  - "social media platform variant selection react"
+  - "facebook reels requirements aspect ratio duration"
+  - "circular import shared module react"
+tags: ["frontend", "integrations"]
+readingTime: 10
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "is Facebook Shorts a real publishing format?"
+    answer: "No. Meta does not have a publishing format called Shorts; that name belongs to YouTube. The Meta equivalent of a short vertical video is a Facebook Reel. Through a publishing API like Ayrshare there is no separate Reels platform either. You publish to the facebook platform and set a reel flag in the platform options (faceBookOptions.reels: true), and Facebook classifies the post as a Reel only if the video also meets the Reel requirements. So a ticket asking for Facebook Shorts is really a request to publish a Reel to the existing facebook target with one extra flag, not a request to integrate a new platform."
+  - question: "why must Facebook Feed and Facebook Reels be mutually exclusive in a single post?"
+    answer: "Because both resolve to the same underlying publishing target. In the code, the display name Facebook Reels maps to the Ayrshare platform identifier facebook, exactly like the plain Facebook feed option does. If a user selects both in one post, the publish payload ends up with two content entries that both normalize to facebook, which is ambiguous: the API cannot tell whether you want one post or two, and the reel flag is set for the whole facebook target rather than for one of two entries. Enforcing that only one Facebook variant can be selected per post keeps the normalization one-to-one and the reel flag unambiguous."
+  - question: "what makes a video qualify as a Facebook Reel through Ayrshare?"
+    answer: "Setting faceBookOptions.reels: true asks Facebook to treat the upload as a Reel, but Facebook only classifies it as one if the media qualifies. The validation enforces a 9:16 aspect ratio, a resolution floor of 540x960 with 1080x1920 recommended, a duration between 3 and 90 seconds, a file size at or under 2 GB, and a title of 255 characters or fewer. A Reel also supports a thumbnail, unlike a YouTube Short. If the aspect ratio is wrong the post still publishes, but Facebook silently treats it as a normal video rather than a Reel, which is why the aspect-ratio check is a hard error rather than a warning."
+  - question: "how do you share platform-selection rules across multiple UIs without a circular import?"
+    answer: "The mutual-exclusivity rules need to run in several selection surfaces: the composer, the Kanban card form, and the review step. The natural home for them is the platform config module, but that module imports the Kanban board component, so importing it into a form pulls the board into the form's module graph and creates a cycle. The fix is to extract the variant grouping and the conflict-dropping helpers into a separate module that imports nothing from the app. Any selection UI can import that dependency-free module to enforce exclusivity without dragging the full platform config and its board dependency along with it."
+  - question: "how do you test Reels publishing when the API has no sandbox?"
+    answer: "Ayrshare has no sandbox environment, so the only way to confirm a real Reel is created is to publish to a genuinely connected Facebook Page and inspect the result. That has to be done for every publishing path independently. In this system there are two: the Supabase edge function that posts directly, and the Python Lambda that resizes the video first and then posts. Both must normalize the Facebook Reels display name to the facebook platform and set the reel flag, so both were verified end to end with a live publish, and the resulting posts were checked to confirm Facebook classified them as Reels rather than ordinary feed videos."
+toc:
+  - { id: "the-format-that-isnt-a-platform", label: "the format that isn't a platform", depth: 2 }
+  - { id: "one-target-many-display-names", label: "one target, many display names", depth: 2 }
+  - { id: "why-the-variants-must-be-exclusive", label: "why the variants must be exclusive", depth: 2 }
+  - { id: "exclusivity-without-a-circular-import", label: "exclusivity without a circular import", depth: 2 }
+  - { id: "the-reel-flag-at-publish-time", label: "the reel flag at publish time", depth: 2 }
+  - { id: "validating-what-counts-as-a-reel", label: "validating what counts as a reel", depth: 2 }
+  - { id: "two-publish-paths-and-no-sandbox", label: "two publish paths and no sandbox", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "stripe-ach-subscriptions-settlement-grace-period"
+    title: "provisioning stripe subscriptions before ach settles"
+    readingTime: 12
+    date: "2026-06-18"
+  - slug: "canvas-lms-self-hosted-sqs-polling"
+    title: "canvas lms self-hosted: polling submissions without kinesis"
+    readingTime: 10
+    date: "2026-04-20"
+---
+
+The ticket said "add Facebook Shorts support." I spent the first part of the review confirming that Facebook Shorts is not a thing. Shorts is YouTube's format. The Meta equivalent of a short vertical video is a Facebook Reel, and through the social publishing API the product uses (Ayrshare), a Reel is not even a distinct platform you publish to. It is the regular `facebook` target with one extra flag set in the platform options. So the actual work was not integrating a new platform. It was modeling a single publish target that users reach through more than one named option, making those options behave coherently, and doing it across every surface that can select a platform.
+
+That sounds smaller than it is. The interesting problems were all consequences of one fact: the name a user picks in the UI is not the identifier the API publishes to. Get the mapping wrong and you either fail to produce a Reel, or you produce an ambiguous publish request that the API cannot interpret. The frontend suite for this work runs 13,655 tests across 2,157 files, and a good chunk of the new ones exist to pin down that mapping.
+
+## the format that isn't a platform
+
+A publishing API like Ayrshare exposes a flat set of platform identifiers: `facebook`, `instagram`, `youtube`, `twitter`, and so on. There is no `facebook_reels` and no `youtube_shorts`. A Reel is produced by publishing to `facebook` with `faceBookOptions.reels: true`, and Facebook then classifies the upload as a Reel only if the media also meets the Reel requirements. A YouTube Short is the same idea: you publish to `youtube` and the platform decides it is a Short based on the video being vertical and short enough.
+
+This means the UI concept and the API concept live at different levels. In the UI it is useful to show "Facebook Reels" and "Facebook" as separate, selectable things, because to a user they are different acts of publishing with different rules. At the API level they are the same destination with a flag toggled. The whole feature is the work of bridging those two levels without letting either one leak incorrectly into the other.
+
+## one target, many display names
+
+The bridge is a single normalization function that maps a UI display name to its API platform identifier. Several display names intentionally collapse onto one identifier:
+
+```typescript
+/** Maps a display platform name to the Ayrshare platform identifier. */
+export const toAyrsharePlatform = (displayName: string): string => {
+  if (displayName === "YouTube Shorts" || displayName === "YouTube Long-Form") return "youtube";
+  if (displayName === "Facebook Reels") return "facebook";
+  if (displayName === "X (Twitter)" || displayName === "X") return "twitter";
+  return displayName.toLowerCase();
+};
+```
+
+Two display names map to `youtube`. Two map to `facebook`. This many-to-one mapping is the source of every subtlety that follows. The display layer can be as expressive as it likes, but the moment a post is built, several distinct-looking selections converge, and any logic downstream of normalization sees only `facebook` or `youtube` with no memory of which variant the user picked unless that information is carried separately.
+
+The reel-ness, specifically, cannot survive normalization on its own. Once "Facebook Reels" becomes `facebook`, nothing in the platform identifier records that it was a Reel. That distinction has to be preserved through a different channel and reattached at publish time, which is what the reel flag does. Recognizing that the variant information and the platform identifier are two separate pieces of data, traveling separately, is the core of getting this right.
+
+## why the variants must be exclusive
+
+If "Facebook" and "Facebook Reels" both normalize to `facebook`, then selecting both in a single post produces two content entries that resolve to the same target. That is not a richer post; it is an ambiguous one. The publish payload would carry two facebook entries, and the reel flag is set per platform target rather than per entry, so there is no coherent way to say "publish this one as a Reel and that one as a feed video" in a single call. The same reasoning applies to YouTube Shorts versus Long-Form.
+
+The clean resolution is to treat each set of variants as a mutually exclusive group: at most one member of each group can be selected per post. Adding one variant drops any other member of its group from the selection. This has to hold everywhere a platform can be chosen, because a post assembled in the Kanban card form and a post assembled in the composer both feed the same normalization and the same publish call. A rule enforced in only one of those surfaces is not a rule; it is a place the bug has not surfaced yet.
+
+## exclusivity without a circular import
+
+The obvious home for the variant groups is the platform config module, which already knows about every platform. But that module imports the Kanban board component, and the Kanban card form needs the exclusivity rule. Importing the platform config into the form to get the rule pulls the Kanban board into the form's module graph, and the result is a circular import that broke at runtime while wiring the exclusivity logic into the card form.
+
+The fix is to recognize that the exclusivity rule does not actually need anything from the platform config. It is pure data about which names conflict, plus a couple of array helpers. Extracting that into a dependency-free module lets every selection surface import it without dragging the board along:
+
+```typescript
+// Dependency-free variant-group helpers. Kept separate from platformConfig (which
+// imports KanbanBoard) so selection UIs can enforce exclusivity without pulling
+// platform config into their module graph, avoiding a circular import.
+
+/** Mutually-exclusive Facebook format variants (only one per post). */
+export const FACEBOOK_VARIANTS = ["Facebook", "Facebook Reels"];
+
+const EXCLUSIVE_VARIANT_GROUPS = [YOUTUBE_VARIANTS, FACEBOOK_VARIANTS];
+
+/** Selection with every variant mutually exclusive to `platform` removed. */
+export function dropConflictingVariants(selected: string[], platform: string): string[] {
+  const group = EXCLUSIVE_VARIANT_GROUPS.find((g) => g.includes(platform));
+  return group ? selected.filter((p) => !group.includes(p)) : selected;
+}
+```
+
+The lesson here is more general than the bug. When a piece of logic needs to be shared across the leaves of a UI, it should depend on as little as possible, because every dependency it carries becomes a dependency of every consumer. A rule that is fundamentally just data about strings has no business transitively importing a board component. Pushing it down into a module that imports nothing is what makes it safe to use everywhere it is needed.
+
+## the reel flag at publish time
+
+After normalization erases the variant distinction from the platform identifier, the publish step reconstructs the reel flag by inspecting the original display name alongside the normalized one. The flag is set on the Facebook platform options for the whole call:
+
+```typescript
+const isReels = platformContents.some(
+  (p) =>
+    getAyrsharePlatformName(p.platform) === "facebook" &&
+    p.platform.toLowerCase().includes("reel")
+);
+
+platformOptions.faceBookOptions = {
+  ...(isReels && { reels: true }),
+};
+```
+
+The conditional spread matters: `reels: true` is only present when a Reel was actually selected, rather than always present and sometimes false. Sending the flag only when it applies keeps the payload minimal and avoids asserting anything about feed posts. This is the exact point where the variant information that traveled separately from the platform identifier gets reattached, completing the round trip from a UI selection back to an API instruction.
+
+Because the flag is keyed off the display name containing "reel", the display names are not arbitrary labels; they are load-bearing. This is worth a comment in the code, because a well-meaning rename of "Facebook Reels" to something cleaner would silently stop producing Reels while every test that checks normalization still passes. The coupling between the human-readable name and the publish logic is the kind of thing that should be made explicit rather than left for someone to rediscover.
+
+## validating what counts as a reel
+
+Setting the flag asks Facebook to treat the upload as a Reel, but Facebook only honors that if the media qualifies. The validation encodes those requirements so a user finds out before publishing rather than after:
+
+```typescript
+export default function validateFacebookReels(ctx: IssueContext): void {
+  if (ctx.facebookTitle.length > 255) {
+    ctx.errors.push(`Facebook title too long (${ctx.facebookTitle.length}/255 chars)`);
+  }
+  checkDuration(ctx, REEL_DURATION); // 3–90 seconds
+  if (ratioMismatch(9 / 16, ctx.meta.videoAspectRatio)) {
+    ctx.errors.push(
+      "Facebook Reels requires 9:16 aspect ratio: video won't be classified as a Reel"
+    );
+  }
+  const d = dims(ctx.meta);
+  if (d) checkReelsResolution(d, ctx); // floor 540×960, recommend 1080×1920
+  if (thumbMismatchesVideo(ctx)) {
+    ctx.warnings.push("Thumbnail aspect ratio doesn't match the video");
+  }
+}
+```
+
+The split between errors and warnings carries the intent. The aspect ratio is an error because a non-9:16 video does not fail to publish; it publishes as an ordinary feed video, which is a worse outcome than a clear rejection because it looks like success. A resolution below 540x960 is an error, but a resolution that clears that floor while falling short of the recommended 1080x1920 is only a warning. And unlike a YouTube Short, a Reel supports a thumbnail, so the thumbnail checks run here where they would not for Shorts. Each of these rules exists because the platform's definition of a Reel is stricter than "set the flag."
+
+## two publish paths and no sandbox
+
+There is not one place this has to be correct; there are two. One path is a Supabase edge function that posts directly to Ayrshare. The other is a Python Lambda that resizes the video first, for flows where the source media needs reshaping before it can become a 9:16 Reel, and then posts. Both paths independently normalize the Facebook Reels display name to `facebook` and set the reel flag, because both construct their own publish payload. A fix applied to only one would leave Reels broken on the other.
+
+Ayrshare has no sandbox, which means none of this can be verified except by publishing to a real connected Facebook Page and looking at the result. So verification was a live publish through each path, checking that the resulting post was classified as a Reel and not a feed video. During that live testing I also found a security problem unrelated to Reels: the edge function was logging request headers and the full Ayrshare payload, which put credentials into the Supabase logs. That needed the logging removed and the exposed credentials rotated before the path could ship.
+
+## what i would change
+
+**Derive the reel flag from a structured field, not a substring of the display name.** Keying `isReels` off the display name containing "reel" works, but it makes the human-readable label load-bearing in a way that is easy to break with an innocent rename. Carrying an explicit `variant: "reel"` field on the platform content from the point of selection would decouple the publish logic from the wording of the UI, and would remove the need for a comment warning people not to rename a string.
+
+**Make the platform-target collapse impossible to represent, not just validated against.** Today the mutual-exclusivity rule prevents two Facebook variants from coexisting, enforced at every selection surface. That is a rule applied repeatedly rather than a structure that cannot be violated. Modeling the selection as a map from API target to a single chosen variant, instead of a flat list of display names, would make a double-Facebook selection unrepresentable rather than merely filtered out, which is a stronger guarantee than remembering to call the filter in every new surface.
+
+**Share one publish-payload builder between the two paths.** The edge function and the resize Lambda each rebuild the normalization and the reel flag. They agree today because both were updated together, but nothing structurally forces them to stay in agreement. Extracting the payload construction into one shared piece, even across the language boundary via a small shared contract, would mean the next platform quirk gets fixed once instead of twice.
