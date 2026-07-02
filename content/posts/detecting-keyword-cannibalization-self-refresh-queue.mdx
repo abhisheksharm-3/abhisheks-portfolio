@@ -1,0 +1,169 @@
+---
+title: "when two of my pages cannibalize the same query"
+subhead: "search console showed two of my own urls ranking for one query, so the learning phase flags the weaker page and queues it to refresh on the next run."
+date: "2026-05-28"
+keywords:
+  - "keyword cannibalization detection"
+  - "self-competing pages google search console"
+  - "page query pairs cannibalization gsc"
+  - "consolidate cannibalizing pages seo"
+  - "automated content refresh queue pipeline"
+  - "two pages ranking for same keyword"
+tags: ["backend", "seo"]
+readingTime: 10
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "what is keyword cannibalization and why does it hurt search rankings?"
+    answer: "Keyword cannibalization is when two or more pages on the same site rank for the same search query, so they compete against each other instead of pooling their authority into one strong result. The practical harm is that a search engine has to pick which of your pages to show, and it may keep swapping between them or rank both in mediocre positions rather than pushing a single page high. For a pipeline that publishes many articles into overlapping topics, this is not a rare accident; it is the default failure mode once the library grows, because nothing stops two runs from targeting adjacent keywords that resolve to the same query in practice."
+  - question: "how do you detect cannibalization from Google Search Console data?"
+    answer: "The signal lives in the page and query pairs Search Console exposes: for a given query, it tells you which of your urls drew impressions and at what average position. The detection groups those pairs by query, drops any pair with fewer than 50 impressions so noise does not create false conflicts, and flags a query as cannibalized when two or more of your own pages appear for it. Because the data is already keyed by both page and query, you do not need to guess which pages overlap; the search engine has effectively told you which of your urls it considers relevant to the same intent, and you only have to group and count."
+  - question: "how do you decide which of two competing pages to keep?"
+    answer: "In this pipeline the tie-break is average position for the shared query. The pages are sorted by position ascending, the one with the best position becomes the stronger page, and the one with the worst position becomes the weaker page. Position is used rather than clicks or impressions because position is the most direct measure of how the search engine ranks the two pages against each other for that specific query. Clicks and impressions are captured alongside it, but they are downstream of position and can be skewed by title wording, so they inform the human reading the report rather than the automated choice of which page loses."
+  - question: "why queue a refresh for a later run instead of fixing the page immediately?"
+    answer: "Detection happens during the learning phase, which runs after publishing and is oriented around measuring outcomes, not writing. Rewriting a page is production work, so rather than switch phases mid-run, the conflict is written to durable state and picked up at the start of the next production run. This keeps each phase doing one job and makes the fix survive restarts, since the queue lives in the database, not in memory. It also naturally batches the work: several conflicts detected across a week accumulate in the queue and get drained together, refreshing weak pages instead of always generating brand new ones."
+  - question: "does consolidating cannibalizing pages mean deleting one of them?"
+    answer: "Not automatically. The system only ever queues the weaker page for a content refresh; it never deletes or redirects anything on its own, because merging two pages is a decision with permanent consequences for existing links and rankings. The human-readable recommendation attached to each conflict does suggest consolidating the weaker page into the stronger one, but that consolidation is left to an operator. The automated action is the safe, reversible half: strengthen or re-angle the weaker page so the two stop targeting identical intent, and leave any actual merge or redirect to a person who can weigh the tradeoffs."
+toc:
+  - { id: "the-failure-mode-of-publishing-a-lot", label: "the failure mode of publishing a lot", depth: 2 }
+  - { id: "the-signal-is-already-in-search-console", label: "the signal is already in search console", depth: 2 }
+  - { id: "picking-a-loser-by-position", label: "picking a loser by position", depth: 2 }
+  - { id: "why-it-runs-on-the-30-day-pass", label: "why it runs on the 30-day pass", depth: 2 }
+  - { id: "queuing-the-weaker-page-for-later", label: "queuing the weaker page for later", depth: 2 }
+  - { id: "draining-the-queue-on-the-next-run", label: "draining the queue on the next run", depth: 2 }
+  - { id: "the-gap-between-the-advice-and-the-action", label: "the gap between the advice and the action", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "agent-pipeline-memory-system-prompt-experiment-loop"
+    title: "giving an agent pipeline memory that changes its output"
+    readingTime: 11
+    date: "2026-05-22"
+  - slug: "transformer-principles-in-rag-retrieval-design"
+    title: "what the transformer paper taught me about rag"
+    readingTime: 11
+    date: "2026-05-18"
+  - slug: "validation-gate-scoring-pipeline-output"
+    title: "scoring an agent's own writing before it publishes"
+    readingTime: 11
+    date: "2026-05-13"
+---
+
+A content pipeline that publishes on a schedule has a problem that only shows up after it has been running for a while: it starts competing with itself. Run 3 targets "react native monorepo setup" and run 9 targets "setting up a react native monorepo," and to a search engine those are the same query. Now two of my own pages are fighting for one slot, and the engine solves the tie by ranking both of them worse than either would rank alone. The library grew to a point where I could no longer assume that a new article only adds; sometimes it subtracts from a page I already had.
+
+This is keyword cannibalization, and the reason it is worth catching automatically is that it is invisible from inside a single run. Each article looked fine when it was written. The damage is a relationship between two pages that only exists in aggregate, weeks later, in ranking data. So the detection had to live in the part of the pipeline that looks backward at outcomes, and the fix had to survive across runs, because the run that notices the conflict is never the run that should rewrite the page.
+
+## the failure mode of publishing a lot
+
+The pipeline treats each article as an experiment with a predicted search position, and a separate learning phase later checks whether the prediction held. That machinery already pulls performance data from Search Console to grade experiments, which made it the natural place to also ask a different question: not "did this one page rank," but "are any two of my pages ranking for the same thing." The data needed for both questions is the same fetch, so the cannibalization check is close to free once the experiment validation is already paying for the API call.
+
+What makes cannibalization different from a normal bad-ranking experiment is that no single page is at fault. An experiment can be invalidated because the article was thin or the keyword was too competitive, and the fix is about that one article. A cannibalization conflict is a property of a pair, and the fix is to change the relationship between them: push one up, pull one back, or merge them. That framing decided the whole design. The output of detection is not a verdict on an article; it is a conflict record naming two slugs and the query they are fighting over.
+
+## the signal is already in search console
+
+The useful shape of Search Console data here is the page and query pair: for each query, which of my urls drew impressions and at what average position. That is exactly the join I would otherwise have to reconstruct, and it means detection is mostly grouping. I collect the pairs into a map keyed by query, keep only pairs with at least 50 impressions so a handful of stray impressions cannot invent a conflict, and reduce each url to its slug so the rest of the pipeline can address it.
+
+```python
+def _check_cannibalization(page_query_pairs):
+    from collections import defaultdict
+    query_pages = defaultdict(list)
+    for pair in page_query_pairs:
+        query = pair.get("query", "")
+        url = pair.get("url", "")
+        impressions = pair.get("impressions", 0)
+        if query and url and impressions >= 50:
+            slug = url.rstrip("/").rsplit("/", 1)[-1]
+            query_pages[query].append({
+                "slug": slug,
+                "url": url,
+                "position": pair.get("position", 999.0),
+                "clicks": pair.get("clicks", 0),
+                "impressions": impressions,
+            })
+```
+
+The 50 impression floor is the one tuning knob that matters. Without it, every long-tail query where two pages happened to surface once each would register as a conflict, and the queue would fill with noise. With it, a query has to be drawing real traffic before the pipeline is willing to spend a future run refreshing a page over it. The default position of 999.0 for a missing value is deliberate too: a page with no reported position sorts to the bottom and becomes the weaker page, which is the safe assumption.
+
+## picking a loser by position
+
+Once the pairs are grouped, a query is a conflict when two or more of my pages appear under it. The tie-break is average position, ascending, so the best-ranked page is the stronger one and the worst-ranked is the weaker one. I do not use clicks or impressions to decide the loser, because position is the most direct statement of how the engine ranks the two pages against each other for that query. Clicks follow from position and title wording, so they are recorded for the human report but kept out of the automated choice.
+
+```python
+    conflicts = []
+    for query, pages in query_pages.items():
+        if len(pages) >= 2:
+            pages_sorted = sorted(pages, key=lambda p: p["position"])
+            conflicts.append({
+                "query": query,
+                "stronger_slug": pages_sorted[0]["slug"],
+                "weaker_slug": pages_sorted[-1]["slug"],
+                "stronger_position": round(pages_sorted[0]["position"], 1),
+                "weaker_position": round(pages_sorted[-1]["position"], 1),
+                "recommendation": "refresh stronger, consolidate weaker",
+            })
+    return conflicts
+```
+
+Sorting and taking the first and last element handles the common two-page case cleanly and also degrades sensibly when three or more pages collide: the best and worst are still the two ends worth naming, even if the middle pages are also technically involved. Each conflict carries both positions, rounded to one decimal, so the report can show how wide the gap is. A conflict where the two pages sit at position 4 and 6 is a very different situation from one at position 8 and 40, and keeping both numbers lets a human tell them apart without another query.
+
+## why it runs on the 30-day pass
+
+Experiments are checked twice, once at 7 days and once at 30 days, because search rankings take weeks to settle. The cannibalization check rides on that same schedule, but only on the 30-day pass. Running it on the 7-day pass would mean acting on rankings that have not stabilized, and a conflict that looks real at day 7 can dissolve by day 30 as the engine sorts out which page it prefers. The 30-day data is the first point where a conflict is trustworthy enough to spend a future run on.
+
+There is also a plainer reason it runs once per fetch rather than on every check. The check consumes the full set of page and query pairs from one Search Console pull, so running it on both passes would just do the same work twice against overlapping windows and risk enqueuing the same conflict twice. Folding it into the 30-day branch means it fires exactly once per learning cycle, on the freshest settled data, and the rest of the phase does not have to know it happened.
+
+## queuing the weaker page for later
+
+When the learning phase finds conflicts, it does three things: emits a run event so the conflict shows up in the dashboard timeline, writes the weaker slugs into a durable queue, and posts a summary to Slack. The queue is the important part. It lives in the org's integration settings in the database, not in the run's memory, so a conflict found today is still waiting when the next production run starts, even across a restart or a redeploy.
+
+```python
+existing_queue_slugs = {r.get("slug") for r in existing_queue}
+new_queue_items = [
+    {"slug": c["weaker_slug"], "reason": "cannibalization", "query": c["query"]}
+    for c in cannibalization_conflicts
+    if c["weaker_slug"] not in existing_queue_slugs
+]
+if new_queue_items:
+    await save_org_integrations(
+        org_id, {"cannibalization_refresh_queue": existing_queue + new_queue_items}
+    )
+```
+
+The dedupe against existing queue slugs matters because the same conflict can persist for several weeks. If "react native monorepo setup" keeps cannibalizing on every 30-day pass until it is fixed, I do not want the weaker page enqueued five times; I want it in the queue once, waiting its turn. Keying the dedupe on the slug rather than on the conflict means that a page already scheduled for a refresh is left alone no matter how many queries it is losing, which is the behavior I want, since one refresh addresses the page regardless of how many conflicts flagged it.
+
+## draining the queue on the next run
+
+The other half of the loop is in the production phase, which is where new articles and refreshes are actually written. Before it decides what to work on, it loads the cannibalization queue and folds each queued slug into its list of refresh candidates, tagging them with a signal that says why they are there. Then it clears the queue in the same step, so the work is claimed exactly once.
+
+```python
+cannibalization_queue = (org.integrations or {}).get("cannibalization_refresh_queue") or []
+if cannibalization_queue:
+    existing_slugs = {c["slug"] for c in refresh_candidates}
+    for item in cannibalization_queue:
+        if item.get("slug") and item["slug"] not in existing_slugs:
+            refresh_candidates.append({
+                "slug": item["slug"],
+                "title": item["slug"].replace("-", " ").title(),
+                "refresh_signal": "cannibalization",
+                # ...other fields defaulted...
+            })
+    # Clear the queue - items will be processed this run
+    await save_org_integrations(org_id, {"cannibalization_refresh_queue": []})
+```
+
+Clearing the queue right after reading it is the simple version of claiming work, and it is good enough here because there is only ever one run per org at a time. The `refresh_signal` tag is what keeps the two paths honest: a page in the refresh list because of cannibalization is treated differently downstream from a page that is being refreshed because it went stale, and the tag carries that reason forward so the writing step knows it is trying to differentiate this page from a sibling rather than just update an old one. The result is a closed loop across two separate runs: one run measures and enqueues, a later run drains and rewrites.
+
+## the gap between the advice and the action
+
+There is one honest wrinkle worth calling out, because I left it in on purpose. Each conflict record carries a recommendation string that reads "refresh stronger, consolidate weaker." But the code does not enqueue the stronger slug; it enqueues the weaker one. So the human-facing advice and the automated action point at two different pages. The advice describes the ideal editorial move, which is to reinforce the page already winning and fold the loser into it, while the automation does the safe, reversible thing, which is to touch only the weaker page.
+
+I kept them different rather than forcing them to agree because they answer to different owners. Consolidating a page into another is a decision about redirects and lost links that I did not want a pipeline making unattended, so the automation stays on the side of the loop that cannot do lasting harm: it re-angles the weaker page so it stops targeting identical intent. The recommendation string is there for the operator reading the Slack message, who can choose to do the fuller consolidation by hand. It is a small thing, but pretending the automated action and the ideal action are the same would have hidden a real decision behind a tidy label.
+
+## what i would change
+
+**Detect near-conflicts before they cost rankings.** Today a conflict only registers after two pages are already both ranking for a query with real impressions, which means the damage is already done by the time the queue fills. The same embedding space the pipeline uses elsewhere could compare a proposed new article's target against existing pages at planning time and warn when a new piece is about to overlap an existing one, turning a backward-looking cleanup into a forward-looking guard.
+
+**Make the winner heuristic look at more than position.** Sorting purely on average position is a fine default, but a page at a slightly worse position that draws far more clicks is arguably the real winner, and refreshing it as the loser would be a mistake. Bringing clicks and impressions into the choice, rather than only reporting them, would stop the occasional case where the page with the better title but marginally worse position gets treated as the one to change.
+
+**Track whether the refresh actually resolved the conflict.** The loop enqueues a fix and drains it, but nothing checks, a month later, whether the two pages stopped competing. Linking a cannibalization refresh back to the next 30-day pass for that query would tell me whether re-angling the weaker page worked or whether the two are still colliding and genuinely need a merge, which is exactly the signal that would justify escalating from an automated refresh to a human consolidation.
