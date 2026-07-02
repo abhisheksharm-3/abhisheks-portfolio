@@ -1,0 +1,205 @@
+---
+title: "giving an agent pipeline memory that changes its output"
+subhead: "semantic, episodic and procedural memory in pgvector, pulled by the current goal into each run's system prompt, then refilled by an experiment loop."
+date: "2026-05-22"
+keywords:
+  - "langgraph asyncpostgresstore semantic memory"
+  - "agent long-term memory pgvector namespaces"
+  - "inject retrieved memory into system prompt"
+  - "episodic procedural semantic memory llm agent"
+  - "experiment validation loop agent learning"
+  - "langgraph store asearch embedding cost"
+tags: ["ai", "backend"]
+readingTime: 11
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "how do you make an LLM agent actually use its long-term memory?"
+    answer: "Storing learnings in a table is not enough, because nothing in a table changes what the model does unless it reaches the prompt the model runs on. The working pattern is to treat memory as an input to prompt construction rather than as a passive log. On every run I retrieve the relevant memories, format them into labeled blocks, and append those blocks to the base system prompt before the orchestrator starts. The agent behaves differently only because the text it reads is different. If a memory never lands in that assembled prompt, it may as well not exist, which is exactly the class of bug where memory is written correctly and read correctly in code and still never influences a single decision."
+  - question: "what is the difference between semantic, episodic and procedural memory for an agent?"
+    answer: "Semantic memory holds standalone facts learned from previous runs, like which audience or format underperformed, retrieved by similarity to the current goal. Episodic memory holds specific past experiments as concrete references: a format and angle for a keyword, plus the ranking it actually achieved, so future hypotheses can copy what worked. Procedural memory holds the current strategy override, a single instruction block that steers overall behavior rather than any one fact. In this pipeline all three live in the same pgvector store under different namespaces, and each is pulled into the prompt through a different query so the model sees facts, past outcomes and standing strategy as separate sections."
+  - question: "why validate an experiment at both 7 and 30 days instead of once?"
+    answer: "Search rankings do not settle for weeks after a page is published, so a single early measurement would either fire too soon on noise or wait too long to be useful. The pipeline checks each experiment at 7 days and again at 30 days, but the two checks are not symmetric. A miss at 7 days can only produce an inconclusive verdict, never a failure, because a page that has not ranked yet is not the same as a page that failed. Only the 30 day check is allowed to mark an experiment invalidated. That asymmetry keeps the leading signal from poisoning the memory that later runs learn from."
+  - question: "how do you stop a content pipeline from citing the same facts every time?"
+    answer: "Pure similarity search is stable, so the same top few facts win every run and the output narrows over time. The fix is to bias retrieval toward breadth. For the organization knowledge namespace the search fetches twice as many results as needed, demotes any fact whose last-used run is inside the recent window to the back of the list, and returns the trimmed set. After a run uses a batch of facts it stamps each one with the current run number. The next run therefore sees recently used facts deprioritized and is pushed toward parts of the knowledge base it has not drawn from lately."
+  - question: "what happens to accumulated agent memory if the vector store is unavailable?"
+    answer: "At startup the pipeline tries to open an AsyncPostgresStore backed by pgvector. If that fails, behavior depends on a single flag. With fail-on-memory-fallback set, startup raises and the process refuses to run without durable memory. Otherwise it logs a critical message and falls back to an in-memory store so the pipeline keeps operating, at the explicit cost that every accumulated learning is lost on the next restart. Making that fallback loud rather than silent matters, because a pipeline that quietly forgets everything looks identical to a healthy one from the outside until you notice its output stopped improving."
+toc:
+  - { id: "memory-the-model-never-sees", label: "memory the model never sees", depth: 2 }
+  - { id: "four-namespaces-one-vector-store", label: "four namespaces, one vector store", depth: 2 }
+  - { id: "rebuilding-the-prompt-from-what-the-org-learned", label: "rebuilding the prompt from what the org learned", depth: 2 }
+  - { id: "the-loop-that-fills-the-memory", label: "the loop that fills the memory", depth: 2 }
+  - { id: "why-7-days-cannot-fail-an-experiment", label: "why 7 days cannot fail an experiment", depth: 2 }
+  - { id: "keeping-the-pipeline-from-repeating-itself", label: "keeping the pipeline from repeating itself", depth: 2 }
+  - { id: "when-the-memory-store-is-gone", label: "when the memory store is gone", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "transformer-principles-in-rag-retrieval-design"
+    title: "what the transformer paper taught me about rag"
+    readingTime: 11
+    date: "2026-05-18"
+  - slug: "llm-router-openrouter-fallback-prompt-caching"
+    title: "one door for every llm call: fallbacks and caching"
+    readingTime: 8
+    date: "2026-05-20"
+  - slug: "validation-gate-scoring-pipeline-output"
+    title: "scoring an agent's own writing before it publishes"
+    readingTime: 11
+    date: "2026-05-13"
+---
+
+I built a content pipeline that regenerates a batch of articles on a schedule: it researches keywords, writes, validates, publishes to a repo, and reports. The first version had a quiet problem. Every run started from zero. It made the same category of mistake in run 5 that it had made in run 1, because nothing carried between them. The fix was memory, but the useful lesson was not "add memory." It was that I added memory twice and only the second attempt did anything, because the first version wrote learnings to storage that the model never actually read.
+
+That distinction is the whole post. There is a version of agent memory that is a database table you write to and query in code, and there is a version that is text assembled into the system prompt before the model runs. Only the second one changes behavior. This pipeline ended up with 4 memory namespaces in a single pgvector store, retrieved by the current goal, and stitched into a system prompt that is rebuilt on every run. Around that sits an experiment loop that decides what is worth remembering in the first place.
+
+## memory the model never sees
+
+The first memory attempt looked correct. There was a table, there were writes after each run, there were retrieval functions, and there were unit tests. What there was not, anywhere, was a line that put a retrieved learning into the prompt the orchestrator was given. The agents ran on a static system prompt. The memory functions were called from code paths that logged results and moved on. Every learning was recorded and every learning was ignored.
+
+This is easy to do and hard to notice, because nothing errors. The store is healthy, the queries return rows, the dashboards show memory growing. The only symptom is that the output never improves, which is invisible until you go looking for it. So the design rule I settled on is blunt: memory is not a store you consult, it is an input to prompt construction. If a piece of memory cannot point at the exact spot in the assembled prompt where it appears, it is not memory, it is a log.
+
+## four namespaces, one vector store
+
+All memory lives in LangGraph's `AsyncPostgresStore`, which is Postgres with a pgvector index over an embedded `text` field. Everything is namespaced by organization, so the store key is a tuple of `(org_id, kind)`. The embeddings run through the same litellm path as the rest of the app, routed to OpenRouter, and padded to 1536 dimensions so the index stays fixed even if the embedding model changes.
+
+The `kind` half of the namespace is where the four memory types separate. Semantic memory is standalone facts. Episodic memory is specific past experiments. Procedural memory is the current strategy. A fourth namespace holds extracted organization knowledge. Writing a semantic fact is a plain put:
+
+```python
+async def save_learning(store, org_id, text, source=""):
+    key = str(uuid.uuid4())
+    await store.aput(
+        (org_id, "semantic"),
+        key,
+        {"text": text, "source": source,
+         "created_at": datetime.now(timezone.utc).isoformat()},
+    )
+    return key
+```
+
+Episodic memory is more structured, because it exists to be copied. Each entry is one experiment reduced to the fields a future hypothesis would want: the format, the angle, the keyword, the verdict, and the ranking it actually reached. The stored `text` is a human-readable line so semantic search over it stays meaningful:
+
+```python
+text = (f"{content_format} about '{keyword}' with angle '{angle}', "
+        f"reached position {position_achieved:.1f} (verdict: {verdict})")
+await store.aput((org_id, "episodic"), key, {
+    "text": text, "angle": angle, "content_format": content_format,
+    "keyword": keyword, "verdict": verdict,
+    "position_achieved": position_achieved,
+})
+```
+
+Procedural memory is the odd one. There is exactly one current strategy per org, stored under a fixed key and overwritten each time it changes, which keeps the read path a single get. But every overwrite also appends to a separate history entry capped at the last 20 revisions, so the strategy can be replaced without erasing how it evolved.
+
+## rebuilding the prompt from what the org learned
+
+The function that assembles the system prompt is the part that makes the memory real. It runs four retrievals in parallel: operator steering instructions from a normal table, semantic facts, episodic experiments, and the current procedural strategy. The semantic and episodic reads are similarity searches against the current goal, so what surfaces depends on what the pipeline is trying to do right now.
+
+```python
+steering, semantic, episodic, procedural = await asyncio.gather(
+    list_active_steering(org_id),
+    search_memories(store, org_id, query=goal, k=5),
+    search_episodic_memories(store, org_id, query=goal, k=3),
+    get_procedural_memory(store, org_id),
+)
+```
+
+Each result becomes a labeled block, and the blocks are appended to the base orchestrator prompt. Semantic facts go under a heading that frames them as things learned from previous runs. Episodic entries go under a heading that tells the model to use them as references for new hypotheses. Procedural memory arrives as a strategy override. The base prompt is constant; the tail is a function of everything the org has accumulated:
+
+```python
+semantic_block = ""
+if semantic:
+    lines = "\n".join(f"- {m['text']}" for m in semantic if m.get("text"))
+    semantic_block = f"\n\n## What We've Learned (facts from previous runs)\n{lines}"
+# ... episodic_block, procedural_block built the same way ...
+return base_prompt + docs_block + steering_block + procedural_block + semantic_block + episodic_block
+```
+
+Two of those retrievals cost real money. A similarity search embeds its query before it can compare vectors, so the semantic and episodic reads each fire an embedding call per run. The procedural read is a direct get by key and embeds nothing. That difference is worth keeping in mind, because it is easy to add a memory read that looks free and is actually an API call on the hot path of every run. A read that passes a query string is never free.
+
+## the loop that fills the memory
+
+Retrieval is only half the system. Something has to decide what gets written, and the answer is that the pipeline never stores an opinion, only a measured outcome. Every article in the production phase is required to create an experiment record before a single word is written. The hypothesis agent commits to a prediction: this format and angle, for this keyword, will reach a specific search position within a specific number of days.
+
+```python
+experiment = await create_experiment(CreateExperimentInput(
+    org_id=org_id, run_id=run_id,
+    angle=brief.angle, content_format=brief.content_format,
+    predicted_keyword=brief.target_keyword,
+    predicted_metric="position",
+    predicted_target=float(hypothesis_data.get("predicted_position", 20)),
+    predicted_timeframe_days=hypothesis_data.get("predicted_timeframe_days", 30),
+))
+```
+
+Writing the prediction down before publishing is what turns a guess into something that can be graded. Later, the learning phase pulls the real ranking from Search Console and compares it to the target. A validated outcome is what earns a place in episodic memory, which is exactly the block that future hypotheses read as references. The loop closes: a prediction becomes an experiment, an experiment becomes a measured verdict, and a good verdict becomes a memory that shapes the next prediction.
+
+## why 7 days cannot fail an experiment
+
+The grading itself is deterministic code, not a model call, because comparing a number to a target is not a judgment call. The verdict has three states and a tolerance band. Beating the target is a clean pass. Missing it by within 20 percent is inconclusive. Missing it by more is a failure, with one important exception tied to how long the page has been live.
+
+```python
+if metric == "position":
+    if actual <= target:
+        verdict = "validated"
+    elif actual <= target * (1 + margin):        # margin = 0.20
+        verdict = "inconclusive"
+    else:
+        verdict = "invalidated" if check_type == "30d" else "inconclusive"
+```
+
+That last line is the domain knowledge. A page checked 7 days after publishing has usually not ranked yet, so a bad number there is noise, not evidence. Letting the 7 day check mark an experiment invalidated would write false failures into the memory that later runs treat as truth. So the early check can only ever land on validated or inconclusive; only the 30 day check is permitted to fail an experiment. When something does fail, a small classifier turns the miss into a reason worth remembering, using signals like how many impressions the page drew:
+
+```python
+def _classify_failure_reason(metric, actual, target, outcome):
+    impressions = outcome.get("impressions", 0)
+    if metric == "position":
+        if impressions < 100:
+            return "too_competitive"
+        if actual <= 30:
+            return "format_mismatch"
+        return "insufficient_depth"
+```
+
+A page nobody saw lost to competition; a page that got impressions but ranked poorly probably picked the wrong format; a page that ranked on the edge likely lacked depth. Each reason implies a different fix, which is more useful to a future run than a bare "this did not work."
+
+## keeping the pipeline from repeating itself
+
+A pure similarity search has a failure mode that only shows up over time: it is too consistent. The same handful of facts are always the closest match to a given goal, so they win every retrieval, and the output slowly collapses toward the same few talking points. For the organization knowledge namespace I fought this with a deliberate anti-staleness pass. The search over-fetches, then demotes anything used too recently.
+
+```python
+fetch_k = k * 2 if recent_run_cutoff is not None else k
+results = await store.asearch((org_id, "org_knowledge"), query=query, limit=fetch_k)
+items = [r.value for r in results]
+if recent_run_cutoff is not None:
+    fresh = [f for f in items if (f.get("last_used_run") or 0) < recent_run_cutoff]
+    stale = [f for f in items if (f.get("last_used_run") or 0) >= recent_run_cutoff]
+    items = (fresh + stale)[:k]
+```
+
+The other half of this is stamping. After a run consumes a batch of facts, it writes the current run number onto each one as `last_used_run`. A fact used in the last few runs falls to the back of the next retrieval, and facts the pipeline has been ignoring get their turn. The result is that similarity still decides relevance, but recency decides ties, and the pipeline is nudged to draw from the full breadth of what it knows instead of the same corner every time.
+
+## when the memory store is gone
+
+Memory this central needs an honest failure mode. At startup the pipeline opens the store with a small, fixed connection pool in autocommit mode, and the vector index config is set once so every embedding is bound to the same 1536 dimensions. If that open fails, there is a single flag that decides whether the pipeline is allowed to run at all.
+
+```python
+except Exception as exc:
+    if s.fail_on_memory_fallback:
+        raise RuntimeError(f"AsyncPostgresStore unavailable ...") from exc
+    _log.critical("memory_degraded", detail=(
+        "AsyncPostgresStore unavailable, falling back to InMemoryStore. "
+        "All accumulated org learnings will be LOST on restart."))
+    _store = InMemoryStore()
+```
+
+The point of that critical log is that a pipeline which has silently lost its memory looks exactly like a healthy one. It still runs, still publishes, still reports. The only difference is that it has quietly gone back to starting from zero every run, which is the original bug wearing a disguise. Making the degraded state loud, and giving the strict deployments a flag to refuse to start without durable memory, keeps that failure from hiding.
+
+## what i would change
+
+**Give semantic facts provenance and decay.** A learning is stored as text, a source string, and a timestamp, and then it lives forever. A fact that was true for one goal, or that was simply wrong, keeps matching the goal query and re-entering the prompt on every future run with equal weight. I would add a confidence score and a way to retract or down-weight a fact, so a bad learning can age out instead of compounding.
+
+**Make the strategy history do something.** Procedural memory keeps the last 20 revisions of the strategy, but the read path only ever fetches the current one, so that history is write-only. Feeding it into the goal review step would let the system see its own strategy drift and notice when it keeps oscillating between the same two directions, which is a pattern no single current-strategy snapshot can reveal.
+
+**Weight episodic recall by verdict, not just similarity.** Retrieval surfaces the experiments nearest the goal, but nearness and usefulness are not the same thing. A validated experiment and an invalidated one that sit equally close to the goal are surfaced identically, even though one is a template to copy and the other is a mistake to avoid. Ranking recall by verdict and recency, rather than pure distance, would turn "past experiments" from a list of neighbors into an actual prior.
