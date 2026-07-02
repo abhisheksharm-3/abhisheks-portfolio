@@ -1,0 +1,126 @@
+---
+title: "scoring an agent's own writing before it publishes"
+subhead: "the last step before publishing scores an article on three axes with an LLM, then runs deterministic checks in python that the model score can never override."
+date: "2026-05-13"
+keywords:
+  - "llm output validation gate"
+  - "score generated article before publishing"
+  - "deterministic checks over llm score"
+  - "anti-ai writing quality check"
+  - "aeo compliance scoring agent"
+  - "hard rules override model score"
+tags: ["ai", "backend"]
+readingTime: 11
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "why not just trust the LLM's score to decide whether to publish?"
+    answer: "A model scoring its own pipeline's output is useful for judgment calls like tone and structure, but it is soft and easy to talk past. The same model that wrote a weak article can rate it a solid 8, and it has no reliable way to count its own internal links or notice a missing component. So the score is treated as one input, not the verdict. A second layer of deterministic checks written in plain python runs afterward, and those checks can force a failure the model would never have flagged. The model handles taste; code handles the things that are either true or false."
+  - question: "what are the deterministic checks that can override the model's score?"
+    answer: "There are seven, all pure functions of the article text. A list of AI-tell words is matched with word boundaries. The em-dash and double-hyphen characters are rejected outright. A set of filler phrases is banned. At least 80 percent of the H2 headings must read as questions or direct-answer phrases. Three specific MDX components must be present. There must be at least two internal links to other articles. And when the article was given source citations, at least one of those URLs has to actually appear in the body. Any of these produces a hard issue that no model score can wave away."
+  - question: "how does the validator judge whether an article fits a specific org?"
+    answer: "Before it scores anything, the validator pulls three things from the org's memory store: the semantic learnings from past runs, the current strategic instruction, and the stored org facts like real numbers and named case studies. These get pasted into the scoring prompt so org-fit means matching what has actually worked for this specific audience, not a generic sense of quality. There is also a rule with teeth: if the org has proof points on file and the article references none of them, the org-fit score is forced to 1, which alone is enough to sink the article."
+  - question: "what is the marginal zone and why not use a hard pass/fail threshold?"
+    answer: "The shipped gate passes an article at a score of 7 or higher. The design argument against a hard cliff is that a model's numeric score is a probability distribution, not a precise measurement, because these models are trained with label smoothing. A 6.9 and a 7.1 sit inside the same band of genuine model uncertainty, so treating the boundary as exact is false precision. The proposed fix is a marginal band just under the threshold where the article does not auto-publish or auto-fail; instead the per-dimension breakdown goes to a human who makes the call."
+  - question: "how do the hard checks and the model score combine into a pass or fail?"
+    answer: "The model returns an overall score and a list of issues. The hard checks then produce their own list of issues. Those hard issues are prepended to the model's list so they show up first, and the overall score is reduced by one point for each hard issue found, with a floor of 1. Finally the article passes only if the reduced score is at least 7 AND the hard-issue list is empty. That second condition is the important one: an article can score 9 from the model and still fail outright because it broke a single non-negotiable rule."
+toc:
+  - { id: "why-a-model-cannot-grade-alone", label: "why a model cannot grade alone", depth: 2 }
+  - { id: "the-three-scores-the-model-assigns", label: "the three scores the model assigns", depth: 2 }
+  - { id: "grading-org-fit-against-memory", label: "grading org fit against memory", depth: 2 }
+  - { id: "the-checks-the-model-gets-no-vote-on", label: "the checks the model gets no vote on", depth: 2 }
+  - { id: "how-a-hard-failure-beats-a-high-score", label: "how a hard failure beats a high score", depth: 2 }
+  - { id: "trusting-a-score-at-the-boundary", label: "trusting a score at the boundary", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "transformer-principles-in-rag-retrieval-design"
+    title: "what the transformer paper taught me about rag"
+    readingTime: 11
+    date: "2026-05-18"
+  - slug: "llm-router-openrouter-fallback-prompt-caching"
+    title: "one door for every llm call: fallbacks and caching"
+    readingTime: 8
+    date: "2026-05-20"
+  - slug: "agent-pipeline-memory-system-prompt-experiment-loop"
+    title: "giving an agent pipeline memory that changes its output"
+    readingTime: 11
+    date: "2026-05-22"
+---
+
+An autonomous content pipeline has one failure mode that matters more than the rest: it publishes plausible slop. The writing agent is good enough that a bad article does not look obviously bad. It has the right shape, the right headings, a confident tone, and nothing measurably wrong at a glance. So the last step before the pipeline opens a pull request is a validator whose only job is to be strict, score the draft on 3 axes from 1 to 5 each, and refuse to ship anything that does not clear a 7.
+
+The thing I got wrong at first was trusting the model to be that gate on its own. A single LLM call that reads the article and returns a score is easy to build and easy to fool. The same model that produced the draft is happy to rate it well, and it cannot reliably count its own internal links or confirm that a required component is present. The design that actually held up has two layers: an LLM that scores the judgment calls, and deterministic python that checks the facts and can override the model whenever it disagrees.
+
+## why a model cannot grade alone
+
+The model is genuinely good at the soft questions. Does the article answer its target question in the first two sentences, or does it warm up for a paragraph first? Do the headings read like real questions a person would ask? Does the opening read like a person wrote it, or like a machine imitating one? These are matters of taste and structure, and a capable model rates them better than any regex could. That is the half worth keeping.
+
+The half to distrust is everything with a definite answer. Whether the article contains a specific banned word, whether it has at least two links to sibling articles, whether the three required components are actually in the body: these are not opinions. A model asked to check them will sometimes miss and sometimes hallucinate compliance, and it has an incentive to be generous with the output it just helped create. Those questions belong in code, where the answer is computed from the text and does not depend on the model being in a rigorous mood.
+
+## the three scores the model assigns
+
+The scoring call goes to a mid-tier model in JSON mode and asks for three sub-scores, each from 1 to 5. The first is AEO compliance: whether the article leads with a direct answer, whether its H2s are phrased as questions or direct-answer phrases, and whether the extraction-target callout near the top actually answers the primary question instead of hedging. The second is anti-AI writing quality: whether the prose avoids the tell-tale vocabulary and sentence shapes that mark machine writing. The third is org-fit, which I will come back to.
+
+The model returns those three numbers plus an overall score from 1 to 10, a boolean, and two short lists: the issues it found and a suggested fix for each. Keeping the sub-scores separate matters, because a single blended number hides where the article actually fell down. An article can write beautifully and still score a 3 on org-fit because it never touches anything specific to the business, and I want that visible rather than averaged into a vague 6. The prompt is deliberately told to be strict and to cap its issue list, so the output stays scannable rather than turning into a wall of nitpicks.
+
+## grading org fit against memory
+
+Org-fit is the score that separates this from a generic writing linter, and it only works because the validator reads the org's memory before it grades. Ahead of the scoring call it pulls three things from the pgvector store: the semantic learnings accumulated from past runs, the current procedural strategy, and the stored org facts, meaning the real numbers, named customers, and case studies the pipeline has on file. All three are pasted into the prompt so that fit is judged against what has actually worked for this specific audience, not against an abstract idea of good.
+
+That context turns into a rule with real consequences. The prompt states that if org-specific proof points are listed and the article references none of them, the org-fit score must be 1. A generic article that could have been written for any company in the space is exactly the output I do not want a client-facing pipeline to publish, so it gets pushed to the floor rather than politely marked down. This is the same memory that shapes how the article was written in the first place, now used a second time to check whether the writing agent actually listened.
+
+## the checks the model gets no vote on
+
+After the model returns its score, a block of deterministic checks runs against the raw article body. Each one appends to a list of hard issues, and each is a plain computation. A list of AI-tell words (things like "showcase" and "vibrant") is matched with word boundaries. The em-dash character and the double-hyphen are rejected on sight. A set of filler phrases is scanned for. And several structural rules run straight off the text:
+
+```python
+# hard checks run after the model score and only ever lower it
+found_words = [w for w in BANNED_WORDS
+               if re.search(rf"\b{re.escape(w)}\b", body_lower)]
+if found_words:
+    hard_issues.append(f"banned AI vocabulary present: {', '.join(found_words)}")
+
+# at least 80% of H2s must be questions or direct-answer phrases
+h2s = re.findall(r"^## (.+)$", body, re.MULTILINE)
+question_h2s = [h for h in h2s if h.strip().endswith("?") or h.lower().startswith(
+    ("how ", "why ", "what ", "when ", "which ", "should ", "can ", "does ", "is ", "are ", "do "))]
+if h2s and len(question_h2s) / max(len(h2s), 1) < 0.8:
+    hard_issues.append("fewer than 80% of H2s are questions or direct-answer phrases")
+
+# at least two internal links into other articles
+internal_link_count = len(re.findall(r"\[.+?\]\(/writing/[a-z0-9][a-z0-9-]+\)", body))
+if internal_link_count < 2:
+    hard_issues.append("fewer than 2 internal /writing/ links")
+```
+
+The rest of the block is the same idea applied to the parts that are easy to forget: the three MDX components (`<ArticleCallout>`, `<ArticleCta>`, `<ArticleCaseStudyCallout>`) each have to appear or it is a hard issue, and when the writing step was handed source citations, at least one of those URLs has to show up in the body so claims trace back to something real. None of these are judgment calls. They are either in the text or they are not, which is exactly why they do not go through the model.
+
+## how a hard failure beats a high score
+
+The two layers meet in a few lines, and the order of operations is the whole point. Hard issues are prepended to the model's own issue list so a human skims the non-negotiable failures first. The overall score is then docked by one point for every hard issue, floored at 1. And the final pass decision is a conjunction, not just a threshold:
+
+```python
+if hard_issues:
+    result.issues = hard_issues + [i for i in result.issues if i not in hard_issues]
+    result.score = max(1, result.score - len(hard_issues))
+
+result.passes = result.score >= 7 and not hard_issues
+```
+
+The `and not hard_issues` is what makes the checks non-negotiable. An article can earn a 9 from the model and still fail, because a single hard issue makes `hard_issues` truthy and the whole expression collapses to false regardless of the number. The score docking is almost cosmetic next to that boolean: its real value is that the reported score drops in step with the count of violations, so a draft with four hard issues does not sit at a misleadingly high number in the logs while it fails. The model gets to praise the writing all it likes. It does not get to publish it.
+
+## trusting a score at the boundary
+
+There is one place I think the current gate is too confident, and it is the threshold itself. The article passes at a score of 7, full stop, which quietly assumes a 6.9 and a 7.1 are meaningfully different. They are not. These models are trained with label smoothing, so their output scores behave like probability distributions rather than exact measurements, and two numbers a tenth of a point apart sit inside the same band of real model uncertainty. A hard cliff at 7 imposes a precision the score does not have.
+
+The design I would rather ship keeps a small marginal band, roughly the half-point just below the threshold, where the article neither auto-publishes nor auto-fails. Instead the per-dimension breakdown goes to a human, who has the sub-scores and the issue list in front of them and makes the call. That treats the number as the confidence interval it actually is, and it reserves human attention for exactly the drafts where the model is genuinely unsure, rather than spending it on the clear passes and the obvious failures.
+
+## what i would change
+
+**Give the banned lists a single source.** The writing step's prompt and the validator's python each carry their own copy of the AI-tell vocabulary, and the two have already started to drift apart. A word the writer is told to avoid should be the same word the checker fails on, which means both should read from one list rather than two hand-maintained ones that agree only by luck.
+
+**Auto-repair the mechanical failures instead of failing the whole draft.** Some hard issues are judgment-adjacent and should stop a publish: no org proof points, banned vocabulary throughout. But a missing second internal link or an absent component is mechanically fixable, and failing an otherwise strong 2,000-word article over it wastes the whole generation. I would split the checks into fixable and fatal, patch the fixable ones in place, and reserve a hard fail for the issues a human actually needs to see.
+
+**Implement the marginal band.** Right now the label-smoothing argument lives in a design note and not in the code, which still uses a bare threshold. Building the operator-review zone just under the pass mark is a small change to the pass expression and the routing, and it is the difference between a gate that pretends its score is exact and one that admits where it is guessing.
