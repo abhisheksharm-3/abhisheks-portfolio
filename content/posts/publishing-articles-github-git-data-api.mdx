@@ -1,0 +1,164 @@
+---
+title: "publishing articles to a repo with the git data api"
+subhead: "the pipeline commits many generated files at once through github's git data api with no clone: build blobs and a tree, commit, move the ref, open a pr."
+date: "2026-05-21"
+keywords:
+  - "github git data api commit multiple files"
+  - "commit files atomically github api no clone"
+  - "github create blob tree commit ref api"
+  - "programmatically open pull request github api"
+  - "update file github git data api tree"
+  - "github contents api vs git data api"
+tags: ["backend"]
+readingTime: 10
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "why use the github git data api instead of the contents api to publish files?"
+    answer: "The contents API writes one file per request and each write is its own commit, so publishing an article plus its assets plus an updated index lands as several separate commits, and a crash between them leaves the repo half published. The Git Data API lets you assemble one commit that contains every file at once, then move the branch to it in a single step. Either the whole batch appears or none of it does. That atomicity is the entire reason to accept the extra plumbing, because a content pipeline that publishes partial article sets is worse than one that fails cleanly and retries."
+  - question: "how do you commit multiple files in a single github commit over the api?"
+    answer: "You build the commit from its parts. First read the branch head to get a parent commit, then read that commit to get its base tree. Create one blob per file, which returns a content hash for each. Create a new tree that lists every path with its blob hash and passes the old tree as base_tree so unchanged files carry over. Create a commit object pointing at the new tree with the parent you started from. Finally update the branch reference to the new commit hash. The files only become visible at that last step, which is what makes the write atomic."
+  - question: "can you open a github pull request programmatically without cloning the repo?"
+    answer: "Yes. Nothing in the publish path needs a working copy on disk. Reading the head reference, creating blobs, trees, and a commit, moving the branch pointer, and opening the pull request are all plain HTTP calls against the GitHub API. The server holds the only copy of the repository. This matters for a scheduled backend job because a clone would mean disk, checkout time, and cleanup on a machine that never edits files by hand. The whole flow in this pipeline runs inside one async HTTP client with a 60 second timeout and no filesystem involved."
+  - question: "how do you make programmatic pull request creation idempotent?"
+    answer: "Creating a pull request returns a 201 only when a new one is opened. If a branch already has an open pull request, the create call comes back with a different status instead. The pipeline treats a non-201 as a signal rather than an error: it lists open pull requests for that head branch and returns the existing one's URL. That way a re-run against the same branch reuses the open pull request instead of erroring or trying to open a duplicate, which keeps repeated publish attempts safe when a run is retried after a partial failure downstream."
+  - question: "how do you safely update a typescript index file when publishing generated content?"
+    answer: "A generated article has to be registered in an import map for the site to load it, and regenerating that whole file from the backend is risky. The pipeline instead reads the current registry file from the branch, or from main if the branch is new, and inserts a single new entry string immediately before the last closing brace. This edits the file in place without parsing TypeScript and without touching the existing entries. The edited text becomes just another blob in the same commit as the article, so registration and content ship together and never drift apart."
+toc:
+  - { id: "why-one-file-at-a-time-was-wrong", label: "why one file at a time was wrong", depth: 2 }
+  - { id: "the-commit-is-eight-http-calls", label: "the commit is eight http calls", depth: 2 }
+  - { id: "a-blob-per-file-one-tree-one-commit", label: "a blob per file, one tree, one commit", depth: 2 }
+  - { id: "editing-the-registry-without-clobbering-it", label: "editing the registry without clobbering it", depth: 2 }
+  - { id: "making-the-pull-request-idempotent", label: "making the pull request idempotent", depth: 2 }
+  - { id: "skipping-all-of-it-in-dev-mode", label: "skipping all of it in dev mode", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "llm-router-openrouter-fallback-prompt-caching"
+    title: "one door for every llm call: fallbacks and caching"
+    readingTime: 8
+    date: "2026-05-20"
+  - slug: "validation-gate-scoring-pipeline-output"
+    title: "scoring an agent's own writing before it publishes"
+    readingTime: 11
+    date: "2026-05-13"
+  - slug: "detecting-keyword-cannibalization-self-refresh-queue"
+    title: "when two of my pages cannibalize the same query"
+    readingTime: 10
+    date: "2026-05-28"
+---
+
+The pipeline I built generates a batch of MDX articles on a schedule and has to get them into a Next.js content repo without a human ever touching git. My first version used the GitHub contents API: one PUT per file. It was wrong in a way that only shows up when a single run writes 6 files at once. Each PUT is its own commit, so a run that writes an article, its images, and an updated index registry lands as 3 separate commits. If the process dies after the second PUT, the repo is left in a half-published state: an article that references a registry entry that does not exist yet, or a registry entry pointing at a file that never got written.
+
+The fix was to stop treating publishing as a sequence of file writes and start treating it as one commit assembled from parts. GitHub's Git Data API exposes the raw objects underneath a commit, which means a backend can build a full commit in memory, with every file in it, and only make it visible at the very end by moving a branch pointer. The whole batch appears at once or not at all. This post is the `commit_files` function that does it, and the reasons each step is shaped the way it is.
+
+## why one file at a time was wrong
+
+The contents API is the obvious tool. It takes a path and base64 content and writes the file, and it is genuinely fine for writing a single file. The problem is that it is a commit-per-call primitive. There is no way to say "these five files are one change." A publish that touches an article file, two image references, and the registry that imports the article is four or five independent commits, in whatever order the loop happened to run.
+
+That ordering is where it bites. If the registry commit lands before the article commit and the deploy fires on the registry push, the site tries to import a file that is not on the branch yet. If the article lands first and the run crashes before the registry, the article exists but nothing links to it. Neither state is one a human would ever create by hand, because a human commits related changes together. The Git Data API is how you get that same "related changes go together" guarantee from a server with no checkout.
+
+## the commit is eight http calls
+
+A commit in git is not a magic operation, it is a small graph of objects: blobs hold file contents, a tree maps paths to blobs, and a commit points at a tree and its parent. The Git Data API lets you create each of those objects directly, then repoint a branch reference at the new commit. `commit_files` walks that graph in 8 numbered steps, all inside a single async HTTP client with a 60 second timeout.
+
+It starts by reading where the branch currently is. Step one gets the SHA of `main`'s head. Step two checks whether the target publish branch already exists: a 404 means create it from main and use main's SHA as the parent, and anything else means the branch is already there, so use its current head as the parent instead. Step three reads that parent commit to pull out its tree SHA, which becomes the base for the new tree so that every file not being changed carries over untouched.
+
+```python
+# 1. Get SHA of main branch HEAD
+main_resp = await client.get(f"{GITHUB_API}/repos/{repo}/git/ref/heads/main")
+main_sha = main_resp.json()["object"]["sha"]
+
+# 2. Create branch from main if missing; else use its HEAD as parent
+ref_resp = await client.get(f"{GITHUB_API}/repos/{repo}/git/ref/heads/{branch}")
+if ref_resp.status_code == 404:
+    await client.post(f"{GITHUB_API}/repos/{repo}/git/refs",
+                      json={"ref": f"refs/heads/{branch}", "sha": main_sha})
+    parent_sha = main_sha
+else:
+    parent_sha = ref_resp.json()["object"]["sha"]
+
+# 3. Get base tree SHA from the parent commit
+commit_resp = await client.get(f"{GITHUB_API}/repos/{repo}/git/commits/{parent_sha}")
+base_tree_sha = commit_resp.json()["tree"]["sha"]
+```
+
+Reading the parent's tree first is the detail that keeps the commit from deleting the rest of the repo. A tree created without `base_tree` describes the entire repository, so if you only list your new files the commit effectively removes everything else. Passing `base_tree` says "start from this snapshot and overlay my changes," which is the behavior you actually want.
+
+## a blob per file, one tree, one commit
+
+With the parent and base tree in hand, the middle of the function turns each file into a blob and collects the results. A blob is just content plus an encoding, and creating one returns a SHA. Every file the run wants to publish becomes an entry in a `blobs` list, tagged with its path, the file mode `100644` for a normal file, the type `blob`, and the SHA that GitHub handed back.
+
+That list is then posted as a single tree with `base_tree` set to the parent's tree. GitHub merges the overlay onto the base and returns a new tree SHA. A commit object is created pointing at that tree with the original parent, which returns the new commit SHA, and only then does step seven move the branch reference to it with a PATCH. Up to that PATCH, none of this is visible on the branch; the blobs and tree and commit are dangling objects. The reference update is the atomic switch.
+
+```python
+# blobs: one per file (registry.ts handled specially, see below)
+blob_resp = await client.post(f"{GITHUB_API}/repos/{repo}/git/blobs",
+                              json={"content": content, "encoding": "utf-8"})
+blobs.append({"path": path, "mode": "100644", "type": "blob",
+              "sha": blob_resp.json()["sha"]})
+
+# 5-7. one tree, one commit, then move the ref
+tree = await client.post(f"{GITHUB_API}/repos/{repo}/git/trees",
+                         json={"base_tree": base_tree_sha, "tree": blobs})
+commit = await client.post(f"{GITHUB_API}/repos/{repo}/git/commits",
+    json={"message": commit_message, "tree": tree.json()["sha"],
+          "parents": [parent_sha]})
+await client.patch(f"{GITHUB_API}/repos/{repo}/git/refs/heads/{branch}",
+                   json={"sha": commit.json()["sha"]})
+```
+
+The payoff is that the number of files stops mattering for correctness. One article or ten, plus every image and the registry, are all in the same tree and the same commit. There is exactly one moment where the branch changes, and if any earlier call fails the branch never moved, so a retry starts clean instead of resuming from a partial write.
+
+## editing the registry without clobbering it
+
+The one file that is not written wholesale is the registry. The site loads generated articles through a TypeScript import map in `registry.ts`, and each new article needs an entry added to it. Regenerating that whole file from the backend would mean the pipeline has to hold an accurate copy of every existing entry, which it does not, and getting it wrong would silently drop published articles from the site.
+
+So the registry is edited in place. When the file being committed ends in `registry.ts`, the code reads the current content from the target branch, falling back to `main` if the branch is new, base64-decodes it, and inserts a single new entry immediately before the last closing brace. The insert is a plain string operation, no TypeScript parsing involved, which is enough because the entry format is fixed.
+
+```python
+new_entry = (f"  '{registry_slug}': () =>\n"
+             f"    import('./{registry_slug}.mdx') as Promise<ArticleModule>,\n")
+last_brace_idx = current_content.rfind("}")
+content = (current_content[:last_brace_idx] + new_entry
+           + current_content[last_brace_idx:])
+```
+
+Reading the branch first, then main, is what makes this survive a run that publishes several articles onto the same branch across retries. Each new entry stacks onto whatever the branch already has rather than resetting to main's version and losing the earlier additions. The edited registry text then becomes just one more blob in the same tree as the article it registers, so the import map and the file it imports always ship in the same commit and can never drift out of sync.
+
+## making the pull request idempotent
+
+Once the branch has the new commit, the function opens a pull request against main with the commit message as the title. GitHub returns a 201 when it actually creates one. The interesting case is every other response, because a branch that already has an open pull request will not create a second one, and a naive handler would treat that as a failure and either crash or spam duplicates.
+
+Instead the code reads a non-201 as "a pull request probably already exists here" and goes looking for it: it lists open pull requests filtered to that head branch and returns the first one's URL. A publish that runs twice against the same branch, which happens whenever a later stage fails and the run is retried, reuses the open pull request rather than erroring. The function's contract stays simple: give it files and a branch, get back a pull request URL, whether or not one already existed.
+
+```python
+pr = await client.post(f"{GITHUB_API}/repos/{repo}/pulls",
+    json={"title": commit_message, "head": branch, "base": "main",
+          "body": "Auto-published by Content Pipeline"})
+if pr.status_code == 201:
+    return pr.json().get("html_url", "")
+
+# non-201: a PR for this head branch likely exists already, reuse it
+existing = await client.get(f"{GITHUB_API}/repos/{repo}/pulls",
+    params={"head": f"{repo.split('/')[0]}:{branch}", "state": "open"})
+if existing.status_code == 200 and existing.json():
+    return existing.json()[0].get("html_url", "")
+```
+
+This is the same instinct as the atomic commit, applied to the pull request. Publishing is something a scheduled job does unattended and sometimes repeats, so every write in the path has to be safe to run more than once. The commit is safe because it is one ref move; the pull request is safe because a second attempt finds and returns the first.
+
+## skipping all of it in dev mode
+
+None of this should fire while I am iterating locally. Opening real pull requests against a real content repo from a dev machine is exactly the kind of accident that wastes an afternoon cleaning up branches. So `commit_files` checks a dev-mode flag at the very top, before any HTTP call, logs that it skipped, and returns a fake `http://localhost/dev-mode-no-pr` URL.
+
+Returning a URL-shaped string rather than raising or returning empty matters more than it looks. Every caller downstream expects a pull request URL and threads it into run records, dashboard state, and reports. A dev run therefore exercises the entire publish path and all its bookkeeping without touching GitHub, and nothing downstream has to special-case the dev return value. The guard is one branch at the entrance, and it keeps the expensive, externally visible action behind an explicit setting.
+
+## what i would change
+
+**Verify the deploy against the commit SHA, not just the branch.** Right now the function returns once the pull request exists, and a separate part of the system reacts to the deploy. The commit SHA it created is the natural key to tie a publish to the deploy it produced, and passing it through would let the pipeline confirm that the specific commit went live rather than inferring it from the branch. That closes a gap where a later commit could be the one that actually deployed.
+
+**Batch the blob creation.** Blobs are created one at a time in a loop, which is fine for a handful of files but is a serial round trip per file. For a run that publishes several articles with images, creating the blobs concurrently would cut the wall-clock time of the publish step, since the blobs are independent and only the tree needs all their SHAs together. The tree, commit, and ref move stay sequential because they genuinely depend on each other.
+
+**Make the registry edit refuse to guess.** Inserting before the last brace assumes a specific file shape, and if the registry ever grows a trailing block or a differently structured export, a blind string insert could produce invalid TypeScript that only fails at build time. A small validation step that confirms the inserted entry parses, or at least that the brace it found is the map's closing brace and not something else, would turn a possible silent breakage into a loud, early failure.
