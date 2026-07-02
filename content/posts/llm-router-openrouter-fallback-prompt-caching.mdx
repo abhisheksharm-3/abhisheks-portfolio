@@ -1,0 +1,171 @@
+---
+title: "one door for every llm call: fallbacks and caching"
+subhead: "every model call in this pipeline runs through one function: openrouter-native fallback chains, anthropic prompt caching, and a cheaper dev-mode path."
+date: "2026-05-20"
+keywords:
+  - "openrouter fallback chain extra_body models"
+  - "litellm openrouter prefix fallback bug"
+  - "anthropic prompt caching cache_control ephemeral"
+  - "single llm router function litellm"
+  - "openrouter response healing json plugin"
+  - "litellm dev mode local model substitution"
+tags: ["ai", "backend"]
+readingTime: 8
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "why route every LLM call through a single function instead of the provider SDK?"
+    answer: "Because the decisions that surround a model call, like which model, what fallback, whether to cache the system prompt, how to track spend, and whether to substitute a cheaper model in development, are the same for every caller and change often. If each of a dozen call sites talks to the provider directly, a model swap becomes a dozen edits and the caching header gets copied inconsistently. Funneling everything through one function means a call site knows only an alias, and every cross-cutting concern lives in one file that I can change once."
+  - question: "how do OpenRouter fallback chains differ from client-side retries?"
+    answer: "A client-side retry loop catches an error, waits, and re-issues the request from your process, which adds a full network round trip per attempt and puts the failover logic in your code. OpenRouter fallback chains are passed once in the request body as a list of models, and the router tries them server-side in order until one succeeds. The caller sees a single request and a single response. There is no extra round trip on failover and no retry state to manage in the application, so a busy provider degrades to the next model without any code on my side running twice."
+  - question: "why does litellm break OpenRouter fallback model ids?"
+    answer: "litellm strips the leading openrouter/ prefix from the primary model field before sending the request, but it passes the extra_body payload straight through untouched. The fallback list lives in extra_body under the models key, so any id there keeps whatever prefix you wrote. If you reuse your prefixed alias strings for the fallback list, OpenRouter receives ids like openrouter/anthropic/claude-haiku, which are not valid model names, and the fallback silently does nothing. The fix is a small helper that removes the prefix so the fallback ids are bare while the primary field keeps its prefix."
+  - question: "how much does Anthropic prompt caching save on a multi-call pipeline?"
+    answer: "A cache write costs about 1.25 times the normal input price and a cache read costs roughly a tenth of it. That trade only pays off when the same large prefix is reused many times. In this pipeline a single run makes more than 20 calls that share one big assembled system prompt, so the first call pays the write premium and every call after it reads the cached prefix at a tenth of the cost. Across a run that works out to roughly 85 percent off the input cost of that shared prompt, which is the bulk of the tokens on every call."
+  - question: "how do you develop against an LLM pipeline without spending money on every run?"
+    answer: "The router checks a dev-mode flag before it does anything else. In dev mode it swaps the production aliases for a single cheap model or, if a local base URL is set, routes to a model served by LM Studio on my machine for zero API cost. Image generation returns an empty string so it never bills, and the research aliases run through a path that does a plain web search plus the cheap model instead of an expensive deep-research call. The call sites do not change; only the resolved model does, so I can exercise the whole flow end to end while iterating."
+toc:
+  - { id: "one-function-every-model-call", label: "one function, every model call", depth: 2 }
+  - { id: "fallback-chains-that-never-touch-my-code", label: "fallback chains that never touch my code", depth: 2 }
+  - { id: "the-prefix-bug-that-ate-my-fallbacks", label: "the prefix bug that ate my fallbacks", depth: 2 }
+  - { id: "caching-a-system-prompt-that-repeats", label: "caching a system prompt that repeats", depth: 2 }
+  - { id: "a-dev-mode-that-does-not-spend-real-money", label: "a dev mode that does not spend real money", depth: 2 }
+  - { id: "cheap-calls-self-healing-json-tracked-spend", label: "cheap calls, self-healing json, tracked spend", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "validation-gate-scoring-pipeline-output"
+    title: "scoring an agent's own writing before it publishes"
+    readingTime: 11
+    date: "2026-05-13"
+  - slug: "transformer-principles-in-rag-retrieval-design"
+    title: "what the transformer paper taught me about rag"
+    readingTime: 11
+    date: "2026-05-18"
+  - slug: "publishing-articles-github-git-data-api"
+    title: "publishing articles to a repo with the git data api"
+    readingTime: 10
+    date: "2026-05-21"
+---
+
+Every run of this content pipeline makes more than 20 model calls: a topic selector, a hypothesis agent, an outliner, a writer, an editor, a validator, plus a handful of research and metadata steps. Early on, each of those call sites talked to the provider client directly. The model id, the retry count, the caching header, and the cost-tracking write were all copied into a dozen places, and swapping a model or changing a fallback meant editing all of them and hoping I got each one right.
+
+So now everything goes through one function. A call site passes an organization id, a model alias, and the messages, and gets back a string. It does not know which provider it hit, whether a fallback fired, whether the system prompt was cached, or what the call cost. All of that lives in a single module, which is the only place model behavior is allowed to change.
+
+## one function, every model call
+
+The alias map is the whole public contract. A caller says `claude-opus` and never touches a provider path. The map turns an alias into an OpenRouter model id, and a couple of small frozensets record which of those support prompt caching and which are the expensive research models.
+
+```python
+MODELS = {
+    "claude-opus": "openrouter/anthropic/claude-opus-4-7",
+    "claude-sonnet": "openrouter/anthropic/claude-sonnet-4-6",
+    "claude-haiku": "openrouter/anthropic/claude-haiku-4.5",
+    "deepseek-flash": "openrouter/deepseek/deepseek-v4-flash",
+    # image-gen, embedding-small, and three perplexity-sonar aliases too
+}
+
+async def call_model(org_id, model_alias, messages,
+                     temperature=0.3, max_tokens=4096,
+                     use_response_cache=False, json_response=False) -> str:
+    ...
+```
+
+The value of a single door is that every cross-cutting concern collapses into it. A model swap is one line in the map. Fallback, caching, dev-mode substitution, retries, and spend tracking each appear exactly once. When I later found a bug in how fallbacks were configured, there was one function to fix, not a dozen call sites to audit. The rest of this post is what accumulated inside that one function.
+
+## fallback chains that never touch my code
+
+Providers have bad minutes. A model can be rate limited or briefly unavailable, and I did not want a single busy upstream to fail a whole article. OpenRouter supports a server-side fallback list: you send a primary model plus an ordered list of alternates in the request body, and it tries them in order until one answers. The caller issues one request and reads one response.
+
+```python
+extra_body = {}
+fallback_chain = _FALLBACK_CHAINS.get(model)
+if fallback_chain:
+    extra_body["models"] = fallback_chain
+```
+
+The alternative is a retry loop in my own code: catch the error, pick the next model, re-issue the call. That works, but it adds a network round trip per attempt and moves failover logic into the application, where it has to be tested and maintained. Pushing the chain into `extra_body["models"]` means the failover happens inside the router, on the same request, with no second round trip and no retry state for me to hold. Opus falls back to Sonnet and then Haiku; Sonnet falls back to Haiku. The pipeline keeps moving even when the first-choice model is having a rough time.
+
+## the prefix bug that ate my fallbacks
+
+This is the part that cost me real time. Every alias in my map is a full OpenRouter path with an `openrouter/` prefix, because that is what litellm expects in the primary `model` field. It turns out litellm strips that prefix off the primary field before sending, but it passes `extra_body` through completely untouched. My fallback list lived in `extra_body["models"]`, so those ids kept their prefix.
+
+```python
+def _or(model: str) -> str:
+    return model.removeprefix("openrouter/")
+
+_FALLBACK_CHAINS = {
+    MODELS["claude-opus"]: [_or(MODELS["claude-sonnet"]), _or(MODELS["claude-haiku"])],
+    MODELS["claude-sonnet"]: [_or(MODELS["claude-haiku"])],
+    MODELS["deepseek-flash"]: ["google/gemini-3.5-flash", _or(MODELS["claude-haiku"])],
+}
+```
+
+The failure was invisible. OpenRouter received fallback ids like `openrouter/anthropic/claude-haiku`, which are not valid model names, so on a primary failure it had nothing usable to fall back to and the request just failed. Nothing errored at config time; the chain was simply dead. The fix is the tiny `_or` helper that removes the prefix, so the primary field keeps its prefix and the fallback list is bare. The lesson stuck: a config that can be wrong without failing loudly at startup is a config that will be wrong in production.
+
+## caching a system prompt that repeats
+
+The system prompt in this pipeline is large. It is the assembled orchestrator prompt with the org's learned memory stitched in, and it is nearly identical across the 20-plus calls in a run. Anthropic prompt caching exists for exactly this shape: mark a stable prefix once, and reads of it after the first call cost a fraction of the input price.
+
+```python
+def _inject_cache_control(messages, model):
+    if model not in _CLAUDE_MODELS:
+        return messages
+    if not messages or messages[0].get("role") != "system":
+        return messages
+    system_content = messages[0]["content"]
+    if isinstance(system_content, str):
+        system_content = [{"type": "text", "text": system_content}]
+    last_block = system_content[-1]
+    if "cache_control" not in last_block:
+        system_content = [*system_content[:-1],
+                          {**last_block, "cache_control": {"type": "ephemeral"}}]
+    return [{"role": "system", "content": system_content}, *messages[1:]]
+```
+
+The economics decide where this is worth doing. A cache write costs about 1.25 times normal input, and a cache read costs about a tenth. On a one-shot call that trade loses. Across a run that reuses the same prefix 20-plus times, the first call pays the write premium and everything after reads at a tenth, which lands around 85 percent off the input cost of that shared prompt. The breakpoint goes on the last block of the system message only, and only for Claude models, since other providers on the router do not honor the same header. Everything else in the message list stays uncached, which is correct, because only the system prefix is actually stable.
+
+## a dev mode that does not spend real money
+
+When I am iterating on prompt wording or graph flow, I am running the pipeline over and over, and none of those runs need a frontier model. So the router checks a dev-mode flag before it resolves anything, and in dev mode it quietly redirects the call.
+
+```python
+if get_settings().dev_mode:
+    if model_alias == "image-gen":
+        return ""                       # never bill image generation while iterating
+    if model_alias in _SONAR_ALIASES:
+        return await _dev_sonar(org_id, messages, max_tokens)
+    lm_base = get_settings().lm_studio_api_base
+    if lm_base:
+        ...                             # route to a local model served by LM Studio
+    model = _DEV_MODELS.get(model_alias) or MODELS.get(model_alias, model_alias)
+    ...
+```
+
+The important property is that the call sites do not know any of this happened. Image generation returns an empty string so it never bills. The research aliases run through a path that does a plain web search and feeds the results to a cheap model, instead of an expensive deep-research call. Everything else maps to one cheap model, or to a model served locally by LM Studio for zero API cost when a local base URL is set. I get to exercise the entire flow end to end, dozens of times a day, without watching a spend meter, and the production path is completely unaffected because it lives past the same flag.
+
+## cheap calls, self-healing json, tracked spend
+
+Not every production call deserves the same treatment either. Background work like validation passes and metadata generation cares about cost more than latency, so there is a second entry point, `call_model_cheap`, that adds a provider preference telling OpenRouter to sort available providers by price. It is a small addition to the same body:
+
+```python
+extra_body = {"provider": {"sort": "price"}}          # call_model_cheap only
+...
+if json_response:
+    extra_body["plugins"] = [{"id": "response-healing"}]
+    completion_kwargs["response_format"] = {"type": "json_object"}
+...
+completion_kwargs["num_retries"] = 2                  # production path only
+fire_task(_record_spend(org_id, run_id, model, response))
+```
+
+Two more details close the loop. When a caller wants JSON, the router both sets a JSON response format and turns on OpenRouter's response-healing plugin, which repairs malformed model output before it comes back, so my parser sees valid JSON far more often. And spend is recorded through a fire-and-forget background task rather than inline, so writing the cost row never blocks or slows the response the caller is waiting on. Retries are set to 2, but only on the production path, so a deterministic bad-input error in dev mode is not pointlessly retried.
+
+## what i would change
+
+**Move the alias map out of code.** The alias-to-model map and the dev substitutes are module constants. Making a different model choice for a specific org, or A/B testing two models on the same step, means editing and redeploying. A per-org config in the database would turn model selection into data, which is where a decision that changes this often belongs.
+
+**Validate fallback chains at startup.** The prefix bug was silent because a malformed fallback id is only rejected when a failover actually fires, which is rare. I would add a startup check that every id in every chain is a known, resolvable model, so a typo fails the boot instead of quietly disarming a safety net that I only notice missing during an outage.
+
+**Cache more than the system prefix.** The caching breakpoint sits only on the system message. In the per-article loop, a large research bundle is also reused across the write, edit, and validate calls for that one article. Marking that stable context as a second cache breakpoint would extend the same savings to the user side of the prompt, not just the system side.
