@@ -1,0 +1,118 @@
+---
+title: "what the transformer paper taught me about rag"
+subhead: "encoder embeddings, l2 norm as attention's scaling trick, multi-resolution retrieval as residual connections, and context over fine-tuning."
+date: "2026-05-18"
+keywords:
+  - "encoder vs decoder embeddings rag"
+  - "l2 normalization cosine similarity embeddings"
+  - "attention is all you need rag design"
+  - "context injection vs fine-tuning llm"
+  - "multi-resolution chunking retrieval design"
+  - "pgvector semantic similarity threshold"
+tags: ["ai", "backend"]
+readingTime: 11
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "why should an embedding model be encoder-based and not a decoder LLM?"
+    answer: "A decoder LLM uses causal masking, so token n can only attend to tokens 1 through n-1. That makes each position's representation conditioned on a different amount of context: the first token sees only itself while the last token sees the whole phrase. Pooling those uneven representations into one vector produces an embedding that is sensitive to word order, so two phrases that mean the same thing but order their words differently land in different regions of the space. An encoder uses bidirectional attention where every token attends to every other token, giving a balanced representation of the full phrase. For clustering, near-duplicate detection, and gap analysis, which all rely on order-invariant meaning, the encoder is the correct choice and a decoder's hidden states are the wrong tool."
+  - question: "why L2-normalize embeddings before cosine similarity?"
+    answer: "Cosine similarity is meant to compare the direction of two vectors, not their length. If vectors are left unnormalized, longer documents tend to produce higher-magnitude vectors, and their similarity scores get inflated regardless of whether the content is actually related. Normalizing every vector to unit length removes magnitude from the comparison so only direction matters, which is what you want when the question is semantic closeness rather than document size. In the design notes I framed this as the embedding-space version of the square-root-of-d scaling inside scaled dot-product attention from Vaswani et al., 2017: both exist for the same reason, to stop raw magnitude from dominating a similarity signal that is supposed to be about relationship, not size."
+  - question: "what does multi-resolution chunking have to do with residual connections?"
+    answer: "Residual connections in a transformer carry earlier-layer representations forward so that fine-grained, low-level information stays available alongside the abstract representations built up in later layers. A retrieval store that only holds full-article embeddings is like reading only the final layer: you get the abstract topic but lose the sentence-level detail an agent sometimes needs. Storing embeddings at several granularities at once, article and section and paragraph and sentence, keeps both the broad meaning and the precise detail reachable, so a query can be answered at whatever resolution it actually needs. The analogy is not decorative; it is the reason the design argues for chunking at multiple levels instead of picking one."
+  - question: "why inject org context at runtime instead of fine-tuning the model?"
+    answer: "Fine-tuning writes facts into the feed-forward weights of the model, and those weights go stale the moment the underlying data changes, which for a per-organization content system is constantly. Injecting the brand document, case studies, and proof points as context on each call keeps the facts fresh because they are read at request time, and it lets the attention mechanism dynamically pick which parts of that context matter for the current task. Prompt caching recovers most of the cost advantage that fine-tuning would have offered, without inheriting the staleness problem. For a system whose knowledge is org-specific and always shifting, runtime context injection is the correct read of what RAG is for."
+  - question: "why treat an LLM quality score of 7.0 as uncertain instead of a hard pass?"
+    answer: "Transformer language models are trained with label smoothing, which replaces hard one-hot targets with softened probability distributions. A consequence is that the numbers such a model emits are themselves distribution-like, not exact point estimates. A score of 7.0 and a score of 7.4 sit inside the same band of genuine model uncertainty, so drawing a hard pass-or-fail line between them pretends a precision the output does not have. In the validator I gave that band its own zone: articles in the marginal range still proceed, but the operator sees the per-dimension breakdown and makes the call, which is the honest way to treat a confidence interval rather than a fact."
+toc:
+  - { id: "the-paper-is-a-source-of-constraints", label: "the paper is a source of constraints", depth: 2 }
+  - { id: "why-the-embedder-has-to-be-an-encoder", label: "why the embedder has to be an encoder", depth: 2 }
+  - { id: "normalizing-is-the-scaling-trick-in-disguise", label: "normalizing is the scaling trick in disguise", depth: 2 }
+  - { id: "storing-meaning-at-four-resolutions", label: "storing meaning at four resolutions", depth: 2 }
+  - { id: "fresh-context-beats-stale-weights", label: "fresh context beats stale weights", depth: 2 }
+  - { id: "a-score-of-7-is-not-a-fact", label: "a score of 7 is not a fact", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "validation-gate-scoring-pipeline-output"
+    title: "scoring an agent's own writing before it publishes"
+    readingTime: 11
+    date: "2026-05-13"
+  - slug: "agent-pipeline-memory-system-prompt-experiment-loop"
+    title: "giving an agent pipeline memory that changes its output"
+    readingTime: 11
+    date: "2026-05-22"
+  - slug: "detecting-keyword-cannibalization-self-refresh-queue"
+    title: "when two of my pages cannibalize the same query"
+    readingTime: 10
+    date: "2026-05-28"
+---
+
+When I designed the retrieval and memory layer for a content pipeline, the most useful reference was not a RAG tutorial. It was the transformer paper, Vaswani et al., 2017. Not because the pipeline trains anything, it does not, but because several of the paper's mechanisms are really statements about how to keep information comparable and accessible, and those statements turn into concrete design rules once you are storing 1536-dimensional vectors and asking whether two of them mean the same thing. The store is pgvector behind LangGraph, keyed per organization, with a cosine-similarity index. The interesting decisions were not which database to use. They were where to borrow a constraint from the architecture that produced the embeddings in the first place.
+
+This post walks through four of those borrowed constraints and one bonus, and it is honest about which ones the code actually enforces today versus which ones live in the design doc as rationale. Two of them are load-bearing in the running system. One is a principle I argued for and have not fully built. That gap is the most interesting part, so it gets its own section at the end.
+
+## the paper is a source of constraints
+
+The reason the paper is useful here is that embeddings are not neutral. A vector is the output of a specific architecture making specific choices about how tokens see each other, and those choices leak into every similarity comparison you do downstream. If you treat the embedding model as a black box that emits "meaning," you inherit its biases silently. If you read it as a transformer, you can predict where it will mislead you and design around that.
+
+So the framing I used was: every similarity operation in the pipeline, clustering keywords, detecting when two of my own pages compete for the same query, checking whether an article has decayed against the current top rankers, is a bet that the embedding space behaves the way I think it does. The transformer paper tells you how that space is built, which means it also tells you the conditions under which the bet is safe. The rest of this is those conditions.
+
+## why the embedder has to be an encoder
+
+The first rule is that the embedding model must be an encoder, a bidirectional-attention model in the BERT family, and never a decoder LLM's hidden states repurposed as an embedding. The reason is causal masking. A decoder attends left to right, so token n only sees tokens 1 through n-1. The first token of a phrase is conditioned on nothing but itself; the last token is conditioned on everything before it. The per-token representations are therefore asymmetric across positions, and when you pool them into one vector, that asymmetry becomes an order sensitivity.
+
+Concretely, the design notes point out that a decoder-derived embedding of `"enterprise react native performance"` differs from `"react native enterprise performance"` even though the two phrases describe the same thing. That is fatal for my use cases, because cluster membership, cannibalization detection, and refresh-gap analysis all assume that meaning is invariant to word order. An encoder fixes this: every token attends to every other token at once, so both orderings land in the same neighborhood. This is also why the design explicitly rejects string-prefix truncation as a cheaper substitute for embeddings, since `"api security best practices"` and `"best practices api security"` share a meaning but not a prefix. The implemented pipeline honors the rule the correct way: it uses a purpose-built embedding model, text-embedding-3-small, which is encoder-architecture by design, rather than pulling hidden states out of a generative model.
+
+## normalizing is the scaling trick in disguise
+
+The second rule is that every vector is L2-normalized to unit length before any cosine comparison. Skipping this is a classic quiet bug. Unnormalized cosine similarity degrades toward an unscaled dot product, and then vector magnitude starts to matter. Longer documents produce higher-magnitude vectors, so they score as more similar to everything, regardless of content. You end up with a retrieval system that thinks your longest articles are relevant to every query.
+
+```python
+import numpy as np
+
+def normalize(vec: np.ndarray) -> np.ndarray:
+    return vec / (np.linalg.norm(vec) + 1e-12)
+
+# store unit-length vectors so cosine compares direction, not magnitude
+embedding = normalize(embed_model.encode(text))
+```
+
+In the design doc I tied this directly to the paper: normalization is the embedding-space analog of the square-root-of-d scaling inside scaled dot-product attention in Vaswani et al., 2017. The attention scaling exists so that as the key dimension grows, the raw dot products do not blow up and saturate the softmax; both it and L2 normalization are there to stop magnitude from swamping a signal that is supposed to be about relationship. Once the space is unit-normalized, fixed thresholds start to mean something stable: the pipeline treats a cosine similarity above 0.82 as same-cluster and above 0.92 as a near-duplicate worth blocking. Those constants are only defensible because every vector lives on the same unit sphere. In practice the shipped embedder already returns near-unit-norm vectors, which is why the running system behaves, but the rule is the thing I trust, not the vendor's default.
+
+## storing meaning at four resolutions
+
+The third idea is the one I find most elegant and have least fully built. The design argues that articles and org documents should be embedded at several granularities at once, article, section, paragraph, and sentence, and it grounds that in residual connections. In a transformer, residual connections carry earlier-layer representations forward so fine-grained, low-level detail stays reachable alongside the abstract representations built in later layers. A store that only keeps full-article embeddings is like reading only the final layer: you capture the topic but lose the sentence-level precision that some retrieval steps need. A store that only keeps sentences loses the broad context. You want both, matched to the resolution each query actually needs.
+
+Here is the honest part. The running store does not do this yet. It indexes a single `text` field per memory entry, so the retrieval resolution is fixed at whatever granularity I happened to write.
+
+```python
+cm = AsyncPostgresStore.from_conn_string(
+    database_url,
+    index={"dims": 1536, "embed": embedder, "fields": ["text"]},
+)
+# one "text" field per entry: resolution is whatever we wrote, not a choice at query time
+```
+
+So multi-resolution retrieval is currently a documented principle rather than a shipped capability. I still think the residual-connection framing is the right way to reason about it, and it is exactly the kind of thing that is easy to hand-wave as "chunk your documents" without understanding why more than one chunk size matters. The paper gives the why.
+
+## fresh context beats stale weights
+
+The fourth rule is about where org-specific knowledge lives, and this one the system does fully implement. The choice is context injection over fine-tuning. Fine-tuning would write brand facts, case studies, and proof points into the feed-forward weights of the model. In a transformer, those feed-forward layers are where a lot of factual knowledge is stored, and the problem is that baked-in facts go stale the instant the org's data changes, which for a per-organization system is constantly. You would be re-training to chase a moving target.
+
+Instead the pipeline reads the relevant org context on every call and lets the attention mechanism decide which parts of it matter for the current brief. That is the actual argument for RAG done correctly, and it is what the memory layer does: retrieved facts and past experiments are assembled into the prompt each run rather than learned once. Attention gives you dynamic selection that fine-tuned weights cannot, since cross-attention between the brand document and the current article brief effectively picks the relevant slice per task. Prompt caching then recovers most of the cost benefit fine-tuning would have promised, without the staleness, which is why the running system caches the stable context blocks rather than trying to train them in.
+
+## a score of 7 is not a fact
+
+The bonus one came up in the validation gate, and it is the same habit of reading a model output as a distribution instead of a number. The article validator scores drafts and uses a pass threshold of 7. The naive design is a hard binary: 7 and above passes, below fails. The problem is that transformer language models are trained with label smoothing, which softens the hard targets into probability distributions, so the scores the model emits are themselves distribution-like rather than exact.
+
+That means a 7.0 and a 7.4 sit inside the same region of real model uncertainty, and forcing a hard boundary between them invents a precision the output does not have. So the design carves out a marginal zone, roughly 7.0 to 7.49, where the article still proceeds but the operator gets the per-dimension breakdown and makes the final call. It is a small thing, but it comes from the same place as the rest of this: treat the number as a confidence interval, not ground truth, because the architecture that produced it was trained to be uncertain on purpose.
+
+## what i would change
+
+**Ship the multi-resolution store, not just the principle.** Today the vector store indexes one `text` field per entry, so retrieval happens at a fixed granularity. The residual-connection argument only pays off if section, paragraph, and sentence embeddings coexist and a query can pick its level. Building that is the single biggest gap between the design and the running system, and it is the change most likely to improve retrieval precision.
+
+**Enforce normalization instead of trusting it.** The system currently works because the embedding vendor returns near-unit-norm vectors, which means a model swap could silently break every fixed cosine threshold in the pipeline. I would normalize explicitly at write time and assert unit length, so the 0.82 and 0.92 thresholds cannot quietly drift out from under the code.
+
+**Turn the encoder rule into a guardrail.** The requirement that embeddings come from an encoder, not a decoder's hidden states, lives in a design doc where nothing stops a future change from violating it. The constraint that keeps word-order-equivalent phrases in the same neighborhood should be a check in code, not a paragraph someone has to remember to read.
