@@ -1,10 +1,10 @@
 ---
-title: "the over-broad boolean that zeroed teams renewals"
-subhead: "a product-classification flag that also matched standard teams routed monthly renewals through concierge logic and granted whole orgs zero ai tokens."
+title: "the over-broad boolean that zeroed a token pool"
+subhead: "a product-classification flag that also matched the per-seat tier routed monthly renewals through managed-tier logic and granted whole orgs zero ai tokens."
 date: "2026-07-03"
 keywords:
   - "stripe subscription renewal zero tokens"
-  - "webhook token allocation bug saas teams"
+  - "webhook token allocation bug saas per-seat"
   - "product metadata misclassification stripe"
   - "invoice.payment_succeeded per-seat allocation"
   - "production incident rca token pool"
@@ -16,11 +16,11 @@ searchIntent: "informational"
 draft: false
 faqs:
   - question: "why did a Stripe subscription renewal grant an organization zero tokens?"
-    answer: "The renewal webhook computed a per-seat token grant, then multiplied it by the seat count to fill the org's pool. A classification flag misrouted standard Teams products into the branch meant for Concierge, which reads a yearly token value from product metadata. Standard monthly Teams products do not carry that yearly key, so the lookup fell through to a default of zero. Zero per seat times any number of seats is zero, so the renewal wrote an empty pool and every member lost access to AI tools the moment billing succeeded."
-  - question: "what made the isConciergeProduct flag match standard Teams organizations?"
-    answer: "The flag was true if any of three conditions held, and one of them was a product metadata field, is_org_plan, set to the string true. That field marks a product as an organization plan, which is correct for both Concierge and standard Teams, so both carried it. The flag was intended to identify Concierge specifically, but the condition it used could not tell the two organization plans apart. Standard Teams satisfied the flag and was treated as Concierge everywhere the flag was read, including the token allocation math."
+    answer: "The renewal webhook computed a per-seat token grant, then multiplied it by the seat count to fill the org's pool. A classification flag misrouted the standard per-seat product into the branch meant for the managed tier, which reads a yearly token value from product metadata. Standard monthly products do not carry that yearly key, so the lookup fell through to a default of zero. Zero per seat times any number of seats is zero, so the renewal wrote an empty pool and every member lost access to AI tools the moment billing succeeded."
+  - question: "what made the tier-classification flag match the wrong product?"
+    answer: "The flag was true if any of three conditions held, and one of them was a product metadata field, is_org_plan, set to the string true. That field marks a product as an organization plan, which is correct for both the managed tier and the standard per-seat tier, so both carried it. The flag was intended to identify the managed tier specifically, but the condition it used could not tell the two organization plans apart. The standard tier satisfied the flag and was treated as managed everywhere the flag was read, including the token allocation math."
   - question: "why did the same bug produce two different symptoms on two branches?"
-    answer: "The flag is read at two call sites: one computes the per-seat grant amount, the other decides whether a renewal refreshes the pool or preserves the existing balance. A later change added a correct narrow flag and fixed only one call site, and it was applied inconsistently across branches. Production still had the broad flag at the per-seat site, so Teams renewals granted zero. The develop line had it fixed there but still broad at the carryover site, so first allocation was correct while renewals preserved the leftover pool instead of refreshing it."
+    answer: "The flag is read at two call sites: one computes the per-seat grant amount, the other decides whether a renewal refreshes the pool or preserves the existing balance. A later change added a correct narrow flag and fixed only one call site, and it was applied inconsistently across branches. Production still had the broad flag at the per-seat site, so renewals granted zero. The other branch had it fixed there but still broad at the carryover site, so first allocation was correct while renewals preserved the leftover pool instead of refreshing it."
   - question: "how do you stop a billing webhook from silently writing a zero-token pool?"
     answer: "Add a guard that treats a zero grant on a paid renewal as an error rather than a valid state. If the seat count is positive and the computed per-seat amount is zero, the product metadata is missing or the classification is wrong, and the handler should throw instead of writing the pool. A thrown error surfaces in logs and returns a non-2xx to Stripe, which retries and raises visibility. Pair the guard with an alert on any paid organization renewal that grants zero, so the failure is loud instead of a quiet empty pool nobody notices until a customer complains."
   - question: "why test the second renewal instead of just the first payment?"
@@ -41,29 +41,29 @@ relatedPosts:
     date: "2026-06-18"
 ---
 
-The escalation reached me as a customer complaint: an organization with 24 seats had just renewed, and every member was getting "insufficient tokens" errors the moment they touched an AI tool. The subscription was active, the invoice was paid, and the org's token pool was zero. At least two other Teams organizations were in the same state. Nothing had failed loudly. The renewal had succeeded, the webhook had run to completion, and it had written a pool of exactly zero tokens.
+The escalation reached me as a customer complaint: an organization with 24 seats had just renewed, and every member was getting "insufficient tokens" errors the moment they touched an AI tool. The subscription was active, the invoice was paid, and the org's token pool was zero. At least two other organizations were in the same state. Nothing had failed loudly. The renewal had succeeded, the webhook had run to completion, and it had written a pool of exactly zero tokens.
 
-The cause was a rule meant only for Concierge, applied to standard Teams by mistake. Concierge always receives its full yearly per-seat allotment regardless of billing cadence. Standard Teams is different: it allots per interval, a monthly amount on monthly billing. A classification flag swept Teams into the Concierge path, so a monthly Teams renewal tried to read a yearly value its product never set, resolved to zero, and never reached the per-interval allocation it was owed. This is the trace from that empty pool back to the single boolean that could not tell the two organization plans apart, and how the same defect wore two different faces on two branches.
+The cause was a rule meant only for the managed tier, applied to the standard per-seat plan by mistake. The managed tier always receives its full yearly per-seat allotment regardless of billing cadence. The standard plan is different: it allots per interval, a monthly amount on monthly billing. A classification flag swept the standard plan into the managed path, so a monthly renewal tried to read a yearly value its product never set, resolved to zero, and never reached the per-interval allocation it was owed. This is the trace from that empty pool back to the single boolean that could not tell the two organization plans apart, and how the same defect wore two different faces on two branches.
 
 ## the symptom: a paid org with no tokens
 
-Sage bills organizations two ways. Standard Teams is a per-seat plan that allots tokens on each billing interval: monthly plans grant a monthly amount, annual plans grant a yearly amount. Concierge is a higher tier that always grants the full yearly per-seat amount regardless of how the firm actually pays, because a Concierge firm on quarterly billing should still get a full year of tokens up front rather than a quarter's worth.
+The billing model has two organization tiers. The standard tier is a per-seat plan that allots tokens on each billing interval: monthly plans grant a monthly amount, annual plans grant a yearly amount. The managed tier is higher-touch and always grants the full yearly per-seat amount regardless of how the customer actually pays, because a managed customer on quarterly billing should still get a full year of tokens up front rather than a quarter's worth.
 
 The org's live balance is a single number, `organizations.total_tokens`, and the AI tools check against it before every call. When a renewal fires, the webhook recomputes that pool from the product's metadata and the seat count and writes it. So a renewal that computes the wrong per-seat number does not degrade gracefully. It overwrites the entire pool with the wrong value, and if that value is zero, the organization goes from fully funded to fully locked out in one webhook.
 
 ## the flag that could not tell two plans apart
 
-The allocation lives in the `org-subscription-handler` edge function, on the `invoice.payment_succeeded` event. It classifies the product, then reads the matching token amount from metadata:
+The allocation lives in the organization subscription handler, on the `invoice.payment_succeeded` event. It classifies the product, then reads the matching token amount from metadata:
 
 ```typescript
 const interval = price?.recurring?.interval;
-const isConciergeProduct =
-  subscription.metadata?.plan_type === "teams_concierge" ||
+const isManagedTier =
+  subscription.metadata?.plan_type === "managed" ||
   product?.metadata?.is_org_plan === "true" ||
-  (product?.name || "").toLowerCase().includes("concierge");
+  (product?.name || "").toLowerCase().includes("managed");
 
 let tokensPerSeat = 0;
-if (isConciergeProduct) {
+if (isManagedTier) {
   tokensPerSeat = parseInt(product?.metadata?.yearly ?? "0");
 } else if (interval === "month") {
   tokensPerSeat = parseInt(product?.metadata?.monthly ?? "0");
@@ -75,35 +75,35 @@ const seatsCount = subscription.quantity || 1;
 const newPeriodTokens = tokensPerSeat * seatsCount;
 ```
 
-The middle condition is the defect. `is_org_plan === "true"` marks a product as an organization plan, and both Concierge and standard Teams carry it, because both are organization plans. The flag was meant to identify Concierge, but the field it keyed on cannot distinguish the two. A standard monthly Teams product satisfies `isConciergeProduct`, enters the first branch, and reads `product.metadata.yearly`. Standard monthly Teams has no `yearly` key; it has `monthly`. So the lookup falls through the null-coalescing default to `"0"`, `parseInt` returns `0`, and `newPeriodTokens` becomes `0 * seatsCount`, which is `0` for any seat count.
+The middle condition is the defect. `is_org_plan === "true"` marks a product as an organization plan, and both the managed tier and the standard tier carry it, because both are organization plans. The flag was meant to identify the managed tier, but the field it keyed on cannot distinguish the two. A standard monthly product satisfies `isManagedTier`, enters the first branch, and reads `product.metadata.yearly`. The standard monthly product has no `yearly` key; it has `monthly`. So the lookup falls through the null-coalescing default to `"0"`, `parseInt` returns `0`, and `newPeriodTokens` becomes `0 * seatsCount`, which is `0` for any seat count.
 
 The `interval === "month"` branch, the one that would have read the correct `monthly` value, is never reached, because the broad flag short-circuits ahead of it. A 24-seat org that should have received 240,000 tokens received none.
 
 ## the comment was right, the condition was too wide
 
-The code above sits under a comment that explains the intent precisely: Concierge always allots the yearly amount regardless of billing period, because a quarterly Concierge subscription has a Stripe interval of `month`, and routing it through the `interval === "month"` branch would read the unset `monthly` key and resolve to zero. That reasoning is correct. The special case exists to stop a real zero-token bug for quarterly Concierge.
+The code above sits under a comment that explains the intent precisely: the managed tier always allots the yearly amount regardless of billing period, because a quarterly managed subscription has a Stripe interval of `month`, and routing it through the `interval === "month"` branch would read the unset `monthly` key and resolve to zero. That reasoning is correct. The special case exists to stop a real zero-token bug for quarterly managed subscriptions.
 
-The mistake was the width of the condition, not the idea behind it. The special case needed to catch Concierge and only Concierge. Instead it was written with an `is_org_plan` check that catches every organization plan, so the guard built to prevent a zero for quarterly Concierge produced a zero for monthly Teams. The narrow signal was available the whole time: `subscription.metadata.plan_type === "teams_concierge"` identifies Concierge exactly, and it is already the first condition in the same `||` chain. The other two conditions only widened the net.
+The mistake was the width of the condition, not the idea behind it. The special case needed to catch the managed tier and only the managed tier. Instead it was written with an `is_org_plan` check that catches every organization plan, so the guard built to prevent a zero for a quarterly managed plan produced a zero for a monthly standard plan. The narrow signal was available the whole time: `subscription.metadata.plan_type === "managed"` identifies the managed tier exactly, and it is already the first condition in the same `||` chain. The other two conditions only widened the net.
 
 ## a fix that existed at one of two call sites
 
-The history is the part worth sitting with. The over-broad flag was introduced on 2026-06-09. A week later, on 2026-06-16, a change added the correct narrow flag, `isTeamsConcierge`, and even left a comment naming this exact defect. But it applied the narrow flag to only one of the two places the classification is used, and it was applied inconsistently across branches.
+The history is the part worth sitting with. The over-broad flag was introduced first. About a week later, a change added the correct narrow flag and even left a comment naming this exact defect. But it applied the narrow flag to only one of the two places the classification is used, and it was applied inconsistently across branches.
 
-There are two call sites. One computes the per-seat grant amount, shown above. The other decides carryover: whether a renewal refreshes the pool to a new period's allotment or preserves the existing balance. Production still had the broad flag at the per-seat site, so Teams renewals granted zero. The develop line had the per-seat site fixed but still ran the broad flag at the carryover site, so its first allocation was correct while renewals preserved the leftover pool instead of refreshing it. Same root cause, two symptoms, and deploying develop verbatim would have traded the zero-token bug for a preserve-not-refresh bug. A fix applied to one of two identical call sites is not a fix; it is a second bug waiting for a different input.
+There are two call sites. One computes the per-seat grant amount, shown above. The other decides carryover: whether a renewal refreshes the pool to a new period's allotment or preserves the existing balance. Production still had the broad flag at the per-seat site, so renewals granted zero. The other branch had the per-seat site fixed but still ran the broad flag at the carryover site, so its first allocation was correct while renewals preserved the leftover pool instead of refreshing it. Same root cause, two symptoms, and shipping the second branch verbatim would have traded the zero-token bug for a preserve-not-refresh bug. A fix applied to one of two identical call sites is not a fix; it is a second bug waiting for a different input.
 
 ## restoring the pools by hand
 
-The immediate need was access, not elegance. The mitigation was a direct database update setting each affected org's `total_tokens` back to its correct entitlement, `seats × 10,000` for standard Teams, which put the 24-seat org back to 240,000 and restored AI access instantly.
+The immediate need was access, not elegance. The mitigation was a direct database update setting each affected org's `total_tokens` back to its correct entitlement, `seats × 10,000` for the standard tier, which put the 24-seat org back to 240,000 and restored AI access instantly.
 
 That restore is explicitly temporary, and it is important to say why out loud rather than quietly close the incident. The pool is recomputed and overwritten on every billing cycle, so a manual top-up survives exactly until the next renewal, at which point the same broken handler zeroes it again. Manual restoration buys uptime for the customers who already complained; it does nothing for the next renewal or for the orgs that have not hit their billing date yet. The only real fix is in the handler.
 
 ## making a zero grant fail loud
 
-The permanent fix has two parts. First, both call sites move to the narrow `isTeamsConcierge` flag and the broad `is_org_plan` condition is removed, so standard Teams falls through to the interval branch that reads its real `monthly` value. Second, and this is the part that would have turned a silent week-long outage into an immediate page, the handler refuses to write a zero pool for a paid renewal:
+The permanent fix has two parts. First, both call sites move to the narrow flag and the broad `is_org_plan` condition is removed, so the standard tier falls through to the interval branch that reads its real `monthly` value. Second, and this is the part that would have turned a silent week-long outage into an immediate page, the handler refuses to write a zero pool for a paid renewal:
 
 ```typescript
-const isTeamsConcierge =
-  subscription.metadata?.plan_type === "teams_concierge";
+const isManagedTier =
+  subscription.metadata?.plan_type === "managed";
 
 // ... interval-based allocation ...
 
@@ -121,6 +121,6 @@ The guard encodes a simple invariant: a paying organization with at least one se
 
 **Test the second renewal, not the first payment.** Both defects live in the renewal path, and the create path can look correct while the cycle path is broken. A regression test that binds a subscription to a Stripe test clock and advances it through a second monthly renewal exercises the exact code that failed, and it is the single test that would have caught both the zero-token grant and the preserve-not-refresh variant. A first-payment test would have passed while production was broken.
 
-**Alert on the invariant, not just guard it.** The throw stops a bad write, but an alert on "paid organization renewal granted zero tokens" turns the class of failure into a signal the on-call sees directly, rather than waiting for a customer to report that their whole firm is locked out. The guard protects the data; the alert protects the response time.
+**Alert on the invariant, not just guard it.** The throw stops a bad write, but an alert on "paid organization renewal granted zero tokens" turns the class of failure into a signal the on-call sees directly, rather than waiting for a customer to report that their whole org is locked out. The guard protects the data; the alert protects the response time.
 
-**Close the coverage gap that let this live.** The edge functions are currently excluded from the automated quality gate, which is why a money-and-access path shipped with no test around the allocation math. Token allocation is exactly the kind of logic that should be inside the gate, not outside it. And the process lesson stands on its own: when a fix touches a flag read in more than one place, it has to be applied at every call site and on every branch, because this defect survived a correct fix that reached only half of where it was needed.
+**Close the coverage gap that let this live.** The webhook handlers were outside the automated quality gate, which is why a money-and-access path shipped with no test around the allocation math. Token allocation is exactly the kind of logic that should be inside the gate, not outside it. And the process lesson stands on its own: when a fix touches a flag read in more than one place, it has to be applied at every call site and on every branch, because this defect survived a correct fix that reached only half of where it was needed.
