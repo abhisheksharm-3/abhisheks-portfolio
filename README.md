@@ -7,7 +7,7 @@ It is a minimal Next.js portfolio for projects, writing, contact, and the older 
 ## What's Inside
 
 - Portfolio pages for about, projects, graveyard, writing, and contact
-- Project data stored in `src/data/project.ts`
+- Project data stored in `src/data/projects.ts`
 - MDX writing system under `content/posts`
 - Zod frontmatter validation for posts
 - Syntax-highlighted technical articles
@@ -16,13 +16,11 @@ It is a minimal Next.js portfolio for projects, writing, contact, and the older 
 
 ## Writing
 
-Posts live in `content/posts/*.mdx`. Frontmatter is validated through `src/lib/post-schema.ts`, loaded through `src/lib/posts.ts`, and rendered at `/writing/[slug]`.
+Posts live in `content/posts/*.mdx`. Frontmatter is validated through `src/lib/content/schema.ts`, loaded through `src/lib/content/loader.ts`, and rendered at `/writing/[slug]`.
 
-The writing system is built for technical posts with real code, concrete numbers, FAQs, and structured metadata. There is also a pre-publish checker in `scripts/check-post.mjs` for catching weak post structure before publishing.
+The writing system is built for technical posts with real code, concrete numbers, FAQs, and structured metadata. Before publishing, run `npm run check-post content/posts/<slug>.mdx` to catch weak post structure.
 
-Current public post:
-
-- `canvas-lms-self-hosted-sqs-polling.mdx`
+See `content/posts/` for the current set of posts, or browse them live at `/writing`.
 
 ## Template Use
 

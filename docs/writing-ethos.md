@@ -94,6 +94,8 @@ Every technical post requires 4 FAQs. Rules:
 - Answers must be complete standalone paragraphs. Do not assume the reader has read the rest of the post.
 - FAQs generate `FAQPage` JSON-LD schema. Even though Google deprecated FAQ rich results in search in 2026, the schema remains a semantic signal for answer engine extraction.
 
+Two different floors enforce the FAQ answer minimum, and they do not agree. `src/lib/content/schema.ts` sets `answer: z.string().min(50)`. That is a 50-**character** floor: Zod's `min()` on a string counts characters. `scripts/check-post.mjs` counts words instead and errors under 50 **words**. A build passes the schema at 50 characters, but `npm run check-post` fails it. The script is the stricter gate and the one that blocks a publish, so write to 50 words, not 50 characters.
+
 ### Specific numbers in the first 100 words
 
 AI models prefer content that opens with verifiable specifics. Put the most concrete number or benchmark in the opening paragraph.
@@ -204,6 +206,8 @@ Format must match intent. Wrong format = poor dwell time = ranking demotion.
 
 Most dev blog posts are informational. Write for that reader — someone who wants to understand and implement, not just know that something exists.
 
+The 800-word lower bound above is not just a format suggestion for informational posts. It is a hard floor for every post regardless of intent. `scripts/check-post.mjs` counts the body's words and errors with `${totalWords} words. Minimum 800 required` under that count. There is no equivalent ceiling check at 2000. That upper bound is judgment, not enforcement.
+
 Skip navigational and transactional queries — those are docs pages and product pages. They are not blog posts.
 
 ---
@@ -215,6 +219,8 @@ The following words and patterns are banned. They are the fingerprints of AI-gen
 ### Banned vocabulary
 
 delve, crucial, pivotal, vital, meticulous, intricate, tapestry, testament, landscape, underscore, bolstered, garnered, enduring, vibrant, rich (as vague intensifier), align with, resonate with, foster, cultivate, showcase, highlight (as verb), enhance, leverage, robust, comprehensive, valuable insights, seamlessly, game-changer, it's worth noting, in today's fast-paced, revolutionize, cutting-edge, state-of-the-art, best-in-class, next-generation, transformative
+
+This is the judgment list, the fuller set to write against. `scripts/check-post.mjs` enforces a shorter, harder subset (`BANNED_WORDS` in that file) as a hard fail: seamlessly, robust, leverage, it's worth noting, it is worth noting, in today's landscape, in today's fast-paced, game-changer, delve, pivotal, meticulous, comprehensive, valuable insights, utilize, holistic, synergy, paradigm, cutting-edge, state-of-the-art, best-in-class, transformative, revolutionize, foster, cultivate, underscore, tapestry, testament, bolstered, garnered. Four of those, utilize, holistic, synergy, and paradigm, are not in the list above, so treat them as banned too even though this doc did not previously say so. Everything in the judgment list above that is not in `BANNED_WORDS` (vital, intricate, enduring, vibrant, rich, align with, resonate with, showcase, highlight as a verb, next-generation, and similar) is not checked by the script. It is still the wrong word, but only a human read catches it.
 
 ### Banned patterns
 
@@ -258,6 +264,32 @@ For calculator and framework posts: include a dedicated "how to use this" sectio
 
 ---
 
+## Frontmatter reference
+
+The full contract lives in `src/lib/content/schema.ts`. A post fails the Zod parse, and the build, if any of this is wrong.
+
+| Field | Required | Constraint |
+|---|---|---|
+| `title` | Yes | String, 1–60 characters |
+| `subhead` | Yes | String, 1–160 characters |
+| `date` | Yes | String, `YYYY-MM-DD` |
+| `keywords` | Yes | Array of strings, exactly 6, not 5, not 7 |
+| `tags` | Yes | Array of strings, 1 to 4 |
+| `readingTime` | Yes | Positive integer |
+| `type` | Yes | `"technical"` or `"essay"` |
+| `searchIntent` | Yes | `"informational"`, `"bofu"`, or `"commercial_investigation"` |
+| `draft` | Yes | Boolean |
+| `updatedAt` | No | String, `YYYY-MM-DD` |
+| `faqs` | No* | Array, minimum 4 entries; each `answer` minimum 50 characters (see the FAQ section above for why this differs from the script's 50-word check) |
+| `toc` | No | Array of `{ id, label, depth: 2 }` |
+| `relatedPosts` | No | Array of `{ slug, title, readingTime, date }`, maximum 3 |
+
+\* `faqs` is optional in the base schema, but a `.refine()` on `PostFrontmatter` makes it required in practice: any post with `type: "technical"` must have at least 4 FAQs, or the whole frontmatter object fails validation. Essay posts have no such requirement.
+
+`keywords` is the one field with no room for judgment. The schema is `z.array(z.string()).length(6, ...)` and `check-post.mjs` errors on anything but exactly 6 with `${keywords.length} keywords. Exactly 6 required`. Five keywords or seven both fail.
+
+---
+
 ## Pre-publish Checklist
 
 Run `npm run check-post content/posts/[slug].mdx` first. Then check the judgment calls below.
@@ -282,5 +314,7 @@ Run `npm run check-post content/posts/[slug].mdx` first. Then check the judgment
 ### Both types
 
 - [ ] `draft: false` set in frontmatter
+- [ ] Exactly 6 `keywords` in frontmatter
+- [ ] Body is at least 800 words
 - [ ] `npm run check-post` passes with zero errors
 - [ ] relatedPosts slugs actually exist in `content/posts/`

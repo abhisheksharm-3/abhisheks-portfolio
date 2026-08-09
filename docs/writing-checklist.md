@@ -26,6 +26,9 @@ Then check the judgment calls below — these are the things the script cannot c
 ## Both types
 
 - [ ] `draft: false` in frontmatter
+- [ ] Exactly 6 `keywords`, not 5, not 7
+- [ ] Body is at least 800 words
+- [ ] FAQ answers are at least 50 words (the script's floor is stricter than the schema's 50-character minimum)
 - [ ] Script passes with zero errors
 - [ ] `relatedPosts` slugs actually exist in `content/posts/`
 
