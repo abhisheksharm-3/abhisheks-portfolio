@@ -1,0 +1,28 @@
+{
+  "mode": "custom",
+  "deadCode": "delete",
+  "backwardCompat": "none",
+  "architecture": {
+    "source": "local",
+    "reference": ".",
+    "conventions": "Next.js 16 App Router. Routes in src/app/<route>/page.tsx with a sibling layout.tsx for per-route metadata. Presentational components in src/components/sections/<page>/ named after the page they serve; shared primitives in src/components/ui/ (shadcn) and src/components/shared/. Static content in src/data/*.ts (projects.ts is the single source of truth for projects). Cross-cutting logic in src/lib/, grouped by concern: content/ (MDX loader + Zod schema), config/, canvas/, actions/, types/. Hooks in src/hooks/. MDX posts in content/posts/*.mdx, validated by scripts/check-post.mjs before publish."
+  },
+  "naming": {
+    "source": "local",
+    "rules": {
+      "components": "PascalCase .tsx files, one component per file, named after the export",
+      "modules": "kebab-case .ts files in src/lib and src/data (e.g. spacing-standards.ts, github-stats.ts)",
+      "hooks": "camelCase with use prefix (useGitHubStats.ts)",
+      "routes": "lowercase App Router segments, [slug] for dynamic",
+      "posts": "kebab-case .mdx slugs describing the specific problem",
+      "constants": "SCREAMING_SNAKE_CASE exported objects (SPACING_STANDARDS, CONTACT_INFO)"
+    }
+  },
+  "pr": {
+    "source": "local",
+    "standards": "Imperative-mood commit subjects, sentence case, no scope prefixes and no trailing period (e.g. \"Add a section param to the OG route and a Polaris project image\"). Bodies explain why the change was made and what it fixes, in prose or a short labelled list, wrapped near 76 columns. No AI attribution: never add Co-Authored-By or Generated-with trailers to commits or PR bodies. Work lands on main."
+  },
+  "guardEdit": true,
+  "promptEnhance": false,
+  "routing": true
+}

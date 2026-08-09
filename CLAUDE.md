@@ -69,42 +69,64 @@ Default to surfacing uncertainty, not hiding it.
 
 | Command | Description |
 |---------|-------------|
-| `npm run dev` | Start dev server (Next.js) |
+| `npm run dev` | Start the Next.js dev server |
 | `npm run build` | Production build |
-| `npm run lint` | Run ESLint |
-| `npm run check-post` | Validate MDX post structure before publishing |
+| `npm start` | Serve the production build |
+| `npm run lint` | ESLint across the repo |
+| `npm run check-post content/posts/<slug>.mdx` | Validate a post before publishing |
+
+There is no test script and no test suite. Playwright is installed as a devDependency but no
+`playwright.config.*` and no test files exist — treat E2E as unbuilt, not broken.
 
 ## Architecture
 
 ```
-src/app/           — Next.js App Router pages
-  about/           — About page
-  contact/         — Contact form (server action + nodemailer)
-  graveyard/       — Archived/dead projects
-  projects/[slug]  — Individual project pages
-  writing/[slug]   — MDX post renderer
-  og/              — OG image generation
-src/components/    — Shared UI components (Radix + Tailwind)
-src/data/          — Static data (projects.ts — source of truth for projects)
-src/lib/           — Utilities: content/loader.ts (MDX loading), content/schema.ts (Zod frontmatter validation)
-src/hooks/         — React hooks
-content/posts/     — MDX writing content (*.mdx)
-scripts/           — check-post.mjs pre-publish validator
-public/images/     — Static assets
+src/app/               Next.js App Router. Each route is page.tsx plus a layout.tsx for metadata.
+  api/github-stats/    Route handler backing the About page activity graph
+  og/route.tsx         Runtime OG image generation (accepts a section param)
+  projects/[slug]/     Project detail pages driven by src/data/projects.ts
+  projects/polaris/    Hand-built one-off project page, outside the [slug] template
+  writing/[slug]/      MDX post renderer
+  robots.ts sitemap.ts Generated crawl metadata
+src/components/
+  sections/<page>/     Presentational components, foldered by the page they serve
+  layout/              Shell, navbar, footer, and the background system
+  ui/                  shadcn primitives (Radix + CVA)
+  shared/              Cross-page pieces (PageHeader, SectionHeader, SharedBackground)
+  writing/             MDX-only components (PostCallout, PostCta)
+src/data/              Static content as typed exports. projects.ts is the source of truth.
+src/lib/
+  content/loader.ts    MDX file loading and post list assembly
+  content/schema.ts    Zod frontmatter validation
+  actions/contact.ts   Contact form server action
+  config/              Spacing, animation, and background tuning constants
+  canvas/              Particle and spatial-hash helpers for the background
+  types/               Shared type definitions
+src/hooks/             React hooks (useGitHubStats, useExperienceCounter)
+content/posts/         MDX posts, one file per slug
+scripts/check-post.mjs Pre-publish structure validator
 ```
 
-## Stack
-
-- Next.js 16 + React 19, App Router, TypeScript
-- Tailwind CSS v4 (`@tailwindcss/postcss` — no tailwind.config.js)
-- next-mdx-remote + rehype-pretty-code for MDX with syntax highlighting
-- Framer Motion for animations, OGL for WebGL background
-- Radix UI primitives, react-hook-form + Zod v4 for forms
-- Playwright for E2E tests, Vercel for deployment
+`DESIGN.md` documents the visual system. `docs/writing-ethos.md` and `docs/writing-checklist.md`
+govern post content.
 
 ## Gotchas
 
-- All MDX frontmatter is Zod-validated via `src/lib/content/schema.ts` — run `npm run check-post` before publishing a new post or the build will fail
-- Tailwind v4 uses `@tailwindcss/postcss`; there is no `tailwind.config.js` — utility classes are configured via CSS
-- Project data lives in `src/data/projects.ts` — this is the single source of truth; don't duplicate project info in MDX or elsewhere
-- Contact form uses a Next.js server action; email is sent via nodemailer using Gmail OAuth2 — requires `MAIL_USER`, `MAIL_CLIENT_ID`, `MAIL_CLIENT_SECRET`, `MAIL_REFRESH_TOKEN`, and `MY_MAIL` (recipient) env vars at runtime. The public-facing fallback address shown in error messages is overridable via `CONTACT_PUBLIC_EMAIL` (defaults to `CONTACT_INFO.email`)
+- Post frontmatter is Zod-validated in `src/lib/content/schema.ts`. A post that fails validation
+  breaks the build, so run `npm run check-post` before publishing.
+- Tailwind v4 via `@tailwindcss/postcss`. There is no `tailwind.config.js`; theme tokens live in
+  `src/app/globals.css`.
+- `next.config.ts` sets a strict Content-Security-Policy. Any new external script, font, or API
+  origin must be added there or it is blocked at runtime, not at build time.
+- `reactCompiler: true` is on. Avoid patterns the React Compiler rejects (mutating props, reading
+  refs during render).
+- Remote images are only allowed from `github.com`. Other hosts need a `remotePatterns` entry.
+- The contact form needs `MAIL_USER`, `MAIL_CLIENT_ID`, `MAIL_CLIENT_SECRET`, `MAIL_REFRESH_TOKEN`,
+  and `MY_MAIL` at runtime (Gmail OAuth2 via nodemailer). `CONTACT_PUBLIC_EMAIL` overrides the
+  fallback address shown in error messages.
+- The GitHub activity graph needs `GITHUB_ACCESS_TOKEN` and `GITHUB_USERNAME`.
+- The background system (`ConstellationBackground`, `*Background` files, `ColorBlobs`,
+  `LightBeams`, `NoiseTexture`, `ScanLines`, `AbstractPath`) is hand-tuned. Do not modify it
+  unless the task is explicitly about the background.
+- Project information belongs in `src/data/projects.ts` only. Do not duplicate it into MDX or
+  component files.
