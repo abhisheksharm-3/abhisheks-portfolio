@@ -19,6 +19,7 @@ export async function GET(request: NextRequest) {
   const subhead  = searchParams.get("subhead")  ?? ""
   const date     = searchParams.get("date")     ?? ""
   const min      = searchParams.get("min")      ?? ""
+  const section  = searchParams.get("section")  ?? "writing"
 
   // Scale title font size to available width
   const titleSize = title.length > 55 ? 38 : title.length > 38 ? 46 : 54
@@ -74,11 +75,11 @@ export async function GET(request: NextRequest) {
                 key={item}
                 style={{
                   fontSize: 12,
-                  color: item === "writing" ? FG : FG_35,
+                  color: item === section ? FG : FG_35,
                   fontFamily: "system-ui, sans-serif",
-                  fontWeight: item === "writing" ? 500 : 300,
+                  fontWeight: item === section ? 500 : 300,
                   letterSpacing: "0.02em",
-                  borderBottom: item === "writing" ? `1px solid ${FG_35}` : "none",
+                  borderBottom: item === section ? `1px solid ${FG_35}` : "none",
                   paddingBottom: 2,
                 }}
               >
@@ -177,7 +178,7 @@ export async function GET(request: NextRequest) {
               letterSpacing: "0.06em",
             }}
           >
-            abhisheksan.com/writing
+            abhisheksan.com/{section}
           </span>
           {tag && (
             <span
