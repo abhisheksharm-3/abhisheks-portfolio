@@ -5,6 +5,21 @@ import { ProjectType } from "@/lib/types/components";
  */
 export const projects: ProjectType[] = [
   {
+    title: "Polaris",
+    slug: "polaris",
+    description: "a project operating system for claude code",
+    longDescription:
+      "polaris runs the whole software lifecycle inside claude code — research, design, build, review, qa, docs, ship, operate — behind one quality bar. eighteen flows live in a json table, so adding one is a table row, not a script. you never type a flow name: a prompt hook classifies the work, opens the run, and says which flow it picked. the standard it enforces on your code, it enforces on itself.",
+    imageSrc: "/images/projects/polaris.png",
+    tags: ["Claude Code", "TypeScript", "Agents", "Developer Tooling"],
+    year: "2026",
+    github: "https://github.com/abhisheksharm-3/polaris",
+    isFeatured: true,
+    role: "solo",
+    duration: "2026 - present",
+    isBuilding: true,
+  },
+  {
     title: "Credify",
     slug: "credify",
     description: "hackathon-winning media verification platform",
