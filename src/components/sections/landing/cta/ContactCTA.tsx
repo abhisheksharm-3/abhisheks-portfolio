@@ -41,10 +41,10 @@ export const ContactCTA = () => {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.5 }}
           className="group inline-flex items-center gap-3 mb-16"
         >
-          <span className="text-2xl sm:text-3xl md:text-4xl font-light text-foreground/80 group-hover:text-foreground transition-colors duration-300 tracking-tight">
+          <span className="text-2xl sm:text-3xl md:text-4xl font-light text-foreground/80 group-hover:text-foreground transition-colors duration-200 tracking-tight">
             {CONTACT_INFO.email}
           </span>
-          <ArrowUpRight className="h-6 w-6 text-foreground/30 group-hover:text-foreground/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0" />
+          <ArrowUpRight className="h-6 w-6 text-foreground/30 group-hover:text-foreground/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0" />
         </motion.a>
 
         <motion.div
@@ -62,10 +62,10 @@ export const ContactCTA = () => {
         >
           <Link
             href="/contact"
-            className="group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-300"
+            className="group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-200"
           >
             <span>let&apos;s build together</span>
-            <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
 
           <div className="flex items-center gap-6">

@@ -47,7 +47,7 @@ export const SectionHeader = ({
       initial={{ width: 0, opacity: 0 }}
       animate={isInView ? { width: "5rem", opacity: 1 } : {}}
       transition={{ duration: 1, delay: 0.5 }}
-      className={`h-[1px] bg-primary/20 ${SPACING_STANDARDS.HEADER.ACCENT_LINE_MARGIN}`}
+      className={`h-[1px] bg-primary/10 ${SPACING_STANDARDS.HEADER.ACCENT_LINE_MARGIN}`}
     />
   </motion.div>
 );

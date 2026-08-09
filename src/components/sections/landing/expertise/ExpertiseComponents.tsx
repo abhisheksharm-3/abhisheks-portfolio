@@ -35,7 +35,7 @@ const SkillRow = ({ service, index }: SkillRowPropsType) => (
         <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light tabular-nums w-5 shrink-0">
           {String(index + 1).padStart(2, "0")}
         </span>
-        <h4 className="text-lg font-light text-foreground group-hover:text-primary/80 transition-colors duration-300">
+        <h4 className="text-lg font-light text-foreground group-hover:text-primary/80 transition-colors duration-200">
           {service.title}
         </h4>
       </div>
@@ -108,10 +108,10 @@ export const FeaturedSkillsSection = ({
         >
           <Link
             href="/about"
-            className="group inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-primary transition-colors duration-300"
+            className="group inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-primary transition-colors duration-200"
           >
             see how i build things
-            <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
           </Link>
         </motion.div>
       </div>
@@ -173,7 +173,7 @@ export const SecondarySkillsGrid = ({
             className={`py-6 pr-8 ${index < additionalServices.length - 1 ? "sm:border-r border-primary/10" : ""} ${index > 0 ? "sm:pl-8" : ""}`}
           >
             <div className="flex items-center justify-between mb-2">
-              <h4 className="text-sm font-light text-foreground group-hover:text-primary/80 transition-colors duration-300">
+              <h4 className="text-sm font-light text-foreground group-hover:text-primary/80 transition-colors duration-200">
                 {service.title}
               </h4>
               <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">

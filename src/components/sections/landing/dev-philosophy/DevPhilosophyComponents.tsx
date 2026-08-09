@@ -97,7 +97,7 @@ export const PhilosophyPrinciples = ({ isInView }: InViewPropsType) => (
               <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light tabular-nums">
                 {principle.number}
               </span>
-              <h4 className="text-base font-light text-foreground group-hover:text-primary/80 transition-colors duration-300">
+              <h4 className="text-base font-light text-foreground group-hover:text-primary/80 transition-colors duration-200">
                 {principle.title}
               </h4>
             </div>

@@ -39,7 +39,7 @@ export const ModeToggle = () => {
     <button
       onClick={cycle}
       aria-label={`Switch theme, current: ${theme}`}
-      className="text-foreground/35 hover:text-foreground/60 transition-colors duration-200 cursor-pointer"
+      className="-m-2 p-2 text-foreground/35 hover:text-foreground/60 transition-colors duration-200 cursor-pointer"
     >
       <Icon className="h-4 w-4" strokeWidth={1.5} />
     </button>

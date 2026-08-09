@@ -15,7 +15,7 @@ export function ProjectDetailOverview({ project }: { project: ProjectType }) {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
       className="mb-16"
     >
       <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light block mb-5">

@@ -10,7 +10,7 @@ import Image from "next/image";
 export const ContactCard = () => {
   return (
     <div className="h-full flex flex-col gap-8">
-      <div className="relative w-full aspect-square overflow-hidden rounded-sm group">
+      <div className="relative w-full aspect-square overflow-hidden group">
         <Image
           src="https://github.com/abhisheksharm-3.png"
           alt="Abhishek Sharma"
@@ -32,7 +32,7 @@ export const ContactCard = () => {
               rel="noopener noreferrer"
               className="flex items-center gap-3 py-3 border-b border-primary/8 text-sm text-foreground/45 hover:text-foreground/80 transition-colors duration-200 group"
             >
-              <span className="text-[11px] text-primary/30 uppercase tracking-[0.15em] font-light w-16 shrink-0">
+              <span className="text-[11px] text-primary/35 uppercase tracking-[0.15em] font-light w-16 shrink-0">
                 {label}
               </span>
               <span className="flex-1 truncate font-light">{displayUrl}</span>

@@ -121,7 +121,7 @@ export const GitHubActivity = () => {
                                     stat.value
                                 )}
                             </div>
-                            <div className="text-xs text-foreground/50 uppercase tracking-wider">
+                            <div className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
                                 {stat.label}
                             </div>
                         </motion.div>
@@ -141,7 +141,7 @@ export const GitHubActivity = () => {
                                     {[...Array(7)].map((_, j) => (
                                         <div
                                             key={j}
-                                            className="w-full aspect-square rounded-full bg-foreground/5 animate-pulse"
+                                            className="w-full aspect-square bg-foreground/5 animate-pulse"
                                         />
                                     ))}
                                 </div>
@@ -176,7 +176,7 @@ export const GitHubActivity = () => {
                                         initial={{ opacity: 0 }}
                                         animate={{ opacity: 1 }}
                                         exit={{ opacity: 0 }}
-                                        className="absolute top-6 right-0 text-xs text-foreground/70 bg-background/95 backdrop-blur-sm px-3 py-1.5 rounded-md border border-primary/10 shadow-lg z-10"
+                                        className="absolute top-6 right-0 text-xs text-foreground/70 bg-background/95 backdrop-blur-sm px-3 py-1.5 border border-primary/10 z-10"
                                     >
                                         <span className="font-medium">
                                             {hoveredDay.contributionCount}
@@ -198,7 +198,7 @@ export const GitHubActivity = () => {
                                                     key={day.date}
                                                     onMouseEnter={() => setHoveredDay(day)}
                                                     onMouseLeave={() => setHoveredDay(null)}
-                                                    className={`w-full aspect-square rounded-full cursor-pointer transition-all duration-150 hover:ring-1 hover:ring-foreground/50 ${getContributionColor(day.contributionCount)}`}
+                                                    className={`w-full aspect-square cursor-pointer transition-all duration-150 hover:ring-1 hover:ring-foreground/50 ${getContributionColor(day.contributionCount)}`}
                                                 />
                                             ))}
                                         </div>
@@ -213,7 +213,7 @@ export const GitHubActivity = () => {
                                         {[0, 2, 5, 8, 12].map((level) => (
                                             <div
                                                 key={level}
-                                                className={`w-[10px] h-[10px] rounded-full ${getContributionColor(level)}`}
+                                                className={`w-[10px] h-[10px] ${getContributionColor(level)}`}
                                             />
                                         ))}
                                     </div>
@@ -230,7 +230,7 @@ export const GitHubActivity = () => {
                 {/* Languages */}
                 {stats?.topLanguages && stats.topLanguages.length > 0 && (
                     <div>
-                        <p className="text-xs text-foreground/50 uppercase tracking-wider mb-4">
+                        <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
                             frequently used
                         </p>
                         <div className="flex flex-wrap gap-2">

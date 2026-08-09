@@ -103,10 +103,10 @@ export const ScrollIndicator: React.FC = () => (
     transition={{ duration: 1, delay: 1.4 }}
     className="absolute bottom-10 right-6 z-10 flex items-center gap-2 sm:right-12"
   >
-    <span className="text-[10px] uppercase tracking-[0.2em] font-light text-foreground/30">
+    <span className="text-[10px] uppercase tracking-[0.2em] font-light text-foreground/35">
       scroll
     </span>
-    <span className="h-px w-8 bg-foreground/20" />
+    <span className="h-px w-8 bg-primary/10" />
     <motion.span
       animate={{ y: [0, 4, 0] }}
       transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}

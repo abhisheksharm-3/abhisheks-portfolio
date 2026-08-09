@@ -33,7 +33,7 @@ const ViewAllLink = ({ isInView }: InViewPropsType) => (
       className="group inline-flex items-center gap-2 text-sm font-light text-foreground/45 hover:text-foreground/70 transition-colors duration-200"
     >
       see all projects
-      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
     </Link>
   </motion.div>
 );
@@ -63,7 +63,7 @@ const CTASection = ({ isInView }: InViewPropsType) => (
       className="group inline-flex items-center gap-2 text-sm font-light text-foreground/45 hover:text-foreground/70 transition-colors duration-200"
     >
       <span>let&apos;s build something cool</span>
-      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+      <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
     </Link>
   </motion.div>
 );
@@ -82,7 +82,7 @@ const ProjectCard = ({
     transition={{
       duration: PROJECT_ANIMATIONS.DURATIONS.FADE_IN,
       delay: PROJECT_ANIMATIONS.DELAYS.CARD_BASE + index * PROJECT_ANIMATIONS.DELAYS.CARD_STAGGER,
-      ease: "easeOut",
+      ease: [0.22, 1, 0.36, 1],
     }}
     onMouseEnter={onHover}
     onMouseLeave={onLeave}
@@ -90,7 +90,7 @@ const ProjectCard = ({
     onBlur={onLeave}
     className="relative group"
   >
-    <Card className="rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent group-hover:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
+    <Card className="rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent group-hover:border-foreground/15 group-focus-within:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
       <ProjectImageContainer project={project} isHovered={isHovered} />
       <ProjectContent project={project} isHovered={isHovered} />
     </Card>

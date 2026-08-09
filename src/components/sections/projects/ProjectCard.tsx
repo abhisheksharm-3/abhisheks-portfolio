@@ -1,7 +1,5 @@
 "use client";
 
-import { useRef } from "react";
-import { motion, useInView } from "framer-motion";
 import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,27 +8,17 @@ import type { ProjectCardPropsType } from "@/lib/types/components";
 
 export const ProjectCard = ({
   project,
-  delay = 0,
   priority = false,
 }: ProjectCardPropsType) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(cardRef, { once: true, amount: 0.01 });
-
   return (
-    <motion.div
-      ref={cardRef}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.6, delay: 0.1 + delay, ease: [0.22, 1, 0.36, 1] }}
-      className="group h-full"
-    >
-      <Card className="h-full rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent hover:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
+    <div className="group h-full">
+      <Card className="h-full rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent hover:border-foreground/15 focus-within:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
       <div className="relative w-full h-44 overflow-hidden shrink-0">
         <Image
           src={project.imageSrc}
           alt={project.title}
           fill
-          className="object-cover grayscale brightness-90 transition-all duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
+          className="object-cover grayscale brightness-90 transition-[transform,filter] duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={priority}
           loading={priority ? undefined : "lazy"}
@@ -51,7 +39,7 @@ export const ProjectCard = ({
             </span>
           ))}
           {project.tags.length > 3 && (
-            <span className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/40 text-[10px]">
+            <span className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/40 text-[10px] font-light">
               +{project.tags.length - 3}
             </span>
           )}
@@ -63,21 +51,21 @@ export const ProjectCard = ({
           {project.title}
         </h3>
 
-        <p className="text-foreground/50 text-sm font-light leading-relaxed mb-4 line-clamp-2 flex-1">
+        <p className="text-foreground/55 text-sm font-light leading-relaxed mb-4 line-clamp-2 flex-1">
           {project.description}
         </p>
 
         {(project.role || project.duration) && (
           <div className="flex flex-wrap gap-x-4 mb-4">
             {project.role && (
-              <span className="text-xs text-foreground/30 font-light">
-                <span className="mr-1 text-foreground/20">role</span>
+              <span className="text-xs text-foreground/35 font-light">
+                <span className="mr-1 text-primary/35">role</span>
                 {project.role}
               </span>
             )}
             {project.duration && (
-              <span className="text-xs text-foreground/30 font-light">
-                <span className="mr-1 text-foreground/20">time</span>
+              <span className="text-xs text-foreground/35 font-light">
+                <span className="mr-1 text-primary/35">time</span>
                 {project.duration}
               </span>
             )}
@@ -120,6 +108,6 @@ export const ProjectCard = ({
         </div>
       </div>
       </Card>
-    </motion.div>
+    </div>
   );
 };

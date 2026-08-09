@@ -73,7 +73,7 @@ export const Navbar = () => {
           <button
             onClick={() => setIsMobileMenuOpen(true)}
             aria-label="Open menu"
-            className="p-1.5 text-foreground/50 hover:text-foreground/80 transition-colors duration-200"
+            className="p-2.5 -mr-2 text-foreground/50 hover:text-foreground/80 transition-colors duration-200"
           >
             <Menu size={18} />
           </button>

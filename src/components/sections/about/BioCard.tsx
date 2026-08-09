@@ -12,7 +12,7 @@ export const BioCard = () => {
         A bit about me
       </h2>
 
-      <div className="space-y-6 text-foreground/65 font-light leading-relaxed">
+      <div className="space-y-6 text-foreground/55 font-light leading-relaxed">
         <p>
           hey, i&apos;m abhishek. a dev who turns ideas into working products.
           started curious about how apps worked, and that curiosity snowballed

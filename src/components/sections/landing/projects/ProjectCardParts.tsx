@@ -43,7 +43,7 @@ export const ProjectImageContainer = ({
         </span>
       ))}
       {(project.tags?.length ?? 0) > 2 && (
-        <span className="text-[10px] text-white/40 bg-black/40 backdrop-blur-sm px-2 py-0.5">
+        <span className="text-[10px] font-light text-white/40 bg-black/40 backdrop-blur-sm px-2 py-0.5">
           +{(project.tags?.length ?? 0) - 2}
         </span>
       )}
@@ -54,19 +54,19 @@ export const ProjectImageContainer = ({
 export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
   <div className="flex flex-col flex-1 p-5 sm:p-6">
     <div className="flex items-baseline justify-between mb-2">
-      <span className="text-[10px] text-foreground/25 font-mono">{project.year}</span>
+      <span className="text-[10px] text-foreground/35 font-mono">{project.year}</span>
     </div>
 
-    <h3 className="text-xl font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-200 mb-2 leading-snug">
+    <h3 className="text-xl font-serif text-foreground/85 group-hover:text-foreground group-focus-within:text-foreground transition-colors duration-200 mb-2 leading-snug">
       {project.title}
     </h3>
 
-    <p className="text-foreground/50 text-sm font-light leading-relaxed flex-1 mb-4 line-clamp-3">
+    <p className="text-foreground/55 text-sm font-light leading-relaxed flex-1 mb-4 line-clamp-3">
       {project.description}
     </p>
 
     <div className="flex items-center justify-between pt-3 border-t border-foreground/8">
-      <span className="text-xs text-foreground/25 font-light">
+      <span className="text-xs text-foreground/35 font-light">
         {project.role || "developer"}
       </span>
       <div className="flex items-center gap-3">

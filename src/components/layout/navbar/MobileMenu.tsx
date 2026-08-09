@@ -34,7 +34,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
         <Logo onClick={onClose} />
         <button
           onClick={onClose}
-          className="p-2 text-foreground/40 hover:text-foreground/70 transition-colors duration-200"
+          className="p-2.5 -mr-2 text-foreground/40 hover:text-foreground/70 transition-colors duration-200"
           aria-label="Close menu"
         >
           <X className="h-4 w-4" />

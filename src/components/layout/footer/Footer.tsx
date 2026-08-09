@@ -40,7 +40,7 @@ export const Footer = () => (
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={platform.label}
-                className="text-foreground/30 hover:text-foreground/70 transition-colors duration-200"
+                className="-m-2 p-2 text-foreground/30 hover:text-foreground/70 transition-colors duration-200"
               >
                 <platform.icon className="h-4 w-4" />
               </a>
@@ -98,7 +98,7 @@ export const Footer = () => (
           © {new Date().getFullYear()}{" "}
           <span className="text-foreground/60">Abhishek Sharma</span>. all mine.
         </p>
-        <p className="text-[10px] text-foreground/25 tracking-wider uppercase">
+        <p className="text-[10px] text-primary/35 tracking-[0.2em] uppercase font-light">
           Chandigarh · Pune, India · available remotely
         </p>
       </div>
