@@ -1,0 +1,145 @@
+---
+title: "stripe pause: release the schedule before the trial"
+subhead: "a pause built on trial_end is undone by any subscription schedule still attached to the subscription. release the schedule first, then write trial_end."
+date: "2026-08-26"
+keywords:
+  - "stripe pause subscription trial_end"
+  - "stripe subscription schedule release phase boundary"
+  - "pause stripe subscription without canceling"
+  - "stripe schedule overwrites trial_end"
+  - "auto resume paused subscription cron"
+  - "stripe subscription schedule end_behavior release"
+tags: ["backend", "payments"]
+readingTime: 11
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "how do you pause a Stripe subscription without canceling it?"
+    answer: "There are two mechanisms. Setting pause_collection stops invoicing while leaving the subscription active. Pushing trial_end into the future also stops collection, because a subscription inside a trial does not invoice, and it resumes on its own when the trial converts. The implementation I work on uses the second approach, setting trial_end to the current plan expiry plus 30 days with proration_behavior set to none. Either way, pausing is a billing state change and not an entitlement change, so your own database still decides what the customer can do during the pause window."
+  - question: "why does a Stripe subscription charge immediately after I set trial_end?"
+    answer: "The usual cause is a subscription schedule still attached to that subscription. A schedule owns the subscription's phases, and at a phase boundary it applies the next phase's parameters to the subscription, overwriting fields you wrote directly, including trial_end. The pause looks correct in the API response and stays correct until the boundary, then the customer is invoiced on the original cadence. Read subscription.schedule before writing trial_end, and release the schedule if one is set, because nothing warns you at write time."
+  - question: "what is the difference between releasing and canceling a Stripe subscription schedule?"
+    answer: "Releasing detaches the schedule and leaves the subscription running exactly as it is, with its current prices, quantities, and discounts intact. Canceling a schedule cancels the subscription underneath it, which is destructive and never what a pause wants. Release is the correct call when you need to take manual control of a subscription a schedule was driving. Stripe also forbids some direct writes on a schedule-managed subscription, including cancel_at_period_end, so release is a prerequisite for more operations than pausing alone."
+  - question: "does resuming a paused Stripe subscription restore credits and tokens?"
+    answer: "Not by itself, and in my case not at all. The resume function only recalculates trial_end by subtracting the unused pause days, writes it back with proration_behavior none, and clears the pause metadata. It grants no tokens and no credits, because provisioning is keyed to invoice payment webhooks rather than to resume. One customer came back from a pause having paid and having nothing provisioned, and the balance was restored by hand with an audit comment recording it as a manual reset. Test the resume path against real production state rather than the API response."
+  - question: "how do you schedule a Stripe subscription quantity decrease without breaking a later pause?"
+    answer: "A decrease that must take effect at renewal is built as a two-phase schedule: phase one holds the current items until current_period_end, phase two holds the reduced items, and end_behavior is set to release so the schedule detaches once it has applied. That schedule is invisible in most billing UIs and outlives the change that created it until the boundary passes. Any later operation that writes directly to the subscription, a pause included, has to read subscription.schedule first and release it, otherwise the phase-two write silently reverts the operation."
+toc:
+  - { id: "what-a-pause-is-in-this-codebase", label: "what a pause is in this codebase", depth: 2 }
+  - { id: "where-the-schedule-comes-from", label: "where the schedule comes from", depth: 2 }
+  - { id: "why-the-schedule-wins", label: "why the schedule wins", depth: 2 }
+  - { id: "the-fix-was-already-in-the-repo", label: "the fix was already in the repo", depth: 2 }
+  - { id: "two-clocks-for-one-pause", label: "two clocks for one pause", depth: 2 }
+  - { id: "resume-grants-nothing", label: "resume grants nothing", depth: 2 }
+  - { id: "the-order-i-follow-now", label: "the order i follow now", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "stripe-ach-subscriptions-settlement-grace-period"
+    title: "provisioning stripe subscriptions before ach settles"
+    readingTime: 12
+    date: "2026-06-18"
+  - slug: "one-boolean-zeroed-a-teams-token-pool"
+    title: "one boolean zeroed a teams token pool"
+    readingTime: 8
+    date: "2026-07-03"
+---
+
+If you pause a Stripe subscription by pushing `trial_end` 30 days into the future, and a subscription schedule is still attached, the pause undoes itself at the next phase boundary and the customer is invoiced anyway. Release the schedule first. Getting that order wrong on one account would have fired a five-figure annual renewal against a customer who had asked to pause. Getting it right left the subscription sitting quietly on a monthly plan until its resume date.
+
+I ran this operation three times in a month for three customers with three different plan shapes. Everything about a pause is per-customer judgment except the ordering, and the ordering is the part that is easy to get backwards, because both steps return success in either order. The invoice arrives weeks later.
+
+## what a pause is in this codebase
+
+A pause here is a trial extension, not `pause_collection`. The `pause-subscription` edge function sets `trial_end` to the plan's stored expiry plus 30 days, with `proration_behavior: "none"`, and stamps the reason into subscription metadata:
+
+```typescript
+const currentExpiry = new Date(subscriptionData.subscription_expiry);
+const trialEnd =
+  Math.floor(currentExpiry.getTime() / 1000) + PAUSE_DURATION_DAYS * 24 * 60 * 60;
+
+const updatedSubscription = await stripe.subscriptions.update(stripeSubscriptionId, {
+  trial_end: trialEnd,
+  proration_behavior: "none",
+  metadata: {
+    ...subscription.metadata,
+    is_pause_trial: "true",
+    paused_at: new Date().toISOString(),
+    pause_ui_ends_at: pauseUiEndsAt.toISOString(),
+    pause_trial_ends_at: new Date(trialEnd * 1000).toISOString(),
+  },
+});
+```
+
+That choice has consequences all over the system. A paused account is `status: "trialing"` in Stripe and `subscription_status: "paused"` in our own `user_subscriptions` table, so any code branching on the Stripe status treats a customer of two years as a new trial signup. The self-serve path is also narrow by design: `PAUSE_DURATION_DAYS` is 30 and `PAUSE_COOLDOWN_DAYS` is 365, enforced against the `subscription_logs` table, so a user can pause for one month once a year. Every multi-month pause a customer actually asked for was executed by hand on top of this function, which is exactly the situation where an ordering rule lives in a runbook instead of in code.
+
+## where the schedule comes from
+
+The schedules that break pauses are created by an unrelated feature: reducing a quantity at renewal. `adjust-subscription-quantity` cannot apply a decrease immediately without refunding, so it builds a two-phase schedule, current items until the period ends, reduced items after:
+
+```typescript
+const phases = [
+  {
+    start_date: subscription.current_period_start,
+    end_date: subscription.current_period_end,
+    items: phase1Items,
+    proration_behavior: "none" as const,
+    discounts,
+  },
+  { items: nextItems, proration_behavior: "none" as const, discounts },
+];
+const schedule = await stripe.subscriptionSchedules.create({
+  from_subscription: subscription.id,
+});
+await stripe.subscriptionSchedules.update(schedule.id, { phases, end_behavior: "release" });
+```
+
+`end_behavior: "release"` means the schedule detaches after it has applied phase two, which is the right setting and also the reason nobody thinks about it again. Between the decrease and the period end, the subscription is schedule-managed. A customer who dropped one editing-credit line three weeks ago is carrying a live schedule that no billing screen mentions.
+
+## why the schedule wins
+
+At the phase boundary, the schedule applies phase two's parameters to the subscription, and that application is a write. It overwrites fields set directly on the subscription, `trial_end` among them. So the pause is real, verifiable in the API response, and temporary.
+
+Worse, the failure is silent in both directions. Stripe reports success on the pause write. The schedule reports nothing when it applies, because applying is its job. The only observable is an invoice on a customer who was told they were paused, which surfaces as a support message rather than an alert. The check is one field on the object you already fetched:
+
+```typescript
+const sub = await stripe.subscriptions.retrieve(stripeSubscriptionId);
+const scheduleId =
+  typeof sub.schedule === "string" ? sub.schedule : sub.schedule?.id;
+
+if (scheduleId) {
+  // phase two would overwrite trial_end at current_period_end
+  await stripe.subscriptionSchedules.release(scheduleId);
+}
+```
+
+`pause-subscription` does not do this. It retrieves the subscription, checks `status`, writes `trial_end`, and re-reads to confirm the status is `trialing`. The word `schedule` does not appear in the file.
+
+## the fix was already in the repo
+
+The release-first pattern exists one function over. The cancel-at-period-end helper in `adjust-subscription-quantity` releases any attached schedule before touching the subscription, and the docstring above it says why: Stripe forbids `cancel_at_period_end` on a schedule-managed subscription, so the schedule is released first and the subscription keeps its current quantity and discount through that release.
+
+Cancellation got the guard because Stripe returns an error there. Pausing did not, because Stripe accepts the write and lets the schedule revert it later. The lesson generalizes past this codebase: an API that rejects an unsafe write teaches you the rule, and an API that accepts it and undoes it later does not. Any subscription write outside the schedule needs the same guard, whether or not the call fails without it.
+
+## two clocks for one pause
+
+A pause writes two dates into metadata and they are not the same date. `pause_ui_ends_at` is 30 days from the moment of pausing and gates the AI tools in the product. `pause_trial_ends_at` is the plan expiry plus 30 days and is when Stripe converts the trial and invoices. For a customer who pauses mid-period those can be weeks apart.
+
+The `auto-resume-paused-subscriptions` cron keys off the first one. It loads every row with `subscription_status: "paused"`, filters on `stripe_data.metadata.pause_ui_ends_at` against today's date, and calls `resume-subscription` per user. So the application resumes access on the UI clock while Stripe bills on the trial clock, and when a pause is requested close to renewal the two land on the same day with no defined ordering between the cron and Stripe's conversion. I recorded that collision rather than fixing it, because the fix belongs in the pause design. The runbook workaround is to avoid resume dates that fall on a renewal date, which is a scheduling constraint and not a fix.
+
+## resume grants nothing
+
+`resume-subscription` recalculates `trial_end` by subtracting the unused pause days, writes it back with `proration_behavior: "none"`, and clears the pause metadata. That is the whole operation. It writes no tokens, no credits, and no plan state, because provisioning in this system hangs off invoice payment webhooks.
+
+That is how one customer came back from a pause having paid and holding nothing. I found it by querying production state before a migration rather than trusting the resume path, restored the token balance explicitly to the amount that had been paid for, and left an audit comment recording it as a manual reset after a failed recovery on resume. The pause itself has to leave entitlements alone in the other direction: a long pause on another account preserved every editing credit and AI token already paid for, while one discount line was deliberately removed alongside the line item it belonged to, so the next renewal priced at the plan's own rate rather than the old annual total.
+
+## the order i follow now
+
+Four steps, in this order:
+
+1. Retrieve the subscription and read `schedule`. If it is set, `subscriptionSchedules.release` it.
+2. Settle line items and discounts, then read the upcoming invoice and confirm the number you are about to promise the customer.
+3. Write `trial_end` with `proration_behavior: "none"`.
+4. Re-read the subscription with `expand: ["schedule"]` and assert `schedule` is null, `status` is `trialing`, and `trial_end` is the date you intended.
+
+Step 4 is the one I would have skipped a month ago, and it is the only step that catches the failure this post is about. A pause that passes steps 1 through 3 and skips 4 is indistinguishable from a delayed charge until the charge lands.
