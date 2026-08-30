@@ -29,10 +29,6 @@ const basteleur = localFont({
   ],
 });
 
-// The navbar reads usePathname() for its active link, which blocks an instant shell.
-// Nav links in the prerendered HTML are worth more here than a streamed shell.
-export const instant = false;
-
 /**
  * Application metadata for SEO and social sharing.
  */

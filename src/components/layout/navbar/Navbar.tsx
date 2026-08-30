@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { ModeToggle } from "@/components/ModeToggle";
 import { NAVIGATION_ITEMS as navigationItems } from "@/data/navigation";
 import type { NavigationItemType } from "@/lib/types/components";
@@ -38,10 +38,24 @@ const useActivePath = (items: readonly NavigationItemType[]): string | null => {
   return activeItem?.name || null;
 };
 
+/**
+ * The only part of the navbar that reads the URL. Isolated behind Suspense so the
+ * shell, links included, still prerenders: the fallback renders the same links with
+ * nothing highlighted, and the highlight streams in.
+ */
+const ActiveDesktopNav = () => <DesktopNavbar activeItem={useActivePath(navigationItems)} />;
+
+const ActiveMobileMenu = ({ onClose }: { onClose: () => void }) => (
+  <MobileMenu
+    activeItem={useActivePath(navigationItems)}
+    navigationItems={navigationItems}
+    onClose={onClose}
+  />
+);
+
 export const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const isScrolled = useScrollEffect(40);
-  const activeItem = useActivePath(navigationItems);
 
   useEffect(() => {
     document.body.classList.toggle("overflow-hidden", isMobileMenuOpen);
@@ -65,7 +79,9 @@ export const Navbar = () => {
 
         <Logo />
 
-        <DesktopNavbar activeItem={activeItem} />
+        <Suspense fallback={<DesktopNavbar activeItem={null} />}>
+          <ActiveDesktopNav />
+        </Suspense>
 
         <div className="flex xl:hidden items-center gap-3 z-50">
           <ModeToggle />
@@ -83,13 +99,7 @@ export const Navbar = () => {
       </motion.header>
 
       <AnimatePresence mode="wait">
-        {isMobileMenuOpen && (
-          <MobileMenu
-            onClose={() => setIsMobileMenuOpen(false)}
-            navigationItems={navigationItems}
-            activeItem={activeItem}
-          />
-        )}
+        {isMobileMenuOpen && <ActiveMobileMenu onClose={() => setIsMobileMenuOpen(false)} />}
       </AnimatePresence>
     </>
   );
