@@ -94,9 +94,9 @@ const ProjectCard = ({
     onMouseLeave={onLeave}
     onFocus={onHover}
     onBlur={onLeave}
-    className="relative group"
+    className="relative group h-full"
   >
-    <Card className="rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent group-hover:border-foreground/15 group-focus-within:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
+    <Card className="h-full rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent group-hover:border-foreground/15 group-focus-within:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
       <ProjectImageContainer project={project} isHovered={isHovered} />
       <ProjectContent project={project} isHovered={isHovered} />
     </Card>
@@ -123,7 +123,7 @@ export const Projects = ({
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 lg:gap-10 mb-10 sm:mb-16 md:mb-20"
+          className="grid grid-cols-1 md:grid-cols-2 items-stretch gap-6 md:gap-8 lg:gap-10 mb-10 sm:mb-16 md:mb-20"
         >
           {featuredProjects.map((project, index) => (
             <ProjectCard

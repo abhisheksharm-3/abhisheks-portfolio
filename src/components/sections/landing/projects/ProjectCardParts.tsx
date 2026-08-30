@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { Check, Copy, ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import type { ProjectType } from "@/lib/types/components";
 
 interface ProjectCardPartPropsType {
@@ -48,6 +49,35 @@ export const ProjectImageContainer = ({ project, isHovered }: ProjectCardPartPro
   </div>
 );
 
+/** The install command with a copy button, for projects you install rather than visit. */
+const InstallCommand = ({ command }: { command: string }) => {
+  const [copied, setCopied] = useState(false);
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(command);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1600);
+    } catch {
+      // Clipboard can be blocked; the command is selectable either way.
+    }
+  };
+
+  return (
+    <div className="mb-4 flex items-center gap-2 border border-foreground/8 bg-foreground/[0.03] pl-3 pr-1.5 py-1.5">
+      <code className="flex-1 truncate font-mono text-[11px] text-foreground/45">{command}</code>
+      <button
+        aria-label={copied ? "install command copied" : "copy install command"}
+        className="shrink-0 p-1.5 text-foreground/30 hover:text-foreground/70 transition-colors duration-200"
+        onClick={copy}
+        type="button"
+      >
+        {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+      </button>
+    </div>
+  );
+};
+
 export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
   <div className="flex flex-col flex-1 p-5 sm:p-6">
     <div className="flex items-baseline justify-between mb-2">
@@ -62,11 +92,7 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
       {project.description}
     </p>
 
-    {project.installCommand && (
-      <code className="mb-4 block truncate border border-foreground/8 bg-foreground/[0.03] px-3 py-2 font-mono text-[11px] text-foreground/45">
-        {project.installCommand}
-      </code>
-    )}
+    {project.installCommand && <InstallCommand command={project.installCommand} />}
 
     <div className="flex items-center justify-between pt-3 border-t border-foreground/8">
       <span className="text-xs text-foreground/35 font-light">{project.role || "developer"}</span>
