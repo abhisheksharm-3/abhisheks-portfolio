@@ -14,6 +14,7 @@ export const projects: ProjectType[] = [
     tags: ["Claude Code", "TypeScript", "Agents", "Developer Tooling"],
     year: "2026",
     github: "https://github.com/abhisheksharm-3/polaris",
+    installCommand: "/plugin marketplace add abhisheksharm-3/polaris",
     isFeatured: true,
     role: "solo",
     duration: "2026 - present",

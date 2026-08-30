@@ -37,7 +37,7 @@ export const personSchema = {
     "@type": "CollegeOrUniversity",
     name: "Chandigarh College of Engineering and Technology, Panjab University",
   },
-  award: "Winner, Network18 track — Google Gen AI Exchange Hackathon (2024)",
+  award: "Winner of the Network18 track at Google's Gen AI Exchange Hackathon, 2024",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Chandigarh",

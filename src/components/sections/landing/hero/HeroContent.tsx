@@ -69,11 +69,11 @@ export const HeroNow: React.FC = () => (
     transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
   >
     <p>
-      currently shipping an autonomous ai content pipeline (langgraph · fastapi · pgvector) and a
-      multi-tenant lms on aws.
+      currently building a multi-agent scripting platform for video creators: generation on aws
+      lambda, voice-profile retrieval, transcription, and model routing with fallback.
     </p>
     <p className="text-foreground/35">
-      winner, network18 track — google gen ai exchange hackathon.
+      winner of the network18 track at google&apos;s gen ai exchange hackathon.
     </p>
   </motion.div>
 );

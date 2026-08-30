@@ -31,6 +31,8 @@ export interface ProjectType {
   isArchived?: boolean;
   /** Primary discipline, used for the filter. Archived work has none. */
   category?: ProjectCategory;
+  /** Shown on the card for projects you install rather than visit. */
+  installCommand?: string;
   role?: string;
   client?: string;
   duration?: string;

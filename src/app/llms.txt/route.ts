@@ -66,7 +66,7 @@ async function renderIndex(): Promise<string> {
     "",
     ...posts.flatMap((post) =>
       (post.frontmatter.faqs ?? []).map(
-        (faq) => `- ${faq.question} — ${SITE_URL}/writing/${post.slug}`,
+        (faq) => `- ${faq.question} Answered in ${SITE_URL}/writing/${post.slug}`,
       ),
     ),
     "",

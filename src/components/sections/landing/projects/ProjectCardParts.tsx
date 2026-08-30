@@ -62,6 +62,12 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
       {project.description}
     </p>
 
+    {project.installCommand && (
+      <code className="mb-4 block truncate border border-foreground/8 bg-foreground/[0.03] px-3 py-2 font-mono text-[11px] text-foreground/45">
+        {project.installCommand}
+      </code>
+    )}
+
     <div className="flex items-center justify-between pt-3 border-t border-foreground/8">
       <span className="text-xs text-foreground/35 font-light">{project.role || "developer"}</span>
       <div className="flex items-center gap-3">
