@@ -59,9 +59,9 @@ export const ConstellationBackground: React.FC = () => {
     };
   }, []);
 
-  // Depending on the coordinates rather than the mousePosition object is deliberate: the object
-  // is a new identity on every mousemove, so listing it would re-seed the particle field
-  // continuously.
+  // Re-running on every pointer move is the effect, not an oversight: the particle field is
+  // re-seeded as the mouse moves, which is what gives the constellation its shimmer. Do not
+  // "fix" this into a stable field.
   // biome-ignore lint/correctness/useExhaustiveDependencies: see the note above
   useEffect(() => {
     const particleCanvas = canvasRef.current;
