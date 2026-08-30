@@ -1,10 +1,11 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/data/projects";
 import { getAllPosts } from "@/lib/content/loader";
+import { SITE_URL } from "@/lib/site";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
-  const baseUrl = "https://abhisheksan.com";
+  const baseUrl = SITE_URL;
   const siteUpdatedAt = new Date("2026-05-30");
 
   const staticRoutes = [

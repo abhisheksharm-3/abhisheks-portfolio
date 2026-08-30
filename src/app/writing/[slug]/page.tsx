@@ -31,7 +31,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${frontmatter.title} | Abhishek Sharma`,
     description: frontmatter.subhead,
     keywords: frontmatter.keywords,
-    authors: [{ name: "Abhishek Sharma", url: "https://abhisheksan.com" }],
+    authors: [{ name: "Abhishek Sharma", url: SITE_URL }],
     openGraph: {
       title: frontmatter.title,
       description: frontmatter.subhead,

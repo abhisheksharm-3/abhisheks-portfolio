@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "biome check .",
     "check-post": "node scripts/check-post.mjs",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "check-webmcp": "node scripts/check-webmcp.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

@@ -4,7 +4,10 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "@/components/Providers";
+import { WebMcpTools } from "@/components/WebMcpTools";
+import { getAllPosts } from "@/lib/content/loader";
 import { JsonLd, personSchema, websiteSchema } from "@/lib/seo/json-ld";
+import { SITE_URL, WEBMCP_ORIGIN_TRIAL_TOKEN } from "@/lib/site";
 import type { RootLayoutPropsType } from "@/lib/types/layout";
 
 const spaceGrotesk = Space_Grotesk({
@@ -34,14 +37,14 @@ export const instant = false;
  * Application metadata for SEO and social sharing.
  */
 export const metadata: Metadata = {
-  metadataBase: new URL("https://abhisheksan.com"),
+  metadataBase: new URL(SITE_URL),
   title: "Abhishek Sharma | Developer",
   description:
     "I'm Abhishek Sharma. I design and build for the web and mobile. This is my corner of the internet to share what I work on.",
   openGraph: {
     title: "Abhishek Sharma | Developer",
     description: "I build web apps, Android apps, and AI systems. This is my work.",
-    url: "https://abhisheksan.com",
+    url: SITE_URL,
     siteName: "Abhishek Sharma",
     images: [
       {
@@ -61,7 +64,7 @@ export const metadata: Metadata = {
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },
-  authors: [{ name: "Abhishek Sharma", url: "https://abhisheksan.com" }],
+  authors: [{ name: "Abhishek Sharma", url: SITE_URL }],
   category: "personal",
   alternates: {
     canonical: "/",
@@ -74,18 +77,34 @@ export const metadata: Metadata = {
   publisher: "Abhishek Sharma",
 };
 
-const RootLayout = ({ children }: Readonly<RootLayoutPropsType>) => (
-  <html lang="en" suppressHydrationWarning>
-    <body
-      className={`${spaceGrotesk.variable} ${geistMono.variable} ${basteleur.variable} antialiased`}
-    >
-      <JsonLd schemas={[personSchema, websiteSchema]} />
-      <Providers>
-        {children}
-        <Analytics />
-      </Providers>
-    </body>
-  </html>
-);
+const RootLayout = async ({ children }: Readonly<RootLayoutPropsType>) => {
+  const posts = await getAllPosts();
+  const postIndex = posts.map(({ slug, frontmatter }) => ({
+    slug,
+    title: frontmatter.title,
+    subhead: frontmatter.subhead,
+    date: frontmatter.date,
+    tags: frontmatter.tags,
+    readingTime: frontmatter.readingTime,
+  }));
+
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta content={WEBMCP_ORIGIN_TRIAL_TOKEN} httpEquiv="origin-trial" />
+      </head>
+      <body
+        className={`${spaceGrotesk.variable} ${geistMono.variable} ${basteleur.variable} antialiased`}
+      >
+        <JsonLd schemas={[personSchema, websiteSchema]} />
+        <Providers>
+          {children}
+          <Analytics />
+        </Providers>
+        <WebMcpTools posts={postIndex} />
+      </body>
+    </html>
+  );
+};
 
 export default RootLayout;
