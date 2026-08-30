@@ -1,7 +1,8 @@
 "use client";
 
+import { RiGithubLine } from "@remixicon/react";
 import { motion } from "framer-motion";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import type { ProjectType } from "@/lib/types/components";
 
 /**
@@ -52,7 +53,7 @@ export function ProjectDetailHeader({ project }: { project: ProjectType }) {
               className="group inline-flex items-center gap-2 text-sm font-light text-foreground/70 transition-colors duration-200 hover:text-foreground"
             >
               view source
-              <Github className="h-3.5 w-3.5" />
+              <RiGithubLine className="h-3.5 w-3.5" />
             </a>
           )}
         </div>

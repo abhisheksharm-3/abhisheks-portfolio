@@ -1,5 +1,12 @@
-import { RiGithubFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
-import { Github, Instagram, Linkedin, Mail } from "lucide-react";
+import {
+  RiGithubFill,
+  RiGithubLine,
+  RiInstagramLine,
+  RiLinkedinFill,
+  RiLinkedinLine,
+  RiTwitterXFill,
+} from "@remixicon/react";
+import { Mail } from "lucide-react";
 
 /**
  * Personal contact information - centralized source of truth
@@ -57,19 +64,19 @@ export const CONTACT_DETAILS = [
   },
   {
     label: "GitHub",
-    Icon: Github,
+    Icon: RiGithubLine,
     link: CONTACT_INFO.github.url,
     display: CONTACT_INFO.github.username,
   },
   {
     label: "LinkedIn",
-    Icon: Linkedin,
+    Icon: RiLinkedinLine,
     link: CONTACT_INFO.linkedin.url,
     display: CONTACT_INFO.linkedin.username,
   },
   {
     label: "Instagram",
-    Icon: Instagram,
+    Icon: RiInstagramLine,
     link: "https://instagram.com/abhishekxsharmaa",
     display: "@abhishekxsharmaa",
   },

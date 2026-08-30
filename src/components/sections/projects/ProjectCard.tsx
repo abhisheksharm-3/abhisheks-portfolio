@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
+import { RiGithubLine } from "@remixicon/react";
+import { ArrowUpRight, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
@@ -89,7 +90,7 @@ export const ProjectCard = ({ project, priority = false }: ProjectCardPropsType)
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
               >
-                <Github className="h-3 w-3" />
+                <RiGithubLine className="h-3 w-3" />
                 code
               </a>
             )}

@@ -1,7 +1,8 @@
 "use client";
 
+import { RiGithubLine } from "@remixicon/react";
 import { motion } from "framer-motion";
-import { ArrowUpRight, Check, Copy, ExternalLink, Github } from "lucide-react";
+import { ArrowUpRight, Check, Copy, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -117,7 +118,7 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
           >
-            <Github className="h-3 w-3" />
+            <RiGithubLine className="h-3 w-3" />
             code
           </a>
         )}

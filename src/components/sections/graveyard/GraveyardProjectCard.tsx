@@ -1,7 +1,8 @@
 "use client";
 
+import { RiGithubLine } from "@remixicon/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Calendar, ExternalLink, Github } from "lucide-react";
+import { Calendar, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
@@ -112,7 +113,7 @@ export const GraveyardProjectCard = ({ project, index }: GraveyardProjectCardPro
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
               >
-                <Github className="h-3 w-3" />
+                <RiGithubLine className="h-3 w-3" />
                 code
               </a>
             )}
