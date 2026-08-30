@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist_Mono, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Providers } from "@/components/Providers";
 import { Analytics } from "@vercel/analytics/next";
+import { Providers } from "@/components/Providers";
 import type { RootLayoutPropsType } from "@/lib/types/layout";
 
 const spaceGrotesk = Space_Grotesk({
@@ -25,6 +25,10 @@ const basteleur = localFont({
   ],
 });
 
+// The navbar reads usePathname() for its active link, which blocks an instant shell.
+// Nav links in the prerendered HTML are worth more here than a streamed shell.
+export const instant = false;
+
 /**
  * Application metadata for SEO and social sharing.
  */
@@ -35,8 +39,7 @@ export const metadata: Metadata = {
     "I'm Abhishek Sharma. I design and build for the web and mobile. This is my corner of the internet to share what I work on.",
   openGraph: {
     title: "Abhishek Sharma | Developer",
-    description:
-      "I build web apps, Android apps, and AI systems. This is my work.",
+    description: "I build web apps, Android apps, and AI systems. This is my work.",
     url: "https://abhisheksan.com",
     siteName: "Abhishek Sharma",
     images: [
@@ -53,8 +56,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Abhishek Sharma | Developer",
-    description:
-      "I build for web and mobile. This site is where I share my work.",
+    description: "I build for web and mobile. This site is where I share my work.",
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },

@@ -1,14 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { SOCIAL_LINKS, CONTACT_INFO } from "@/data/contact";
+import Link from "next/link";
+import { CONTACT_INFO, SOCIAL_LINKS } from "@/data/contact";
 import { NAVIGATION_ITEMS } from "@/data/navigation";
-import {
-  CONTAINER_VARIANTS,
-  ITEM_VARIANTS,
-} from "@/lib/config/page-animations";
+import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 
 export const Footer = () => (
   <footer className="border-t border-primary/10">
@@ -68,10 +65,7 @@ export const Footer = () => (
         </motion.div>
 
         {/* Contact */}
-        <motion.div
-          variants={ITEM_VARIANTS}
-          className="md:justify-self-end md:text-right"
-        >
+        <motion.div variants={ITEM_VARIANTS} className="md:justify-self-end md:text-right">
           <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
             say hi
           </p>
@@ -95,7 +89,7 @@ export const Footer = () => (
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
         <p className="text-xs text-foreground/35 font-light">
-          © {new Date().getFullYear()}{" "}
+          © {process.env.NEXT_PUBLIC_BUILD_YEAR}{" "}
           <span className="text-foreground/60">Abhishek Sharma</span>. all mine.
         </p>
         <p className="text-[10px] text-primary/35 tracking-[0.2em] uppercase font-light">

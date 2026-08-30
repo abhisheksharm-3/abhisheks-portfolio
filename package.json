@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint .",
-    "check-post": "node scripts/check-post.mjs"
+    "lint": "biome check .",
+    "check-post": "node scripts/check-post.mjs",
+    "format": "biome format --write ."
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
@@ -24,7 +25,7 @@
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.562.0",
     "mermaid": "^11.16.1",
-    "next": "^16.2.9",
+    "next": "^16.3.3",
     "next-mdx-remote": "^6.0.0",
     "next-themes": "^0.4.6",
     "nodemailer": "^9.0.1",
@@ -38,19 +39,16 @@
     "zod": "^4.2.1"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3",
+    "@biomejs/biome": "^2.5.11",
     "@playwright/test": "^1.60.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^25",
     "@types/nodemailer": "^8.0.1",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "^1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "^16.2.9",
     "playwright": "^1.60.0",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.4.0",
-    "typescript": "^5"
+    "typescript": "^7.0.2"
   }
 }

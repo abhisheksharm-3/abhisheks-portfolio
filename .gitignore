@@ -42,3 +42,6 @@ next-env.d.ts
 
 # design context (local-only)
 DESIGN.md
+
+# Polaris run state is per-session, not project history
+.polaris/runs/

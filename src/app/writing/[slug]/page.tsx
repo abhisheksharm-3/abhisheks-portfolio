@@ -1,29 +1,29 @@
-import { notFound } from "next/navigation"
-import type { Metadata } from "next"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
-import { AppShell } from "@/components/layout/AppShell"
-import { getAllPosts, getPostBySlug } from "@/lib/content/loader"
-import { PostCta } from "@/components/writing/PostCta"
+"use cache";
+
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { AppShell } from "@/components/layout/AppShell";
+import { PostCta } from "@/components/writing/PostCta";
+import { getAllPosts, getPostBySlug } from "@/lib/content/loader";
 
 type Props = {
-  params: Promise<{ slug: string }>
-}
-
-export const dynamicParams = false
+  params: Promise<{ slug: string }>;
+};
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts()
-  return posts.map((post) => ({ slug: post.slug }))
+  const posts = await getAllPosts();
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
-  if (!post) return {}
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
+  if (!post) return {};
 
-  const { frontmatter } = post
-  const ogUrl = `/og?title=${encodeURIComponent(frontmatter.title)}&tag=${encodeURIComponent(frontmatter.tags[0] ?? "")}&subhead=${encodeURIComponent(frontmatter.subhead)}&date=${encodeURIComponent(new Date(frontmatter.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }))}&min=${frontmatter.readingTime}`
+  const { frontmatter } = post;
+  const ogUrl = `/og?title=${encodeURIComponent(frontmatter.title)}&tag=${encodeURIComponent(frontmatter.tags[0] ?? "")}&subhead=${encodeURIComponent(frontmatter.subhead)}&date=${encodeURIComponent(new Date(frontmatter.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }))}&min=${frontmatter.readingTime}`;
 
   return {
     title: `${frontmatter.title} | Abhishek Sharma`,
@@ -45,18 +45,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: frontmatter.subhead,
       images: [ogUrl],
     },
-  }
+  };
 }
 
 function serializeJsonLd(data: object): string {
-  return JSON.stringify(data)
-    .replace(/</g, "\\u003c")
-    .replace(/>/g, "\\u003e")
+  return JSON.stringify(data).replace(/</g, "\\u003c").replace(/>/g, "\\u003e");
 }
 
 function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
-  if (!post) return null
-  const { frontmatter, slug } = post
+  if (!post) return null;
+  const { frontmatter, slug } = post;
 
   const articleSchema = {
     "@context": "https://schema.org",
@@ -77,7 +75,7 @@ function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
     },
     keywords: frontmatter.keywords.join(", "),
     url: `https://abhisheksan.com/writing/${slug}`,
-  }
+  };
 
   const faqSchema = frontmatter.faqs
     ? {
@@ -89,25 +87,25 @@ function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
           acceptedAnswer: { "@type": "Answer", text: faq.answer },
         })),
       }
-    : null
+    : null;
 
-  return { articleSchema, faqSchema }
+  return { articleSchema, faqSchema };
 }
 
 export default async function PostPage({ params }: Props) {
-  const { slug } = await params
-  const post = await getPostBySlug(slug)
+  const { slug } = await params;
+  const post = await getPostBySlug(slug);
 
-  if (!post) notFound()
+  if (!post) notFound();
 
-  const { frontmatter, content } = post
-  const schemas = buildJsonLd(post)
+  const { frontmatter, content } = post;
+  const schemas = buildJsonLd(post);
 
   const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
-  })
+  });
 
   return (
     <AppShell showBackground={false}>
@@ -128,7 +126,6 @@ export default async function PostPage({ params }: Props) {
 
       <div className="pt-36 pb-24 px-6 sm:px-10 lg:px-24">
         <div className="max-w-3xl mx-auto">
-
           <Link
             href="/writing"
             className="group inline-flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/70 transition-colors duration-200 font-light mb-10"
@@ -151,9 +148,7 @@ export default async function PostPage({ params }: Props) {
 
           <div className="h-px bg-primary/10 w-full mb-10" />
 
-          <div className="prose-writing">
-            {content}
-          </div>
+          <div className="prose-writing">{content}</div>
 
           {frontmatter.faqs && frontmatter.faqs.length > 0 && (
             <>
@@ -165,9 +160,7 @@ export default async function PostPage({ params }: Props) {
                 <div className="space-y-6">
                   {frontmatter.faqs.map((faq, i) => (
                     <div key={i}>
-                      <p className="text-sm text-foreground/80 font-light mb-2">
-                        {faq.question}
-                      </p>
+                      <p className="text-sm text-foreground/80 font-light mb-2">{faq.question}</p>
                       <p className="text-sm text-foreground/65 font-light leading-relaxed">
                         {faq.answer}
                       </p>
@@ -206,9 +199,8 @@ export default async function PostPage({ params }: Props) {
           )}
 
           <PostCta searchIntent={frontmatter.searchIntent} />
-
         </div>
       </div>
     </AppShell>
-  )
+  );
 }
