@@ -14,7 +14,14 @@ const AnimatedPath = ({
   pathD = SHARED_SVG_PATHS.default,
   delay = 0,
 }: AnimatedPathPropsType) => (
-  <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className={className}>
+  <svg
+    aria-hidden="true"
+    width="100"
+    height="100"
+    viewBox="0 0 100 100"
+    fill="none"
+    className={className}
+  >
     <motion.path
       d={pathD}
       stroke="currentColor"
@@ -30,6 +37,7 @@ const AnimatedPath = ({
 const NoiseTexture = ({ filterId }: { filterId: string }) => (
   <div className="absolute inset-0 z-0 mix-blend-overlay opacity-10">
     <svg
+      aria-hidden="true"
       className="w-full h-full opacity-20"
       viewBox="0 0 200 200"
       xmlns="http://www.w3.org/2000/svg"

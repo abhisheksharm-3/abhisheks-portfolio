@@ -13,6 +13,7 @@ export const NoiseTexture = () => (
     className="absolute inset-0 size-full pointer-events-none"
   >
     <svg
+      aria-hidden="true"
       className="absolute inset-0 size-full opacity-20"
       style={{ filter: "contrast(135%) brightness(105%)" }}
     >

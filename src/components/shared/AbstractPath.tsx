@@ -19,7 +19,14 @@ interface AbstractPathProps {
  */
 export const AbstractPath = ({ className, pathD }: AbstractPathProps) => {
   return (
-    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" className={className}>
+    <svg
+      aria-hidden="true"
+      width="100"
+      height="100"
+      viewBox="0 0 100 100"
+      fill="none"
+      className={className}
+    >
       <motion.path
         d={pathD || "M30,20 Q50,10 70,30 T90,50"}
         stroke="currentColor"

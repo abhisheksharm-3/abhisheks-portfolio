@@ -9,6 +9,7 @@ export const GraveyardBackground = () => {
   return (
     <div className="absolute inset-0 pointer-events-none -z-10">
       <svg
+        aria-hidden="true"
         className="absolute inset-0 w-full h-full opacity-[0.03]"
         viewBox="0 0 200 200"
         preserveAspectRatio="xMidYMid slice"

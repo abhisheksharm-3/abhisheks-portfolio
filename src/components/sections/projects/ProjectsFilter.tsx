@@ -71,6 +71,8 @@ export function ProjectsFilters({
           return (
             <button
               key={tag}
+              type="button"
+              aria-pressed={isActive}
               onClick={() => setActiveFilter(tag)}
               className={`
                 px-3 py-1 text-xs font-light transition-all duration-200 border

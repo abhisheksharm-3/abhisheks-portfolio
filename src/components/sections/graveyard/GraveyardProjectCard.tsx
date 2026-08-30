@@ -117,6 +117,8 @@ export const GraveyardProjectCard = ({ project, index }: GraveyardProjectCardPro
               </a>
             )}
             <button
+              type="button"
+              aria-expanded={isShowingLessons}
               onClick={() => setIsShowingLessons(!isShowingLessons)}
               className="ml-auto text-xs text-foreground/25 hover:text-foreground/55 transition-colors duration-200"
             >

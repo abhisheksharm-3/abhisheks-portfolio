@@ -33,6 +33,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
       <div className="flex items-center justify-between mb-12">
         <Logo onClick={onClose} />
         <button
+          type="button"
           onClick={onClose}
           className="p-2.5 -mr-2 text-foreground/40 hover:text-foreground/70 transition-colors duration-200"
           aria-label="Close menu"

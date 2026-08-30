@@ -147,6 +147,13 @@
     @apply bg-background text-foreground font-sans;
   }
 
+  /* cursor: pointer is a strong actionability signal for agents reading a page,
+     and Tailwind v4 no longer sets it on buttons. */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
+
   /* Keyboard focus indicator for links and bare buttons.
      Components with their own focus-visible utilities override this. */
   a:focus-visible,

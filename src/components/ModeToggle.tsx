@@ -37,6 +37,7 @@ export const ModeToggle = () => {
 
   return (
     <button
+      type="button"
       onClick={cycle}
       aria-label={`Switch theme, current: ${theme}`}
       className="-m-2 p-2 text-foreground/35 hover:text-foreground/60 transition-colors duration-200 cursor-pointer"

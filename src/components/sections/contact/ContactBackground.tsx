@@ -37,7 +37,7 @@ export const ContactBackground = () => {
     <div className="absolute inset-0 pointer-events-none -z-10">
       {/* Noise Texture */}
       <div className="absolute inset-0 mix-blend-overlay opacity-10">
-        <svg className="w-full h-full opacity-20" viewBox="0 0 200 200">
+        <svg aria-hidden="true" className="w-full h-full opacity-20" viewBox="0 0 200 200">
           <filter id="contactPageNoiseFilter">
             <feTurbulence
               type="fractalNoise"

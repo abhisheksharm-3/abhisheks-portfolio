@@ -5,7 +5,7 @@
 export const ProjectsPageBackground = () => (
   <div className="absolute inset-0 pointer-events-none -z-10">
     <div className="absolute inset-0 opacity-[0.03]">
-      <svg className="w-full h-full" viewBox="0 0 200 200">
+      <svg aria-hidden="true" className="w-full h-full" viewBox="0 0 200 200">
         <filter id="projectsNoiseFilter">
           <feTurbulence
             type="fractalNoise"

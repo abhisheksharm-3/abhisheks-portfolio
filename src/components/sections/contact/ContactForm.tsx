@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertTriangle, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
-import { useRef, useState, useTransition } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import {
   Form,
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CONTACT_FORM_SCHEMA } from "@/data/contact";
+import { CONTACT_FORM_SCHEMA, CONTACT_INFO } from "@/data/contact";
 import { submitContactForm } from "@/lib/actions/contact";
 import type { ContactFormDataType } from "@/lib/types/components";
 
@@ -26,8 +26,14 @@ const label = "text-[10px] text-primary/35 uppercase tracking-[0.18em] font-ligh
 export const SendMessageCard = () => {
   const [isPending, startTransition] = useTransition();
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
-  const [renderedAt] = useState(() => Date.now());
+  const renderedAtRef = useRef(0);
   const honeypotRef = useRef<HTMLInputElement>(null);
+
+  // Stamped on mount, not during render: Date.now() while prerendering is an
+  // unstable value, and it kept the whole form out of the static HTML.
+  useEffect(() => {
+    renderedAtRef.current = Date.now();
+  }, []);
 
   const form = useForm<ContactFormDataType>({
     resolver: zodResolver(CONTACT_FORM_SCHEMA),
@@ -40,7 +46,7 @@ export const SendMessageCard = () => {
       try {
         const result = await submitContactForm(data, {
           honeypot: honeypotRef.current?.value ?? "",
-          renderedAt,
+          renderedAt: renderedAtRef.current,
         });
         if (result.error) {
           setSubmitStatus("error");
@@ -65,6 +71,16 @@ export const SendMessageCard = () => {
       <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] mb-10 font-light">
         send a message
       </p>
+
+      <noscript>
+        <p className="mb-8 text-sm font-light text-foreground/60">
+          This form needs JavaScript to submit. Email{" "}
+          <a className="underline" href={`mailto:${CONTACT_INFO.email}`}>
+            {CONTACT_INFO.email}
+          </a>{" "}
+          instead.
+        </p>
+      </noscript>
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-9">

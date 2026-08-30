@@ -14,6 +14,7 @@ const NoiseBackground = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-20">
     <div className="absolute inset-0 z-0 mix-blend-overlay">
       <svg
+        aria-hidden="true"
         className="w-full h-full opacity-20"
         viewBox="0 0 200 200"
         xmlns="http://www.w3.org/2000/svg"

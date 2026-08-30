@@ -71,7 +71,9 @@ export const Navbar = () => {
           <ModeToggle />
 
           <button
+            type="button"
             onClick={() => setIsMobileMenuOpen(true)}
+            aria-expanded={isMobileMenuOpen}
             aria-label="Open menu"
             className="p-2.5 -mr-2 text-foreground/50 hover:text-foreground/80 transition-colors duration-200"
           >

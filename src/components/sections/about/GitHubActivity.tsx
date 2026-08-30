@@ -183,6 +183,9 @@ export const GitHubActivity = () => {
                     {week.contributionDays.map((day: ContributionDayType) => (
                       <div
                         key={day.date}
+                        role="img"
+                        aria-label={`${day.contributionCount} contributions on ${formatDate(day.date)}`}
+                        title={`${day.contributionCount} contributions on ${formatDate(day.date)}`}
                         onMouseEnter={() => setHoveredDay(day)}
                         onMouseLeave={() => setHoveredDay(null)}
                         className={`w-full aspect-square cursor-pointer transition-all duration-150 hover:ring-1 hover:ring-foreground/50 ${getContributionColor(day.contributionCount)}`}
