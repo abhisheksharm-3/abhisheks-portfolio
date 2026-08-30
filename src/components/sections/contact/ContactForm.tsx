@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { CONTACT_FORM_SCHEMA, CONTACT_INFO } from "@/data/contact";
+import { CONTACT_INFO } from "@/data/contact";
+import { CONTACT_FORM_SCHEMA } from "@/data/contact-schema";
 import { submitContactForm } from "@/lib/actions/contact";
 import type { ContactFormDataType } from "@/lib/types/components";
 

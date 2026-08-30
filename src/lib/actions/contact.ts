@@ -5,7 +5,8 @@ import { headers } from "next/headers";
 import nodemailer from "nodemailer";
 import React from "react";
 import { ContactEmailTemplate } from "@/components/emails/ContactEmailTemplate";
-import { CONTACT_FORM_SCHEMA, CONTACT_INFO } from "@/data/contact";
+import { CONTACT_INFO } from "@/data/contact";
+import { CONTACT_FORM_SCHEMA } from "@/data/contact-schema";
 import type { ContactFormDataType } from "@/lib/types/components";
 import type {
   ContactAntiSpamType,

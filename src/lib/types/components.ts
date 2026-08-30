@@ -1,7 +1,7 @@
 import type { LucideIcon } from "lucide-react";
 import type { ReactNode } from "react";
 import type z from "zod";
-import type { CONTACT_FORM_SCHEMA } from "@/data/contact";
+import type { CONTACT_FORM_SCHEMA } from "@/data/contact-schema";
 
 /** Props for components that animate based on scroll-into-view state */
 export interface InViewPropsType {
