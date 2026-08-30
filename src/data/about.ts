@@ -25,27 +25,6 @@ export const PERSONAL_INTERESTS = [
       "lo-fi for deep work, rock when i'm stuck debugging, and the occasional classical binge when i need a brain reset.",
     tags: ["Lo-fi", "Rock", "Classical"],
   },
-  {
-    category: "Gaming",
-    icon: Gamepad,
-    description:
-      "valorant for the chaos, rdr2 for the escape. honestly the best way to cool down after a long coding session.",
-    tags: ["Valorant", "RDR2", "Far Cry 4"],
-  },
-  {
-    category: "Sci-Fi Media",
-    icon: Film,
-    description:
-      "obsessed with sci-fi that feels a little too close to reality. interstellar and the martian are on permanent rewatch.",
-    tags: ["Interstellar", "The Martian", "Inception"],
-  },
-  {
-    category: "Exploration",
-    icon: Coffee,
-    description:
-      "weekends = wandering streets, chasing food stalls, or finding low-key cafes to sit and code/read for hours.",
-    tags: ["Cafes", "Street Food", "City Walks"],
-  },
 ] as const;
 
 /**
@@ -86,21 +65,5 @@ export const EDUCATION_DATA = [
     description:
       "graduated with an 8.31 cgpa. learnt my foundations in cs, but honestly most growth came from side projects and hackathons i kept grinding on.",
     badges: [{ label: "CGPA", value: "8.31" }],
-  },
-  {
-    title: "12th Grade (CBSE)",
-    subtitle: "Mount Carmel School, Chandigarh",
-    date: "2021",
-    description:
-      "science + math focus. scored 92.4%. lots of late-night physics + coding side quests.",
-    badges: [{ label: "Score", value: "92.4%" }],
-  },
-  {
-    title: "10th Grade (CBSE)",
-    subtitle: "Mount Carmel School, Chandigarh",
-    date: "2019",
-    description:
-      "strong academics (92.2%) but also when i really got hooked on tinkering with computers beyond the classroom.",
-    badges: [{ label: "Score", value: "92.2%" }],
   },
 ] as const;

@@ -48,6 +48,11 @@ export const BioCard = () => {
           </p>
         </div>
 
+        <p>
+          i don&apos;t marry frameworks or patterns. the right tool is whatever solves the problem
+          cleanly, even when that means plain old sql.
+        </p>
+
         <div className="h-px bg-primary/10" />
 
         <p>

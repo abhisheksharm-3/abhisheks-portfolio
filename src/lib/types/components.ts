@@ -40,6 +40,8 @@ export interface ProjectType {
 export interface ProjectsPropsType {
   headline?: string;
   showCta?: boolean;
+  /** Rendered under the project grid, inside the section's spacing. */
+  footer?: ReactNode;
 }
 
 export interface ProjectCardPropsType {
@@ -63,7 +65,6 @@ export interface ExpertiseType {
   title: string;
   description: string;
   skills: readonly string[];
-  level: string;
 }
 
 export interface AnimatedPathPropsType {

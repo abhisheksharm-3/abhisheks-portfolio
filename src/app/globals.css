@@ -330,3 +330,13 @@
 .prose-writing tbody tr:hover td {
   color: color-mix(in oklch, var(--foreground) 70%, transparent);
 }
+
+/* Route loading indicator: a line that sweeps, in place of a spinner. */
+@keyframes loading-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}

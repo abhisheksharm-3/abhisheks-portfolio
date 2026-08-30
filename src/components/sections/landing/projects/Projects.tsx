@@ -98,6 +98,7 @@ const ProjectCard = ({
 export const Projects = ({
   headline = "stuff i'm proud of",
   showCta = true,
+  footer,
 }: ProjectsPropsType) => {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -128,6 +129,8 @@ export const Projects = ({
             />
           ))}
         </motion.div>
+
+        {footer}
 
         {showCta && <CTASection isInView={isInView} />}
       </div>

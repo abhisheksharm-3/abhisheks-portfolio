@@ -42,11 +42,8 @@ const SkillRow = ({ service, index }: SkillRowPropsType) => (
         {service.description}
       </p>
 
-      {/* Skills + level column */}
+      {/* Skills column */}
       <div className="flex flex-col gap-3 sm:w-1/5 sm:items-end">
-        <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
-          {service.level}
-        </span>
         <div className="flex flex-wrap gap-1.5 sm:justify-end">
           {service.skills.slice(0, 3).map((skill) => (
             <span key={skill} className="text-[11px] text-foreground/50 font-light">
@@ -154,7 +151,7 @@ export const SecondarySkillsGrid = ({
       variants={SKILLS_ANIMATIONS.container}
       initial="hidden"
       animate={isInView ? "show" : "hidden"}
-      className="grid grid-cols-1 sm:grid-cols-3 gap-0"
+      className={`grid grid-cols-1 gap-0 ${additionalServices.length > 2 ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}
     >
       {additionalServices.map((service, index) => (
         <motion.div key={service.title} variants={SKILLS_ANIMATIONS.item} className="group">
@@ -165,9 +162,6 @@ export const SecondarySkillsGrid = ({
               <h4 className="text-sm font-light text-foreground group-hover:text-primary/80 transition-colors duration-200">
                 {service.title}
               </h4>
-              <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
-                {service.level}
-              </span>
             </div>
             <p className="text-foreground/50 text-xs font-light leading-relaxed mb-3">
               {service.description}
