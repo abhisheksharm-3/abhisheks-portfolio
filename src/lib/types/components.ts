@@ -14,6 +14,8 @@ export interface MobileNavLinkPropsType {
   onClick: () => void;
 }
 
+export type ProjectCategory = "ai" | "web" | "mobile";
+
 export interface ProjectType {
   title: string;
   slug: string;
@@ -25,6 +27,10 @@ export interface ProjectType {
   url?: string;
   github?: string;
   isFeatured: boolean;
+  /** Early learning work: listed as a text row, not a card. */
+  isArchived?: boolean;
+  /** Primary discipline, used for the filter. Archived work has none. */
+  category?: ProjectCategory;
   role?: string;
   client?: string;
   duration?: string;

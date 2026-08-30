@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useInView } from "framer-motion";
+import Link from "next/link";
 import { useMemo, useRef, useState, useTransition } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProjectCard } from "@/components/sections/projects/ProjectCard";
@@ -8,14 +9,9 @@ import { ProjectsCTA } from "@/components/sections/projects/ProjectsCTA";
 import { ProjectsFilters } from "@/components/sections/projects/ProjectsFilter";
 import { ProjectsHeader } from "@/components/sections/projects/ProjectsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
-import { projects } from "@/data/projects";
+import { archivedProjects, selectedProjects } from "@/data/projects";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
-
-/**
- * A sorted, unique list of all project tags, generated once at the module level.
- */
-const allTags = Array.from(new Set(projects.flatMap((project) => project.tags))).sort();
 
 /**
  * Renders the main projects page, including filtering and animated project cards.
@@ -30,8 +26,8 @@ const ProjectsPage = () => {
   const filteredProjects = useMemo(
     () =>
       activeFilter === "all"
-        ? projects
-        : projects.filter((project) => project.tags.includes(activeFilter)),
+        ? selectedProjects
+        : selectedProjects.filter((project) => project.category === activeFilter),
     [activeFilter],
   );
 
@@ -61,10 +57,9 @@ const ProjectsPage = () => {
 
         <motion.div variants={ITEM_VARIANTS} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
           <ProjectsFilters
-            allTags={allTags}
             activeFilter={activeFilter}
             setActiveFilter={handleFilterChange}
-            projects={projects}
+            projects={selectedProjects}
             filteredCount={filteredProjects.length}
             isPending={isPending}
           />
@@ -89,6 +84,38 @@ const ProjectsPage = () => {
             ))}
           </AnimatePresence>
         </motion.div>
+
+        {activeFilter === "all" && (
+          <motion.section
+            variants={ITEM_VARIANTS}
+            className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
+          >
+            <h2 className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-1">
+              earlier work
+            </h2>
+            <p className="text-xs text-foreground/30 font-light mb-6">
+              where I learned. Kept for the record, not the résumé.
+            </p>
+            <ul className="divide-y divide-foreground/8 border-y border-foreground/8">
+              {archivedProjects.map((project) => (
+                <li key={project.slug}>
+                  <Link
+                    href={`/projects/${project.slug}`}
+                    className="group flex items-baseline justify-between gap-4 py-3 text-sm font-light"
+                  >
+                    <span className="text-foreground/55 group-hover:text-foreground/80 transition-colors duration-200">
+                      {project.title}
+                    </span>
+                    <span className="hidden sm:block flex-1 text-xs text-foreground/25 truncate">
+                      {project.description}
+                    </span>
+                    <span className="text-xs text-foreground/25 tabular-nums">{project.year}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </motion.section>
+        )}
 
         <motion.div variants={ITEM_VARIANTS}>
           <ProjectsCTA />

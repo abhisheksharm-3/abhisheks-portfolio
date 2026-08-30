@@ -17,6 +17,7 @@ export const projects: ProjectType[] = [
     isFeatured: true,
     role: "solo",
     duration: "2026 - present",
+    category: "ai",
     isBuilding: true,
   },
   {
@@ -34,6 +35,7 @@ export const projects: ProjectType[] = [
     role: "team lead",
     client: "hackathon project (network 18)",
     duration: "August 2024 - October 2024",
+    category: "ai",
     isBuilding: false,
   },
   {
@@ -51,6 +53,7 @@ export const projects: ProjectType[] = [
     role: "solo developer",
     client: "personal project",
     duration: "November 2025 - Present",
+    category: "mobile",
     isBuilding: true,
   },
   {
@@ -64,10 +67,11 @@ export const projects: ProjectType[] = [
     year: "2025",
     url: "https://inquora.vercel.app/",
     github: "https://github.com/abhisheksharm-3/inquora",
-    isFeatured: true,
+    isFeatured: false,
     role: "full stack developer",
     client: "personal project",
     duration: "July 2025 – Present",
+    category: "ai",
     isBuilding: true,
   },
   {
@@ -85,6 +89,7 @@ export const projects: ProjectType[] = [
     role: "solo developer",
     client: "personal project",
     duration: "March 2025 – August 2025",
+    category: "mobile",
     isBuilding: false,
   },
   {
@@ -102,6 +107,7 @@ export const projects: ProjectType[] = [
     role: "full stack developer",
     client: "semester 7 capstone project",
     duration: "July 2024 - November 2024",
+    category: "ai",
     isBuilding: false,
   },
   {
@@ -119,6 +125,7 @@ export const projects: ProjectType[] = [
     role: "solo developer",
     client: "personal project",
     duration: "May 2025",
+    category: "web",
     isBuilding: false,
   },
   {
@@ -136,6 +143,7 @@ export const projects: ProjectType[] = [
     role: "full stack developer",
     client: "personal project",
     duration: "April 2025",
+    category: "ai",
     isBuilding: false,
   },
   {
@@ -152,6 +160,7 @@ export const projects: ProjectType[] = [
     role: "solo developer",
     client: "personal project",
     duration: "April 2025",
+    category: "web",
     isBuilding: false,
   },
   {
@@ -169,6 +178,7 @@ export const projects: ProjectType[] = [
     role: "blockchain developer",
     client: "personal project",
     duration: "May 2024 - September 2024",
+    category: "web",
     isBuilding: false,
   },
   {
@@ -186,6 +196,7 @@ export const projects: ProjectType[] = [
     role: "solo developer",
     client: "personal project",
     duration: "June 2024 – August 2024",
+    category: "ai",
     isBuilding: false,
   },
   {
@@ -203,6 +214,7 @@ export const projects: ProjectType[] = [
     role: "full stack developer",
     client: "neural networks course project",
     duration: "December 2024",
+    category: "ai",
     isBuilding: false,
   },
   {
@@ -220,6 +232,7 @@ export const projects: ProjectType[] = [
     role: "full stack developer",
     client: "personal project",
     duration: "August 2024 – November 2024",
+    category: "web",
     isBuilding: false,
   },
   {
@@ -237,6 +250,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "personal project",
     duration: "June 2023 - October 2023",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -254,6 +268,7 @@ export const projects: ProjectType[] = [
     role: "full stack developer",
     client: "personal project",
     duration: "January 2024 - March 2024",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -271,6 +286,7 @@ export const projects: ProjectType[] = [
     role: "ml engineer + full stack developer",
     client: "sem 5 data mining lab course project",
     duration: "April 2024",
+    category: "ai",
     isBuilding: false,
   },
   {
@@ -288,6 +304,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "personal project",
     duration: "July 2024",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -305,6 +322,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "personal project",
     duration: "August 2023",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -322,6 +340,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "personal project",
     duration: "July 2023",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -339,6 +358,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "sem 6 dma course project",
     duration: "January 2024",
+    category: "web",
     isBuilding: false,
   },
   {
@@ -356,6 +376,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "personal project",
     duration: "June 2023",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -373,6 +394,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "personal project",
     duration: "July 2024",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -390,12 +412,29 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "sem 5 ai course project",
     duration: "September 2023",
+    isArchived: true,
     isBuilding: false,
   },
 ];
 
 // Export just the featured projects for quick access
 export const featuredProjects = projects.filter((project) => project.isFeatured);
+
+/** Substantial work, shown as cards. */
+export const selectedProjects = projects.filter((project) => !project.isArchived);
+
+/**
+ * Filter categories. One primary discipline per project, because tag-level filters
+ * put thirteen of fifteen projects behind a single "web" chip.
+ */
+export const PROJECT_CATEGORIES = [
+  { id: "ai", label: "ai & agents" },
+  { id: "web", label: "web" },
+  { id: "mobile", label: "mobile" },
+] as const;
+
+/** Early learning work, listed as text rather than given a card. */
+export const archivedProjects = projects.filter((project) => project.isArchived);
 
 export interface DeadProjectType {
   title: string;

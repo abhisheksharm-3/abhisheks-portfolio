@@ -1,4 +1,4 @@
-import { projects } from "@/data/projects";
+import { archivedProjects, selectedProjects } from "@/data/projects";
 import { getAllPosts } from "@/lib/content/loader";
 import { AUTHOR, SITE_URL } from "@/lib/site";
 
@@ -30,7 +30,7 @@ async function renderIndex(): Promise<string> {
     "",
     "## Projects",
     "",
-    ...projects.map((project) => {
+    ...selectedProjects.map((project) => {
       const links = [
         project.url && `live: ${project.url}`,
         project.github && `source: ${project.github}`,
@@ -41,6 +41,15 @@ async function renderIndex(): Promise<string> {
       const summary = project.description.replace(/\.+$/, "");
       return `- [${project.title}](${SITE_URL}/projects/${project.slug}): ${summary}. ${project.tags.join(", ")}. ${project.year}${suffix}`;
     }),
+    "",
+    "## Earlier work",
+    "",
+    "Learning projects, kept for the record.",
+    "",
+    ...archivedProjects.map(
+      (project) =>
+        `- [${project.title}](${SITE_URL}/projects/${project.slug}): ${project.description.replace(/\.+$/, "")} (${project.year})`,
+    ),
     "",
     "## Writing",
     "",
