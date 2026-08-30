@@ -59,6 +59,10 @@ export const ConstellationBackground: React.FC = () => {
     };
   }, []);
 
+  // Depending on the coordinates rather than the mousePosition object is deliberate: the object
+  // is a new identity on every mousemove, so listing it would re-seed the particle field
+  // continuously.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: see the note above
   useEffect(() => {
     const particleCanvas = canvasRef.current;
     const gridCanvas = gridCanvasRef.current;

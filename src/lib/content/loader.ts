@@ -2,6 +2,7 @@
 import "server-only";
 import fs from "node:fs";
 import path from "node:path";
+import GithubSlugger from "github-slugger";
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
 import rehypePrettyCode from "rehype-pretty-code";
@@ -12,6 +13,35 @@ import { PostFrontmatter, type PostFrontmatterType } from "./schema";
 
 const POSTS_DIR = path.resolve(process.cwd(), "content/posts");
 const POST_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+export type TocEntry = { id: string; label: string };
+
+/**
+ * Headings for the in-page nav, read from the body rather than frontmatter so a
+ * renamed heading can never drift from its link. The slugger is the same one
+ * rehype-slug uses, so the ids match the rendered anchors.
+ */
+function extractToc(content: string): TocEntry[] {
+  const slugger = new GithubSlugger();
+  const entries: TocEntry[] = [];
+  let inFence = false;
+
+  for (const line of content.split("\n")) {
+    if (line.startsWith("```")) {
+      inFence = !inFence;
+      continue;
+    }
+    if (inFence) continue;
+
+    const match = /^## +(.+?)\s*$/.exec(line);
+    if (match) {
+      const label = match[1].replace(/[*_`]/g, "").trim();
+      entries.push({ id: slugger.slug(label), label });
+    }
+  }
+
+  return entries;
+}
 
 export type PostMeta = {
   slug: string;
@@ -79,6 +109,8 @@ export async function getPostBySlug(slug: string, opts?: { includeDrafts?: boole
 
   if (frontmatter.draft && !opts?.includeDrafts) return null;
 
+  const toc = extractToc(content);
+
   const { content: mdxContent } = await compileMDX({
     source: content,
     components: { PostCallout },
@@ -93,7 +125,7 @@ export async function getPostBySlug(slug: string, opts?: { includeDrafts?: boole
     },
   });
 
-  return { slug, frontmatter, content: mdxContent };
+  return { slug, frontmatter, content: mdxContent, toc };
 }
 
 /** Raw MDX source for a post, for the plain-text routes agents and feed readers fetch. */

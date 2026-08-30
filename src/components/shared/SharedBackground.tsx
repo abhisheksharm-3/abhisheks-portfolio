@@ -58,16 +58,16 @@ const NoiseTexture = ({ filterId }: { filterId: string }) => (
 /** Renders the asymmetrical grid overlay. */
 const AsymmetricalGrid = () => (
   <div className="absolute inset-0 opacity-5">
-    {SHARED_GRID_CONFIG.vertical.map((line, index) => (
+    {SHARED_GRID_CONFIG.vertical.map((line) => (
       <div
-        key={`v-${index}`}
+        key={`v-${line.left}`}
         className={`absolute top-0 bottom-0 w-[1px] ${line.className}`}
         style={{ left: line.left }}
       />
     ))}
-    {SHARED_GRID_CONFIG.horizontal.map((line, index) => (
+    {SHARED_GRID_CONFIG.horizontal.map((line) => (
       <div
-        key={`h-${index}`}
+        key={`h-${line.top}`}
         className={`absolute left-0 right-0 h-[1px] ${line.className}`}
         style={{ top: line.top }}
       />

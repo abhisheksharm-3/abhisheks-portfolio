@@ -139,7 +139,7 @@ export async function GET(request: NextRequest) {
               maxWidth: 880,
             }}
           >
-            {subhead.length > 120 ? subhead.slice(0, 117) + "..." : subhead}
+            {subhead.length > 120 ? `${subhead.slice(0, 117)}...` : subhead}
           </p>
         )}
 

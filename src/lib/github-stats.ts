@@ -95,9 +95,9 @@ export async function fetchGitHubStats(): Promise<GitHubStatsType> {
     0,
   );
 
-  const languages = user.repositories.nodes
-    .filter((repo: RepositoryType) => repo.primaryLanguage !== null)
-    .map((repo: RepositoryType) => repo.primaryLanguage!.name);
+  const languages = user.repositories.nodes.flatMap((repo: RepositoryType) =>
+    repo.primaryLanguage ? [repo.primaryLanguage.name] : [],
+  );
   const topLanguages: string[] = [...new Set(languages)].slice(0, 10);
 
   return {

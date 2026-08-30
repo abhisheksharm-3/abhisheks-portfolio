@@ -52,16 +52,16 @@ export const ContactBackground = () => {
 
       {/* Asymmetrical Grid Lines */}
       <div className="absolute inset-0 opacity-5">
-        {gridLinesConfig.vertical.map((line, i) => (
+        {gridLinesConfig.vertical.map((line) => (
           <div
-            key={`v-${i}`}
+            key={`v-${line.left}`}
             className={`absolute top-0 bottom-0 w-[1px] ${line.class}`}
             style={{ left: line.left }}
           />
         ))}
-        {gridLinesConfig.horizontal.map((line, i) => (
+        {gridLinesConfig.horizontal.map((line) => (
           <div
-            key={`h-${i}`}
+            key={`h-${line.top}`}
             className={`absolute left-0 right-0 h-[1px] ${line.class}`}
             style={{ top: line.top }}
           />

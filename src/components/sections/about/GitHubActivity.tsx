@@ -75,6 +75,10 @@ function buildContributionGraph(
  * GitHub activity section displaying contribution graph and statistics.
  * Uses React Query for data fetching with automatic caching.
  */
+/** Stable keys for the loading skeleton's fixed grid. */
+const SKELETON_WEEKS = Array.from({ length: 52 }, (_, week) => `week-${week}`);
+const SKELETON_DAYS = Array.from({ length: 7 }, (_, day) => `day-${day}`);
+
 export const GitHubActivity = () => {
   const { data: stats, isLoading } = useGitHubStats();
   const [hoveredDay, setHoveredDay] = useState<ContributionDayType | null>(null);
@@ -130,10 +134,13 @@ export const GitHubActivity = () => {
             <div className="h-3 w-20 bg-foreground/5 rounded animate-pulse" />
           </div>
           <div className="grid grid-cols-[repeat(52,1fr)] gap-[3px] mt-4">
-            {[...Array(52)].map((_, i) => (
-              <div key={i} className="flex flex-col gap-[3px]">
-                {[...Array(7)].map((_, j) => (
-                  <div key={j} className="w-full aspect-square bg-foreground/5 animate-pulse" />
+            {SKELETON_WEEKS.map((weekKey) => (
+              <div key={weekKey} className="flex flex-col gap-[3px]">
+                {SKELETON_DAYS.map((dayKey) => (
+                  <div
+                    key={`${weekKey}-${dayKey}`}
+                    className="w-full aspect-square bg-foreground/5 animate-pulse"
+                  />
                 ))}
               </div>
             ))}
@@ -149,9 +156,9 @@ export const GitHubActivity = () => {
           >
             <div className="flex items-center justify-between mb-2 relative h-6">
               <div className="absolute inset-x-0 top-0 flex">
-                {monthLabels.map((month, idx) => (
+                {monthLabels.map((month) => (
                   <span
-                    key={`${month.label}-${idx}`}
+                    key={`${month.label}-${month.position}`}
                     className="text-[10px] text-foreground/40 absolute"
                     style={{ left: `${month.position}%` }}
                   >
@@ -178,8 +185,11 @@ export const GitHubActivity = () => {
 
             <div className="mt-4 w-full max-w-full overflow-x-auto">
               <div className="grid grid-cols-[repeat(53,1fr)] gap-[2px] min-w-0">
-                {weeks.map((week: ContributionWeekType, weekIndex: number) => (
-                  <div key={weekIndex} className="flex flex-col gap-[3px]">
+                {weeks.map((week: ContributionWeekType) => (
+                  <div
+                    key={week.contributionDays[0]?.date ?? crypto.randomUUID()}
+                    className="flex flex-col gap-[3px]"
+                  >
                     {week.contributionDays.map((day: ContributionDayType) => (
                       <div
                         key={day.date}

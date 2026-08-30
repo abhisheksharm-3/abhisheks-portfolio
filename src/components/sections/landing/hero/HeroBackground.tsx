@@ -62,16 +62,16 @@ export const AsymmetricalGrid: React.FC = () => {
       className="absolute inset-0 overflow-hidden pointer-events-none opacity-5"
       aria-hidden="true"
     >
-      {verticalLines.map((line, index) => (
+      {verticalLines.map((line) => (
         <div
-          key={`v-${index}`}
+          key={`v-${line.left}`}
           className={`absolute top-0 bottom-0 w-[1px] ${line.opacity}`}
           style={{ left: line.left }}
         />
       ))}
-      {horizontalLines.map((line, index) => (
+      {horizontalLines.map((line) => (
         <div
-          key={`h-${index}`}
+          key={`h-${line.top}`}
           className={`absolute left-0 right-0 h-[1px] ${line.opacity}`}
           style={{ top: line.top }}
         />

@@ -17,8 +17,8 @@ export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
       <div className="absolute left-[3px] top-2 bottom-2 w-px bg-primary/10" />
 
       <div className="space-y-10">
-        {items.map((item, index) => (
-          <div key={index} className="relative pl-8">
+        {items.map((item) => (
+          <div key={`${item.title}-${item.date}`} className="relative pl-8">
             {/* Timeline dot */}
             <div className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full bg-primary/25" />
 

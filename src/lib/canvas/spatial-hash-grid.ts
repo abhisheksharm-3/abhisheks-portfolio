@@ -19,10 +19,13 @@ export class SpatialHashGrid {
 
   insert(particle: Particle): void {
     const key = this.getKey(particle.x, particle.y);
-    if (!this.grid.has(key)) {
-      this.grid.set(key, []);
+    const bucket = this.grid.get(key);
+
+    if (bucket) {
+      bucket.push(particle);
+    } else {
+      this.grid.set(key, [particle]);
     }
-    this.grid.get(key)!.push(particle);
   }
 
   getNearbyParticles(particle: Particle, radius: number): Particle[] {

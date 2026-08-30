@@ -9,7 +9,7 @@ interface ErrorPropsType {
 }
 
 /** Client-side error boundary. */
-const Error = ({ error, reset }: ErrorPropsType) => {
+const ErrorBoundary = ({ error, reset }: ErrorPropsType) => {
   useEffect(() => {
     console.error("Error boundary caught:", error);
   }, [error]);
@@ -35,4 +35,4 @@ const Error = ({ error, reset }: ErrorPropsType) => {
   );
 };
 
-export default Error;
+export default ErrorBoundary;

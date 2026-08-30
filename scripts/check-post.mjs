@@ -74,9 +74,7 @@ function getH2Sections(content) {
   const sections = [];
   const h2Regex = /^## .+$/gm;
   const positions = [];
-  let match;
-
-  while ((match = h2Regex.exec(content)) !== null) {
+  for (const match of content.matchAll(h2Regex)) {
     positions.push(match.index);
   }
 
@@ -259,7 +257,9 @@ results.push("\nANTI-AI");
 const contentLower = content.toLowerCase();
 const bannedFound = BANNED_WORDS.filter((word) => contentLower.includes(word.toLowerCase()));
 if (bannedFound.length > 0) {
-  bannedFound.forEach((word) => pushError(errors, `banned word found: "${word}"`));
+  for (const word of bannedFound) {
+    pushError(errors, `banned word found: "${word}"`);
+  }
 } else {
   pushOk(results, "no banned vocabulary");
 }
@@ -268,16 +268,22 @@ if (/\u2014/.test(content)) pushError(errors, "em dash found");
 else pushOk(results, "no em dashes");
 
 console.log(`\nChecking: ${filePath}\n${"-".repeat(50)}`);
-results.forEach((result) => console.log(result));
+for (const result of results) {
+  console.log(result);
+}
 
 if (warnings.length > 0) {
   console.log("");
-  warnings.forEach((warning) => console.log(warning));
+  for (const warning of warnings) {
+    console.log(warning);
+  }
 }
 
 if (errors.length > 0) {
   console.log("");
-  errors.forEach((error) => console.log(error));
+  for (const error of errors) {
+    console.log(error);
+  }
 }
 
 const passed = errors.length === 0;

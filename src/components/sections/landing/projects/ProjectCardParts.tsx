@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Check, Copy, ExternalLink, Github } from "lucide-react";
+import { ArrowUpRight, Check, Copy, ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import type { ProjectType } from "@/lib/types/components";
 
@@ -120,6 +121,13 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
             code
           </a>
         )}
+        <Link
+          className="group/link flex items-center gap-1 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
+          href={`/projects/${project.slug}`}
+        >
+          details
+          <ArrowUpRight className="h-3 w-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
+        </Link>
       </div>
     </div>
   </div>
