@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "@/components/Providers";
+import { JsonLd, personSchema, websiteSchema } from "@/lib/seo/json-ld";
 import type { RootLayoutPropsType } from "@/lib/types/layout";
 
 const spaceGrotesk = Space_Grotesk({
@@ -62,6 +63,13 @@ export const metadata: Metadata = {
   },
   authors: [{ name: "Abhishek Sharma", url: "https://abhisheksan.com" }],
   category: "personal",
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": [{ url: "/writing/feed.xml", title: "Abhishek Sharma — Writing" }],
+      "text/plain": [{ url: "/llms.txt", title: "Site index for agents" }],
+    },
+  },
   creator: "Abhishek Sharma",
   publisher: "Abhishek Sharma",
 };
@@ -71,6 +79,7 @@ const RootLayout = ({ children }: Readonly<RootLayoutPropsType>) => (
     <body
       className={`${spaceGrotesk.variable} ${geistMono.variable} ${basteleur.variable} antialiased`}
     >
+      <JsonLd schemas={[personSchema, websiteSchema]} />
       <Providers>
         {children}
         <Analytics />

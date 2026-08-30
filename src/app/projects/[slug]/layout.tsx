@@ -1,25 +1,16 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { projects } from "@/data/projects";
+import { breadcrumbSchema, JsonLd, projectSchema } from "@/lib/seo/json-ld";
+
+/** Every project is known at build time, so every project page is prerendered. */
+export function generateStaticParams() {
+  return projects.map((project) => ({ slug: project.slug }));
+}
 
 /**
- * Converts a URL-friendly slug into a human-readable, title-cased string.
- * For example, "my-cool-project" becomes "My Cool Project".
- *
- * @param {string} slug - The input string, typically from a URL parameter.
- * @returns {string} The formatted, title-cased string.
- */
-const slugToTitleCase = (slug: string): string => {
-  return slug
-    .replace(/-/g, " ")
-    .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
-};
-
-/**
- * Dynamically generates metadata for each project page based on its slug.
- * This function is called by Next.js at build time to create the page's <head> tags.
- *
- * @param {{ params: Promise<{ slug: string }> }} props - The props containing dynamic route parameters.
- * @returns {Promise<Metadata>} A metadata object tailored to the specific project page.
+ * Metadata for each project page, taken from src/data/projects.ts, which is the
+ * source of truth for project information.
  */
 export async function generateMetadata({
   params,
@@ -27,27 +18,56 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const formattedTitle = slugToTitleCase(slug);
+  const project = projects.find((entry) => entry.slug === slug);
+
+  if (!project) return { title: "Project | Abhishek Sharma" };
 
   return {
-    title: `${formattedTitle} | Abhishek Sharma`,
-    description: `A closer look at my project "${formattedTitle}" . What I built, the stack I used, and how it came together.`,
+    title: `${project.title} | Abhishek Sharma`,
+    description: project.longDescription ?? project.description,
+    keywords: project.tags,
+    alternates: { canonical: `/projects/${project.slug}` },
+    openGraph: {
+      title: project.title,
+      description: project.description,
+      type: "article",
+      url: `/projects/${project.slug}`,
+      images: [{ url: project.imageSrc, alt: project.title }],
+    },
   };
 }
 
 /**
- * Defines the layout for the dynamic [slug] project pages.
- *
- * This is a pass-through component that doesn't render any visible UI.
- * Its purpose is to associate the dynamic `generateMetadata` function
- * with this route segment.
- *
- * @param {{ children: ReactNode }} props - The component props.
- * @param {ReactNode} props.children - The page component to be rendered within this layout.
- * @returns {ReactNode} The rendered children.
+ * Attaches metadata and structured data to the dynamic project route. The page
+ * itself is a client component, so both belong here.
  */
-const DetailedProjectPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
-  return children;
+const DetailedProjectPageLayout = async ({
+  children,
+  params,
+}: {
+  children: ReactNode;
+  params: Promise<{ slug: string }>;
+}) => {
+  const { slug } = await params;
+  const project = projects.find((entry) => entry.slug === slug);
+
+  return (
+    <>
+      {project && (
+        <JsonLd
+          schemas={[
+            projectSchema(project),
+            breadcrumbSchema([
+              { name: "Home", path: "/" },
+              { name: "Projects", path: "/projects" },
+              { name: project.title, path: `/projects/${project.slug}` },
+            ]),
+          ]}
+        />
+      )}
+      {children}
+    </>
+  );
 };
 
 export default DetailedProjectPageLayout;

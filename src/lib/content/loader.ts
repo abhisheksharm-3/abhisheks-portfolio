@@ -1,9 +1,9 @@
 // Server-only — uses fs. Do not import from client components.
 import "server-only";
 import fs from "node:fs";
+import path from "node:path";
 import matter from "gray-matter";
 import { compileMDX } from "next-mdx-remote/rsc";
-import path from "node:path";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
@@ -92,4 +92,19 @@ export async function getPostBySlug(slug: string, opts?: { includeDrafts?: boole
   });
 
   return { slug, frontmatter, content: mdxContent };
+}
+
+/** Raw MDX source for a post, for the plain-text routes agents and feed readers fetch. */
+export async function getPostSource(slug: string) {
+  const filePath = getPostFilePath(slug);
+
+  if (!filePath || !fs.existsSync(filePath)) return null;
+
+  const source = fs.readFileSync(filePath, "utf-8");
+  const { data, content } = matter(source);
+  const frontmatter = PostFrontmatter.parse(data);
+
+  if (frontmatter.draft) return null;
+
+  return { slug, frontmatter, raw: content.trim() };
 }

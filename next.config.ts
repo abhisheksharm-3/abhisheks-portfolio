@@ -46,6 +46,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    // Agents conventionally append .md to a URL to get the source of a page.
+    return [{ source: "/writing/:slug.md", destination: "/api/md/:slug" }];
+  },
   async headers() {
     return [
       {

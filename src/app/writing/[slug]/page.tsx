@@ -7,6 +7,8 @@ import { notFound } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { PostCta } from "@/components/writing/PostCta";
 import { getAllPosts, getPostBySlug } from "@/lib/content/loader";
+import { breadcrumbSchema, JsonLd } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/site";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -48,10 +50,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-function serializeJsonLd(data: object): string {
-  return JSON.stringify(data).replace(/</g, "\\u003c").replace(/>/g, "\\u003e");
-}
-
 function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
   if (!post) return null;
   const { frontmatter, slug } = post;
@@ -63,18 +61,10 @@ function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
     description: frontmatter.subhead,
     datePublished: frontmatter.date,
     dateModified: frontmatter.updatedAt ?? frontmatter.date,
-    author: {
-      "@type": "Person",
-      name: "Abhishek Sharma",
-      url: "https://abhisheksan.com",
-    },
-    publisher: {
-      "@type": "Person",
-      name: "Abhishek Sharma",
-      url: "https://abhisheksan.com",
-    },
+    author: { "@id": `${SITE_URL}/#person` },
+    publisher: { "@id": `${SITE_URL}/#person` },
     keywords: frontmatter.keywords.join(", "),
-    url: `https://abhisheksan.com/writing/${slug}`,
+    url: `${SITE_URL}/writing/${slug}`,
   };
 
   const faqSchema = frontmatter.faqs
@@ -89,7 +79,13 @@ function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
       }
     : null;
 
-  return { articleSchema, faqSchema };
+  const breadcrumbs = breadcrumbSchema([
+    { name: "Home", path: "/" },
+    { name: "Writing", path: "/writing" },
+    { name: frontmatter.title, path: `/writing/${slug}` },
+  ]);
+
+  return { articleSchema, faqSchema, breadcrumbs };
 }
 
 export default async function PostPage({ params }: Props) {
@@ -110,18 +106,13 @@ export default async function PostPage({ params }: Props) {
   return (
     <AppShell showBackground={false}>
       {schemas && (
-        <>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: serializeJsonLd(schemas.articleSchema) }}
-          />
-          {schemas.faqSchema && (
-            <script
-              type="application/ld+json"
-              dangerouslySetInnerHTML={{ __html: serializeJsonLd(schemas.faqSchema) }}
-            />
-          )}
-        </>
+        <JsonLd
+          schemas={[
+            schemas.articleSchema,
+            schemas.breadcrumbs,
+            ...(schemas.faqSchema ? [schemas.faqSchema] : []),
+          ]}
+        />
       )}
 
       <div className="pt-36 pb-24 px-6 sm:px-10 lg:px-24">

@@ -1,7 +1,7 @@
 import fs from "node:fs";
-import matter from "gray-matter";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import matter from "gray-matter";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");

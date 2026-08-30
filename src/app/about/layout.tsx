@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { breadcrumbSchema, JsonLd, personSchema } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/site";
 
 /**
  * Metadata for the /about page and its nested routes.
@@ -22,6 +24,26 @@ export const metadata: Metadata = {
  * @param {ReactNode} props.children - The child components to be rendered within this layout.
  * @returns {ReactNode} The rendered child components.
  */
-const AboutPageLayout = ({ children }: { children: ReactNode }) => children;
+const profilePageSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  url: `${SITE_URL}/about`,
+  mainEntity: personSchema,
+};
+
+const AboutPageLayout = ({ children }: { children: ReactNode }) => (
+  <>
+    <JsonLd
+      schemas={[
+        profilePageSchema,
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "About", path: "/about" },
+        ]),
+      ]}
+    />
+    {children}
+  </>
+);
 
 export default AboutPageLayout;
