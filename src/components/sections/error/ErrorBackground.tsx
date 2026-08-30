@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useTransform, MotionValue } from "framer-motion";
+import { type MotionValue, motion, useTransform } from "framer-motion";
 
 interface MouseParallaxPropsType {
   mouseX: MotionValue<number>;
@@ -151,10 +151,7 @@ const AsymmetricalDecoration = ({ mouseX, mouseY }: MouseParallaxPropsType) => {
   const y = useTransform(mouseY, (val) => val * 0.04);
 
   return (
-    <motion.div
-      className="absolute top-[12%] right-[22%] hidden md:block"
-      style={{ x, y }}
-    >
+    <motion.div className="absolute top-[12%] right-[22%] hidden md:block" style={{ x, y }}>
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

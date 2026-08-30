@@ -1,8 +1,8 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { MonitorIcon, MoonIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, MonitorIcon } from "lucide-react";
+import { useSyncExternalStore } from "react";
 
 const THEMES = ["system", "light", "dark"] as const;
 type ThemeType = (typeof THEMES)[number];
@@ -20,7 +20,7 @@ export const ModeToggle = () => {
   const isMounted = useSyncExternalStore(
     subscribe,
     () => true,
-    () => false
+    () => false,
   );
 
   const cycle = () => {

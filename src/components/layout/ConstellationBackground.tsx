@@ -1,14 +1,15 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
-import { Particle } from "@/lib/canvas/particle";
+import type React from "react";
+import { useEffect, useRef, useState } from "react";
 import { drawConnections, drawGridSystem } from "@/lib/canvas/draw-helpers";
+import { Particle } from "@/lib/canvas/particle";
 import type { PositionType, WindowSizeType } from "@/lib/types/canvas";
+import { ColorBlobs } from "./background/ColorBlobs";
+import { InteractiveElement } from "./background/InteractiveElement";
+import { LightBeams } from "./background/LightBeams";
 import { NoiseTexture } from "./background/NoiseTexture";
 import { ScanLines } from "./background/ScanLines";
-import { InteractiveElement } from "./background/InteractiveElement";
-import { ColorBlobs } from "./background/ColorBlobs";
-import { LightBeams } from "./background/LightBeams";
 
 const HOVER_TIMEOUT_MS = 2000;
 
@@ -74,12 +75,12 @@ export const ConstellationBackground: React.FC = () => {
 
     const particleCount = Math.min(
       Math.max((windowSize.width * windowSize.height) / 22000, 12),
-      35
+      35,
     );
     const connectionDistance = Math.min(windowSize.width, windowSize.height) / 6;
     const particles = Array.from(
       { length: particleCount },
-      () => new Particle(windowSize.width, windowSize.height)
+      () => new Particle(windowSize.width, windowSize.height),
     );
 
     let animationFrameId: number;
@@ -103,7 +104,7 @@ export const ConstellationBackground: React.FC = () => {
         windowSize.height,
         scrollYRef.current,
         mousePosition,
-        timestamp
+        timestamp,
       );
 
       animationFrameId = requestAnimationFrame(animate);

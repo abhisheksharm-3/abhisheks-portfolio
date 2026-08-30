@@ -11,10 +11,7 @@ import type { ReactNode } from "react";
 const slugToTitleCase = (slug: string): string => {
   return slug
     .replace(/-/g, " ")
-    .replace(
-      /\w\S*/g,
-      (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase(),
-    );
+    .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase());
 };
 
 /**
@@ -49,11 +46,7 @@ export async function generateMetadata({
  * @param {ReactNode} props.children - The page component to be rendered within this layout.
  * @returns {ReactNode} The rendered children.
  */
-const DetailedProjectPageLayout = ({
-  children,
-}: {
-  children: ReactNode;
-}): ReactNode => {
+const DetailedProjectPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
   return children;
 };
 

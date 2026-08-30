@@ -1,15 +1,15 @@
 "use client";
 
-import { useState } from "react";
 import { motion } from "framer-motion";
-import { notFound } from "next/navigation";
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
-import { projects } from "@/data/projects";
 import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
+import { projects } from "@/data/projects";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { RunDiagram } from "./RunDiagram";
 
@@ -143,10 +143,9 @@ const PolarisPage = () => {
 /plugin install polaris`}
               </pre>
               <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
-                Then run <span className="font-mono text-xs">/init</span> once
-                at a project root. The interview asks how the standard should
-                apply here and writes a config every agent and hook reads, so
-                one engine enforces a different profile per project.
+                Then run <span className="font-mono text-xs">/init</span> once at a project root.
+                The interview asks how the standard should apply here and writes a config every
+                agent and hook reads, so one engine enforces a different profile per project.
               </p>
             </div>
           </div>
@@ -165,15 +164,13 @@ const PolarisPage = () => {
                 <span className="float-left mr-3 mt-2 font-serif text-[4.5rem] leading-[0.7] text-foreground">
                   A
                 </span>
-                n agent left alone drifts two ways. It over-builds, writing
-                fifty lines where one would do. And it writes prose full of the
-                tells that mark it as machine-generated.
+                n agent left alone drifts two ways. It over-builds, writing fifty lines where one
+                would do. And it writes prose full of the tells that mark it as machine-generated.
               </p>
               <p className="mt-8 max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
-                Polaris fixes both with one standard and the machinery to
-                enforce it. A gate runs a deterministic pass plus a judgment
-                pass and reports pass or fail with file and line. Agents call it
-                before they are allowed to say they are done.
+                Polaris fixes both with one standard and the machinery to enforce it. A gate runs a
+                deterministic pass plus a judgment pass and reports pass or fail with file and line.
+                Agents call it before they are allowed to say they are done.
               </p>
             </div>
           </div>
@@ -191,9 +188,8 @@ const PolarisPage = () => {
                 You never type <span className="italic">a flow name</span>
               </h2>
               <p className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
-                Describe the work. A hook classifies it, opens a run, and says
-                which flow it chose. Pick one below to redraw the phases it
-                runs.
+                Describe the work. A hook classifies it, opens a run, and says which flow it chose.
+                Pick one below to redraw the phases it runs.
               </p>
             </div>
           </div>

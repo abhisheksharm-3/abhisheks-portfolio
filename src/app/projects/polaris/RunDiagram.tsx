@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
 import { useTheme } from "next-themes";
+import { useEffect, useId, useRef, useState } from "react";
 
 /** Foreground ink for each theme, matching the site's neutral. */
 const INK = {
@@ -16,10 +16,7 @@ const INK = {
  */
 const buildDefinition = (phases: string[]) => {
   const nodes = phases
-    .map(
-      (phase, index) =>
-        `  P${index}["${String(index + 1).padStart(2, "0")}  ${phase}"]`,
-    )
+    .map((phase, index) => `  P${index}["${String(index + 1).padStart(2, "0")}  ${phase}"]`)
     .join("\n");
 
   const links = phases
@@ -46,13 +43,7 @@ ${links}
  * Renders the run architecture with mermaid. The library is imported inside the
  * effect so it only loads on this route.
  */
-export const RunDiagram = ({
-  flowName,
-  phases,
-}: {
-  flowName: string;
-  phases: string[];
-}) => {
+export const RunDiagram = ({ flowName, phases }: { flowName: string; phases: string[] }) => {
   const container = useRef<HTMLDivElement>(null);
   const reactId = useId().replace(/[^a-zA-Z0-9]/g, "");
   const { resolvedTheme } = useTheme();
@@ -121,9 +112,7 @@ export const RunDiagram = ({
 
   if (phases.length === 0) {
     return (
-      <p className="font-serif text-2xl italic text-foreground/45">
-        a question routes nowhere.
-      </p>
+      <p className="font-serif text-2xl italic text-foreground/45">a question routes nowhere.</p>
     );
   }
 

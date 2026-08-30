@@ -1,15 +1,15 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { ArrowUpRight } from "lucide-react"
-import { PageHeader } from "@/components/shared/PageHeader"
-import type { PostMeta } from "@/lib/content/loader"
+import { motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { PageHeader } from "@/components/shared/PageHeader";
+import type { PostMeta } from "@/lib/content/loader";
 
 type WritingListPropsType = {
-  posts: PostMeta[]
-  draftPosts: PostMeta[]
-}
+  posts: PostMeta[];
+  draftPosts: PostMeta[];
+};
 
 export function WritingList({ posts, draftPosts }: WritingListPropsType) {
   return (
@@ -155,5 +155,5 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }

@@ -1,14 +1,11 @@
 "use client";
 
-import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import {
-  PhilosophyQuote,
-  PhilosophyPrinciples,
-} from "./DevPhilosophyComponents";
-import { SharedBackground } from "@/components/shared/SharedBackground";
+import { useRef } from "react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { SharedBackground } from "@/components/shared/SharedBackground";
 import { getSectionClasses } from "@/lib/config/spacing-standards";
+import { PhilosophyPrinciples, PhilosophyQuote } from "./DevPhilosophyComponents";
 
 /**
  * The main component for the Philosophy section.
@@ -20,14 +17,9 @@ export const Philosophy = () => {
 
   return (
     <section ref={sectionRef} className={getSectionClasses()}>
-      <SharedBackground
-        isInView={isInView}
-        noiseFilterId="philosophyNoiseFilter"
-      />
+      <SharedBackground isInView={isInView} noiseFilterId="philosophyNoiseFilter" />
 
-      <div
-        className="relative z-10 w-full"
-      >
+      <div className="relative z-10 w-full">
         <SectionHeader subtitle="how i think about dev" isInView={isInView}>
           <span className="font-serif text-foreground select-none pr-4">
             not a manifesto, just how i build

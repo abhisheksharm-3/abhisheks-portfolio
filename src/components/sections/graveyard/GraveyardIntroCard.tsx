@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -19,26 +19,21 @@ const itemVariants: Variants = {
  */
 export const GraveyardIntroCard = () => {
   return (
-    <motion.div
-      variants={containerVariants}
-      className="mb-16 max-w-2xl"
-    >
+    <motion.div variants={containerVariants} className="mb-16 max-w-2xl">
       <motion.p
         variants={itemVariants}
         className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-5"
       >
-        every dev&apos;s got a trail of dead projects. mine crashed in all kinds
-        of ways. some broke on tech, some got boring, some fizzled out when
-        i stopped caring.
+        every dev&apos;s got a trail of dead projects. mine crashed in all kinds of ways. some broke
+        on tech, some got boring, some fizzled out when i stopped caring.
       </motion.p>
 
       <motion.p
         variants={itemVariants}
         className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8"
       >
-        none of this was a waste. shipping or not, these projects sharpened me.
-        so this is me giving them a grave. not to mourn them, but to mark what
-        they taught me before they died.
+        none of this was a waste. shipping or not, these projects sharpened me. so this is me giving
+        them a grave. not to mourn them, but to mark what they taught me before they died.
       </motion.p>
 
       <motion.div variants={itemVariants} className="h-px bg-primary/10" />
@@ -47,8 +42,8 @@ export const GraveyardIntroCard = () => {
         variants={itemVariants}
         className="mt-4 text-xs text-foreground/30 font-light leading-relaxed"
       >
-        these projects are abandoned and unmaintained. some links may be broken,
-        features may not work, and databases may be empty.
+        these projects are abandoned and unmaintained. some links may be broken, features may not
+        work, and databases may be empty.
       </motion.p>
     </motion.div>
   );

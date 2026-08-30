@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 /**
  * Renders a simple editorial call-to-action for viewing projects.

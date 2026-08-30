@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import Link from "next/link";
 
 /**
  * ProjectsCTA - Editorial call-to-action for the projects section.
@@ -27,8 +27,8 @@ export const ProjectsCTA = () => {
             have a project in mind?
           </h3>
           <p className="text-foreground/50 text-sm font-light leading-relaxed mt-3 max-w-md">
-            i&apos;m open to new projects, creative ideas, and interesting
-            problems. if you have something in mind, just reach out.
+            i&apos;m open to new projects, creative ideas, and interesting problems. if you have
+            something in mind, just reach out.
           </p>
         </div>
 

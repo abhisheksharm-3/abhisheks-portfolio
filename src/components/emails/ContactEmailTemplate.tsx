@@ -1,19 +1,19 @@
-import { ContactEmailPropsType } from "@/lib/types/components";
 import {
   Body,
-  Container,
-  Head,
-  Html,
-  Preview,
-  Text,
-  Section,
-  Row,
   Column,
-  Link,
+  Container,
   Font,
+  Head,
   Hr,
+  Html,
+  Link,
+  Preview,
+  Row,
+  Section,
+  Text,
 } from "@react-email/components";
 import * as React from "react";
+import type { ContactEmailPropsType } from "@/lib/types/components";
 
 /**
  * Design tokens for the email template.
@@ -150,8 +150,8 @@ export const ContactEmailTemplate = ({
           <Section style={styles.content}>
             <Text style={styles.title}>New Portfolio Message</Text>
             <Text style={styles.paragraph}>
-              A new message was submitted via your portfolio&apos;s contact
-              form. Here are the details:
+              A new message was submitted via your portfolio&apos;s contact form. Here are the
+              details:
             </Text>
 
             {details.map(({ label, value }) => (
@@ -162,15 +162,11 @@ export const ContactEmailTemplate = ({
             ))}
 
             <Section style={styles.messageBox}>
-              <Text style={{ ...styles.tableValue, whiteSpace: "pre-line" }}>
-                {message}
-              </Text>
+              <Text style={{ ...styles.tableValue, whiteSpace: "pre-line" }}>{message}</Text>
             </Section>
 
             <Hr style={styles.hr} />
-            <Text style={styles.footerText}>
-              This message was sent from abhisheksan.com
-            </Text>
+            <Text style={styles.footerText}>This message was sent from abhisheksan.com</Text>
             <Text style={styles.footerMetaText}>User Agent: {userAgent}</Text>
           </Section>
         </Container>

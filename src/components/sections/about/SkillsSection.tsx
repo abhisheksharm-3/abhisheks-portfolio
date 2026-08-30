@@ -1,11 +1,8 @@
 "use client";
 
-import { EXPERTISE } from "@/data/skills-expertise";
 import { motion } from "framer-motion";
-import {
-  STAGGER_CONTAINER_VARIANTS,
-  STAGGER_ITEM_VARIANTS,
-} from "@/lib/config/page-animations";
+import { EXPERTISE } from "@/data/skills-expertise";
+import { STAGGER_CONTAINER_VARIANTS, STAGGER_ITEM_VARIANTS } from "@/lib/config/page-animations";
 
 /**
  * Renders technical skills as a clean typographic grid, animated on entry.
@@ -16,9 +13,7 @@ export const SkillsSection = () => {
       <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
         technical skills
       </p>
-      <h3 className="text-2xl font-serif text-foreground mb-8">
-        What I work with
-      </h3>
+      <h3 className="text-2xl font-serif text-foreground mb-8">What I work with</h3>
       <div className="h-px bg-primary/10 mb-10" />
 
       <motion.div
@@ -38,10 +33,7 @@ export const SkillsSection = () => {
             </div>
             <div className="flex flex-wrap gap-x-3 gap-y-1.5">
               {category.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="text-sm text-foreground/60 font-light"
-                >
+                <span key={skill} className="text-sm text-foreground/60 font-light">
                   {skill}
                 </span>
               ))}

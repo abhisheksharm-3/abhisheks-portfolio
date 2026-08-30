@@ -1,4 +1,4 @@
-import { NavigationItemType } from "@/lib/types/components";
+import type { NavigationItemType } from "@/lib/types/components";
 
 /**
  * Centralized navigation configuration

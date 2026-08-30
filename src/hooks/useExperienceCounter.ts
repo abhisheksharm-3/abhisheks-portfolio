@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { HERO_ANIMATIONS as ANIMATION_CONFIG } from "@/data/animations";
-import { useState, useEffect } from "react";
 
 /**
  * A custom React hook that animates a counter from "00" up to a target value.

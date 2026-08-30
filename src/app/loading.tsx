@@ -1,8 +1,8 @@
 "use client";
 
 import { motion, useMotionValue } from "framer-motion";
-import { AppShell } from "@/components/layout/AppShell";
 import { useEffect, useRef } from "react";
+import { AppShell } from "@/components/layout/AppShell";
 import { LoadingBackground } from "@/components/sections/loading/LoadingBackground";
 
 /**

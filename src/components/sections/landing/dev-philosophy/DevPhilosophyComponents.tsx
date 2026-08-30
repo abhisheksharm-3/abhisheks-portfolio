@@ -38,8 +38,8 @@ export const PhilosophyQuote = ({ isInView }: InViewPropsType) => (
   >
     <div className="lg:w-1/2">
       <blockquote className="text-2xl sm:text-3xl font-serif text-foreground leading-snug mb-6">
-        i don&apos;t worship perfect code. i care about code that ships, scales,
-        and actually makes life easier.
+        i don&apos;t worship perfect code. i care about code that ships, scales, and actually makes
+        life easier.
       </blockquote>
       <p className="text-sm font-light text-foreground/55 italic">
         clever code feeds your ego. simple code lets you sleep at night.
@@ -49,17 +49,12 @@ export const PhilosophyQuote = ({ isInView }: InViewPropsType) => (
     <div className="lg:w-1/2 lg:pt-2">
       <p className="text-foreground/60 text-base font-light leading-relaxed">
         building for me is about{" "}
-        <span className="text-foreground font-medium">clarity and momentum</span>
-        . i like making stuff that&apos;s lightweight, scales when it needs to,
-        and actually solves problems. could be an{" "}
-        <span className="text-foreground/80">ai agent</span> digging through
-        messy pdfs, or a minimal{" "}
-        <span className="text-foreground/80">android app</span> that just gets
-        out of your way. my approach:{" "}
-        <span className="font-medium italic">
-          start scrappy, ship fast, keep tweaking
-        </span>
-        .
+        <span className="text-foreground font-medium">clarity and momentum</span>. i like making
+        stuff that&apos;s lightweight, scales when it needs to, and actually solves problems. could
+        be an <span className="text-foreground/80">ai agent</span> digging through messy pdfs, or a
+        minimal <span className="text-foreground/80">android app</span> that just gets out of your
+        way. my approach:{" "}
+        <span className="font-medium italic">start scrappy, ship fast, keep tweaking</span>.
       </p>
     </div>
   </motion.div>

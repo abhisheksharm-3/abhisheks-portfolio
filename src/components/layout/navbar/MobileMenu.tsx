@@ -1,12 +1,12 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { MobileMenuPropsType } from "@/lib/types/components";
-import { MobileNavLink } from "./MobileNavLink";
-import { Logo } from "./Logo";
 import { ArrowRight, X } from "lucide-react";
 import Link from "next/link";
 import { ModeToggle } from "@/components/ModeToggle";
+import type { MobileMenuPropsType } from "@/lib/types/components";
+import { Logo } from "./Logo";
+import { MobileNavLink } from "./MobileNavLink";
 
 export const MobileMenu: React.FC<MobileMenuPropsType> = ({
   onClose,
@@ -49,11 +49,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.05 + index * 0.05, duration: 0.3, ease: "easeOut" }}
           >
-            <MobileNavLink
-              item={item}
-              isActive={item.name === activeItem}
-              onClick={onClose}
-            />
+            <MobileNavLink item={item} isActive={item.name === activeItem} onClick={onClose} />
           </motion.div>
         ))}
       </nav>

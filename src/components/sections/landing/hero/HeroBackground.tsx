@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useTransform, MotionValue } from "framer-motion";
+import { type MotionValue, motion, useTransform } from "framer-motion";
 
 // This would typically be in a shared config file
 const ANIMATION_CONFIG = {
@@ -195,14 +195,8 @@ export const AsymmetricalDecoration: React.FC<{
   mouseX: MotionValue<number>;
   mouseY: MotionValue<number>;
 }> = ({ mouseX, mouseY }) => {
-  const x = useTransform(
-    mouseX,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL,
-  );
-  const y = useTransform(
-    mouseY,
-    (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL,
-  );
+  const x = useTransform(mouseX, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL);
+  const y = useTransform(mouseY, (val) => val * ANIMATION_CONFIG.MOUSE_PARALLAX_MULTIPLIER.SMALL);
 
   return (
     <motion.div

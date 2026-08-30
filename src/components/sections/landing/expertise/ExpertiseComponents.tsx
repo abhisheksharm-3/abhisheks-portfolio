@@ -1,10 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { ExpertiseType } from "@/lib/types/components";
+import Link from "next/link";
 import { SKILLS_ANIMATIONS } from "@/data/animations";
+import type { ExpertiseType } from "@/lib/types/components";
 
 interface SkillRowPropsType {
   service: ExpertiseType;
@@ -25,10 +25,7 @@ interface SecondarySkillsGridPropsType {
  * Renders a single expertise row in the editorial list.
  */
 const SkillRow = ({ service, index }: SkillRowPropsType) => (
-  <motion.div
-    variants={SKILLS_ANIMATIONS.item}
-    className="group"
-  >
+  <motion.div variants={SKILLS_ANIMATIONS.item} className="group">
     <div className="flex flex-col sm:flex-row sm:items-start gap-4 sm:gap-8 py-7">
       {/* Index + title column */}
       <div className="flex items-baseline gap-4 sm:w-2/5">
@@ -52,10 +49,7 @@ const SkillRow = ({ service, index }: SkillRowPropsType) => (
         </span>
         <div className="flex flex-wrap gap-1.5 sm:justify-end">
           {service.skills.slice(0, 3).map((skill) => (
-            <span
-              key={skill}
-              className="text-[11px] text-foreground/50 font-light"
-            >
+            <span key={skill} className="text-[11px] text-foreground/50 font-light">
               {skill}
             </span>
           ))}
@@ -96,10 +90,9 @@ export const FeaturedSkillsSection = ({
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
           className="text-foreground/55 text-sm font-light leading-relaxed mb-6"
         >
-          i keep it simple: start small, ship fast, tweak along the way. could
-          be spinning up an ai bot in a weekend or rolling out a backend that
-          just scales. i move quick, but never forget the details that make
-          things actually usable.
+          i keep it simple: start small, ship fast, tweak along the way. could be spinning up an ai
+          bot in a weekend or rolling out a backend that just scales. i move quick, but never forget
+          the details that make things actually usable.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -164,11 +157,7 @@ export const SecondarySkillsGrid = ({
       className="grid grid-cols-1 sm:grid-cols-3 gap-0"
     >
       {additionalServices.map((service, index) => (
-        <motion.div
-          key={service.title}
-          variants={SKILLS_ANIMATIONS.item}
-          className="group"
-        >
+        <motion.div key={service.title} variants={SKILLS_ANIMATIONS.item} className="group">
           <div
             className={`py-6 pr-8 ${index < additionalServices.length - 1 ? "sm:border-r border-primary/10" : ""} ${index > 0 ? "sm:pl-8" : ""}`}
           >
@@ -185,10 +174,7 @@ export const SecondarySkillsGrid = ({
             </p>
             <div className="flex flex-wrap gap-2">
               {service.skills.map((skill) => (
-                <span
-                  key={skill}
-                  className="text-[11px] text-foreground/40 font-light"
-                >
+                <span key={skill} className="text-[11px] text-foreground/40 font-light">
                   {skill}
                 </span>
               ))}

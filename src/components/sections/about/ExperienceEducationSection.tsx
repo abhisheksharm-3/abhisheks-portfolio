@@ -1,6 +1,6 @@
-import { EDUCATION_DATA, EXPERIENCE_DATA } from "@/data/about";
-import { TimelineCardPropsType } from "@/lib/types/components";
 import { Briefcase, GraduationCap } from "lucide-react";
+import { EDUCATION_DATA, EXPERIENCE_DATA } from "@/data/about";
+import type { TimelineCardPropsType } from "@/lib/types/components";
 
 /**
  * A reusable editorial timeline for displaying a list of experience or education events.
@@ -9,9 +9,7 @@ export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
   <div>
     <div className="flex items-center gap-3 mb-8">
       <Icon className="h-4 w-4 text-primary/40" strokeWidth={1.5} />
-      <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
-        {title}
-      </p>
+      <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">{title}</p>
     </div>
 
     <div className="relative">
@@ -24,9 +22,7 @@ export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
             {/* Timeline dot */}
             <div className="absolute left-0 top-[6px] w-1.5 h-1.5 rounded-full bg-primary/25" />
 
-            <h4 className="text-base font-medium text-foreground/85 leading-snug">
-              {item.title}
-            </h4>
+            <h4 className="text-base font-medium text-foreground/85 leading-snug">{item.title}</h4>
             <div className="flex flex-wrap items-center gap-x-2 text-xs text-foreground/45 mt-1 mb-2 font-light">
               <span>{item.subtitle}</span>
               <span className="text-primary/20">·</span>
@@ -38,10 +34,7 @@ export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
             {item.badges && (
               <div className="flex flex-wrap gap-2 mt-3">
                 {item.badges.map((badge) => (
-                  <span
-                    key={badge.label}
-                    className="text-[11px] text-primary/50 font-light"
-                  >
+                  <span key={badge.label} className="text-[11px] text-primary/50 font-light">
                     {badge.label}: {badge.value}
                   </span>
                 ))}
@@ -60,16 +53,8 @@ export const TimelineCard = ({ title, Icon, items }: TimelineCardPropsType) => (
 export const ExperienceEducationSection = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-      <TimelineCard
-        title="Experience"
-        Icon={Briefcase}
-        items={EXPERIENCE_DATA}
-      />
-      <TimelineCard
-        title="Education"
-        Icon={GraduationCap}
-        items={EDUCATION_DATA}
-      />
+      <TimelineCard title="Experience" Icon={Briefcase} items={EXPERIENCE_DATA} />
+      <TimelineCard title="Education" Icon={GraduationCap} items={EDUCATION_DATA} />
     </div>
   );
 };

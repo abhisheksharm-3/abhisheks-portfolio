@@ -7,8 +7,7 @@ import type { ReactNode } from "react";
  */
 export const metadata: Metadata = {
   title: "Contact | Abhishek Sharma",
-  description:
-    "Get in touch with me for collaborations, project ideas, or just to say hi.",
+  description: "Get in touch with me for collaborations, project ideas, or just to say hi.",
 };
 
 /**

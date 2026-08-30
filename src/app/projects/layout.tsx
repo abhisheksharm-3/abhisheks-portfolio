@@ -7,8 +7,7 @@ import type { ReactNode } from "react";
  */
 export const metadata: Metadata = {
   title: "Projects | Abhishek Sharma",
-  description:
-    "Projects I’ve built: web apps, android apps, AI tools, and a hackathon win.",
+  description: "Projects I’ve built: web apps, android apps, AI tools, and a hackathon win.",
 };
 
 /**
@@ -22,11 +21,7 @@ export const metadata: Metadata = {
  * @param {ReactNode} props.children - The child pages or components to render.
  * @returns {ReactNode} The rendered children.
  */
-const ProjectsPageLayout = ({
-  children,
-}: {
-  children: ReactNode;
-}): ReactNode => {
+const ProjectsPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
   return children;
 };
 

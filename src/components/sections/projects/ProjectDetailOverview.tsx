@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ProjectType } from "@/lib/types/components";
+import type { ProjectType } from "@/lib/types/components";
 
 /**
  * Renders the overview text section for a project detail page.

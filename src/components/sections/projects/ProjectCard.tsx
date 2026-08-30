@@ -6,107 +6,102 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import type { ProjectCardPropsType } from "@/lib/types/components";
 
-export const ProjectCard = ({
-  project,
-  priority = false,
-}: ProjectCardPropsType) => {
+export const ProjectCard = ({ project, priority = false }: ProjectCardPropsType) => {
   return (
     <div className="group h-full">
       <Card className="h-full rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent hover:border-foreground/15 focus-within:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
-      <div className="relative w-full h-44 overflow-hidden shrink-0">
-        <Image
-          src={project.imageSrc}
-          alt={project.title}
-          fill
-          className="object-cover grayscale brightness-90 transition-[transform,filter] duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          priority={priority}
-          loading={priority ? undefined : "lazy"}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+        <div className="relative w-full h-44 overflow-hidden shrink-0">
+          <Image
+            src={project.imageSrc}
+            alt={project.title}
+            fill
+            className="object-cover grayscale brightness-90 transition-[transform,filter] duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            priority={priority}
+            loading={priority ? undefined : "lazy"}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
-        <span className="absolute top-3 right-3 text-[10px] font-mono text-white/45">
-          {project.year}
-        </span>
+          <span className="absolute top-3 right-3 text-[10px] font-mono text-white/45">
+            {project.year}
+          </span>
 
-        <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-          {project.tags.slice(0, 3).map((tag: string) => (
-            <span
-              key={tag}
-              className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/65 text-[10px] font-light"
-            >
-              {tag}
-            </span>
-          ))}
-          {project.tags.length > 3 && (
-            <span className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/40 text-[10px] font-light">
-              +{project.tags.length - 3}
-            </span>
-          )}
-        </div>
-      </div>
-
-      <div className="p-5 flex flex-col flex-1">
-        <h3 className="text-lg font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-200 mb-1.5">
-          {project.title}
-        </h3>
-
-        <p className="text-foreground/55 text-sm font-light leading-relaxed mb-4 line-clamp-2 flex-1">
-          {project.description}
-        </p>
-
-        {(project.role || project.duration) && (
-          <div className="flex flex-wrap gap-x-4 mb-4">
-            {project.role && (
-              <span className="text-xs text-foreground/35 font-light">
-                <span className="mr-1 text-primary/35">role</span>
-                {project.role}
+          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+            {project.tags.slice(0, 3).map((tag: string) => (
+              <span
+                key={tag}
+                className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/65 text-[10px] font-light"
+              >
+                {tag}
               </span>
-            )}
-            {project.duration && (
-              <span className="text-xs text-foreground/35 font-light">
-                <span className="mr-1 text-primary/35">time</span>
-                {project.duration}
+            ))}
+            {project.tags.length > 3 && (
+              <span className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/40 text-[10px] font-light">
+                +{project.tags.length - 3}
               </span>
             )}
           </div>
-        )}
-
-        <div className="flex items-center gap-3 pt-3 border-t border-foreground/8">
-          {project.url && (
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
-            >
-              <ExternalLink className="h-3 w-3" />
-              live
-            </a>
-          )}
-          {project.url && project.github && (
-            <div className="w-px h-3 bg-foreground/8" />
-          )}
-          {project.github && (
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
-            >
-              <Github className="h-3 w-3" />
-              code
-            </a>
-          )}
-          <Link
-            href={`/projects/${project.slug}`}
-            className="flex items-center gap-1 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200 ml-auto group/link"
-          >
-            details
-            <ArrowUpRight className="h-3 w-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
-          </Link>
         </div>
-      </div>
+
+        <div className="p-5 flex flex-col flex-1">
+          <h3 className="text-lg font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-200 mb-1.5">
+            {project.title}
+          </h3>
+
+          <p className="text-foreground/55 text-sm font-light leading-relaxed mb-4 line-clamp-2 flex-1">
+            {project.description}
+          </p>
+
+          {(project.role || project.duration) && (
+            <div className="flex flex-wrap gap-x-4 mb-4">
+              {project.role && (
+                <span className="text-xs text-foreground/35 font-light">
+                  <span className="mr-1 text-primary/35">role</span>
+                  {project.role}
+                </span>
+              )}
+              {project.duration && (
+                <span className="text-xs text-foreground/35 font-light">
+                  <span className="mr-1 text-primary/35">time</span>
+                  {project.duration}
+                </span>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center gap-3 pt-3 border-t border-foreground/8">
+            {project.url && (
+              <a
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
+              >
+                <ExternalLink className="h-3 w-3" />
+                live
+              </a>
+            )}
+            {project.url && project.github && <div className="w-px h-3 bg-foreground/8" />}
+            {project.github && (
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
+              >
+                <Github className="h-3 w-3" />
+                code
+              </a>
+            )}
+            <Link
+              href={`/projects/${project.slug}`}
+              className="flex items-center gap-1 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200 ml-auto group/link"
+            >
+              details
+              <ArrowUpRight className="h-3 w-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />
+            </Link>
+          </div>
+        </div>
       </Card>
     </div>
   );

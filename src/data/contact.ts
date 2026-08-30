@@ -1,5 +1,5 @@
-import { Mail, Github, Linkedin, Instagram } from "lucide-react";
 import { RiGithubFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
+import { Github, Instagram, Linkedin, Mail } from "lucide-react";
 import z from "zod";
 
 /**

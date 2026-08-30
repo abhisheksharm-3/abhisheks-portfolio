@@ -1,4 +1,4 @@
-import { ProjectType } from "@/lib/types/components";
+import type { ProjectType } from "@/lib/types/components";
 
 /**
  * Array of all projects containing information about each project.
@@ -142,8 +142,7 @@ export const projects: ProjectType[] = [
     title: "Nahmachine",
     slug: "nahmachine",
     description: "a site that helps you say 'no'.",
-    longDescription:
-      "built for fun: get a witty way to decline. a cheeky, quick next.js project.",
+    longDescription: "built for fun: get a witty way to decline. a cheeky, quick next.js project.",
     imageSrc: "/images/projects/nahmachine.png",
     tags: ["NextJs", "TypeScript", "TailwindCSS"],
     year: "2025",
@@ -417,10 +416,8 @@ export const deadProjects: DeadProjectType[] = [
   {
     title: "WebList",
     description: "all-in-one toolkit hub that never launched.",
-    reason:
-      'didn\'t buy domain in time and misjudged how long "tiny" projects actually take',
-    lessons:
-      "secure domains first, scope properly, everything eats more time than you think.",
+    reason: 'didn\'t buy domain in time and misjudged how long "tiny" projects actually take',
+    lessons: "secure domains first, scope properly, everything eats more time than you think.",
     progress: "35%",
     technologies: ["Next.js", "Appwrite", "TailwindCSS"],
     year: "2025",
@@ -456,8 +453,7 @@ export const deadProjects: DeadProjectType[] = [
     year: "2023",
     duration: "September 2023 - November 2023",
     imageSrc: "/images/graveyard/triptalkies.png",
-    epitaph:
-      "triptalkies: trip ended before the journey even started. sep–nov 2023",
+    epitaph: "triptalkies: trip ended before the journey even started. sep–nov 2023",
     link: "https://triptalkies.vercel.app/",
     repo: "https://github.com/abhisheksharm-3/trip-website",
   },
@@ -469,13 +465,7 @@ export const deadProjects: DeadProjectType[] = [
     lessons:
       "school projects don't always become real projects. but i still want to rebuild it someday using rag and adding indian laws. just don't know when.",
     progress: "70%",
-    technologies: [
-      "SvelteKit",
-      "TypeScript",
-      "TailwindCSS",
-      "FastAPI",
-      "Python",
-    ],
+    technologies: ["SvelteKit", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2024",
     duration: "December 2024",
     imageSrc: "/images/graveyard/lexalyze.png",

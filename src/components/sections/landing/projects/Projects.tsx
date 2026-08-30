@@ -1,21 +1,21 @@
 "use client";
 
-import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { featuredProjects } from "@/data/projects";
-import {
-  ProjectsPropsType,
-  LandingProjectCardPropsType,
-  InViewPropsType,
-} from "@/lib/types/components";
-import { PROJECT_ANIMATIONS } from "@/data/animations";
-import { ProjectImageContainer, ProjectContent } from "./ProjectCardParts";
-import { SharedBackground } from "@/components/shared/SharedBackground";
+import Link from "next/link";
+import { useRef, useState } from "react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { SharedBackground } from "@/components/shared/SharedBackground";
+import { Card } from "@/components/ui/card";
+import { PROJECT_ANIMATIONS } from "@/data/animations";
+import { featuredProjects } from "@/data/projects";
 import { getSectionClasses } from "@/lib/config/spacing-standards";
+import type {
+  InViewPropsType,
+  LandingProjectCardPropsType,
+  ProjectsPropsType,
+} from "@/lib/types/components";
+import { ProjectContent, ProjectImageContainer } from "./ProjectCardParts";
 
 interface ProjectsHeaderPropsType extends InViewPropsType {
   headline: string;
@@ -42,9 +42,7 @@ const ProjectsHeader = ({ headline, isInView }: ProjectsHeaderPropsType) => (
   <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 sm:mb-12 md:mb-16 lg:mb-20 relative z-10">
     <div className="flex-1">
       <SectionHeader subtitle="stuff i've built" isInView={isInView}>
-        <span className="font-serif text-foreground select-none pr-3">
-          {headline}
-        </span>
+        <span className="font-serif text-foreground select-none pr-3">{headline}</span>
       </SectionHeader>
     </div>
     <ViewAllLink isInView={isInView} />

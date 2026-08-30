@@ -1,19 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
-import { ProjectType } from "@/lib/types/components";
+import Image from "next/image";
+import type { ProjectType } from "@/lib/types/components";
 
 interface ProjectCardPartPropsType {
   project: ProjectType;
   isHovered: boolean;
 }
 
-export const ProjectImageContainer = ({
-  project,
-  isHovered,
-}: ProjectCardPartPropsType) => (
+export const ProjectImageContainer = ({ project, isHovered }: ProjectCardPartPropsType) => (
   <div className="relative w-full h-52 sm:h-64 overflow-hidden shrink-0">
     <motion.div
       className="relative w-full h-full"
@@ -66,9 +63,7 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
     </p>
 
     <div className="flex items-center justify-between pt-3 border-t border-foreground/8">
-      <span className="text-xs text-foreground/35 font-light">
-        {project.role || "developer"}
-      </span>
+      <span className="text-xs text-foreground/35 font-light">{project.role || "developer"}</span>
       <div className="flex items-center gap-3">
         {project.url && (
           <a
@@ -81,9 +76,7 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
             visit
           </a>
         )}
-        {project.url && project.github && (
-          <div className="w-px h-3 bg-foreground/8" />
-        )}
+        {project.url && project.github && <div className="w-px h-3 bg-foreground/8" />}
         {project.github && (
           <a
             href={project.github}

@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useTransform, MotionValue } from "framer-motion";
+import { type MotionValue, motion, useTransform } from "framer-motion";
 
 interface MouseParallaxPropsType {
   mouseX: MotionValue<number>;

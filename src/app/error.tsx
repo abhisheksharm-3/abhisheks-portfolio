@@ -1,12 +1,12 @@
 "use client";
 
 import { motion, useMotionValue } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { AppShell } from "@/components/layout/AppShell";
-import { useEffect, useRef } from "react";
-import { AlertTriangle, RefreshCw, Home, Bug } from "lucide-react";
+import { AlertTriangle, Bug, Home, RefreshCw } from "lucide-react";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
+import { AppShell } from "@/components/layout/AppShell";
 import { ErrorBackground } from "@/components/sections/error/ErrorBackground";
+import { Button } from "@/components/ui/button";
 
 interface ErrorPropsType {
   error: Error & { digest?: string };
@@ -91,8 +91,8 @@ const Error = ({ error, reset }: ErrorPropsType) => {
               transition={{ duration: 0.8, delay: 1.0 }}
               className="text-lg text-muted-foreground max-w-md mx-auto leading-relaxed mb-8"
             >
-              Looks like something broke. You can try refreshing, or reach out
-              if it keeps happening.
+              Looks like something broke. You can try refreshing, or reach out if it keeps
+              happening.
             </motion.p>
 
             <motion.details
@@ -106,15 +106,11 @@ const Error = ({ error, reset }: ErrorPropsType) => {
                 Error Details
               </summary>
               <div className="mt-3 space-y-2">
-                <p className="text-sm font-mono text-destructive break-all">
-                  {error.message}
-                </p>
+                <p className="text-sm font-mono text-destructive break-all">{error.message}</p>
                 {error.digest && (
                   <p className="text-xs text-muted-foreground">
                     Error ID:{" "}
-                    <code className="bg-background px-1 rounded text-xs">
-                      {error.digest}
-                    </code>
+                    <code className="bg-background px-1 rounded text-xs">{error.digest}</code>
                   </p>
                 )}
               </div>
@@ -126,21 +122,12 @@ const Error = ({ error, reset }: ErrorPropsType) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 1.4 }}
             >
-              <Button
-                onClick={reset}
-                size="lg"
-                className="w-full sm:w-auto group cursor-pointer"
-              >
+              <Button onClick={reset} size="lg" className="w-full sm:w-auto group cursor-pointer">
                 <RefreshCw className="mr-2 h-4 w-4 transition-transform group-hover:rotate-180" />
                 Try again
               </Button>
 
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto group"
-              >
+              <Button asChild variant="outline" size="lg" className="w-full sm:w-auto group">
                 <Link href="/">
                   <Home className="mr-2 h-4 w-4 transition-transform group-hover:scale-110" />
                   Go home

@@ -1,13 +1,13 @@
 "use client";
 
 import { motion, useMotionValue } from "framer-motion";
+import { ArrowLeft, Home, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { AppShell } from "@/components/layout/AppShell";
-import { Button } from "@/components/ui/button";
 import { useEffect, useRef } from "react";
-import { ArrowLeft, Home, Search } from "lucide-react";
+import { AppShell } from "@/components/layout/AppShell";
 import { NotFoundBackground } from "@/components/sections/not-found/NotFoundBackground";
+import { Button } from "@/components/ui/button";
 
 /**
  * Custom 404 page for routes that do not exist, with helpful navigation options.
@@ -77,8 +77,8 @@ const NotFound = () => {
               transition={{ duration: 0.8, delay: 1.0 }}
               className="mb-8 text-lg leading-relaxed text-muted-foreground max-w-md mx-auto"
             >
-              The page you&apos;re looking for doesn&apos;t exist or has been
-              moved. Let&apos;s get you back on track.
+              The page you&apos;re looking for doesn&apos;t exist or has been moved. Let&apos;s get
+              you back on track.
             </motion.p>
 
             <motion.div
@@ -102,12 +102,7 @@ const NotFound = () => {
                   Home
                 </Link>
               </Button>
-              <Button
-                asChild
-                variant="ghost"
-                size="lg"
-                className="w-full sm:w-auto group"
-              >
+              <Button asChild variant="ghost" size="lg" className="w-full sm:w-auto group">
                 <Link href="/projects">
                   <Search className="mr-2 h-4 w-4 transition-transform group-hover:rotate-12" />
                   Browse projects

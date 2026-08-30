@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ProjectType } from "@/lib/types/components";
+import type { ProjectType } from "@/lib/types/components";
 
 /**
  * Horizontal metadata band for a project detail page: role / client / duration
@@ -28,9 +28,7 @@ export function ProjectDetailMeta({ project }: { project: ProjectType }) {
               <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/35">
                 {detail.label}
               </span>
-              <span className="text-sm font-light text-foreground/70">
-                {detail.value}
-              </span>
+              <span className="text-sm font-light text-foreground/70">{detail.value}</span>
             </div>
           ))}
         </div>

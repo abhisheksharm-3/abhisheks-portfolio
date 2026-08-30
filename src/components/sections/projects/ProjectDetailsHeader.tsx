@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ExternalLink, Github } from "lucide-react";
-import { ProjectType } from "@/lib/types/components";
+import type { ProjectType } from "@/lib/types/components";
 
 /**
  * Editorial header for a project detail page: eyebrow, serif title, divider,

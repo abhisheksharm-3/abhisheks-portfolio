@@ -1,8 +1,4 @@
-import {
-    GitHubStatsType,
-    GitHubUserType,
-    RepositoryType,
-} from "@/lib/types/stats";
+import type { GitHubStatsType, GitHubUserType, RepositoryType } from "@/lib/types/stats";
 
 const GITHUB_USERNAME = process.env.GITHUB_USERNAME ?? "abhisheksharm-3";
 const GITHUB_GRAPHQL_ENDPOINT = "https://api.github.com/graphql";
@@ -55,64 +51,62 @@ const GITHUB_STATS_QUERY = `
  * @throws Error if GITHUB_ACCESS_TOKEN is missing or API request fails
  */
 export async function fetchGitHubStats(): Promise<GitHubStatsType> {
-    const githubToken = process.env.GITHUB_ACCESS_TOKEN;
+  const githubToken = process.env.GITHUB_ACCESS_TOKEN;
 
-    if (!githubToken) {
-        throw new Error("Missing GITHUB_ACCESS_TOKEN in environment variables.");
-    }
+  if (!githubToken) {
+    throw new Error("Missing GITHUB_ACCESS_TOKEN in environment variables.");
+  }
 
-    const response = await fetch(GITHUB_GRAPHQL_ENDPOINT, {
-        method: "POST",
-        headers: {
-            Authorization: `Bearer ${githubToken}`,
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            query: GITHUB_STATS_QUERY,
-            variables: {
-                username: GITHUB_USERNAME,
-                from: new Date(Date.now() - ONE_YEAR_MS).toISOString(),
-                to: new Date().toISOString(),
-            },
-        }),
-        next: { revalidate: CACHE_REVALIDATE_SECONDS },
-    });
+  const response = await fetch(GITHUB_GRAPHQL_ENDPOINT, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${githubToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query: GITHUB_STATS_QUERY,
+      variables: {
+        username: GITHUB_USERNAME,
+        from: new Date(Date.now() - ONE_YEAR_MS).toISOString(),
+        to: new Date().toISOString(),
+      },
+    }),
+    next: { revalidate: CACHE_REVALIDATE_SECONDS },
+  });
 
-    if (!response.ok) {
-        throw new Error(`Failed to fetch GitHub data: ${response.statusText}`);
-    }
+  if (!response.ok) {
+    throw new Error(`Failed to fetch GitHub data: ${response.statusText}`);
+  }
 
-    const json = await response.json();
+  const json = await response.json();
 
-    if (json.errors) {
-        throw new Error(`GitHub API errors: ${JSON.stringify(json.errors)}`);
-    }
+  if (json.errors) {
+    throw new Error(`GitHub API errors: ${JSON.stringify(json.errors)}`);
+  }
 
-    if (!json.data?.user) {
-        throw new Error("Invalid data structure received from GitHub API.");
-    }
+  if (!json.data?.user) {
+    throw new Error("Invalid data structure received from GitHub API.");
+  }
 
-    const user: GitHubUserType = json.data.user;
+  const user: GitHubUserType = json.data.user;
 
-    const totalStars = user.repositories.nodes.reduce(
-        (acc: number, repo: RepositoryType) => acc + repo.stargazerCount,
-        0
-    );
+  const totalStars = user.repositories.nodes.reduce(
+    (acc: number, repo: RepositoryType) => acc + repo.stargazerCount,
+    0,
+  );
 
-    const languages = user.repositories.nodes
-        .filter((repo: RepositoryType) => repo.primaryLanguage !== null)
-        .map((repo: RepositoryType) => repo.primaryLanguage!.name);
-    const topLanguages: string[] = [...new Set(languages)].slice(0, 10);
+  const languages = user.repositories.nodes
+    .filter((repo: RepositoryType) => repo.primaryLanguage !== null)
+    .map((repo: RepositoryType) => repo.primaryLanguage!.name);
+  const topLanguages: string[] = [...new Set(languages)].slice(0, 10);
 
-    return {
-        publicRepos: user.repositories.totalCount,
-        totalStars,
-        contributions:
-            user.contributionsCollection.contributionCalendar.totalContributions,
-        contributionCalendar:
-            user.contributionsCollection.contributionCalendar.weeks,
-        topLanguages,
-        followers: user.followers.totalCount,
-        following: user.following.totalCount,
-    };
+  return {
+    publicRepos: user.repositories.totalCount,
+    totalStars,
+    contributions: user.contributionsCollection.contributionCalendar.totalContributions,
+    contributionCalendar: user.contributionsCollection.contributionCalendar.weeks,
+    topLanguages,
+    followers: user.followers.totalCount,
+    following: user.following.totalCount,
+  };
 }

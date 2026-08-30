@@ -7,8 +7,7 @@ import type { ReactNode } from "react";
  */
 export const metadata: Metadata = {
   title: "Project Graveyard | Abhishek Sharma",
-  description:
-    "A collection of abandoned projects and what they taught me.",
+  description: "A collection of abandoned projects and what they taught me.",
 };
 
 /**
@@ -22,11 +21,7 @@ export const metadata: Metadata = {
  * @param {ReactNode} props.children - The child pages or components to render.
  * @returns {ReactNode} The rendered children.
  */
-const GraveyardPageLayout = ({
-  children,
-}: {
-  children: ReactNode;
-}): ReactNode => {
+const GraveyardPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
   return children;
 };
 

@@ -1,17 +1,17 @@
 "use client";
 
-import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { SharedBackground } from "@/components/shared/SharedBackground";
+import { useRef } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { AboutPageCTA } from "@/components/sections/about/AboutPageCTA";
 import { AboutPageHeader } from "@/components/sections/about/AboutPageHeader";
 import { BioCard } from "@/components/sections/about/BioCard";
 import { ContactCard } from "@/components/sections/about/ContactCard";
 import { ExperienceEducationSection } from "@/components/sections/about/ExperienceEducationSection";
+import { GitHubActivity } from "@/components/sections/about/GitHubActivity";
 import { InterestsSection } from "@/components/sections/about/InterestsSection";
 import { SkillsSection } from "@/components/sections/about/SkillsSection";
-import { GitHubActivity } from "@/components/sections/about/GitHubActivity";
+import { SharedBackground } from "@/components/shared/SharedBackground";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
@@ -33,10 +33,7 @@ const AboutPage = () => {
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
         >
-          <SharedBackground
-            isInView={isInView}
-            noiseFilterId="aboutPageNoiseFilter"
-          />
+          <SharedBackground isInView={isInView} noiseFilterId="aboutPageNoiseFilter" />
 
           <motion.div variants={ITEM_VARIANTS}>
             <AboutPageHeader />

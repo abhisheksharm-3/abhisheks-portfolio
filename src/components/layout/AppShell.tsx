@@ -1,5 +1,5 @@
+import type { AppShellPropsType } from "@/lib/types/components";
 import { cn } from "@/lib/utils";
-import { AppShellPropsType } from "@/lib/types/components";
 import { ConstellationBackground } from "./ConstellationBackground";
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";

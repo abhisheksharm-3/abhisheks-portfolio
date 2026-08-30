@@ -1,12 +1,12 @@
 "use client";
 
-import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { SOCIAL_LINKS, CONTACT_INFO } from "@/data/contact";
-import { SharedBackground } from "@/components/shared/SharedBackground";
+import { useRef } from "react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { SharedBackground } from "@/components/shared/SharedBackground";
+import { CONTACT_INFO, SOCIAL_LINKS } from "@/data/contact";
 import { getSectionClasses } from "@/lib/config/spacing-standards";
 
 export const ContactCTA = () => {
@@ -30,8 +30,8 @@ export const ContactCTA = () => {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
           className="text-foreground/55 text-base font-light leading-relaxed max-w-lg mb-10"
         >
-          open for freelance, full-time roles, and interesting problems. if you
-          have an idea or a project, just reach out.
+          open for freelance, full-time roles, and interesting problems. if you have an idea or a
+          project, just reach out.
         </motion.p>
 
         <motion.a

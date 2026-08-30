@@ -2,10 +2,10 @@
 
 import { AppShell } from "@/components/layout/AppShell";
 import { ContactBackground } from "@/components/sections/contact/ContactBackground";
-import { ContactHeader } from "@/components/sections/contact/ContactHeader";
 import { SendMessageCard } from "@/components/sections/contact/ContactForm";
-import { ScheduleMeetingCard } from "@/components/sections/contact/ScheduleMeetingCard";
+import { ContactHeader } from "@/components/sections/contact/ContactHeader";
 import { ContactInfoCard } from "@/components/sections/contact/ContactInfoCard";
+import { ScheduleMeetingCard } from "@/components/sections/contact/ScheduleMeetingCard";
 
 const ContactPage = () => (
   <AppShell>

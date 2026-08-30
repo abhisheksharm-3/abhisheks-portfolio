@@ -1,23 +1,21 @@
 "use client";
 
-import { useRef, useState, useTransition, useMemo } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "framer-motion";
+import { useMemo, useRef, useState, useTransition } from "react";
 import { AppShell } from "@/components/layout/AppShell";
-import { projects } from "@/data/projects";
-import { ProjectsHeader } from "@/components/sections/projects/ProjectsHeader";
-import { ProjectsFilters } from "@/components/sections/projects/ProjectsFilter";
-import { ProjectsCTA } from "@/components/sections/projects/ProjectsCTA";
 import { ProjectCard } from "@/components/sections/projects/ProjectCard";
+import { ProjectsCTA } from "@/components/sections/projects/ProjectsCTA";
+import { ProjectsFilters } from "@/components/sections/projects/ProjectsFilter";
+import { ProjectsHeader } from "@/components/sections/projects/ProjectsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
+import { projects } from "@/data/projects";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
  * A sorted, unique list of all project tags, generated once at the module level.
  */
-const allTags = Array.from(
-  new Set(projects.flatMap((project) => project.tags)),
-).sort();
+const allTags = Array.from(new Set(projects.flatMap((project) => project.tags))).sort();
 
 /**
  * Renders the main projects page, including filtering and animated project cards.
@@ -29,11 +27,12 @@ const ProjectsPage = () => {
   const [isPending, startTransition] = useTransition();
 
   // Calculate filtered projects during render (React best practice)
-  const filteredProjects = useMemo(() =>
-    activeFilter === "all"
-      ? projects
-      : projects.filter((project) => project.tags.includes(activeFilter)),
-    [activeFilter]
+  const filteredProjects = useMemo(
+    () =>
+      activeFilter === "all"
+        ? projects
+        : projects.filter((project) => project.tags.includes(activeFilter)),
+    [activeFilter],
   );
 
   // Wrap filter changes in transition for responsive UI
@@ -60,10 +59,7 @@ const ProjectsPage = () => {
           <ProjectsHeader />
         </motion.div>
 
-        <motion.div
-          variants={ITEM_VARIANTS}
-          className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
-        >
+        <motion.div variants={ITEM_VARIANTS} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
           <ProjectsFilters
             allTags={allTags}
             activeFilter={activeFilter}

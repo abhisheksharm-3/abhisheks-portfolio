@@ -1,21 +1,27 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertTriangle, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Loader2, ArrowRight, CheckCircle, AlertTriangle } from "lucide-react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { submitContactForm } from "@/lib/actions/contact";
 import { CONTACT_FORM_SCHEMA } from "@/data/contact";
-import { ContactFormDataType } from "@/lib/types/components";
+import { submitContactForm } from "@/lib/actions/contact";
+import type { ContactFormDataType } from "@/lib/types/components";
 
 const field =
   "border border-foreground/10 bg-foreground/[0.03] dark:bg-foreground/[0.03] shadow-none rounded-none px-3 py-3 h-auto text-base text-foreground placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-foreground/25 focus-visible:bg-foreground/[0.06] dark:focus-visible:bg-foreground/[0.06] transition-all duration-200";
-const label =
-  "text-[10px] text-primary/35 uppercase tracking-[0.18em] font-light";
+const label = "text-[10px] text-primary/35 uppercase tracking-[0.18em] font-light";
 
 export const SendMessageCard = () => {
   const [isPending, startTransition] = useTransition();
@@ -158,30 +164,30 @@ export const SendMessageCard = () => {
           </div>
 
           <div aria-live="polite" role="status">
-          <AnimatePresence>
-            {submitStatus === "success" && (
-              <motion.p
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center gap-2 text-sm text-foreground/50 font-light"
-              >
-                <CheckCircle className="h-3.5 w-3.5 shrink-0" />
-                Message sent. I&apos;ll get back to you soon.
-              </motion.p>
-            )}
-            {submitStatus === "error" && (
-              <motion.p
-                initial={{ opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0 }}
-                className="flex items-center gap-2 text-sm text-foreground/50 font-light"
-              >
-                <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                Something went wrong. Try again.
-              </motion.p>
-            )}
-          </AnimatePresence>
+            <AnimatePresence>
+              {submitStatus === "success" && (
+                <motion.p
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-2 text-sm text-foreground/50 font-light"
+                >
+                  <CheckCircle className="h-3.5 w-3.5 shrink-0" />
+                  Message sent. I&apos;ll get back to you soon.
+                </motion.p>
+              )}
+              {submitStatus === "error" && (
+                <motion.p
+                  initial={{ opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                  className="flex items-center gap-2 text-sm text-foreground/50 font-light"
+                >
+                  <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                  Something went wrong. Try again.
+                </motion.p>
+              )}
+            </AnimatePresence>
           </div>
         </form>
       </Form>

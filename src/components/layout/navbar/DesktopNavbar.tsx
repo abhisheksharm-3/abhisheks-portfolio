@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowRight, History } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { NAVIGATION_ITEMS } from "@/data/navigation";
+import Link from "next/link";
 import { ModeToggle } from "@/components/ModeToggle";
+import { NAVIGATION_ITEMS } from "@/data/navigation";
+import { cn } from "@/lib/utils";
 
 interface DesktopNavbarPropsType {
   activeItem: string | null;

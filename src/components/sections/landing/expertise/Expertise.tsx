@@ -1,15 +1,12 @@
 "use client";
 
-import { useRef } from "react";
 import { useInView } from "framer-motion";
-import { EXPERTISE } from "@/data/skills-expertise";
-import { SharedBackground } from "@/components/shared/SharedBackground";
-import {
-  FeaturedSkillsSection,
-  SecondarySkillsGrid,
-} from "./ExpertiseComponents";
+import { useRef } from "react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
+import { SharedBackground } from "@/components/shared/SharedBackground";
+import { EXPERTISE } from "@/data/skills-expertise";
 import { getSectionClasses } from "@/lib/config/spacing-standards";
+import { FeaturedSkillsSection, SecondarySkillsGrid } from "./ExpertiseComponents";
 
 /**
  * The main component for the Skills/Expertise section.
@@ -28,23 +25,13 @@ export const Skills = () => {
     <section ref={sectionRef} className={getSectionClasses()} id="skills">
       <SharedBackground isInView={isInView} noiseFilterId="skillsNoiseFilter" />
 
-      <div
-        className="relative z-10 w-full"
-      >
+      <div className="relative z-10 w-full">
         <SectionHeader subtitle="expertise" isInView={isInView}>
-          <span className="font-serif text-foreground select-none pr-4">
-            what i do best
-          </span>
+          <span className="font-serif text-foreground select-none pr-4">what i do best</span>
         </SectionHeader>
 
-        <FeaturedSkillsSection
-          mainServices={mainServices}
-          isInView={isInView}
-        />
-        <SecondarySkillsGrid
-          additionalServices={additionalServices}
-          isInView={isInView}
-        />
+        <FeaturedSkillsSection mainServices={mainServices} isInView={isInView} />
+        <SecondarySkillsGrid additionalServices={additionalServices} isInView={isInView} />
       </div>
     </section>
   );

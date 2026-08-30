@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
-import { useExperienceCounter } from "@/hooks/useExperienceCounter";
+import type React from "react";
 import { HERO_SKILLS } from "@/data/skills-expertise";
+import { useExperienceCounter } from "@/hooks/useExperienceCounter";
 
 /**
  * Smoothly scrolls the window to a given element ID.
@@ -79,10 +79,7 @@ export const HeroSkillsStrip: React.FC = () => (
     </div>
     <ul className="flex flex-wrap gap-x-10 gap-y-3 text-lg sm:text-xl font-light text-foreground/75">
       {HERO_SKILLS.map((skill) => (
-        <li
-          key={skill}
-          className="transition-colors duration-200 hover:text-foreground"
-        >
+        <li key={skill} className="transition-colors duration-200 hover:text-foreground">
           {skill}
         </li>
       ))}

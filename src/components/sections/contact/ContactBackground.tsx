@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 import { AbstractPath } from "../../shared/AbstractPath";
 
 // --- CONFIG & VARIANTS ---
@@ -46,11 +46,7 @@ export const ContactBackground = () => {
               stitchTiles="stitch"
             />
           </filter>
-          <rect
-            width="100%"
-            height="100%"
-            filter="url(#contactPageNoiseFilter)"
-          />
+          <rect width="100%" height="100%" filter="url(#contactPageNoiseFilter)" />
         </svg>
       </div>
 

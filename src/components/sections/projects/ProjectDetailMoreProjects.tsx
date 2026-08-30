@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 /**
  * Renders a clean editorial "explore more projects" section.

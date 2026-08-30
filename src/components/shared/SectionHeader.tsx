@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { SectionHeaderPropsType } from "@/lib/types/components";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
+import type { SectionHeaderPropsType } from "@/lib/types/components";
+import { cn } from "@/lib/utils";
 
 /**
  * A reusable, animated header for different sections of the landing page.

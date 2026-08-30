@@ -1,7 +1,7 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { SOCIAL_LINKS } from "@/data/contact";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { SOCIAL_LINKS } from "@/data/contact";
 
 /**
  * Renders contact details, social media links, and a CTA on the about page.

@@ -64,4 +64,3 @@ export interface GitHubStatsType {
   followers: number;
   following: number;
 }
-

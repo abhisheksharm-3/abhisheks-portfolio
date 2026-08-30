@@ -1,13 +1,7 @@
 "use client";
 
+import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
 import { useEffect, useRef } from "react";
-import {
-  motion,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
 import {
   AbstractShapes,
   AnimatedPaths,
@@ -61,10 +55,7 @@ export const Hero = () => {
   const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
 
   return (
-    <section
-      ref={containerRef}
-      className="relative min-h-[100vh] w-full overflow-hidden"
-    >
+    <section ref={containerRef} className="relative min-h-[100vh] w-full overflow-hidden">
       <NoiseBackground />
       <AsymmetricalGrid />
       <AbstractShapes mouseX={mouseX} mouseY={mouseY} />

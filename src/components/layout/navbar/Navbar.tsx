@@ -1,17 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 import { Menu } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { MobileMenu } from "./MobileMenu";
-import { NavigationItemType } from "@/lib/types/components";
-import { NAVIGATION_ITEMS as navigationItems } from "@/data/navigation";
-import { NavbarBackground } from "./NavbarBackground";
-import { Logo } from "./Logo";
-import { DesktopNavbar } from "./DesktopNavbar";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { ModeToggle } from "@/components/ModeToggle";
+import { NAVIGATION_ITEMS as navigationItems } from "@/data/navigation";
+import type { NavigationItemType } from "@/lib/types/components";
+import { cn } from "@/lib/utils";
+import { DesktopNavbar } from "./DesktopNavbar";
+import { Logo } from "./Logo";
+import { MobileMenu } from "./MobileMenu";
+import { NavbarBackground } from "./NavbarBackground";
 
 const useScrollEffect = (threshold: number): boolean => {
   const [isScrolled, setIsScrolled] = useState(false);

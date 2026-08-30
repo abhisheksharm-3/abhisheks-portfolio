@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 /** Props for components that accept children */
 export interface ChildrenPropsType {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 /** Props for the Providers component */

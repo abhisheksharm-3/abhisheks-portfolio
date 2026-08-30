@@ -1,17 +1,17 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { notFound, useParams } from "next/navigation";
-import Link from "next/link";
-import { AppShell } from "@/components/layout/AppShell";
 import { ArrowLeft } from "lucide-react";
-import { projects } from "@/data/projects";
-import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
-import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
+import Link from "next/link";
+import { notFound, useParams } from "next/navigation";
+import { AppShell } from "@/components/layout/AppShell";
 import { ProjectDetailImage } from "@/components/sections/projects/ProjectDetailImage";
-import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDetailOverview";
+import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
+import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDetailOverview";
+import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
+import { projects } from "@/data/projects";
 import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 
 /**
