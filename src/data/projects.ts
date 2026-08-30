@@ -111,24 +111,6 @@ export const projects: ProjectType[] = [
     isBuilding: false,
   },
   {
-    title: "WesternFront",
-    slug: "westernfront",
-    description: "conflict news aggregator.",
-    longDescription:
-      "a feed that pulls together india–pakistan conflict updates. just a clean ui over reddit sources so i didn’t have to doomscroll in 10 places.",
-    imageSrc: "/images/projects/westernfront.png",
-    tags: ["NextJs", "TypeScript", "TailwindCSS", "RSS"],
-    year: "2025",
-    url: "https://western-front.vercel.app",
-    github: "",
-    isFeatured: false,
-    role: "solo developer",
-    client: "personal project",
-    duration: "May 2025",
-    category: "web",
-    isBuilding: false,
-  },
-  {
     title: "Resummarize",
     slug: "resummarize",
     description: "ai-powered note summarizer.",
@@ -160,7 +142,7 @@ export const projects: ProjectType[] = [
     role: "solo developer",
     client: "personal project",
     duration: "April 2025",
-    category: "web",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -358,7 +340,7 @@ export const projects: ProjectType[] = [
     role: "frontend developer",
     client: "sem 6 dma course project",
     duration: "January 2024",
-    category: "web",
+    isArchived: true,
     isBuilding: false,
   },
   {
@@ -452,6 +434,21 @@ export interface DeadProjectType {
 }
 
 export const deadProjects: DeadProjectType[] = [
+  {
+    title: "WesternFront",
+    description: "conflict news aggregator.",
+    reason:
+      "reddit discontinued the api tier it ran on, and the rss feeds i fell back to were unreliable and visibly slanted. an aggregator is only as good as its sources, and mine stopped being trustworthy.",
+    lessons:
+      "an aggregator is a bet on someone else's api staying free. check the terms before building on a platform feed, and treat source quality as a feature, not plumbing.",
+    progress: "shipped, then starved",
+    technologies: ["Next.js", "TypeScript", "TailwindCSS", "RSS"],
+    year: "2025",
+    duration: "May 2025",
+    imageSrc: "/images/projects/westernfront.png",
+    epitaph: "westernfront: outlived by the api it depended on. may 2025",
+    link: "https://western-front.vercel.app",
+  },
   {
     title: "WebList",
     description: "all-in-one toolkit hub that never launched.",

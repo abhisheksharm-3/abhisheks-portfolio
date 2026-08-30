@@ -1,5 +1,9 @@
+import { EXPERTISE } from "@/data/skills-expertise";
 import { AUTHOR, SITE_URL } from "@/lib/site";
 import type { ProjectType } from "@/lib/types/components";
+
+/** Every named technology across the expertise cards, deduped. */
+const KNOWS_ABOUT = [...new Set(EXPERTISE.flatMap((area) => area.skills))];
 
 /** Escapes the two characters that could close the surrounding script tag. */
 export function serializeJsonLd(data: object): string {
@@ -17,7 +21,29 @@ export const personSchema = {
   jobTitle: "Software Engineer",
   description: "Full-stack developer. I build web apps, Android apps, and AI systems.",
   sameAs: [AUTHOR.github, AUTHOR.linkedin, AUTHOR.x],
-} as const;
+  knowsAbout: KNOWS_ABOUT,
+  hasOccupation: {
+    "@type": "Occupation",
+    name: "Forward Deployed Engineer",
+    occupationLocation: { "@type": "Country", name: "India" },
+    skills: KNOWS_ABOUT.join(", "),
+  },
+  worksFor: {
+    "@type": "Organization",
+    name: "Wednesday Solutions",
+    url: "https://wednesday.is",
+  },
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Chandigarh College of Engineering and Technology, Panjab University",
+  },
+  award: "Winner, Network18 track — Google Gen AI Exchange Hackathon (2024)",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Chandigarh",
+    addressCountry: "IN",
+  },
+};
 
 export const websiteSchema = {
   "@context": "https://schema.org",
@@ -43,6 +69,37 @@ export function projectSchema(project: ProjectType) {
     ...(project.github ? { codeRepository: project.github } : {}),
     ...(project.url ? { sameAs: [project.url] } : {}),
     ...(project.tags.length ? { programmingLanguage: project.tags } : {}),
+  };
+}
+
+/** A listing page's items, so an engine reads it as a list rather than prose. */
+export function itemListSchema({
+  name,
+  path,
+  items,
+}: {
+  name: string;
+  path: string;
+  items: readonly { name: string; path: string; description?: string }[];
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name,
+    url: `${SITE_URL}${path}`,
+    isPartOf: { "@id": `${SITE_URL}/#website` },
+    about: { "@id": `${SITE_URL}/#person` },
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: items.length,
+      itemListElement: items.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.name,
+        url: `${SITE_URL}${item.path}`,
+        ...(item.description ? { description: item.description } : {}),
+      })),
+    },
   };
 }
 

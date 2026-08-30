@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
+import { selectedProjects } from "@/data/projects";
+import { breadcrumbSchema, itemListSchema, JsonLd } from "@/lib/seo/json-ld";
 
 /**
  * Metadata for the /projects page and its nested routes.
@@ -21,8 +23,27 @@ export const metadata: Metadata = {
  * @param {ReactNode} props.children - The child pages or components to render.
  * @returns {ReactNode} The rendered children.
  */
-const ProjectsPageLayout = ({ children }: { children: ReactNode }): ReactNode => {
-  return children;
-};
+const ProjectsPageLayout = ({ children }: { children: ReactNode }) => (
+  <>
+    <JsonLd
+      schemas={[
+        itemListSchema({
+          name: "Projects",
+          path: "/projects",
+          items: selectedProjects.map((project) => ({
+            name: project.title,
+            path: `/projects/${project.slug}`,
+            description: project.description,
+          })),
+        }),
+        breadcrumbSchema([
+          { name: "Home", path: "/" },
+          { name: "Projects", path: "/projects" },
+        ]),
+      ]}
+    />
+    {children}
+  </>
+);
 
 export default ProjectsPageLayout;

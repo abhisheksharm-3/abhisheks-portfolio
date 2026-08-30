@@ -16,6 +16,8 @@ const POST_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export type PostMeta = {
   slug: string;
   frontmatter: PostFrontmatterType;
+  /** Body words, excluding frontmatter. Used for the corpus total on /writing. */
+  wordCount: number;
 };
 
 function getSlugFromFilename(filename: string): string {
@@ -54,9 +56,9 @@ export async function getAllPosts(opts?: { includeDrafts?: boolean }): Promise<P
     }
 
     const source = fs.readFileSync(filePath, "utf-8");
-    const { data } = matter(source);
+    const { data, content } = matter(source);
     const frontmatter = PostFrontmatter.parse(data);
-    return { slug, frontmatter };
+    return { slug, frontmatter, wordCount: content.trim().split(/\s+/).length };
   });
 
   const filtered = opts?.includeDrafts ? posts : posts.filter((p) => !p.frontmatter.draft);

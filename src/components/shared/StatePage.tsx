@@ -15,9 +15,11 @@ export const StatePage = ({
   title,
   body,
   children,
+  as: Heading = "h1",
 }: {
   eyebrow: string;
   title: string;
+  as?: "h1" | "p";
   body?: ReactNode;
   children?: ReactNode;
 }) => (
@@ -36,12 +38,11 @@ export const StatePage = ({
           {eyebrow}
         </motion.p>
 
-        <motion.h1
-          variants={STAGGER_ITEM_VARIANTS}
-          className="text-4xl sm:text-5xl md:text-6xl font-serif leading-tight text-foreground mb-6"
-        >
-          {title}
-        </motion.h1>
+        <motion.div variants={STAGGER_ITEM_VARIANTS}>
+          <Heading className="text-4xl sm:text-5xl md:text-6xl font-serif leading-tight text-foreground mb-6">
+            {title}
+          </Heading>
+        </motion.div>
 
         <motion.div variants={STAGGER_ITEM_VARIANTS} className="h-px bg-primary/10 w-full mb-6" />
 

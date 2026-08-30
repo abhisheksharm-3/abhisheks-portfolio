@@ -26,7 +26,7 @@ const ViewAllLink = ({ isInView }: InViewPropsType) => (
     initial={{ opacity: 0, y: 10 }}
     animate={isInView ? { opacity: 1, y: 0 } : {}}
     transition={{ duration: 0.6, delay: 0.8 }}
-    className="flex justify-center sm:justify-end mt-6 sm:mt-0"
+    className="flex flex-col sm:items-end gap-2 justify-center sm:justify-end mt-6 sm:mt-0"
   >
     <Link
       href="/projects"
@@ -34,6 +34,14 @@ const ViewAllLink = ({ isInView }: InViewPropsType) => (
     >
       see all projects
       <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
+    </Link>
+    {/* The graveyard is the most distinctive page here and nothing linked to it. */}
+    <Link
+      href="/graveyard"
+      className="group inline-flex items-center gap-2 text-xs font-light text-foreground/30 hover:text-foreground/55 transition-colors duration-200"
+    >
+      and the ones i killed
+      <ArrowRight className="h-3 w-3 group-hover:translate-x-1 transition-transform duration-200" />
     </Link>
   </motion.div>
 );

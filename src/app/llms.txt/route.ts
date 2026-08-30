@@ -1,4 +1,5 @@
 import { archivedProjects, selectedProjects } from "@/data/projects";
+import { corpusStats } from "@/lib/content/domains";
 import { getAllPosts } from "@/lib/content/loader";
 import { AUTHOR, SITE_URL } from "@/lib/site";
 
@@ -10,12 +11,15 @@ async function renderIndex(): Promise<string> {
   "use cache";
 
   const posts = await getAllPosts();
+  const stats = corpusStats(posts);
 
   const body = [
     `# ${AUTHOR.name}`,
     "",
     "> Full-stack developer. I build web apps, Android apps, and AI systems.",
     "> This site holds my projects, the work I abandoned, and what I write about building things.",
+    "",
+    `${stats.posts} write-ups, ${stats.words.toLocaleString("en-US")} words, ${stats.questions} questions answered, all from production incidents.`,
     "",
     "Every post is also available as raw markdown at the same URL with `.md` appended.",
     `The complete text of every post is at ${SITE_URL}/llms-full.txt.`,
@@ -56,6 +60,14 @@ async function renderIndex(): Promise<string> {
     ...posts.map(
       (post) =>
         `- [${post.frontmatter.title}](${SITE_URL}/writing/${post.slug}): ${post.frontmatter.subhead} (${post.frontmatter.date}, ${post.frontmatter.readingTime} min)`,
+    ),
+    "",
+    "## Questions answered in these posts",
+    "",
+    ...posts.flatMap((post) =>
+      (post.frontmatter.faqs ?? []).map(
+        (faq) => `- ${faq.question} — ${SITE_URL}/writing/${post.slug}`,
+      ),
     ),
     "",
     "## Contact",

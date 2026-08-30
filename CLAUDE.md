@@ -102,7 +102,7 @@ src/lib/
   config/              Spacing, animation, and background tuning constants
   canvas/              Particle and spatial-hash helpers for the background
   types/               Shared type definitions
-src/hooks/             React hooks (useGitHubStats, useExperienceCounter)
+src/hooks/             React hooks (useGitHubStats)
 content/posts/         MDX posts, one file per slug
 scripts/check-post.mjs Pre-publish structure validator
 ```

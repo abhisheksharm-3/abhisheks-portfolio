@@ -12,6 +12,7 @@ import {
 import {
   HeroEyebrow,
   HeroName,
+  HeroNow,
   HeroSkillsStrip,
   HeroTagline,
   ScrollIndicator,
@@ -67,6 +68,7 @@ export const Hero = () => {
           <HeroEyebrow />
           <HeroName />
           <HeroTagline />
+          <HeroNow />
           <HeroSkillsStrip />
         </motion.div>
       </div>

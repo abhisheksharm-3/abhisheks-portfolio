@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import type React from "react";
 import { HERO_SKILLS } from "@/data/skills-expertise";
-import { useExperienceCounter } from "@/hooks/useExperienceCounter";
 
 /**
  * Smoothly scrolls the window to a given element ID.
@@ -14,22 +13,19 @@ const scrollToSection = (sectionId: string): void => {
 };
 
 /**
- * Eyebrow above the name: "about · NN yrs crafting code", with the year count
- * animating up on load.
+ * Eyebrow above the name. The current job, not a vague year count: it is the first
+ * thing a recruiter looks for and it was previously buried on the about page.
  */
-export const HeroEyebrow: React.FC = () => {
-  const years = useExperienceCounter(1);
-  return (
-    <motion.p
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-      className="mb-8 text-[11px] uppercase tracking-[0.2em] font-light text-primary/35"
-    >
-      about · {years} yrs crafting code
-    </motion.p>
-  );
-};
+export const HeroEyebrow: React.FC = () => (
+  <motion.p
+    animate={{ opacity: 1, y: 0 }}
+    className="mb-8 text-[11px] uppercase tracking-[0.2em] font-light text-primary/35"
+    initial={{ opacity: 0, y: 20 }}
+    transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+  >
+    forward deployed engineer · wednesday solutions
+  </motion.p>
+);
 
 /**
  * The dominant name statement that owns the fold.
@@ -59,6 +55,27 @@ export const HeroTagline: React.FC = () => (
   >
     software engineer: ai systems, mobile builds, side projects past midnight.
   </motion.p>
+);
+
+/**
+ * What is actually shipping right now, and the one award someone else handed out.
+ * Both existed only in EXPERIENCE_DATA, below the fold on /about.
+ */
+export const HeroNow: React.FC = () => (
+  <motion.div
+    animate={{ opacity: 1, y: 0 }}
+    className="mt-6 space-y-1.5 text-sm font-light text-foreground/45"
+    initial={{ opacity: 0, y: 20 }}
+    transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
+  >
+    <p>
+      currently shipping an autonomous ai content pipeline (langgraph · fastapi · pgvector) and a
+      multi-tenant lms on aws.
+    </p>
+    <p className="text-foreground/35">
+      winner, network18 track — google gen ai exchange hackathon.
+    </p>
+  </motion.div>
 );
 
 /**

@@ -48,6 +48,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    // WesternFront moved to the graveyard; keep its old URL alive.
+    return [{ source: "/projects/westernfront", destination: "/graveyard", permanent: true }];
+  },
   async rewrites() {
     // Agents conventionally append .md to a URL to get the source of a page.
     return [{ source: "/writing/:slug.md", destination: "/api/md/:slug" }];

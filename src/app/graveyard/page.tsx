@@ -3,7 +3,7 @@
 import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { GraveyardBackground } from "@/components/sections/graveyard/GraveyardBackground";
 import { GraveyardIntroCard } from "@/components/sections/graveyard/GraveyardIntroCard";
@@ -27,11 +27,13 @@ const inspirationalQuotes = [
  * @returns {JSX.Element} The GraveyardPage component.
  */
 const GraveyardPage = () => {
-  // Use useState with an initializer function to select a quote only once on mount.
-  const [quote] = useState(() => {
-    const randomIndex = Math.floor(Math.random() * inspirationalQuotes.length);
-    return inspirationalQuotes[randomIndex];
-  });
+  // Randomised after mount, not during render: Math.random() while prerendering is an
+  // unstable value, and it kept this whole page out of the static HTML.
+  const [quote, setQuote] = useState(inspirationalQuotes[0]);
+
+  useEffect(() => {
+    setQuote(inspirationalQuotes[Math.floor(Math.random() * inspirationalQuotes.length)]);
+  }, []);
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
