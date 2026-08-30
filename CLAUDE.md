@@ -72,11 +72,14 @@ Default to surfacing uncertainty, not hiding it.
 | `npm run dev` | Start the Next.js dev server |
 | `npm run build` | Production build |
 | `npm start` | Serve the production build |
-| `npm run lint` | ESLint across the repo |
+| `npm run lint` | Biome check (lint + format) across the repo |
+| `npm run format` | Biome formatter, writing changes |
+| `npm run check-webmcp` | Verify the WebMCP tool handlers |
 | `npm run check-post content/posts/<slug>.mdx` | Validate a post before publishing |
 
-There is no test script and no test suite. Playwright is installed as a devDependency but no
-`playwright.config.*` and no test files exist — treat E2E as unbuilt, not broken.
+There is no test suite. `npm run check-webmcp` is the only automated check: a node script that
+exercises the WebMCP tool handlers. Playwright is installed as a devDependency but no
+`playwright.config.*` and no test files exist, so treat E2E as unbuilt, not broken.
 
 ## Architecture
 
