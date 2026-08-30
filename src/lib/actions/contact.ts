@@ -1,6 +1,7 @@
 "use server";
 
 import { render } from "@react-email/render";
+import { headers } from "next/headers";
 import nodemailer from "nodemailer";
 import React from "react";
 import { ContactEmailTemplate } from "@/components/emails/ContactEmailTemplate";
@@ -43,7 +44,6 @@ const getTransporter = (): nodemailer.Transporter => {
   const { user, clientId, clientSecret, refreshToken } = getMailConfig();
   _transporter = nodemailer.createTransport({
     service: "gmail",
-    host: "smtp.gmail.com",
     auth: {
       type: "OAuth2",
       user,
@@ -51,7 +51,10 @@ const getTransporter = (): nodemailer.Transporter => {
       clientSecret,
       refreshToken,
     },
-  } as nodemailer.TransportOptions);
+    connectionTimeout: 10_000,
+    greetingTimeout: 8_000,
+    socketTimeout: 15_000,
+  });
   return _transporter;
 };
 
@@ -86,27 +89,34 @@ export async function submitContactForm(
   const safeName = sanitizeHeader(validation.data.name).replace(/["<>]/g, "");
   const safeSubject = sanitizeHeader(validation.data.subject);
 
-  const emailHtml = await render(
-    React.createElement(ContactEmailTemplate, {
-      name: validation.data.name,
-      email: validation.data.email,
-      subject: validation.data.subject,
-      message: validation.data.message,
-      submittedAt: new Date().toLocaleString("en-IN", {
-        timeZone: "Asia/Kolkata",
-      }),
-      userAgent: "Server Action",
-      referer: "Direct submission",
+  const requestHeaders = await headers();
+
+  const emailElement = React.createElement(ContactEmailTemplate, {
+    name: validation.data.name,
+    email: validation.data.email,
+    subject: validation.data.subject,
+    message: validation.data.message,
+    submittedAt: new Date().toLocaleString("en-IN", {
+      timeZone: "Asia/Kolkata",
     }),
-  );
+    userAgent: requestHeaders.get("user-agent") ?? "unknown",
+    referer: requestHeaders.get("referer") ?? "unknown",
+  });
+
+  // A plaintext alternative is what text-only clients read and what spam filters
+  // expect; HTML-only mail scores worse on both counts.
+  const [emailHtml, emailText] = await Promise.all([
+    render(emailElement),
+    render(emailElement, { plainText: true }),
+  ]);
 
   try {
     await getTransporter().sendMail({
       from: `"${safeName}" <${mailConfig.user}>`,
       to: mailConfig.recipient,
       replyTo: validation.data.email,
-      priority: "high",
       subject: `New Portfolio Message: ${safeSubject}`,
+      text: emailText,
       html: emailHtml,
     });
   } catch (error) {
