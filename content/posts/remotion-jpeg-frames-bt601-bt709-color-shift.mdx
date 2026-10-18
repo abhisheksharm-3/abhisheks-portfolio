@@ -1,0 +1,134 @@
+---
+title: "jpeg frames shifted the colour of every render"
+subhead: "renders came out warmer than the upload. the cause was not the colour code i had just added. it was the image format remotion captures each frame in."
+date: "2026-09-28"
+keywords:
+  - "remotion lambda imageFormat png color shift"
+  - "bt601 bt709 color matrix mismatch video"
+  - "ffmpeg zscale matrixin 709 limited range"
+  - "video render warmer saturated than source"
+  - "jpeg frame capture color space render pipeline"
+  - "remotion colorSpace bt709 jpeg default"
+tags: ["backend", "infrastructure"]
+readingTime: 11
+type: "technical"
+searchIntent: "informational"
+draft: false
+faqs:
+  - question: "why did the render look warmer than the uploaded video?"
+    answer: "The encode was told to treat its input frames as BT.709 while the frames were actually BT.601. Remotion captures each composition frame to an image before handing the sequence to ffmpeg, and the default capture format is JPEG, which carries a BT.601 colour matrix. Setting colorSpace to bt709 makes ffmpeg run a zscale filter with matrixin=709, so it reads BT.601 pixel values as if they were BT.709 and converts them wrongly. Red and blue drift apart and saturation climbs, which the eye reads as a warmer, more vivid picture than the original."
+  - question: "what is the difference between BT.601 and BT.709 here?"
+    answer: "They are two different matrices for converting between RGB and the YUV values a video codec stores. BT.601 is the standard-definition convention, BT.709 is the high-definition one, and the coefficients differ enough that applying the wrong one skews colour. The pixels do not carry a label that ffmpeg trusts during this step; the matrixin value you pass tells it what the input is assumed to be. If that assumption is wrong, the conversion is wrong, even though every individual step ran without an error."
+  - question: "why switch frame capture to PNG instead of changing the colour setting?"
+    answer: "The colour setting was correct for the output: the rendered video genuinely should be BT.709 limited range so players render it as intended. The problem was the input assumption, not the output tag. PNG frames are stored as RGB with no colour matrix baked in, so when ffmpeg converts them to BT.709 YUV there is no mismatched source matrix to get wrong. Switching the capture format fixes the input side and leaves the correct output behaviour in place, rather than undoing the colour tagging that solved the earlier clipping problem."
+  - question: "how do you prove a colour fix worked rather than just looking at it?"
+    answer: "Eyeballing a render is unreliable because the shift is small and monitors vary. I measured it against the upload on a real production edit. The red-minus-blue difference versus the source went from +5.07 to -0.15, and saturation went from +9.4 percent to +2.9 percent, both rendered on the production function rather than a laptop. Numbers like these turn a subjective complaint into a regression you can watch close, and they let you compare the two frame formats on the same source instead of trusting memory of how the last render looked."
+  - question: "what did the PNG frames cost in render time and money?"
+    answer: "PNG is larger and slower to write than JPEG, so capturing every frame as PNG raised the work per frame. On the same production edit, render time went from 85.1 seconds to 103.0 seconds, about 21 percent slower, and Lambda cost went from $0.060 to $0.076, about 27 percent more. That was an acceptable trade for correct colour on a feature where the whole point is that the exported video matches what the user recorded, but it is a real cost and worth naming rather than hiding."
+toc:
+  - { id: "the-report-and-the-wrong-suspect", label: "the report and the wrong suspect", depth: 2 }
+  - { id: "what-the-first-fix-actually-did", label: "what the first fix actually did", depth: 2 }
+  - { id: "the-frame-that-ffmpeg-never-sees-correctly", label: "the frame ffmpeg never sees correctly", depth: 2 }
+  - { id: "measuring-instead-of-squinting", label: "measuring instead of squinting", depth: 2 }
+  - { id: "the-one-line-fix", label: "the one-line fix", depth: 2 }
+  - { id: "the-normalization-detour-i-threw-away", label: "the normalization detour i threw away", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+  - { id: "frequently-asked-questions", label: "frequently asked questions", depth: 2 }
+relatedPosts:
+  - slug: "react-native-tts-hardware-aec-interruption"
+    title: "react native tts false interrupts and synthesis latency"
+    readingTime: 11
+    date: "2026-05-08"
+  - slug: "facebook-reels-ayrshare-one-target-two-variants"
+    title: "facebook reels isn't a platform, it's a flag"
+    readingTime: 10
+    date: "2026-06-23"
+---
+
+A user reported that videos coming out of the AI video editor looked warmer and more saturated than the clips they had uploaded. This was defect 7 of 7 in a long colour-and-render investigation, and it had a frustrating shape: the render was wrong because of a line I had added three weeks earlier to make the render right. The fix for the previous colour bug was the cause of this one.
+
+The editor renders on Remotion running in AWS Lambda. Remotion builds each frame of the composition, captures it to an image, and feeds the sequence of images to ffmpeg to encode into H.264. The colour problem lived in the gap between two of those steps, in an assumption that nothing in the code made visible until I measured the output pixel by pixel against the source.
+
+## the report and the wrong suspect
+
+My first instinct was the obvious one. I had recently touched the colour handling, so I assumed the new colour code was wrong and the fix would be to undo or adjust it. That instinct was exactly backwards, and chasing it would have reintroduced the bug it was built to solve.
+
+The code in question sets one option on the Remotion render call:
+
+```ts
+await renderMediaOnLambda({
+  // ...
+  codec: 'h264',
+  timeoutInMilliseconds: 600_000,
+  // Unset, ffmpeg tags nothing and falls back to BT.601 full-range, writing luma
+  // over 3-255 where players expect 16-235. This also inserts a zscale filter, so
+  // the pixels are converted to limited range and not merely relabelled.
+  colorSpace: 'bt709',
+  crf: 18,
+  // ...
+});
+```
+
+That `colorSpace: 'bt709'` had fixed an earlier, more visible bug. Before it existed, Remotion ran with no colour space set, ffmpeg tagged nothing, and every export shipped as BT.601 full range. Players assume 16-235 for 1080p H.264, so they clipped both ends of the range and stretched the midtones. That was its own reported colouring issue, and the fix was to make ffmpeg emit proper colour tags and convert the pixel range instead of leaving it mislabelled.
+
+So the line was not a mistake. It was a fix. The new report was a second, subtler bug that the first fix had uncovered.
+
+## what the first fix actually did
+
+Setting `colorSpace` to `bt709` does two things inside Remotion's encode. It writes the four colour metadata tags onto the output so a player knows how to interpret it, and it inserts a zscale filter that looks roughly like `zscale=matrix=709:matrixin=709:range=limited`. That filter is the important part. It does not relabel the pixels, it converts them, from whatever it is told the input is, into BT.709 limited range.
+
+The key word is `matrixin=709`. That is ffmpeg being told, "the frames coming in are BT.709, convert accordingly." It is an assumption about the input, and the conversion is only correct if the assumption is true.
+
+For the previous bug, verified against an HLG HDR source, this was a clear improvement. The default render gave luma spanning 0 to 251 with blacks clipped and a saturation figure of 14.68. With `bt709` the output gave luma from 13 to 233, sitting cleanly inside the range players expect, and saturation of 12.93. The range problem was gone.
+
+But `matrixin=709` is only right if the frames feeding the encode really are BT.709. That turned out to be the whole bug.
+
+## the frame ffmpeg never sees correctly
+
+Remotion does not hand ffmpeg the raw composition. It captures each frame to an image file first, and the default image format is JPEG. JPEG carries a BT.601 colour matrix. So the pipeline was:
+
+1. Capture each frame as JPEG, which stores it as BT.601.
+2. Encode with `matrixin=709`, telling ffmpeg to read those frames as BT.709.
+
+Every render since the `colorSpace` line landed on 2026-09-08 was shipping BT.601 pixel values interpreted as BT.709. The conversion matrix was wrong for the actual input, so colour drifted on every single export. The output was correctly tagged and correctly ranged, which is why the earlier clipping was gone, but the values themselves were off because the input assumption was false.
+
+Nothing errored. Each step did exactly what it was configured to do. The bug lived in the handoff between a default I never set (JPEG capture) and an option I did set (BT.709 encode), and those two defaults silently disagreed about what colour space the frames were in.
+
+## measuring instead of squinting
+
+The shift was small enough that staring at two videos side by side was not a reliable way to confirm a fix. The complaint was "warmer and more saturated," which is subjective, and the whole point of this feature is that the export matches the recording, so I wanted a number that said how far off we were.
+
+I rendered a real production edit on the production function and compared the output against the upload on two measures: the red-minus-blue channel difference, as a proxy for warmth, and overall saturation. With the JPEG frames, red-minus-blue sat at +5.07 against the source and saturation was +9.4 percent high. That is the warmth and vividness the user was seeing, quantified.
+
+Measuring on the production function mattered. Earlier in this investigation I had been burned by probing capability on a laptop and getting a result that did not hold in the deployed render path, so by this point the rule was to measure where the render actually runs.
+
+## the one-line fix
+
+Once the cause was "the input frames are BT.601 but the encode assumes BT.709," two fixes were possible. I could tell the encode the truth (`matrixin=601`), or I could make the input genuinely match the assumption. I chose the second, by changing the capture format:
+
+```ts
+  colorSpace: 'bt709',
+  // bt709's zscale treats the frames as bt709, but the default JPEG frames are bt601,
+  // so renders ship bt601 values tagged bt709 and play warm. PNG frames are RGB.
+  imageFormat: 'png',
+```
+
+PNG frames are stored as RGB with no colour matrix baked in. When ffmpeg converts RGB into BT.709 YUV, there is no mismatched source matrix to get wrong, so the conversion is exact. I preferred this over setting `matrixin=601` because the output genuinely should be BT.709, and making the input match that target keeps one colour space flowing through the pipeline instead of layering a second conversion to compensate for a lossy capture format.
+
+The same measurement that exposed the bug confirmed the fix. Red-minus-blue versus the upload went from +5.07 to -0.15, and saturation from +9.4 percent to +2.9 percent. The render now matches the source to within rounding.
+
+The cost is real. PNG is larger and slower to write than JPEG, so render time rose from 85.1 to 103.0 seconds, about 21 percent, and Lambda cost from $0.060 to $0.076, about 27 percent, on that same edit. For a feature whose core promise is that the exported video looks like what you recorded, correct colour at a 27 percent cost bump was an easy call.
+
+## the normalization detour i threw away
+
+Before landing on three lines of config, I spent real time on a far bigger approach. Difficult source files (HDR, odd frame rates, unusual codecs) were causing several of the colour and frame defects, so I built a source normalization pipeline that transcoded awkward uploads before they reached the renderer, including an HLG tone-map and a duration ceiling tuned to the encode speed measured on Lambda rather than on a laptop.
+
+Then I removed it. The normalization added 591 lines of plumbing to the render path and solved problems that the targeted colour and audio fixes already covered more cheaply. I reverted the whole thing and kept only the colour and audio changes. The tone-mapping work did leave one durable finding behind, from a separate Safari investigation: Safari flattens HDR to 8-bit sRGB during decode, before any application code can touch the frame, so for HDR the realistic fix is a warning at upload time, not a client-side correction.
+
+The lesson I keep relearning is that a big, general pipeline feels like the thorough answer and is often the wrong one. The real fix here was changing one default.
+
+## what i would change
+
+The thing that cost me the most was invisibility. Two defaults disagreed (JPEG capture is BT.601, the encode assumes BT.709) and nothing in the code or the logs said so. I would add an assertion or a log line in the render path that records the capture format and the encode's assumed input matrix together, so a future mismatch is a visible warning instead of a colour shift someone has to report and I have to measure to find.
+
+I would also keep the measurement harness as a permanent check rather than a one-off. The red-minus-blue and saturation comparison against the source is exactly the kind of thing that should run on a reference clip in CI, because this class of bug ships clean: every step succeeds, no error is thrown, and the only signal is that the picture is slightly wrong. A green pipeline told me nothing both times this broke. A number comparing output to source would have caught it before a user did.
