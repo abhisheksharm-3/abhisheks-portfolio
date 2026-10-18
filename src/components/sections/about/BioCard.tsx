@@ -23,8 +23,8 @@ export const BioCard = () => {
         <div className="h-px bg-primary/10" />
 
         <p>
-          most of what i do sits somewhere between frontend, backend, and mobile. i enjoy shipping
-          stuff that actually feels good to use, not just works. that balance between technical
+          most of what i do now is backend and ai: agent pipelines, payments, and the infra under
+          them. i still want it to feel good to use, not just work. that balance between technical
           detail and user experience is what keeps me hooked.
         </p>
 
@@ -42,9 +42,10 @@ export const BioCard = () => {
             >
               wednesday.is
             </a>
-            : own problems from discovery to deployment. right now that means an autonomous ai
-            content pipeline (langgraph + fastapi + pgvector), off grid&apos;s tts and voice loop
-            with hardware aec, and a multi-tenant lms on aws.
+            : own problems from discovery to deployment. right now that means an ai video platform
+            for creators: scriptwriting agents, a lambda render path, stripe billing, and social
+            analytics. before that, an autonomous content pipeline (langgraph + fastapi + pgvector),
+            off grid&apos;s voice loop, and a multi-tenant lms on aws.
           </p>
         </div>
 
@@ -56,7 +57,7 @@ export const BioCard = () => {
         <div className="h-px bg-primary/10" />
 
         <p>
-          hackathons shaped a lot of how i work. building a media verification tool in a day,
+          hackathons shaped a lot of how i work. building a media verification tool in a month,
           shipping under pressure, learning that a working v1 is worth more than a perfect v0. those
           sprints are in my muscle memory.
         </p>

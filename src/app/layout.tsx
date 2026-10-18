@@ -34,12 +34,13 @@ const basteleur = localFont({
  */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Abhishek Sharma | Developer",
+  title: "Abhishek Sharma | Forward Deployed Engineer",
   description:
-    "I'm Abhishek Sharma. I design and build for the web and mobile. This is my corner of the internet to share what I work on.",
+    "I'm Abhishek Sharma, a forward deployed engineer at Wednesday Solutions. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
   openGraph: {
-    title: "Abhishek Sharma | Developer",
-    description: "I build web apps, Android apps, and AI systems. This is my work.",
+    title: "Abhishek Sharma | Forward Deployed Engineer",
+    description:
+      "Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
     url: SITE_URL,
     siteName: "Abhishek Sharma",
     images: [
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Abhishek Sharma | Developer",
+        alt: "Abhishek Sharma | Forward Deployed Engineer",
       },
     ],
     locale: "en_US",
@@ -55,8 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Abhishek Sharma | Developer",
-    description: "I build for web and mobile. This site is where I share my work.",
+    title: "Abhishek Sharma | Forward Deployed Engineer",
+    description:
+      "Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },
@@ -65,7 +67,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
     types: {
-      "application/rss+xml": [{ url: "/writing/feed.xml", title: "Abhishek Sharma — Writing" }],
+      "application/rss+xml": [{ url: "/writing/feed.xml", title: "Writing by Abhishek Sharma" }],
       "text/plain": [{ url: "/llms.txt", title: "Site index for agents" }],
     },
   },

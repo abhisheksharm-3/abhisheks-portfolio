@@ -5,11 +5,28 @@ import type { ProjectType } from "@/lib/types/components";
  */
 export const projects: ProjectType[] = [
   {
+    title: "AI video platform",
+    slug: "ai-video-platform",
+    description:
+      "client work: an ai video platform for creators, in production with 200+ paying customers",
+    longDescription:
+      "brought in to cover a month of leave in june 2026, still running it. i own the money path, the releases, and the production database for an ai video platform i can't name: scriptwriting agents, a remotion render path on aws lambda, stripe billing and plan migrations, a social analytics pipeline, and team roles with impersonation and an audit trail.",
+    imageSrc: "/images/projects/ai-video-platform.png",
+    tags: ["TypeScript", "React", "Supabase", "Stripe", "AWS Lambda", "Remotion", "Python"],
+    year: "2026",
+    isFeatured: true,
+    role: "forward deployed engineer",
+    client: "client work, via wednesday solutions",
+    duration: "june 2026 - present",
+    category: "ai",
+    isBuilding: true,
+  },
+  {
     title: "Polaris",
     slug: "polaris",
     description: "a project operating system for claude code",
     longDescription:
-      "polaris runs the whole software lifecycle inside claude code — research, design, build, review, qa, docs, ship, operate — behind one quality bar. eighteen flows live in a json table, so adding one is a table row, not a script. you never type a flow name: a prompt hook classifies the work, opens the run, and says which flow it picked. the standard it enforces on your code, it enforces on itself.",
+      "polaris runs the whole software lifecycle inside claude code (research, design, build, review, qa, docs, ship, operate) behind one quality bar. eighteen flows live in a json table, so adding one is a table row, not a script. you never type a flow name: a prompt hook classifies the work, opens the run, and says which flow it picked. the standard it enforces on your code, it enforces on itself.",
     imageSrc: "/images/projects/polaris.png",
     tags: ["Claude Code", "TypeScript", "Agents", "Developer Tooling"],
     year: "2026",
@@ -26,7 +43,7 @@ export const projects: ProjectType[] = [
     slug: "credify",
     description: "hackathon-winning media verification platform",
     longDescription:
-      "built this in 1.5 months for google + devfolio’s gen ai exchange hackathon. we hacked together a tampering detection and attribution system with next.js frontend and fastapi backend. three-person team, i led, we actually shipped a working product and won. mostly about moving fast, dividing work smart, and finishing.",
+      "built this in 1 month for google + devfolio’s gen ai exchange hackathon. we hacked together a tampering detection and attribution system with next.js frontend and fastapi backend. three-person team, i led, we actually shipped a working product and won. mostly about moving fast, dividing work smart, and finishing.",
     imageSrc: "/images/projects/credify.png",
     tags: ["NextJs", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2024",
@@ -50,7 +67,7 @@ export const projects: ProjectType[] = [
     year: "2025",
     url: "https://github.com/abhisheksharm-3/flockr/releases",
     github: "https://github.com/abhisheksharm-3/flockr",
-    isFeatured: true,
+    isFeatured: false,
     role: "solo developer",
     client: "personal project",
     duration: "November 2025 - Present",
@@ -203,18 +220,18 @@ export const projects: ProjectType[] = [
   {
     title: "QuickGist",
     slug: "quickgist",
-    description: "fast code snippet sharing (react + go).",
+    description: "markdown and code sharing, rendered on the server (go + react).",
     longDescription:
-      "react + go project. share snippets and binaries with sub-100ms response. ended up being used by 20+ peers for collab. uptime mattered, so i obsessed over speed. my sub-100ms goals sometimes get wrecked by render’s free tier pausing the server after 15 min of no activity, but i see a way out of that mess very soon.",
+      "paste markdown or code, get a link, send it. no account needed. first built in 2024 with react + go and used by 20+ peers. rebuilt in 2026 on supabase postgres: authorization lives in row-level security, so a handler that forgets a check still can’t read someone else’s private gist. markdown and ~250 languages render on the server with goldmark and chroma, and the html is cached in postgres keyed to a renderer version.",
     imageSrc: "/images/projects/quickgist.png",
-    tags: ["Go", "React", "TypeScript", "TailwindCSS"],
+    tags: ["Go", "React", "TypeScript", "Supabase", "PostgreSQL"],
     year: "2024",
     url: "https://quickgist.vercel.app/",
     github: "https://github.com/abhisheksharm-3/quickgist",
     isFeatured: false,
     role: "full stack developer",
     client: "personal project",
-    duration: "August 2024 – November 2024",
+    duration: "August 2024, rebuilt September 2026",
     category: "web",
     isBuilding: false,
   },

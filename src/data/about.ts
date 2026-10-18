@@ -36,7 +36,7 @@ export const EXPERIENCE_DATA = [
     subtitle: "Wednesday Solutions",
     date: "Feb 2026 – Present",
     description:
-      "forward deployed engineer: own problems from discovery to deployment. shipped an autonomous ai content pipeline (langgraph, fastapi, pgvector), off grid's tts and voice loop with hardware aec, and a multi-tenant lms on aws (ecs, sqs, terraform). passed probation.",
+      "forward deployed engineer: own problems from discovery to deployment. now on an ai video platform for creators: scriptwriting agents, a lambda render path, stripe billing and plan migrations, and social analytics. before that, shipped an autonomous ai content pipeline (langgraph, fastapi, pgvector), off grid's tts and voice loop with hardware aec, and a multi-tenant lms on aws (ecs, sqs, terraform). passed probation.",
   },
   {
     title: "Software Development Intern",

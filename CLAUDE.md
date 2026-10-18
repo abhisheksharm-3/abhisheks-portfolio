@@ -78,8 +78,7 @@ Default to surfacing uncertainty, not hiding it.
 | `npm run check-post content/posts/<slug>.mdx` | Validate a post before publishing |
 
 There is no test suite. `npm run check-webmcp` is the only automated check: a node script that
-exercises the WebMCP tool handlers. Playwright is installed as a devDependency but no
-`playwright.config.*` and no test files exist, so treat E2E as unbuilt, not broken.
+exercises the WebMCP tool handlers. There is no E2E setup.
 
 ## Architecture
 

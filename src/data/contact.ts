@@ -28,6 +28,9 @@ export const CONTACT_INFO = {
   },
 } as const;
 
+/** Resume link for the about page. Set it to a URL and the row appears; null hides it. */
+export const RESUME_URL: string | null = null;
+
 /**
  * Social media links with consistent styling
  */

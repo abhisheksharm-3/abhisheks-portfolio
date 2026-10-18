@@ -1,13 +1,20 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { SOCIAL_LINKS } from "@/data/contact";
+import { RESUME_URL, SOCIAL_LINKS } from "@/data/contact";
 
 /**
  * Renders contact details, social media links, and a CTA on the about page.
  * Minimal editorial style — no card wrapper.
  */
 export const ContactCard = () => {
+  const links = [
+    ...SOCIAL_LINKS,
+    ...(RESUME_URL
+      ? [{ label: "Resume", href: RESUME_URL, displayUrl: RESUME_URL.replace(/^https?:\/\//, "") }]
+      : []),
+  ];
+
   return (
     <div className="h-full flex flex-col gap-8">
       <div className="relative w-full aspect-square overflow-hidden group">
@@ -24,7 +31,7 @@ export const ContactCard = () => {
           elsewhere
         </p>
         <div>
-          {SOCIAL_LINKS.map(({ label, href, displayUrl }) => (
+          {links.map(({ label, href, displayUrl }) => (
             <Link
               key={label}
               href={href}

@@ -3,9 +3,17 @@ import type { ReactNode } from "react";
 import { projects } from "@/data/projects";
 import { breadcrumbSchema, JsonLd, projectSchema } from "@/lib/seo/json-ld";
 
+/**
+ * Projects with their own route under src/app/projects/. Prerendering them here too
+ * writes a second <slug>.html, and whichever the build writes last is what gets served.
+ */
+const HAND_BUILT_SLUGS = new Set(["polaris", "ai-video-platform"]);
+
 /** Every project is known at build time, so every project page is prerendered. */
 export function generateStaticParams() {
-  return projects.map((project) => ({ slug: project.slug }));
+  return projects
+    .filter((project) => !HAND_BUILT_SLUGS.has(project.slug))
+    .map((project) => ({ slug: project.slug }));
 }
 
 /**
@@ -26,6 +34,8 @@ export async function generateMetadata({
     title: `${project.title} | Abhishek Sharma`,
     description: project.longDescription ?? project.description,
     keywords: project.tags,
+    // Archived projects are early learning work; their pages stay reachable but out of search.
+    ...(project.isArchived && { robots: { index: false } }),
     alternates: { canonical: `/projects/${project.slug}` },
     openGraph: {
       title: project.title,

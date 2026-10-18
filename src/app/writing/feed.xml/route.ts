@@ -28,9 +28,9 @@ async function renderFeed(): Promise<string> {
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">',
     "  <channel>",
-    `    <title>${escapeXml(AUTHOR.name)} — Writing</title>`,
+    `    <title>Writing by ${escapeXml(AUTHOR.name)}</title>`,
     `    <link>${SITE_URL}/writing</link>`,
-    "    <description>Posts on building web apps, Android apps, and AI systems.</description>",
+    "    <description>Posts on building AI agent pipelines, backend systems, and infra.</description>",
     "    <language>en-us</language>",
     `    <atom:link href="${SITE_URL}/writing/feed.xml" rel="self" type="application/rss+xml" />`,
     ...(updated

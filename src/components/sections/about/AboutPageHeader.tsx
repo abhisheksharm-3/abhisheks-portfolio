@@ -10,7 +10,7 @@ export const AboutPageHeader = () => {
     <PageHeader
       eyebrow="about me"
       title="abhishek sharma"
-      intro="software engineer at wednesday. i build ai pipelines, android apps, and web platforms. i care about shipping things that actually work, not just things that look good in a PR description."
+      intro="forward deployed engineer at wednesday. i build ai agent pipelines, billing systems, and the infra under them. i care about shipping things that actually work, not just things that look good in a PR description."
     />
   );
 };

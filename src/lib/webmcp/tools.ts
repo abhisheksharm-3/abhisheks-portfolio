@@ -83,7 +83,7 @@ export function createSiteTools({
           matches
             .map(
               (project) =>
-                `${project.title} (${project.year}) — ${project.description}. Stack: ${project.tags.join(", ")}. ${SITE_URL}/projects/${project.slug}`,
+                `${project.title} (${project.year}): ${project.description}. Stack: ${project.tags.join(", ")}. ${SITE_URL}/projects/${project.slug}`,
             )
             .join("\n"),
         );
@@ -115,7 +115,7 @@ export function createSiteTools({
           matches
             .map(
               (post) =>
-                `${post.title} (${post.date}, ${post.readingTime} min) — ${post.subhead} ${SITE_URL}/writing/${post.slug}`,
+                `${post.title} (${post.date}, ${post.readingTime} min): ${post.subhead} ${SITE_URL}/writing/${post.slug}`,
             )
             .join("\n"),
         );

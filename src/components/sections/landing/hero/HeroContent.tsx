@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ChevronDown } from "lucide-react";
+import Link from "next/link";
 import type React from "react";
 import { HERO_SKILLS } from "@/data/skills-expertise";
 
@@ -53,7 +54,7 @@ export const HeroTagline: React.FC = () => (
     transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
     className="mt-8 max-w-xl text-lg sm:text-xl md:text-2xl font-light leading-snug text-foreground/65"
   >
-    software engineer: ai systems, mobile builds, side projects past midnight.
+    ai agents, billing, and infra, from first call to production. side projects past midnight.
   </motion.p>
 );
 
@@ -69,8 +70,15 @@ export const HeroNow: React.FC = () => (
     transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
   >
     <p>
-      currently building a multi-agent scripting platform for video creators: generation on aws
-      lambda, voice-profile retrieval, transcription, and model routing with fallback.
+      currently on an{" "}
+      <Link
+        href="/projects/ai-video-platform"
+        className="underline decoration-foreground/20 underline-offset-4 transition-colors duration-200 hover:text-foreground/70 hover:decoration-foreground/45"
+      >
+        ai video platform for creators
+      </Link>
+      : the scriptwriting agent pipeline, an ai video editor that renders on aws lambda, stripe
+      billing, and social analytics.
     </p>
     <p className="text-foreground/35">
       winner of the network18 track at google&apos;s gen ai exchange hackathon.

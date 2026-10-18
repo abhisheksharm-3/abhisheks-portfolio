@@ -16,7 +16,7 @@ export const ProjectCard = ({ project, priority = false }: ProjectCardPropsType)
             src={project.imageSrc}
             alt={project.title}
             fill
-            className="object-cover grayscale brightness-90 transition-[transform,filter] duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
+            className="object-cover object-left grayscale brightness-90 transition-[transform,filter] duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority={priority}
             loading={priority ? undefined : "lazy"}

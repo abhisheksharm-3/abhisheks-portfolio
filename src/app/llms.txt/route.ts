@@ -16,7 +16,7 @@ async function renderIndex(): Promise<string> {
   const body = [
     `# ${AUTHOR.name}`,
     "",
-    "> Full-stack developer. I build web apps, Android apps, and AI systems.",
+    "> Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
     "> This site holds my projects, the work I abandoned, and what I write about building things.",
     "",
     `${stats.posts} write-ups, ${stats.words.toLocaleString("en-US")} words, ${stats.questions} questions answered, all from production incidents.`,

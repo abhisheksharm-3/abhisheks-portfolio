@@ -6,7 +6,6 @@ import { SITE_URL } from "@/lib/site";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPosts();
   const baseUrl = SITE_URL;
-  const siteUpdatedAt = new Date("2026-05-30");
 
   const staticRoutes = [
     { path: "", changeFrequency: "monthly", priority: 1 },
@@ -19,17 +18,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticEntries = staticRoutes.map((entry) => ({
     url: `${baseUrl}${entry.path}`,
-    lastModified: siteUpdatedAt,
     changeFrequency: entry.changeFrequency,
     priority: entry.priority,
   })) satisfies MetadataRoute.Sitemap;
 
-  const projectEntries = projects.map((project) => ({
-    url: `${baseUrl}/projects/${project.slug}`,
-    lastModified: siteUpdatedAt,
-    changeFrequency: "yearly",
-    priority: project.isArchived ? 0.3 : project.isFeatured ? 0.8 : 0.6,
-  })) satisfies MetadataRoute.Sitemap;
+  const projectEntries = projects
+    .filter((project) => !project.isArchived)
+    .map((project) => ({
+      url: `${baseUrl}/projects/${project.slug}`,
+      changeFrequency: "yearly",
+      priority: project.isFeatured ? 0.8 : 0.6,
+    })) satisfies MetadataRoute.Sitemap;
 
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: `${baseUrl}/writing/${post.slug}`,

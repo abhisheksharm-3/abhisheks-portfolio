@@ -28,7 +28,7 @@ async function renderCorpus(): Promise<string> {
     );
 
   const body = [
-    `# ${AUTHOR.name} — complete writing`,
+    `# ${AUTHOR.name}: complete writing`,
     "",
     `> Every published post on ${SITE_URL}, in full.`,
     "",

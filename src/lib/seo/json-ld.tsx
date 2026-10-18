@@ -19,7 +19,8 @@ export const personSchema = {
   url: SITE_URL,
   email: `mailto:${AUTHOR.email}`,
   jobTitle: "Software Engineer",
-  description: "Full-stack developer. I build web apps, Android apps, and AI systems.",
+  description:
+    "Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
   sameAs: [AUTHOR.github, AUTHOR.linkedin, AUTHOR.x],
   knowsAbout: KNOWS_ABOUT,
   hasOccupation: {

@@ -24,7 +24,7 @@ export const ProjectImageContainer = ({ project, isHovered }: ProjectCardPartPro
         src={project.imageSrc}
         alt={project.title}
         fill
-        className={`object-cover transition-all duration-500 ${
+        className={`object-cover object-left transition-all duration-500 ${
           isHovered ? "grayscale-0 brightness-100" : "grayscale brightness-90"
         }`}
         sizes="(max-width: 1024px) 100vw, 50vw"
