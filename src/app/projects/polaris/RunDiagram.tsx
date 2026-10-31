@@ -28,7 +28,7 @@ const buildDefinition = (phases: string[]) => {
   IN(["your prompt"]) --> CL["classify<br/><span class='sub'>hooks/enhance-prompt</span>"]
   CL -- "no row matches" --> CO["compose a flow"]
   CO -- "validated as a row" --> LG
-  CL -- "one of eighteen flows" --> LG[("run ledger<br/><span class='sub'>.polaris/runs/&lt;slug&gt;/state.json</span>")]
+  CL -- "one of twenty-seven flows" --> LG[("run ledger<br/><span class='sub'>.polaris/runs/&lt;slug&gt;/state.json</span>")]
   LG --> P0
 ${nodes}
 ${links}

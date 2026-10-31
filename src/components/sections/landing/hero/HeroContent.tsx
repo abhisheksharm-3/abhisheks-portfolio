@@ -70,15 +70,15 @@ export const HeroNow: React.FC = () => (
     transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
   >
     <p>
-      currently on an{" "}
+      currently running billing and releases for{" "}
       <Link
         href="/projects/ai-video-platform"
         className="underline decoration-foreground/20 underline-offset-4 transition-colors duration-200 hover:text-foreground/70 hover:decoration-foreground/45"
       >
-        ai video platform for creators
+        a client&apos;s ai video platform
       </Link>
-      : the scriptwriting agent pipeline, an ai video editor that renders on aws lambda, stripe
-      billing, and social analytics.
+      , with 170+ paying customers and ~$200k mrr. stripe billing, plan migrations, social
+      analytics, and every production release.
     </p>
     <p className="text-foreground/35">
       winner of the network18 track at google&apos;s gen ai exchange hackathon.

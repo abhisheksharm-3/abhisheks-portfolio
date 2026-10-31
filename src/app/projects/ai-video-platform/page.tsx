@@ -17,12 +17,12 @@ const TRUSTED = [
   {
     name: "plan migrations",
     detail:
-      "moved every eligible monthly and annual customer onto modular pricing, live in stripe. each account got a dry run first, and the batch had a rollback path.",
+      "moved 55 live subscriptions, monthly and annual, onto modular pricing in stripe. each account got a dry run first, and the batch had a rollback path.",
   },
   {
     name: "releases",
     detail:
-      "i promote to main and write the release notes the founder reads. one release carried 57 pull requests across eight product areas.",
+      "i promote to main and write the release notes the founders read: 42 production releases since june, each migration checked against the live schema first.",
   },
   {
     name: "production data",
@@ -32,7 +32,7 @@ const TRUSTED = [
   {
     name: "the support queue",
     detail:
-      "customer reports come straight to me, and go back with a root cause, a fix, and when it ships.",
+      "customer reports come straight to me, and go back with a root cause, a fix, and when it ships. 68 fixes in four months.",
   },
 ];
 
@@ -40,12 +40,12 @@ const BUILT = [
   {
     name: "scriptwriting agents",
     detail:
-      "a pipeline that plans a script's spine, drafts from it, and ties every figure to a cited source.",
+      "a pipeline that plans a script and ties every figure to a cited source. paused for now: accurate, but too fact-heavy to sound right on camera yet.",
   },
   {
-    name: "ai video editor",
+    name: "render fixes",
     detail:
-      "a render path on remotion and aws lambda, with a browser-side re-encode that took frozen frames to zero.",
+      "the editor is a teammate's; i own what feeds its lambda render. a browser-side re-encode took frozen frames from 23.42% to 0.00%.",
   },
   {
     name: "billing",
@@ -60,11 +60,12 @@ const BUILT = [
   {
     name: "teams",
     detail:
-      "seat permissions enforced in the database, log-in-as for admins, and an audit trail of every action taken on someone's behalf.",
+      "co-built with a teammate: seat permissions in one postgres rule that the database, edge functions, and ui all read, plus an audit trail of every action taken on someone's behalf.",
   },
   {
     name: "ci",
-    detail: "an overhaul to node 24, tests on changed files only, and zero type errors.",
+    detail:
+      "712 type errors to zero across 46 prs, tests on changed files only, and feature-pr ci from 48 minutes to under 5.",
   },
 ];
 
@@ -153,11 +154,11 @@ const AiVideoPlatformPage = () => {
 
           <div className="space-y-6 self-end border-t border-foreground/10 pt-6 lg:border-t-0 lg:pt-0">
             <p className="font-mono text-[11px] leading-loose tracking-[0.15em] text-foreground/40">
-              200+ paying customers
+              170+ paying customers
               <br />
-              ~$270k billed a month
+              ~$200k mrr
               <br />
-              in production since june 2026
+              on it since june 2026
               <br />
               two engineers
             </p>
@@ -223,13 +224,13 @@ const AiVideoPlatformPage = () => {
               </p>
               <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
                 The last one was the frame format: capturing PNG instead of JPEG made the colour
-                exact, at 21% more render time and 27% more render cost. The client heard those
-                numbers before it shipped, not after.
+                exact, at 21% more render time and 27% more render cost. The acceptance test was a
+                re-render of a real customer video.
               </p>
               <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
-                Analytics went the other way. Halfway in, the design turned out to store the same
-                lifetime counter again and again, with no usable time series. I closed the open pull
-                requests, wrote down the decision, and started over from it.
+                Analytics went the other way. The old design stored the same lifetime counter again
+                and again: 10,254 rows over six months and no usable time series. I wrote down the
+                decision and rebuilt it as an append-only archive.
               </p>
             </div>
           </Row>

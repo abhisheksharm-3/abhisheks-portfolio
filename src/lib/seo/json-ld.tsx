@@ -20,12 +20,12 @@ export const personSchema = {
   email: `mailto:${AUTHOR.email}`,
   jobTitle: "Associate Forward Deployed Engineer",
   description:
-    "Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
+    "Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform at ~$200K MRR, and build AI agent pipelines and the infra they run on.",
   sameAs: [AUTHOR.github, AUTHOR.linkedin, AUTHOR.x],
   knowsAbout: KNOWS_ABOUT,
   hasOccupation: {
     "@type": "Occupation",
-    name: "Forward Deployed Engineer",
+    name: "Associate Forward Deployed Engineer",
     occupationLocation: { "@type": "Country", name: "India" },
     skills: KNOWS_ABOUT.join(", "),
   },
@@ -41,7 +41,7 @@ export const personSchema = {
   award: "Winner of the Network18 track at Google's Gen AI Exchange Hackathon, 2024",
   address: {
     "@type": "PostalAddress",
-    addressLocality: "Chandigarh",
+    addressLocality: "Pune",
     addressCountry: "IN",
   },
 };

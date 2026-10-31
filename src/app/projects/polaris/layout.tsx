@@ -6,7 +6,7 @@ import { breadcrumbSchema, JsonLd, projectSchema } from "@/lib/seo/json-ld";
 export const metadata: Metadata = {
   title: "Polaris | Abhishek Sharma",
   description:
-    "A project operating system for Claude Code: eighteen flows, thirty-one commands, and the gates that keep an agent honest.",
+    "A project operating system for Claude Code: twenty-seven flows, thirty-one commands, and the gates that keep an agent honest.",
 };
 
 /**

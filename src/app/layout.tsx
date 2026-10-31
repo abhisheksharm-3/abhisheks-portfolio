@@ -34,13 +34,13 @@ const basteleur = localFont({
  */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Abhishek Sharma | Forward Deployed Engineer",
+  title: "Abhishek Sharma | Associate Forward Deployed Engineer",
   description:
-    "I'm Abhishek Sharma, a forward deployed engineer at Wednesday Solutions. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
+    "I'm Abhishek Sharma, an associate forward deployed engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform at ~$200K MRR, and build AI agent pipelines and the infra they run on.",
   openGraph: {
-    title: "Abhishek Sharma | Forward Deployed Engineer",
+    title: "Abhishek Sharma | Associate Forward Deployed Engineer",
     description:
-      "Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
+      "Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform, and build AI agents and the infra they run on.",
     url: SITE_URL,
     siteName: "Abhishek Sharma",
     images: [
@@ -48,7 +48,7 @@ export const metadata: Metadata = {
         url: "/images/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Abhishek Sharma | Forward Deployed Engineer",
+        alt: "Abhishek Sharma | Associate Forward Deployed Engineer",
       },
     ],
     locale: "en_US",
@@ -56,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Abhishek Sharma | Forward Deployed Engineer",
+    title: "Abhishek Sharma | Associate Forward Deployed Engineer",
     description:
-      "Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
+      "Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform, and build AI agents and the infra they run on.",
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },

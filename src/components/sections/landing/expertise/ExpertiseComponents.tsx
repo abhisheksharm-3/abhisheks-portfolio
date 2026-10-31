@@ -87,9 +87,9 @@ export const FeaturedSkillsSection = ({
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
           className="text-foreground/55 text-sm font-light leading-relaxed mb-6"
         >
-          i keep it simple: start small, ship fast, tweak along the way. could be spinning up an ai
-          bot in a weekend or rolling out a backend that just scales. i move quick, but never forget
-          the details that make things actually usable.
+          i keep it simple: start small, ship fast, tweak along the way. could be a sales checkout
+          live 11 days after the demo, or a 26-agent content engine in four weeks. i move quick, but
+          never forget the details that make things actually usable.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

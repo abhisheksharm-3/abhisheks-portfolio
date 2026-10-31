@@ -16,10 +16,10 @@ async function renderIndex(): Promise<string> {
   const body = [
     `# ${AUTHOR.name}`,
     "",
-    "> Forward deployed engineer. I build AI agent pipelines, billing systems, and the infra they run on, from discovery to production.",
+    "> Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform at ~$200K MRR, and build AI agent pipelines and the infra they run on.",
     "> This site holds my projects, the work I abandoned, and what I write about building things.",
     "",
-    `${stats.posts} write-ups, ${stats.words.toLocaleString("en-US")} words, ${stats.questions} questions answered, all from production incidents.`,
+    `${stats.posts} write-ups, ${stats.words.toLocaleString("en-US")} words, ${stats.questions} questions answered, mostly from production work.`,
     "",
     "Every post is also available as raw markdown at the same URL with `.md` appended.",
     `The complete text of every post is at ${SITE_URL}/llms-full.txt.`,

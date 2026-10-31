@@ -36,21 +36,21 @@ export const EXPERIENCE_DATA = [
     subtitle: "Wednesday Solutions",
     date: "Feb 2026 – Present",
     description:
-      "forward deployed engineer: own problems from discovery to deployment. now on an ai video platform for creators: scriptwriting agents, a lambda render path, stripe billing and plan migrations, and social analytics. before that, shipped an autonomous ai content pipeline (langgraph, fastapi, pgvector), off grid's tts and voice loop with hardware aec, and a multi-tenant lms on aws (ecs, sqs, terraform). passed probation.",
+      "own problems from discovery to deployment. since june 2026, a client's ai video platform at ~$200k mrr: stripe billing and plan migrations, a sales checkout, social analytics, render fixes, and 42 production releases. before that, re-architected a us edtech client's grading platform on spring boot and aws (ecs, sqs, terraform), built an autonomous content engine (langgraph, fastapi, pgvector), and prototyped hands-free voice mode for off grid in a week. passed probation.",
   },
   {
     title: "Software Development Intern",
     subtitle: "Stardom",
     date: "Jan 2025 – Jun 2025",
     description:
-      "took charge of building stardom's web presence from scratch with next.js. tweaked and tuned the frontend till it actually felt fast. also set up their cloud infra + email systems. basically made sure things didn't break when people actually started using it.",
+      "built stardom's first web platform from scratch in next.js, with appwrite and react query services and a custom cms built alongside a freelancer. also set up their cloud and email, with netlify deploys on every merge.",
   },
   {
     title: "Winner – Network18 Track",
     subtitle: "Gen AI Exchange Hackathon (Google)",
     date: "Oct 2024",
     description:
-      "built 'credify', an ai-powered media verification tool. we hacked together machine learning + attribution logic to fight fake media and ended up winning the track. intense 1 month, but super worth it.",
+      "led a three-person team on 'credify', a media verification tool: it hashes content to trace the first uploader, flags forgeries, and fact-checks with gemini. one intense month on next.js and fastapi, and we won the track.",
   },
 ] as const;
 

@@ -15,24 +15,49 @@ import { RunDiagram } from "./RunDiagram";
 
 /** Every flow in rules/flows.json, with the phases it runs in order. */
 const FLOWS: { name: string; phases: string[] }[] = [
-  { name: "feature", phases: ["spec", "design", "build", "ship"] },
-  { name: "foggy", phases: ["recon", "spec", "design", "build", "ship"] },
+  {
+    name: "feature",
+    phases: ["spec", "experience", "contract", "schema", "threat-model", "design", "build", "ship"],
+  },
+  {
+    name: "foggy",
+    phases: [
+      "recon",
+      "spec",
+      "experience",
+      "contract",
+      "schema",
+      "threat-model",
+      "design",
+      "build",
+      "ship",
+    ],
+  },
   { name: "bug", phases: ["reproduce", "rootcause", "fix", "verify", "ship"] },
-  { name: "incident", phases: ["mitigate", "rootcause", "prevent", "notes"] },
-  { name: "audit", phases: ["audit", "triage", "fix", "verify"] },
-  { name: "security", phases: ["threat-model", "harden", "verify"] },
-  { name: "modernize", phases: ["survey", "upgrade", "qa", "ship"] },
-  { name: "release", phases: ["gate", "notes", "release"] },
-  { name: "qa", phases: ["break", "fix", "verify"] },
-  { name: "cleanup", phases: ["cleanup", "gate", "ship"] },
-  { name: "docs", phases: ["drift", "write", "gate"] },
-  { name: "review", phases: ["review", "verify"] },
-  { name: "fix", phases: ["implement", "gate", "ship"] },
-  { name: "spike", phases: ["spike", "decide"] },
+  { name: "continuation", phases: [] },
+  { name: "conversation", phases: [] },
   { name: "trivial", phases: ["edit", "gate"] },
+  { name: "fix", phases: ["implement", "gate", "ship"] },
+  { name: "ship", phases: ["gate", "ship"] },
+  { name: "migration", phases: ["plan", "migrate", "verify", "ship"] },
+  { name: "perf", phases: ["measure", "fix", "remeasure", "ship"] },
+  { name: "integration", phases: ["contract", "threat-model", "build", "verify", "ship"] },
+  { name: "design", phases: ["direction", "build", "critique", "polish", "gate"] },
+  { name: "testing", phases: ["survey", "write", "prove", "gate"] },
+  { name: "spike", phases: ["spike", "decide"] },
+  { name: "review", phases: ["review", "verify"] },
+  { name: "audit", phases: ["audit", "triage", "fix", "verify"] },
+  { name: "qa", phases: ["break", "pin", "fix", "verify"] },
+  { name: "cleanup", phases: ["cleanup", "gate", "ship"] },
+  { name: "security", phases: ["threat-model", "harden", "verify"] },
+  { name: "incident", phases: ["mitigate", "rootcause", "prevent", "notes"] },
+  { name: "release", phases: ["gate", "notes", "release"] },
+  { name: "readiness", phases: ["audit", "observe", "rollout", "ship"] },
+  { name: "platform", phases: ["change", "gate", "ship"] },
+  { name: "modernize", phases: ["survey", "upgrade", "qa", "ship"] },
+  { name: "docs", phases: ["drift", "write", "gate"] },
   { name: "research", phases: ["research"] },
   { name: "context", phases: ["catchup"] },
-  { name: "conversation", phases: [] },
 ];
 
 const GUARDS = [
@@ -106,13 +131,13 @@ const PolarisPage = () => {
 
           <div className="space-y-6 self-end border-t border-foreground/10 pt-6 lg:border-t-0 lg:pt-0">
             <p className="font-mono text-[11px] leading-loose tracking-[0.15em] text-foreground/40">
-              eighteen flows
+              twenty-seven flows
               <br />
               thirty-one commands
               <br />
-              twenty-seven agents
+              twenty-nine agents
               <br />
-              thirteen hooks
+              sixteen hooks
             </p>
             <p className="text-sm font-light leading-relaxed text-foreground/55">
               It holds itself to the bar it holds you to.

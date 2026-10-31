@@ -42,10 +42,11 @@ export const BioCard = () => {
             >
               wednesday.is
             </a>
-            : own problems from discovery to deployment. right now that means an ai video platform
-            for creators: scriptwriting agents, a lambda render path, stripe billing, and social
-            analytics. before that, an autonomous content pipeline (langgraph + fastapi + pgvector),
-            off grid&apos;s voice loop, and a multi-tenant lms on aws.
+            : own problems from discovery to deployment. right now that means a client&apos;s ai
+            video platform at ~$200k mrr: stripe billing, plan migrations, social analytics, and
+            every production release. before that, a us edtech client&apos;s grading platform on
+            spring boot and aws, an autonomous content engine (langgraph + fastapi + pgvector), and
+            a one-week voice mode prototype for off grid.
           </p>
         </div>
 

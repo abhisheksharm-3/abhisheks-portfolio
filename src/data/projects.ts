@@ -8,14 +8,14 @@ export const projects: ProjectType[] = [
     title: "AI video platform",
     slug: "ai-video-platform",
     description:
-      "client work: an ai video platform for creators, in production with 200+ paying customers",
+      "client work: billing and releases for an ai video platform with 170+ paying customers and ~$200k mrr",
     longDescription:
-      "brought in to cover a month of leave in june 2026, still running it. i own the money path, the releases, and the production database for an ai video platform i can't name: scriptwriting agents, a remotion render path on aws lambda, stripe billing and plan migrations, a social analytics pipeline, and team roles with impersonation and an audit trail.",
+      "brought in to cover a month of leave in june 2026, still running it. i own the money path, the releases, and the production database for an ai video platform i can't name, at ~$200k mrr: stripe billing and plan migrations, a sales checkout, social analytics across five networks, render fixes for the video editor, and team access co-built with a teammate. 746 pull requests merged since june.",
     imageSrc: "/images/projects/ai-video-platform.png",
     tags: ["TypeScript", "React", "Supabase", "Stripe", "AWS Lambda", "Remotion", "Python"],
     year: "2026",
     isFeatured: true,
-    role: "forward deployed engineer",
+    role: "associate forward deployed engineer",
     client: "client work, via wednesday solutions",
     duration: "june 2026 - present",
     category: "ai",
@@ -26,7 +26,7 @@ export const projects: ProjectType[] = [
     slug: "polaris",
     description: "a project operating system for claude code",
     longDescription:
-      "polaris runs the whole software lifecycle inside claude code (research, design, build, review, qa, docs, ship, operate) behind one quality bar. eighteen flows live in a json table, so adding one is a table row, not a script. you never type a flow name: a prompt hook classifies the work, opens the run, and says which flow it picked. the standard it enforces on your code, it enforces on itself.",
+      "polaris runs the whole software lifecycle inside claude code (research, design, build, review, qa, docs, ship, operate) behind one quality bar. twenty-seven flows live in a json table, so adding one is a table row, not a script. you never type a flow name: a prompt hook classifies the work, opens the run, and says which flow it picked. the standard it enforces on your code, it enforces on itself. twelve releases so far, up to v1.19.0.",
     imageSrc: "/images/projects/polaris.png",
     tags: ["Claude Code", "TypeScript", "Agents", "Developer Tooling"],
     year: "2026",
@@ -43,7 +43,7 @@ export const projects: ProjectType[] = [
     slug: "credify",
     description: "hackathon-winning media verification platform",
     longDescription:
-      "built this in 1 month for google + devfolio’s gen ai exchange hackathon. we hacked together a tampering detection and attribution system with next.js frontend and fastapi backend. three-person team, i led, we actually shipped a working product and won. mostly about moving fast, dividing work smart, and finishing.",
+      "built this in 1 month for google + devfolio’s gen ai exchange hackathon. we hacked together a tampering detection and attribution system with next.js frontend and fastapi backend. three-person team: i led and wrote 240 of 361 commits, we shipped a working product, and won the network18 track. mostly about moving fast, dividing work smart, and finishing.",
     imageSrc: "/images/projects/credify.png",
     tags: ["NextJs", "TypeScript", "TailwindCSS", "FastAPI", "Python"],
     year: "2024",
@@ -52,16 +52,16 @@ export const projects: ProjectType[] = [
     isFeatured: false,
     role: "team lead",
     client: "hackathon project (network 18)",
-    duration: "August 2024 - October 2024",
+    duration: "October 2024",
     category: "ai",
     isBuilding: false,
   },
   {
     title: "Flockr",
     slug: "flockr",
-    description: "modern household management platform",
+    description: "a shared-home ledger, chores, and shopping list for android",
     longDescription:
-      "built a full-stack multi-tenant household management app with kotlin, jetpack compose, and supabase. handles expense tracking, bill splitting, chores, shopping lists, and real-time chat. three months of shipping features like per-diem billing, recurring expenses, and ious. learned mad architecture, flow-based reactive programming, and how to design for multi-household isolation with row-level security.",
+      "an android app for shared homes, built alone in kotlin and jetpack compose on supabase. splits by equal, exact, percentage, or shares, a fewest-payments settle-up over upi, chores that rotate between housemates, a shopping list that becomes an expense, and location sharing that expires on the server. amounts live in the currency's smallest unit, and postgres triggers reject any unbalanced ledger write from any client. 22 releases so far, up to v2.0.0.",
     imageSrc: "/images/projects/flockr.png",
     tags: ["Kotlin", "Jetpack Compose", "Android", "Supabase", "PostgreSQL"],
     year: "2025",
@@ -77,9 +77,9 @@ export const projects: ProjectType[] = [
   {
     title: "Inquora",
     slug: "inquora",
-    description: "chat with any file, even youtube videos.",
+    description: "cited answers from your documents, repos, and videos.",
     longDescription:
-      "my rag playground. you throw in a pdf, ppt, doc, image, or even a youtube link, and query it like chatgpt. used next.js + vector db. feels like research that actually talks back instead of static ctrl+f. still building cause youtube is too tricky to work with.",
+      "my rag playground, now a cited q&a app. ask across documents, spreadsheets, repos, and videos, and every claim links to the passage it came from: sql for spreadsheets, path and line for repos, timestamps for videos. retrieval fuses pgvector and full-text search in one postgres function, and a rework cut a repository index from 2,664 chunks to 711 with the same coverage.",
     imageSrc: "/images/projects/inquora.png",
     tags: ["NextJs", "TypeScript", "TailwindCSS", "RAG"],
     year: "2025",
@@ -222,7 +222,7 @@ export const projects: ProjectType[] = [
     slug: "quickgist",
     description: "markdown and code sharing, rendered on the server (go + react).",
     longDescription:
-      "paste markdown or code, get a link, send it. no account needed. first built in 2024 with react + go and used by 20+ peers. rebuilt in 2026 on supabase postgres: authorization lives in row-level security, so a handler that forgets a check still can’t read someone else’s private gist. markdown and ~250 languages render on the server with goldmark and chroma, and the html is cached in postgres keyed to a renderer version.",
+      "paste markdown or code, get a link, send it. no account needed. first built in 2024 with react + go. rebuilt in 2026 on supabase postgres: authorization lives in row-level security, so a handler that forgets a check still can’t read someone else’s private gist. markdown and ~250 languages render on the server with goldmark and chroma, and the html is cached in postgres keyed to a renderer version.",
     imageSrc: "/images/projects/quickgist.png",
     tags: ["Go", "React", "TypeScript", "Supabase", "PostgreSQL"],
     year: "2024",
