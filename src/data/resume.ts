@@ -66,11 +66,11 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
         stack: "React, Supabase, Stripe, AWS Lambda, Python",
         bullets: [
           {
-            text: "Own Stripe billing for the platform at ~$200K MRR and 170+ paying customers; shipped modular plans, tiered editing credits, and annual prepay as 10 dependency-ordered PRs in 1 week of work.",
+            text: "Own Stripe billing for the platform at ~$200K MRR and 170+ paying customers; rebuilt its pricing into modular plans in 8 days, and revenue from existing customers then rose 35% with new customers up from 11.3 to 12.6 a month.",
             lenses: ["general", "fde", "fullstack"],
           },
           {
-            text: "Built a sales checkout for the platform in React on 10+ edge functions: sales prices a deal and sends a proposal link, and the prospect pays through Stripe Checkout before any account exists; live 11 days after the demo.",
+            text: "Built a sales checkout for the platform in React on 10+ edge functions, where the prospect pays through Stripe Checkout before any account exists; 71% of quoted prospects paid, at a median of 12 minutes from quote to payment.",
             lenses: ["fde", "fullstack"],
           },
           {
