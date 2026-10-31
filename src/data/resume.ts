@@ -66,63 +66,63 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
         stack: "React, Supabase, Stripe, AWS Lambda, Python",
         bullets: [
           {
-            text: "Own Stripe billing for a client's AI video platform at ~$200K MRR and 170+ paying customers; shipped modular plans, tiered editing credits, and annual prepay as 10 dependency-ordered PRs in 1 week of work.",
+            text: "Own Stripe billing for the platform at ~$200K MRR and 170+ paying customers; shipped modular plans, tiered editing credits, and annual prepay as 10 dependency-ordered PRs in 1 week of work.",
             lenses: ["general", "fde", "fullstack"],
           },
           {
-            text: "Built a sales checkout for the AI video platform in React on 10+ edge functions: sales prices a deal and sends a proposal link, and the prospect pays through Stripe Checkout before any account exists; live 11 days after the demo.",
+            text: "Built a sales checkout for the platform in React on 10+ edge functions: sales prices a deal and sends a proposal link, and the prospect pays through Stripe Checkout before any account exists; live 11 days after the demo.",
             lenses: ["fde", "fullstack"],
           },
           {
-            text: "Changed 2 pricing and access policies on live calls with the AI video platform's founders, and caught a plan migration that would have cut every migrating user's AI allowance by 9% before it reached a single customer.",
+            text: "Changed 2 pricing and access policies on live calls with the platform's founders, and caught a plan migration that would have cut every migrating user's AI allowance by 9% before it reached a single customer.",
             lenses: ["fde"],
           },
           {
-            text: "Fixed a renewal bug on the AI video platform that left a 24-seat paying team with 0 AI tokens, restored all 240,000 tokens the same night, and added a guard that fails loudly on any zero grant, with an RCA for the client.",
+            text: "Fixed a renewal bug on the platform that left a 24-seat paying team with 0 AI tokens, restored all 240,000 tokens the same night, and added a guard that fails loudly on any zero grant, with an RCA for the client.",
             lenses: ["fde"],
           },
           {
-            text: "Merged 746 PRs across 4 repos of a client's AI video platform in 4.5 months and ran its 42 production releases to 170+ paying customers, checking every database migration against the live schema before it shipped.",
+            text: "Merged 746 PRs across 4 repos of the platform in 4.5 months and ran its 42 production releases to 170+ paying customers, checking every database migration against the live schema before it shipped.",
             lenses: ["general"],
           },
           {
-            text: "Cut a team insights query for a 100-advisor firm on the AI video platform from 58s to 0.07s, well under its 8s database timeout, and cut each analytics page load for the firm's team admins from 7 database calls to 1.",
+            text: "Cut a team insights query for a 100-advisor firm on the platform from 58s to 0.07s, well under its 8s database timeout, and cut each analytics page load for the firm's team admins from 7 database calls to 1.",
             lenses: ["general"],
           },
           {
-            text: "Cut frozen frames in the AI video platform's exported videos from 23.42% to 0.00% by re-encoding each upload in the browser before render, for every edited video the platform renders for its 170+ paying customers.",
+            text: "Cut frozen frames in the platform's exported videos from 23.42% to 0.00% by re-encoding each upload in the browser before render, for every edited video it renders for its 170+ paying customers.",
             lenses: ["general"],
           },
           {
-            text: "Built social analytics and AI coaching across 5 social networks for the AI video client on an append-only Postgres archive with React and TanStack Query pages, and closed 32 analytics stories in 5 weeks.",
+            text: "Built social analytics and AI coaching across 5 social networks for the client on an append-only Postgres archive with React and TanStack Query pages, and closed 32 analytics stories in 5 weeks.",
             lenses: ["fullstack"],
           },
           {
-            text: "Took the AI video platform's React and TypeScript codebase from 712 type errors to 0 across 46 PRs; CI now fails on any new error, and each PR runs only the tests its change touches, behind an 80% patch coverage gate.",
+            text: "Took the platform's React and TypeScript codebase from 712 type errors to 0 across 46 PRs; CI now fails on any new error, and each PR runs only the tests its change touches, behind an 80% patch coverage gate.",
             lenses: ["fullstack"],
           },
           {
-            text: "Migrated 55 live subscriptions on the AI video platform to modular plans with a dry-run-first script and grandfather coupons built to hold each old price, and checked each of the 30 annual accounts line by line.",
+            text: "Migrated 55 live subscriptions on the platform to modular plans with a dry-run-first script and grandfather coupons built to hold each old price, and checked each of the 30 annual accounts line by line.",
             lenses: [],
           },
           {
-            text: "Enabled ACH bank debit for the AI video client's $5K+/month contracts 8 days after inheriting the codebase, with a 2-month grace period for failed payments; now live on 11 subscriptions worth ~$39K a month.",
+            text: "Enabled ACH bank debit for the client's $5K+/month contracts 8 days after inheriting the codebase, with a 2-month grace period for failed payments; now live on 11 subscriptions worth ~$39K a month.",
             lenses: [],
           },
           {
-            text: "Closed a privilege escalation on the AI video platform that let any signed-in user make themselves super-admin, locked org billing columns behind triggers, and verified each fix with SQL checks across 7 roles.",
+            text: "Closed a privilege escalation on the platform that let any signed-in user make themselves super-admin, locked org billing columns behind triggers, and verified each fix with SQL checks across 7 roles.",
             lenses: ["fullstack"],
           },
           {
-            text: "Enabled row-level security on 23 exposed tables in a client's production Postgres within one sprint, writing per-role policies so every user, team admin, and staff role reads and writes only its own rows.",
+            text: "Enabled row-level security on 23 exposed tables in the platform's production Postgres within one sprint, writing per-role policies so every user, team admin, and staff role reads and writes only its own rows.",
             lenses: [],
           },
           {
-            text: "Found and closed 1,167 AI generation requests stuck in processing across 139 users of a client's live video platform, and added a daily job that expires any request still processing past its timeout window.",
+            text: "Found and closed 1,167 AI generation requests stuck in processing across 139 users of the platform, and added a daily job that expires any request still processing past its timeout window.",
             lenses: [],
           },
           {
-            text: "Built 30-day renewal reminder emails for every annual subscriber of a client's billing platform, replacing a one-off send to the next 30 accounts with a daily job that finds each renewal as it comes due.",
+            text: "Built 30-day renewal reminder emails for every annual subscriber of the platform, replacing a one-off send to the next 30 accounts with a daily job that finds each renewal as it comes due.",
             lenses: [],
           },
           {
@@ -130,11 +130,11 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
             lenses: [],
           },
           {
-            text: "Ran 42 production releases of the AI video platform with no staging environment, and wrote the founders' release notes for 13 of them in 12 weeks, each tied to its ticket, plus sprint sign-off reports.",
+            text: "Ran 42 production releases of the platform with no staging environment, and wrote the founders' release notes for 13 of them in 12 weeks, each tied to its ticket, plus sprint sign-off reports.",
             lenses: [],
           },
           {
-            text: "Cut feature-PR CI on the AI video platform from 48 minutes to under 5 with a sharded test suite that runs only the tests a change touches, with type checks and secret scans on every push.",
+            text: "Cut feature-PR CI on the platform from 48 minutes to under 5 with a sharded test suite that runs only the tests a change touches, with type checks and secret scans on every push.",
             lenses: [],
           },
         ],
@@ -145,27 +145,27 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
         stack: "Spring Boot, React, AWS, Terraform",
         bullets: [
           {
-            text: "Re-architected a US EdTech client's multi-tenant grading platform on Spring Boot and Java 21, with 105 REST endpoints and tenant isolation in Postgres row-level security on 20 tables that fails closed.",
+            text: "Re-architected the client's multi-tenant grading platform on Spring Boot and Java 21, with 105 REST endpoints and tenant isolation in Postgres row-level security on 20 tables that fails closed.",
             lenses: ["general", "fullstack"],
           },
           {
-            text: "Connected Moodle and self-hosted Canvas, which has no webhooks, to the EdTech client's grading platform: submissions in and grades back through 5 SQS queues with backoff retries and dead-letter queues.",
+            text: "Connected Moodle and self-hosted Canvas, which has no webhooks, to the platform: submissions in and grades back through 5 SQS queues with backoff retries and dead-letter queues.",
             lenses: ["fde"],
           },
           {
-            text: "Load-tested the EdTech client's grading API with k6 at 151 virtual users and 100 graders at once on a single 1 vCPU, 2 GB Fargate task: grader p95 held at 1.82s under its 2s budget, with zero 5xx responses.",
+            text: "Load-tested the client's grading API with k6 at 151 virtual users and 100 graders at once on a single 1 vCPU, 2 GB Fargate task: grader p95 held at 1.82s under its 2s budget, with zero 5xx responses.",
             lenses: [],
           },
           {
-            text: "Provisioned the EdTech client's AWS stack alone in Terraform across 3 environments and 121 resources: ECS Fargate, RDS Postgres, encrypted Redis, Cognito, 5 SQS queues with dead-letter queues, and 20 alarms.",
+            text: "Provisioned the client's AWS stack alone in Terraform across 3 environments and 121 resources: ECS Fargate, RDS Postgres, encrypted Redis, Cognito, 5 SQS queues with dead-letter queues, and 20 alarms.",
             lenses: ["general"],
           },
           {
-            text: "Led the EdTech client's React grading frontend, 339 of 496 commits: in-browser PDF annotation burned into the file and passed back to the LMS, plus 3 admin tiers; the client called the new UI a major plus.",
+            text: "Led the client's React grading frontend, 339 of 496 commits: in-browser PDF annotation burned into the file and passed back to the LMS, plus 3 admin tiers; the client called the new UI a major plus.",
             lenses: [],
           },
           {
-            text: "Wrote the handover for the EdTech client's 3-repo grading platform, with every API endpoint, queue, job, and migration and its known risks, plus a 6-step Canvas guide the client's admins used to connect.",
+            text: "Wrote the handover for the client's 3-repo grading platform, with every API endpoint, queue, job, and migration and its known risks, plus a 6-step Canvas guide the client's admins used to connect.",
             lenses: [],
           },
         ],
@@ -176,7 +176,7 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
         stack: "FastAPI, LangGraph, Postgres",
         bullets: [
           {
-            text: "Built a content engine alone for Wednesday in FastAPI and LangGraph: 26 AI agents that research, draft, and publish articles as GitHub PRs, with human review on Postgres checkpoints, and demoed it to the CEO.",
+            text: "Built a content engine alone in FastAPI and LangGraph: 26 AI agents that research, draft, and publish articles as GitHub PRs, with human review on Postgres checkpoints, and demoed it to the CEO.",
             lenses: ["fde"],
           },
           {
@@ -229,7 +229,7 @@ export const RESUME_PROJECTS: readonly ResumeProject[] = [
     lenses: ["general", "fde"],
     bullets: [
       {
-        text: "Built Polaris, a Claude Code plugin that routes plain-language tasks into 27 gated flows across 29 agents, shipped over 12 releases to v1.19.0 and used daily on client work for a US AI video platform.",
+        text: "Built Polaris, a Claude Code plugin that routes plain-language tasks into 27 gated flows across 29 agents, shipped over 12 releases to v1.19.0 and used daily on client work in production.",
         lenses: ["general", "fde"],
         status: "in-progress",
       },
