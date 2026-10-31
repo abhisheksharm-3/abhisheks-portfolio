@@ -30,9 +30,9 @@ export const RESUME_LENSES: readonly ResumeLensMeta[] = [
     id: "general",
     label: "general",
     summary:
-      "i own billing and releases for a client's ai video platform at ~$200k mrr. 746 pull requests merged there since june 2026.",
+      "the engineer behind a client's ai video platform at ~$200k mrr: analytics, billing, team access, and every release. 746 pull requests merged since june 2026.",
     pdfSummary:
-      "Software engineer at Wednesday Solutions (Associate Forward Deployed Engineer). Own Stripe billing for a client's AI video platform at ~$200K MRR and run its production releases, with 746 PRs merged. Re-architected a US EdTech client's grading platform on Spring Boot and AWS, and build LLM agent systems in Python and LangGraph.",
+      "Software engineer at Wednesday Solutions (Associate Forward Deployed Engineer), and the engineer behind a client's AI video platform at ~$200K MRR: its analytics, billing, team access, and releases, with 746 PRs merged. Re-architected a US EdTech client's grading platform on Spring Boot and AWS, and build LLM agents.",
   },
   {
     id: "fde",
@@ -40,7 +40,7 @@ export const RESUME_LENSES: readonly ResumeLensMeta[] = [
     summary:
       "i work straight with client founders: pricing calls in the morning, production fixes by night, release notes they actually read.",
     pdfSummary:
-      "Associate Forward Deployed Engineer at Wednesday Solutions, working directly with client founders. Own Stripe billing for a client's AI video platform at ~$200K MRR and 170+ paying customers, from pricing calls to production fixes. Rebuilt and handed over a US EdTech client's grading platform, and build LLM agents.",
+      "Associate Forward Deployed Engineer at Wednesday Solutions, working directly with client founders. The engineer behind a client's AI video platform at ~$200K MRR and 170+ paying customers: analytics, billing, team access, and releases, from pricing calls to production fixes. Rebuilt and handed over a US EdTech client's grading platform.",
   },
   {
     id: "fullstack",
@@ -48,7 +48,7 @@ export const RESUME_LENSES: readonly ResumeLensMeta[] = [
     summary:
       "postgres to the pixel: migrations, edge functions, queues, react, and the aws underneath them.",
     pdfSummary:
-      "Full-stack engineer at Wednesday Solutions (Associate Forward Deployed Engineer). Own billing, checkout, and analytics for a client's AI video platform at ~$200K MRR on React, Supabase, and Stripe. Re-architected a US EdTech client's grading platform: a Spring Boot API with 105 endpoints and a React frontend.",
+      "Full-stack engineer at Wednesday Solutions (Associate Forward Deployed Engineer). Build across a client's AI video platform at ~$200K MRR on React, Supabase, and Stripe: analytics, billing, checkout, and team access. Re-architected a US EdTech client's grading platform: a Spring Boot API with 105 endpoints and a React frontend.",
   },
 ];
 
