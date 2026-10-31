@@ -17,7 +17,7 @@ const TRUSTED = [
   {
     name: "plan migrations",
     detail:
-      "moved 55 live subscriptions, monthly and annual, onto modular pricing in stripe. each account got a dry run first, and the batch had a rollback path.",
+      "moved 55 live subscriptions, monthly and annual, onto modular pricing in stripe with a dry-run-first script and grandfather coupons that hold each old price. every annual account was checked line by line.",
   },
   {
     name: "releases",
@@ -38,9 +38,14 @@ const TRUSTED = [
 
 const BUILT = [
   {
-    name: "scriptwriting agents",
+    name: "social analytics",
     detail:
-      "a pipeline that plans a script and ties every figure to a cited source. paused for now: accurate, but too fact-heavy to sound right on camera yet.",
+      "built alone from scratch: a time series over five networks, recorded on a schedule because the provider only reports lifetime counters. a team insights query went from 58s to 0.07s.",
+  },
+  {
+    name: "billing",
+    detail:
+      "pricing rebuilt into modular plans in 8 days, after which revenue from existing customers rose 35%. a sales checkout where 71% of quoted prospects paid, at a median of 12 minutes. plus ach for large contracts, and pause, refund, and credit flows.",
   },
   {
     name: "render fixes",
@@ -48,14 +53,9 @@ const BUILT = [
       "the editor is a teammate's; i own what feeds its lambda render. a browser-side re-encode took frozen frames from 23.42% to 0.00%.",
   },
   {
-    name: "billing",
+    name: "scriptwriting agents",
     detail:
-      "modular pricing, sales proposals with their own checkout, ach for large contracts, and pause, refund, and credit flows.",
-  },
-  {
-    name: "social analytics",
-    detail:
-      "a time series over five networks, recorded on a schedule because the provider only reports lifetime counters.",
+      "a pipeline that plans a script and ties every figure to a cited source. paused for now: accurate, but too fact-heavy to sound right on camera yet.",
   },
   {
     name: "teams",

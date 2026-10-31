@@ -6,7 +6,7 @@ import { breadcrumbSchema, JsonLd } from "@/lib/seo/json-ld";
 export const metadata: Metadata = {
   title: "Resume | Abhishek Sharma",
   description:
-    "Associate forward deployed engineer at Wednesday. Billing, releases, and production systems for client platforms, with a one-page PDF per role.",
+    "Associate forward deployed engineer at Wednesday. Analytics, billing, and releases for client platforms, with a one-page PDF per role.",
 };
 
 const ResumeLayout = ({ children }: { children: ReactNode }) => (

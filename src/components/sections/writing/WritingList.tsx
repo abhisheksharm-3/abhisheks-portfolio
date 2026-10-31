@@ -38,7 +38,7 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
           <span>
             <span className="text-foreground/70">{stats.questions}</span> questions answered
           </span>
-          <span>all from production incidents</span>
+          <span>mostly from production work</span>
         </motion.div>
       </PageHeader>
 
@@ -156,7 +156,7 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
               get notified
             </p>
             <p className="text-sm text-foreground/50 font-light">
-              follow me on x or linkedin. i&apos;ll post when something drops.
+              new posts go out on x and linkedin.
             </p>
           </div>
           <div className="flex items-center gap-6">

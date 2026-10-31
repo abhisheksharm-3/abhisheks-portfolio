@@ -16,7 +16,7 @@ export const GraveyardSectionHeader = ({ quote }: { quote: string }) => {
     <PageHeader
       eyebrow="R.I.P"
       title="the project graveyard"
-      intro="here lies the stuff i never shipped. some broke on bad decisions, some got boring, some i just abandoned. every one of them cost me time and taught me something."
+      intro="projects i stopped, with the reason for each and what it changed in how i work."
     >
       <motion.p
         variants={STAGGER_ITEM_VARIANTS}

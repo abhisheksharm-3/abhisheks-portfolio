@@ -140,7 +140,7 @@ const PolarisPage = () => {
               sixteen hooks
             </p>
             <p className="text-sm font-light leading-relaxed text-foreground/55">
-              It holds itself to the bar it holds you to.
+              Its quality gate blocks its own author too.
             </p>
             <a
               href="https://github.com/abhisheksharm-3/polaris"

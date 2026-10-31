@@ -11,7 +11,7 @@ export const ProjectsHeader = () => {
     <PageHeader
       eyebrow="project archive"
       title="things i've built"
-      intro="web apps, android apps, ai tools. some for fun, some for clients, one that won a hackathon. filter by tech or just scroll."
+      intro="client work, web apps, android apps, and ai tools, including a hackathon winner. filter by area or scroll."
     />
   );
 };

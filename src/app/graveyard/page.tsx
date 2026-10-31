@@ -14,11 +14,8 @@ import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations"
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 const inspirationalQuotes = [
-  "at least there’s a commit for it.",
-  "dead repos are just proof i actually tried.",
-  "some things are worth starting even when you can’t finish them.",
-  "shipped nothing, learned plenty: fair trade.",
-  "these taught me more than the ones that shipped.",
+  "each one is listed with the reason it stopped.",
+  "the reasons are written down so the next project avoids them.",
 ];
 
 /**

@@ -24,16 +24,16 @@ export const EXPERTISE = [
   },
   {
     icon: Code,
-    title: "frontend stuff",
+    title: "frontend",
     description:
-      "i like making interfaces that don't feel like a chore to use. react and next.js is where i live: a sales checkout and analytics dashboards on a client's live platform, a grading ui with in-browser pdf annotation, and this site. svelte for small things. clean code, smooth ux, no dead weight.",
+      "react and next.js for most of it: a sales checkout and analytics pages on a client's live platform, a grading ui with in-browser pdf annotation, and this site. svelte for small things.",
     skills: ["React.js", "Next.js", "SvelteKit", "TailwindCSS", "TypeScript"],
   },
   {
     icon: Terminal,
     title: "backend, apis & data",
     description:
-      "spring boot and java 21 for a client's grading api (105 endpoints), fastapi for agent backends, go and node on the side. postgres everywhere, with row-level security doing the authorization, plus mongo and neo4j where they fit. speed and resilience over overengineering.",
+      "spring boot and java 21 for a client's grading api (105 endpoints), fastapi for agent backends, go and node on the side. postgres everywhere, with row-level security doing the authorization, plus mongo and neo4j where they fit.",
     skills: ["Spring Boot", "FastAPI", "Go", "Node.js", "PostgreSQL", "Supabase"],
   },
   {
@@ -45,7 +45,7 @@ export const EXPERTISE = [
   },
   {
     icon: Smartphone,
-    title: "mobile builds",
+    title: "mobile",
     description:
       "android apps in jetpack compose (flockr, 22 releases to v2.0.0), cross-platform in react native with expo. spent a week prototyping hands-free voice mode for off grid, wednesday's offline ai app: six swappable tts engines, sentence-by-sentence synthesis, and barge-in on hardware echo cancellation. the shipped voice mode drew on it.",
     skills: ["React Native", "Jetpack Compose", "Expo", "TTS Streaming", "Hardware AEC"],

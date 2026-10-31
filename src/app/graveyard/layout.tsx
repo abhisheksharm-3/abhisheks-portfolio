@@ -7,7 +7,7 @@ import type { ReactNode } from "react";
  */
 export const metadata: Metadata = {
   title: "Project Graveyard | Abhishek Sharma",
-  description: "A collection of abandoned projects and what they taught me.",
+  description: "Projects I stopped, why each one stopped, and what I do differently now.",
 };
 
 /**

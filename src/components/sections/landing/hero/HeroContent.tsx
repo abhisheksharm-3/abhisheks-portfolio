@@ -54,7 +54,8 @@ export const HeroTagline: React.FC = () => (
     transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
     className="mt-8 max-w-xl text-lg sm:text-xl md:text-2xl font-light leading-snug text-foreground/65"
   >
-    ai agents, billing, and infra, from first call to production. side projects past midnight.
+    analytics, billing, access, and releases for client platforms, from the first call to
+    production.
   </motion.p>
 );
 

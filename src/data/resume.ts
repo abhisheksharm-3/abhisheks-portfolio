@@ -38,7 +38,7 @@ export const RESUME_LENSES: readonly ResumeLensMeta[] = [
     id: "fde",
     label: "forward deployed",
     summary:
-      "i work straight with client founders: pricing calls in the morning, production fixes by night, release notes they actually read.",
+      "i work directly with client founders, on the calls where pricing gets decided and in the production systems where it has to work, and i write the release notes they read.",
     pdfSummary:
       "Associate Forward Deployed Engineer at Wednesday Solutions, working directly with client founders. The engineer behind a client's AI video platform at ~$200K MRR and 170+ paying customers: analytics, billing, team access, and releases, from pricing calls to production fixes. Rebuilt and handed over a US EdTech client's grading platform.",
   },
@@ -130,7 +130,7 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
             lenses: [],
           },
           {
-            text: "Ran 42 production releases of the platform with no staging environment, and wrote the founders' release notes for 13 of them in 12 weeks, each tied to its ticket, plus sprint sign-off reports.",
+            text: "Ran 42 production releases of the platform and wrote the founders' release notes for 13 of them in 12 weeks, each tied to its ticket, plus sprint sign-off reports.",
             lenses: [],
           },
           {

@@ -7,22 +7,20 @@ export const PERSONAL_INTERESTS = [
   {
     category: "Photography",
     icon: Camera,
-    description:
-      "got into the habit of clicking random city corners and skies. my gallery is basically 70% cloud pics at this point.",
+    description: "i photograph city corners and skies. my gallery is mostly clouds.",
     tags: ["Street", "Nature", "Golden Hour"],
   },
   {
     category: "Reading",
     icon: BookOpen,
     description:
-      "currently juggling naval's almanack and the courage to be disliked. i like books that make you pause mid-page and rethink stuff.",
+      "recent reads: the almanack of naval ravikant and the courage to be disliked. mostly books that change how i think about work.",
     tags: ["Philosophy", "Self-Growth", "Business"],
   },
   {
     category: "Music",
     icon: Music,
-    description:
-      "lo-fi for deep work, rock when i'm stuck debugging, and the occasional classical binge when i need a brain reset.",
+    description: "lo-fi while i work, plus rock and classical.",
     tags: ["Lo-fi", "Rock", "Classical"],
   },
 ] as const;
@@ -36,7 +34,7 @@ export const EXPERIENCE_DATA = [
     subtitle: "Wednesday Solutions",
     date: "Feb 2026 – Present",
     description:
-      "own problems from discovery to deployment. since june 2026, a client's ai video platform at ~$200k mrr: stripe billing and plan migrations, a sales checkout, social analytics, render fixes, and 42 production releases. before that, re-architected a us edtech client's grading platform on spring boot and aws (ecs, sqs, terraform), built an autonomous content engine (langgraph, fastapi, pgvector), and prototyped hands-free voice mode for off grid in a week. passed probation.",
+      "since june 2026, a us client's ai video platform with 170+ paying customers and ~$200k mrr: built the analytics module alone from scratch, own stripe billing (modular pricing in 8 days, a sales checkout where 71% of quoted prospects paid), co-built team access, and ran 42 production releases. before that, re-architected a us edtech client's grading platform on spring boot and aws (ecs, sqs, terraform), built an autonomous content engine (langgraph, fastapi, pgvector), and prototyped hands-free voice mode for off grid in a week.",
   },
   {
     title: "Software Development Intern",
@@ -50,7 +48,7 @@ export const EXPERIENCE_DATA = [
     subtitle: "Gen AI Exchange Hackathon (Google)",
     date: "Oct 2024",
     description:
-      "led a three-person team on 'credify', a media verification tool: it hashes content to trace the first uploader, flags forgeries, and fact-checks with gemini. one intense month on next.js and fastapi, and we won the track.",
+      "led a three-person team on credify, a media verification tool: it hashes content to trace the first uploader, flags forgeries, and fact-checks with gemini. built in one month on next.js and fastapi; it won the track.",
   },
 ] as const;
 
@@ -63,7 +61,7 @@ export const EDUCATION_DATA = [
     subtitle: "CCET, Panjab University",
     date: "2021–2025",
     description:
-      "graduated with an 8.31 cgpa. learnt my foundations in cs, but honestly most growth came from side projects and hackathons i kept grinding on.",
+      "graduated with an 8.31 cgpa. alongside the degree: the network18 track win at google's gen ai exchange hackathon and an internal round win at smart india hackathon.",
     badges: [{ label: "CGPA", value: "8.31" }],
   },
 ] as const;

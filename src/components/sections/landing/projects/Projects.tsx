@@ -68,7 +68,7 @@ const CTASection = ({ isInView }: InViewPropsType) => (
       href="/contact"
       className="group inline-flex items-center gap-2 text-sm font-light text-foreground/45 hover:text-foreground/70 transition-colors duration-200"
     >
-      <span>let&apos;s build something cool</span>
+      <span>get in touch</span>
       <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
     </Link>
   </motion.div>

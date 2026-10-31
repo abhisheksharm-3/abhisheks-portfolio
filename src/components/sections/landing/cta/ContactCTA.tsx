@@ -19,9 +19,7 @@ export const ContactCTA = () => {
 
       <div className="relative z-10 w-full">
         <SectionHeader subtitle="reach out" isInView={isInView}>
-          <span className="font-serif text-foreground select-none pr-4">
-            let&apos;s make cool stuff
-          </span>
+          <span className="font-serif text-foreground select-none pr-4">let&apos;s talk</span>
         </SectionHeader>
 
         <motion.p
@@ -30,8 +28,8 @@ export const ContactCTA = () => {
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
           className="text-foreground/55 text-base font-light leading-relaxed max-w-lg mb-10"
         >
-          open for freelance, full-time roles, and interesting problems. if you have an idea or a
-          project, just reach out.
+          questions about something i built or wrote, or a problem you want a second pair of eyes
+          on: email me.
         </motion.p>
 
         <motion.a

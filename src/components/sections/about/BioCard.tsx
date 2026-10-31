@@ -12,25 +12,21 @@ export const BioCard = () => {
 
       <div className="space-y-6 text-foreground/55 font-light leading-relaxed">
         <p>
-          hey, i&apos;m abhishek. a dev who turns ideas into working products. started curious about
-          how apps worked, and that curiosity snowballed into cs and shipping things constantly.
-        </p>
-
-        <p className="text-foreground/75 italic">
-          &quot;clever code makes you feel smart. simple code helps you sleep better.&quot;
+          i&apos;m abhishek, a forward deployed engineer at wednesday, based in pune. i work on
+          client platforms end to end: on calls with the founders, in their production systems, and
+          through every release.
         </p>
 
         <div className="h-px bg-primary/10" />
 
         <p>
-          most of what i do now is backend and ai: agent pipelines, payments, and the infra under
-          them. i still want it to feel good to use, not just work. that balance between technical
-          detail and user experience is what keeps me hooked.
+          the job started with spring boot, then grew into react and postgres, python for agents,
+          and terraform when a client needed aws from nothing.
         </p>
 
         <div>
           <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-3">
-            what i&apos;m into right now
+            what i work on now
           </p>
           <p>
             associate forward deployed engineer at{" "}
@@ -42,31 +38,29 @@ export const BioCard = () => {
             >
               wednesday.is
             </a>
-            : own problems from discovery to deployment. right now that means a client&apos;s ai
-            video platform at ~$200k mrr: stripe billing, plan migrations, social analytics, and
-            every production release. before that, a us edtech client&apos;s grading platform on
-            spring boot and aws, an autonomous content engine (langgraph + fastapi + pgvector), and
-            a one-week voice mode prototype for off grid.
+            . since june 2026, a us client&apos;s ai video platform at ~$200k mrr: i built its
+            analytics module alone from scratch, own its stripe billing, co-built its team access,
+            and run every production release. before that, a us edtech client&apos;s grading
+            platform on spring boot and aws, an autonomous content engine (langgraph + fastapi +
+            pgvector), and a one-week voice mode prototype for off grid.
           </p>
         </div>
 
         <p>
-          i don&apos;t marry frameworks or patterns. the right tool is whatever solves the problem
-          cleanly, even when that means plain old sql.
+          i pick the tool the problem needs, and that is often plain sql: authorization in row-level
+          security, and ledger rules in postgres triggers.
         </p>
 
         <div className="h-px bg-primary/10" />
 
         <p>
-          hackathons shaped a lot of how i work. building a media verification tool in a month,
-          shipping under pressure, learning that a working v1 is worth more than a perfect v0. those
-          sprints are in my muscle memory.
+          before wednesday, hackathons: i led a team of three on credify, a media verification tool
+          built in a month, and it won the network18 track at google&apos;s gen ai exchange.
         </p>
 
         <p>
-          full-time at wednesday, still finding time to tinker. side projects, new tools, things
-          that seemed interesting at midnight. that&apos;s where most of the actual growth happens
-          anyway.
+          on my own time i build polaris, a claude code plugin i use daily on client work, and
+          flockr, an android app for shared homes.
         </p>
       </div>
     </div>

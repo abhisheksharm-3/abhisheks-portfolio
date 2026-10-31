@@ -27,8 +27,7 @@ export const ProjectsCTA = () => {
             have a project in mind?
           </h3>
           <p className="text-foreground/50 text-sm font-light leading-relaxed mt-3 max-w-md">
-            i&apos;m open to new projects, creative ideas, and interesting problems. if you have
-            something in mind, just reach out.
+            questions about any of these, or something you are building: reach out.
           </p>
         </div>
 

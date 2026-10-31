@@ -79,7 +79,7 @@ export const FeaturedSkillsSection = ({
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
           className="text-2xl sm:text-3xl font-serif text-foreground mb-4"
         >
-          how i build stuff
+          how i work
         </motion.h3>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -87,9 +87,9 @@ export const FeaturedSkillsSection = ({
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1], delay: 0.35 }}
           className="text-foreground/55 text-sm font-light leading-relaxed mb-6"
         >
-          i keep it simple: start small, ship fast, tweak along the way. could be a sales checkout
-          live 11 days after the demo, or a 26-agent content engine in four weeks. i move quick, but
-          never forget the details that make things actually usable.
+          small slices, shipped and checked against production. modular pricing on a live platform
+          in 8 days, a 26-agent content engine in four weeks, and a client&apos;s aws stack in
+          terraform: 121 resources across 3 environments.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}

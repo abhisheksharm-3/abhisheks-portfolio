@@ -24,16 +24,15 @@ export const GraveyardIntroCard = () => {
         variants={itemVariants}
         className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-5"
       >
-        every dev&apos;s got a trail of dead projects. mine crashed in all kinds of ways. some broke
-        on tech, some got boring, some fizzled out when i stopped caring.
+        projects i started and stopped. some hit a technical wall, some lost a dependency, and some
+        i stopped working on.
       </motion.p>
 
       <motion.p
         variants={itemVariants}
         className="text-foreground/60 text-sm sm:text-base font-light leading-relaxed mb-8"
       >
-        none of this was a waste. shipping or not, these projects sharpened me. so this is me giving
-        them a grave. not to mourn them, but to mark what they taught me before they died.
+        each one lists why it stopped and what i do differently now.
       </motion.p>
 
       <motion.div variants={itemVariants} className="h-px bg-primary/10" />

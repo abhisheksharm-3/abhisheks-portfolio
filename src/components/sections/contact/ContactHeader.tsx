@@ -6,6 +6,6 @@ export const ContactHeader = () => (
   <PageHeader
     eyebrow="get in touch"
     title="let's connect"
-    intro="open for freelance work, full-time roles, and the occasional wild idea."
+    intro="questions about my work, a post, or a project: email me or use the form."
   />
 );
