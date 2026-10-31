@@ -49,7 +49,7 @@ export const projects: ProjectType[] = [
     year: "2026",
     url: "https://projectsleeve.vercel.app/",
     github: "https://github.com/abhisheksharm-3/project-sleeve",
-    isFeatured: true,
+    isFeatured: false,
     role: "solo",
     client: "personal project",
     duration: "September 2026",
