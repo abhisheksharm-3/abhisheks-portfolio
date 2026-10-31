@@ -33,7 +33,7 @@ export const BioCard = () => {
             what i&apos;m into right now
           </p>
           <p>
-            forward deployed engineer at{" "}
+            associate forward deployed engineer at{" "}
             <a
               href="https://wednesday.is"
               target="_blank"

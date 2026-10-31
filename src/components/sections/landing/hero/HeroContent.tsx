@@ -24,7 +24,7 @@ export const HeroEyebrow: React.FC = () => (
     initial={{ opacity: 0, y: 20 }}
     transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
   >
-    forward deployed engineer · wednesday solutions
+    associate forward deployed engineer · wednesday solutions
   </motion.p>
 );
 

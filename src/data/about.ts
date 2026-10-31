@@ -32,7 +32,7 @@ export const PERSONAL_INTERESTS = [
  */
 export const EXPERIENCE_DATA = [
   {
-    title: "Software Engineer 1",
+    title: "Associate Forward Deployed Engineer",
     subtitle: "Wednesday Solutions",
     date: "Feb 2026 – Present",
     description:

@@ -10,7 +10,7 @@ import { SITE_URL } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About | Abhishek Sharma",
   description:
-    "Software engineer at Wednesday. I build AI pipelines, mobile apps, and web platforms.",
+    "Associate forward deployed engineer at Wednesday. I build AI pipelines, mobile apps, and web platforms.",
 };
 
 /**
