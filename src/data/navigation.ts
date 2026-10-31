@@ -10,5 +10,6 @@ export const NAVIGATION_ITEMS: readonly NavigationItemType[] = [
   { name: "things i built", href: "/projects" },
   { name: "things i killed", href: "/graveyard" },
   { name: "writing", href: "/writing" },
+  { name: "resume", href: "/resume" },
   { name: "say hi", href: "/contact" },
 ] as const;
