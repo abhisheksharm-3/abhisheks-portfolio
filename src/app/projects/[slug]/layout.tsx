@@ -1,3 +1,5 @@
+"use cache";
+
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { projects } from "@/data/projects";
@@ -10,7 +12,7 @@ import { breadcrumbSchema, JsonLd, projectSchema } from "@/lib/seo/json-ld";
 const HAND_BUILT_SLUGS = new Set(["polaris", "ai-video-platform"]);
 
 /** Every project is known at build time, so every project page is prerendered. */
-export function generateStaticParams() {
+export async function generateStaticParams() {
   return projects
     .filter((project) => !HAND_BUILT_SLUGS.has(project.slug))
     .map((project) => ({ slug: project.slug }));
