@@ -26,6 +26,8 @@ export interface ProjectType {
   year: string;
   url?: string;
   github?: string;
+  /** A notebook that shows the model training, for ML projects. */
+  notebook?: string;
   isFeatured: boolean;
   /** Early learning work: listed as a text row, not a card. */
   isArchived?: boolean;

@@ -32,7 +32,7 @@ export function ProjectDetailHeader({ project }: { project: ProjectType }) {
         {project.description}
       </p>
 
-      {(project.url || project.github) && (
+      {(project.url || project.github || project.notebook) && (
         <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
           {project.url && (
             <a
@@ -54,6 +54,17 @@ export function ProjectDetailHeader({ project }: { project: ProjectType }) {
             >
               view source
               <RiGithubLine className="h-3.5 w-3.5" />
+            </a>
+          )}
+          {project.notebook && (
+            <a
+              href={project.notebook}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-2 text-sm font-light text-foreground/70 transition-colors duration-200 hover:text-foreground"
+            >
+              training notebook
+              <ExternalLink className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           )}
         </div>
