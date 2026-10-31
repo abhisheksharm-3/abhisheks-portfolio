@@ -45,3 +45,6 @@ DESIGN.md
 
 # Polaris run state is per-session, not project history
 .polaris/runs/
+
+# generated LaTeX; the PDFs in public/resume/ are committed
+/resume/
