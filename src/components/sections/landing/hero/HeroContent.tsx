@@ -70,15 +70,15 @@ export const HeroNow: React.FC = () => (
     transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
   >
     <p>
-      currently running billing and releases for{" "}
+      currently the engineer behind{" "}
       <Link
         href="/projects/ai-video-platform"
         className="underline decoration-foreground/20 underline-offset-4 transition-colors duration-200 hover:text-foreground/70 hover:decoration-foreground/45"
       >
         a client&apos;s ai video platform
       </Link>
-      , with 170+ paying customers and ~$200k mrr. stripe billing, plan migrations, social
-      analytics, and every production release.
+      , with 170+ paying customers and ~$200k mrr: its analytics, billing, team access, and every
+      production release.
     </p>
     <p className="text-foreground/35">
       winner of the network18 track at google&apos;s gen ai exchange hackathon.

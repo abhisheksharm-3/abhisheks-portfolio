@@ -16,7 +16,7 @@ async function renderIndex(): Promise<string> {
   const body = [
     `# ${AUTHOR.name}`,
     "",
-    "> Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform at ~$200K MRR, and build AI agent pipelines and the infra they run on.",
+    "> Associate Forward Deployed Engineer at Wednesday Solutions. I'm the engineer behind a client's AI video platform at ~$200K MRR: its analytics, billing, team access, and releases. I also build AI agent pipelines and the infra they run on.",
     "> This site holds my projects, the work I abandoned, and what I write about building things.",
     "",
     `${stats.posts} write-ups, ${stats.words.toLocaleString("en-US")} words, ${stats.questions} questions answered, mostly from production work.`,

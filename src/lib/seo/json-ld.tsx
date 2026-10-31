@@ -20,7 +20,7 @@ export const personSchema = {
   email: `mailto:${AUTHOR.email}`,
   jobTitle: "Associate Forward Deployed Engineer",
   description:
-    "Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform at ~$200K MRR, and build AI agent pipelines and the infra they run on.",
+    "Associate Forward Deployed Engineer at Wednesday Solutions. I'm the engineer behind a client's AI video platform at ~$200K MRR: its analytics, billing, team access, and releases. I also build AI agent pipelines and the infra they run on.",
   sameAs: [AUTHOR.github, AUTHOR.linkedin, AUTHOR.x],
   knowsAbout: KNOWS_ABOUT,
   hasOccupation: {

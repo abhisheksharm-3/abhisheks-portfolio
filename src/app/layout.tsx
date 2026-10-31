@@ -36,11 +36,11 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Abhishek Sharma | Associate Forward Deployed Engineer",
   description:
-    "I'm Abhishek Sharma, an associate forward deployed engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform at ~$200K MRR, and build AI agent pipelines and the infra they run on.",
+    "I'm Abhishek Sharma, an associate forward deployed engineer at Wednesday Solutions. I'm the engineer behind a client's AI video platform at ~$200K MRR: its analytics, billing, team access, and releases. I also build AI agent pipelines and the infra they run on.",
   openGraph: {
     title: "Abhishek Sharma | Associate Forward Deployed Engineer",
     description:
-      "Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform, and build AI agents and the infra they run on.",
+      "Associate Forward Deployed Engineer at Wednesday Solutions. Engineer behind a client's AI video platform: analytics, billing, team access, and releases. I also build AI agents and the infra they run on.",
     url: SITE_URL,
     siteName: "Abhishek Sharma",
     images: [
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Abhishek Sharma | Associate Forward Deployed Engineer",
     description:
-      "Associate Forward Deployed Engineer at Wednesday Solutions. I own billing and releases for a client's AI video platform, and build AI agents and the infra they run on.",
+      "Associate Forward Deployed Engineer at Wednesday Solutions. Engineer behind a client's AI video platform: analytics, billing, team access, and releases. I also build AI agents and the infra they run on.",
     images: ["/images/og-image.png"],
     creator: "@iabhisheksan",
   },

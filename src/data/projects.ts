@@ -8,9 +8,9 @@ export const projects: ProjectType[] = [
     title: "AI video platform",
     slug: "ai-video-platform",
     description:
-      "client work: billing and releases for an ai video platform with 170+ paying customers and ~$200k mrr",
+      "client work: the engineer behind an ai video platform with 170+ paying customers and ~$200k mrr",
     longDescription:
-      "brought in to cover a month of leave in june 2026, still running it. i own the money path, the releases, and the production database for an ai video platform i can't name, at ~$200k mrr: stripe billing and plan migrations, a sales checkout, social analytics across five networks, render fixes for the video editor, and team access co-built with a teammate. 746 pull requests merged since june.",
+      "brought in to cover a month of leave in june 2026, still running it. i'm the engineer behind an ai video platform i can't name, at ~$200k mrr: social analytics across five networks (the biggest share of my 746 pull requests), stripe billing and plan migrations, a sales checkout, render fixes for the video editor, and team access co-built with a teammate. 746 pull requests merged since june.",
     imageSrc: "/images/projects/ai-video-platform.png",
     tags: ["TypeScript", "React", "Supabase", "Stripe", "AWS Lambda", "Remotion", "Python"],
     year: "2026",

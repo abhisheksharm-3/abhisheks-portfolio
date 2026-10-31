@@ -6,7 +6,7 @@ import { breadcrumbSchema, JsonLd, projectSchema } from "@/lib/seo/json-ld";
 export const metadata: Metadata = {
   title: "AI video platform | Abhishek Sharma",
   description:
-    "Client work in production: billing and releases for an AI video platform with 170+ paying customers and ~$200K MRR. Stripe billing, plan migrations, social analytics, and render fixes.",
+    "Client work in production: the engineer behind an AI video platform with 170+ paying customers and ~$200K MRR. Social analytics, Stripe billing and checkout, team access, render fixes, and releases.",
 };
 
 /**
