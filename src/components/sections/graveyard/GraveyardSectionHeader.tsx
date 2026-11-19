@@ -1,20 +1,19 @@
 import { PageHeader } from "@/components/shared/PageHeader";
 
 /**
- * Renders the main header for the Graveyard page.
- * @param {object} props - The component props.
- * @param {string} props.quote - The inspirational quote to display.
- * @returns {JSX.Element} The GraveyardSectionHeader component.
+ * Renders the header of the Graveyard page: one sentence on what the page is, and the notice that
+ * what it lists is no longer maintained.
  */
-export const GraveyardSectionHeader = ({ quote }: { quote: string }) => {
+export const GraveyardSectionHeader = () => {
   return (
     <PageHeader
       eyebrow="R.I.P"
       title="the project graveyard"
-      intro="projects i stopped, with the reason for each and what it changed in how i work."
+      intro="projects i started and stopped, with why each one stopped and what i do differently now."
     >
-      <p className="mt-5 max-w-2xl text-xs text-foreground/30 italic font-light leading-relaxed">
-        &ldquo;{quote}&rdquo;
+      <p className="mt-5 max-w-2xl text-xs font-light leading-relaxed text-foreground/60">
+        these projects are abandoned and unmaintained. some links may be broken, features may not
+        work, and databases may be empty.
       </p>
     </PageHeader>
   );

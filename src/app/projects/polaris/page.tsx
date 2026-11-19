@@ -105,7 +105,7 @@ const PolarisPage = () => {
           <Link
             href="/projects"
             transitionTypes={["nav-back"]}
-            className="group inline-flex items-center gap-2 text-xs text-foreground/40 transition-colors duration-200 hover:text-foreground/70"
+            className="group inline-flex items-center gap-2 text-xs text-foreground/60 transition-colors duration-200 hover:text-foreground/70"
           >
             <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
             back to projects
@@ -125,7 +125,7 @@ const PolarisPage = () => {
           </div>
 
           <div className="space-y-6 self-end border-t border-foreground/10 pt-6 lg:border-t-0 lg:pt-0">
-            <p className="font-mono text-[11px] leading-loose tracking-[0.15em] text-foreground/40">
+            <p className="font-mono text-[11px] leading-loose tracking-[0.15em] text-foreground/60">
               twenty-seven flows
               <br />
               thirty-one commands
@@ -134,7 +134,7 @@ const PolarisPage = () => {
               <br />
               sixteen hooks
             </p>
-            <p className="text-sm font-light leading-relaxed text-foreground/55">
+            <p className="text-sm font-light leading-relaxed text-foreground/65">
               Its quality gate blocks its own author too.
             </p>
             <a
@@ -155,7 +155,7 @@ const PolarisPage = () => {
         {project.notes && (
           <section className="mb-28">
             <div className="grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
-              <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+              <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
                 in the margin
               </p>
               <div className="max-w-md">
@@ -167,7 +167,7 @@ const PolarisPage = () => {
 
         <section className="mb-24">
           <div className="grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
-            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
               install
             </p>
             <div className="space-y-6">
@@ -175,7 +175,7 @@ const PolarisPage = () => {
                 {`/plugin marketplace add abhisheksharm-3/polaris
 /plugin install polaris`}
               </pre>
-              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
+              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
                 Then run <span className="font-mono text-xs">/init</span> once at a project root.
                 The interview asks how the standard should apply here and writes a config every
                 agent and hook reads, so one engine enforces a different profile per project.
@@ -186,7 +186,7 @@ const PolarisPage = () => {
 
         <section className="mb-28">
           <div className="grid gap-x-14 gap-y-10 lg:grid-cols-[1fr_1.4fr]">
-            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
               the problem
               <br />
               it solves
@@ -194,13 +194,10 @@ const PolarisPage = () => {
 
             <div>
               <p className="font-serif text-2xl leading-relaxed text-foreground/85 sm:text-[2rem]">
-                <span className="float-left mr-3 mt-2 font-serif text-[4.5rem] leading-[0.7] text-foreground">
-                  A
-                </span>
-                n agent left alone drifts two ways. It over-builds, writing fifty lines where one
+                An agent left alone drifts two ways. It over-builds, writing fifty lines where one
                 would do. And it writes prose full of the tells that mark it as machine-generated.
               </p>
-              <p className="mt-8 max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
+              <p className="mt-8 max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
                 Polaris fixes both with one standard and the machinery to enforce it. A gate runs a
                 deterministic pass plus a judgment pass and reports pass or fail with file and line.
                 Agents call it before they are allowed to say they are done.
@@ -211,7 +208,7 @@ const PolarisPage = () => {
 
         <section className="mb-28">
           <div className="mb-12 grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
-            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
               how a run
               <br />
               works
@@ -220,7 +217,7 @@ const PolarisPage = () => {
               <h2 className="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
                 You never type <span className="italic">a flow name</span>
               </h2>
-              <p className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
+              <p className="mt-6 max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
                 Describe the work. A hook classifies it, opens a run, and says which flow it chose.
                 Pick one below to redraw the phases it runs.
               </p>
@@ -236,8 +233,8 @@ const PolarisPage = () => {
                 aria-pressed={flow.name === active}
                 className={`font-mono text-xs tracking-[0.05em] transition-colors duration-200 ${
                   flow.name === active
-                    ? "text-foreground"
-                    : "text-foreground/30 hover:text-foreground/60"
+                    ? "text-foreground underline underline-offset-4"
+                    : "text-foreground/60 hover:text-foreground"
                 }`}
               >
                 {flow.name}
@@ -252,7 +249,7 @@ const PolarisPage = () => {
 
         <section className="mb-4">
           <div className="grid gap-x-14 gap-y-10 lg:grid-cols-[1fr_1.4fr]">
-            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+            <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
               what holds
               <br />
               the line
@@ -264,7 +261,7 @@ const PolarisPage = () => {
                   <p className="mb-3 font-mono text-xs tracking-[0.05em] text-foreground/75">
                     {guard.name}
                   </p>
-                  <p className="text-sm font-light leading-relaxed text-foreground/55">
+                  <p className="text-sm font-light leading-relaxed text-foreground/65">
                     {guard.detail}
                   </p>
                 </div>
@@ -274,7 +271,7 @@ const PolarisPage = () => {
         </section>
 
         <div>
-          <ProjectDetailMoreProjects />
+          <ProjectDetailMoreProjects slug={project.slug} />
         </div>
       </div>
     </AppShell>

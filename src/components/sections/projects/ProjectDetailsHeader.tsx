@@ -5,13 +5,13 @@ import type { ProjectType } from "@/lib/types/components";
 
 /**
  * Editorial header for a project detail page: eyebrow, serif title, divider,
- * lede, and quiet action links. Mirrors the shared PageHeader rhythm used
+ * the description as a serif italic lede, and quiet action links. Mirrors the shared PageHeader rhythm used
  * across the rest of the site.
  */
 export function ProjectDetailHeader({ project }: { project: ProjectType }) {
   return (
     <div className="flex flex-col">
-      <span className="mb-5 text-[11px] uppercase tracking-[0.2em] font-light text-primary/35">
+      <span className="mb-5 text-[11px] uppercase tracking-[0.2em] font-light text-primary/60">
         project · {project.year}
       </span>
 
@@ -23,7 +23,7 @@ export function ProjectDetailHeader({ project }: { project: ProjectType }) {
 
       <div className="mb-6 h-px w-full bg-primary/10" />
 
-      <p className="max-w-2xl text-sm sm:text-base font-light leading-relaxed text-foreground/55">
+      <p className="max-w-2xl font-serif text-2xl italic leading-snug text-foreground/70 sm:text-3xl">
         {project.description}
       </p>
 

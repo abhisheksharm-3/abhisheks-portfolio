@@ -9,6 +9,7 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import remarkGfm from "remark-gfm";
 import { PostCallout } from "@/components/writing/PostCallout";
+import { CODE_THEMES } from "./code-themes";
 import { PostFrontmatter, type PostFrontmatterType } from "./schema";
 
 const POSTS_DIR = path.resolve(process.cwd(), "content/posts");
@@ -119,7 +120,7 @@ export async function getPostBySlug(slug: string, opts?: { includeDrafts?: boole
         remarkPlugins: [remarkGfm],
         rehypePlugins: [
           rehypeSlug,
-          [rehypePrettyCode, { theme: "one-dark-pro", keepBackground: false }],
+          [rehypePrettyCode, { theme: CODE_THEMES, keepBackground: false }],
         ],
       },
     },

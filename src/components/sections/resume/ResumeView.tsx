@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import { useState } from "react";
 import { PageHeader } from "@/components/shared/PageHeader";
@@ -12,27 +12,72 @@ import { ResumeSections } from "./ResumeSections";
 const FULL_CUT = {
   id: "all",
   label: "everything",
-  summary: "the whole record, including what does not fit on a page. dimmer lines live only here.",
+  summary: "the whole record, including what does not fit on a page. lighter lines live only here.",
 } as const;
 
 const CUTS = [...RESUME_LENSES, FULL_CUT];
 
+const PdfLink = ({ lens, label }: { lens: string; label: string }) => (
+  <a
+    href={`/resume/${lens}.pdf`}
+    download={`abhishek-sharma-${lens}.pdf`}
+    className="group inline-flex items-center gap-2 self-start font-mono text-xs tracking-[0.05em] text-foreground/65 transition-colors duration-200 hover:text-foreground/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/40 sm:self-auto"
+  >
+    <ArrowDown
+      aria-hidden="true"
+      className="h-3 w-3 transition-transform duration-200 group-hover:translate-y-0.5"
+    />
+    {label} pdf, one page
+  </a>
+);
+
+/**
+ * The cut's summary. It is the only part of the page that crossfades: old and new sit in the
+ * same grid cell, so the swap does not reflow while they overlap.
+ */
+const CutSummary = ({ cutId, children }: { cutId: string; children: string }) => {
+  const reduceMotion = useReducedMotion();
+  const duration = reduceMotion ? 0 : 0.2;
+
+  return (
+    <span className="grid">
+      <AnimatePresence initial={false}>
+        <motion.span
+          key={cutId}
+          className="col-start-1 row-start-1"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1, transition: { duration, ease: "easeOut" } }}
+          exit={{ opacity: 0, transition: { duration, ease: "easeIn" } }}
+        >
+          {children}
+        </motion.span>
+      </AnimatePresence>
+    </span>
+  );
+};
+
 /**
  * The resume page body. A cut picks which claims show, matching the PDF of the same name;
- * "everything" shows the full corpus and points the download at the general PDF.
+ * "everything" shows the full corpus and points the download at the general PDF. Switching
+ * cuts animates only what changed: the summary crossfades, and bullets enter and leave.
  */
 export const ResumeView = () => {
   const [cut, setCut] = useState<ResumeCut>("general");
   const active = CUTS.find((candidate) => candidate.id === cut) ?? CUTS[0];
-  const pdfLens = cut === "all" ? "general" : cut;
+  const pdf =
+    cut === "all" ? { lens: "general", label: "general" } : { lens: cut, label: active.label };
 
   return (
     <>
-      <PageHeader eyebrow="resume" title="the record" intro={active.summary} />
+      <PageHeader
+        eyebrow="resume"
+        title="the record"
+        intro={<CutSummary cutId={active.id}>{active.summary}</CutSummary>}
+      />
 
-      <div className="mb-16 flex flex-col gap-6 border-b border-foreground/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
+      <div className="mb-12 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <fieldset>
-          <legend className="mb-3 font-mono text-[10px] uppercase tracking-[0.2em] text-primary/35">
+          <legend className="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-primary/60">
             cut for
           </legend>
           <div className="flex flex-wrap gap-x-6 gap-y-2">
@@ -46,7 +91,7 @@ export const ResumeView = () => {
                   "border-b pb-1 text-sm font-light transition-colors duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/40",
                   cut === option.id
                     ? "border-foreground/70 text-foreground/90"
-                    : "border-transparent text-foreground/45 hover:text-foreground/75",
+                    : "border-transparent text-foreground/60 hover:text-foreground/85",
                 )}
               >
                 {option.label}
@@ -55,26 +100,18 @@ export const ResumeView = () => {
           </div>
         </fieldset>
 
-        <a
-          href={`/resume/${pdfLens}.pdf`}
-          download={`abhishek-sharma-${pdfLens}.pdf`}
-          className="group inline-flex items-center gap-2 self-start font-mono text-xs tracking-[0.05em] text-foreground/60 transition-colors duration-200 hover:text-foreground/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/40 sm:self-auto"
-        >
-          <ArrowDown className="h-3 w-3 transition-transform duration-200 group-hover:translate-y-0.5" />
-          {pdfLens} pdf, one page
-        </a>
+        <PdfLink lens={pdf.lens} label={pdf.label} />
       </div>
 
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.div
-          key={cut}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1, transition: { duration: 0.22, ease: [0.22, 1, 0.36, 1] } }}
-          exit={{ opacity: 0, transition: { duration: 0.12, ease: "easeIn" } }}
-        >
-          <ResumeSections view={cutResume(cut)} isFullCut={cut === "all"} />
-        </motion.div>
-      </AnimatePresence>
+      <p className="sr-only" aria-live="polite">
+        showing the {active.label} cut
+      </p>
+
+      <ResumeSections view={cutResume(cut)} isFullCut={cut === "all"} />
+
+      <div className="border-t border-foreground/8 py-10">
+        <PdfLink lens={pdf.lens} label={pdf.label} />
+      </div>
     </>
   );
 };

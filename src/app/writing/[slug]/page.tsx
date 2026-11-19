@@ -8,6 +8,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { SharedElement } from "@/components/shared/SharedElement";
 import { PostCta } from "@/components/writing/PostCta";
 import { PostToc } from "@/components/writing/PostToc";
+import { projects } from "@/data/projects";
 import { getAllPosts, getPostBySlug } from "@/lib/content/loader";
 import { breadcrumbSchema, JsonLd } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/site";
@@ -90,6 +91,14 @@ function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
   return { articleSchema, faqSchema, breadcrumbs };
 }
 
+const FAQ_ID = "frequently-asked-questions";
+
+function projectForPost(slug: string) {
+  return projects.find((project) =>
+    project.notes?.some((note) => note.href === `/writing/${slug}`),
+  );
+}
+
 export default async function PostPage({ params }: Props) {
   const { slug } = await params;
   const post = await getPostBySlug(slug);
@@ -98,6 +107,10 @@ export default async function PostPage({ params }: Props) {
 
   const { frontmatter, content, toc } = post;
   const schemas = buildJsonLd(post);
+  const project = projectForPost(slug);
+  const tocEntries = frontmatter.faqs?.length
+    ? [...toc, { id: FAQ_ID, label: "frequently asked questions" }]
+    : toc;
 
   const formattedDate = new Date(frontmatter.date).toLocaleDateString("en-US", {
     year: "numeric",
@@ -120,25 +133,38 @@ export default async function PostPage({ params }: Props) {
       <div className="pt-36 pb-24 px-6 sm:px-10 lg:px-24">
         {/* The article stays centred at every width; the rail hangs in the margin it
             already had, so no post shifts depending on whether it has one. */}
-        <div className="relative mx-auto max-w-3xl">
+        <div className="relative mx-auto max-w-[38rem]">
           <aside className="hidden xl:block absolute right-full top-0 h-full w-48 pr-8">
             <div className="sticky top-32">
-              <PostToc entries={toc} variant="rail" />
+              <PostToc entries={tocEntries} variant="rail" />
             </div>
           </aside>
 
           <div className="min-w-0">
             <Link
               href="/writing"
-              className="group inline-flex items-center gap-1.5 text-xs text-foreground/35 hover:text-foreground/70 transition-colors duration-200 font-light mb-10"
+              transitionTypes={["nav-back"]}
+              className="group inline-flex items-center gap-1.5 text-xs text-foreground/60 hover:text-foreground/90 transition-colors duration-200 font-light mb-10"
             >
               <ArrowLeft className="h-3 w-3 group-hover:-translate-x-0.5 transition-transform duration-200" />
               <span>writing</span>
             </Link>
 
-            <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
+            <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light mb-2">
               {frontmatter.tags[0]} / {formattedDate} / {frontmatter.readingTime} min
             </p>
+
+            {project && (
+              <p className="mb-4 text-sm font-light">
+                <Link
+                  href={`/projects/${project.slug}`}
+                  transitionTypes={["nav-forward"]}
+                  className="text-foreground/60 underline decoration-foreground/15 underline-offset-4 transition-colors duration-200 hover:text-foreground/90 hover:decoration-foreground/60"
+                >
+                  from the {project.title.toLowerCase()}
+                </Link>
+              </p>
+            )}
 
             <SharedElement name={`post-title-${slug}`}>
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif leading-tight text-foreground mb-4">
@@ -150,30 +176,35 @@ export default async function PostPage({ params }: Props) {
               {frontmatter.subhead}
             </p>
 
-            <div className="h-px bg-primary/10 w-full mb-10" />
+            <div className="h-px bg-primary/10 w-full mb-8" />
 
-            <PostToc entries={toc} />
+            <PostToc entries={tocEntries} />
 
             <div className="prose-writing">{content}</div>
 
             {frontmatter.faqs && frontmatter.faqs.length > 0 && (
               <>
                 <div className="h-px bg-primary/10 w-full mt-12 mb-10" />
-                <div id="frequently-asked-questions">
-                  <h2 className="text-lg font-serif text-foreground/80 mb-6">
+                <section aria-labelledby={`${FAQ_ID}-heading`} className="scroll-mt-24" id={FAQ_ID}>
+                  <h2
+                    className="mb-6 font-serif text-xl italic text-foreground/85"
+                    id={`${FAQ_ID}-heading`}
+                  >
                     frequently asked questions
                   </h2>
-                  <div className="space-y-6">
+                  <dl className="space-y-8">
                     {frontmatter.faqs.map((faq) => (
                       <div key={faq.question}>
-                        <p className="text-sm text-foreground/80 font-light mb-2">{faq.question}</p>
-                        <p className="text-sm text-foreground/65 font-light leading-relaxed">
+                        <dt className="mb-2 font-serif text-lg font-normal italic leading-snug text-foreground/85">
+                          {faq.question}
+                        </dt>
+                        <dd className="font-light leading-[1.8] text-foreground/70">
                           {faq.answer}
-                        </p>
+                        </dd>
                       </div>
                     ))}
-                  </div>
-                </div>
+                  </dl>
+                </section>
               </>
             )}
 
@@ -181,7 +212,7 @@ export default async function PostPage({ params }: Props) {
               <>
                 <div className="h-px bg-primary/10 w-full mt-12 mb-8" />
                 <div>
-                  <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
+                  <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light mb-4">
                     related
                   </p>
                   <div className="space-y-3">
@@ -189,12 +220,15 @@ export default async function PostPage({ params }: Props) {
                       <Link
                         key={related.slug}
                         href={`/writing/${related.slug}`}
+                        transitionTypes={["nav-forward"]}
                         className="group flex items-baseline gap-4 py-2"
                       >
-                        <span className="text-sm text-foreground/60 font-light group-hover:text-foreground/90 transition-colors duration-200 leading-snug">
-                          {related.title}
-                        </span>
-                        <span className="text-xs text-foreground/25 font-light shrink-0">
+                        <SharedElement name={`post-title-${related.slug}`}>
+                          <span className="text-sm text-foreground/70 font-light group-hover:text-foreground/90 transition-colors duration-200 leading-snug">
+                            {related.title}
+                          </span>
+                        </SharedElement>
+                        <span className="text-xs text-foreground/60 font-light shrink-0">
                           {related.readingTime} min
                         </span>
                       </Link>

@@ -21,32 +21,40 @@ import { CONTACT_FORM_SCHEMA } from "@/data/contact-schema";
 import { submitContactForm } from "@/lib/actions/contact";
 import type { ContactFormDataType } from "@/lib/types/components";
 
+/**
+ * Field chrome. `scroll-mt-32` keeps a field that validation just focused clear of the fixed
+ * header; placeholders sit at the contrast floor.
+ */
 const field =
-  "border border-foreground/10 bg-foreground/[0.03] dark:bg-foreground/[0.03] shadow-none rounded-none px-3 py-3 h-auto text-base text-foreground placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-foreground/25 focus-visible:bg-foreground/[0.06] dark:focus-visible:bg-foreground/[0.06] transition-all duration-200";
-const label = "text-[10px] text-primary/35 uppercase tracking-[0.18em] font-light";
+  "scroll-mt-32 border border-foreground/30 bg-foreground/[0.03] shadow-none rounded-none px-3 py-3 h-auto text-base text-foreground placeholder:text-foreground/60 focus-visible:ring-1 focus-visible:ring-foreground/30 focus-visible:ring-offset-0 focus-visible:border-foreground/60 focus-visible:bg-foreground/[0.06] transition-colors duration-200";
+const label = "text-[11px] text-primary/60 uppercase tracking-[0.18em] font-light";
 
-/** The submit button's label morphs through the send: "Send Message", "Sending", then "Sent" while the success note shows. */
+/** The submit button's label morphs through the send: "send message", "sending", then "sent" while the success note shows. */
 const submitLabel = (isPending: boolean, status: "success" | "error" | null) => {
-  if (isPending) return "Sending";
-  if (status === "success") return "Sent";
-  return "Send Message";
+  if (isPending) return "sending";
+  if (status === "success") return "sent";
+  return "send message";
 };
 
+/**
+ * The contact form. Stamping `renderedAt` happens on mount, not during render: Date.now()
+ * while prerendering is an unstable value, and it kept the whole form out of the static HTML.
+ * `noValidate` hands validation to the schema, so errors speak in the site's voice instead of
+ * the browser's bubble. The hidden `company` field is a honeypot: people never see it, scripts fill it.
+ */
 export const SendMessageCard = () => {
   const [isPending, startTransition] = useTransition();
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
   const renderedAtRef = useRef(0);
   const honeypotRef = useRef<HTMLInputElement>(null);
 
-  // Stamped on mount, not during render: Date.now() while prerendering is an
-  // unstable value, and it kept the whole form out of the static HTML.
   useEffect(() => {
     renderedAtRef.current = Date.now();
   }, []);
 
   const form = useForm<ContactFormDataType>({
     resolver: zodResolver(CONTACT_FORM_SCHEMA),
-    defaultValues: { name: "", email: "", subject: "", message: "" },
+    defaultValues: { name: "", email: "", message: "" },
   });
 
   const handleSubmit = (data: ContactFormDataType) => {
@@ -73,13 +81,13 @@ export const SendMessageCard = () => {
 
   return (
     <div>
-      <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] mb-10 font-light">
+      <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] mb-10 font-light">
         send a message
       </p>
 
       <noscript>
-        <p className="mb-8 text-sm font-light text-foreground/60">
-          This form needs JavaScript to submit. Email{" "}
+        <p className="mb-8 text-sm font-light text-foreground/65">
+          this form needs javascript to submit. email{" "}
           <a className="underline" href={`mailto:${CONTACT_INFO.email}`}>
             {CONTACT_INFO.email}
           </a>{" "}
@@ -88,8 +96,7 @@ export const SendMessageCard = () => {
       </noscript>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-9">
-          {/* Honeypot: hidden from people, attracts automated submissions */}
+        <form noValidate onSubmit={form.handleSubmit(handleSubmit)} className="space-y-9">
           <div aria-hidden="true" className="absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden">
             <label htmlFor="company">Company</label>
             <input
@@ -108,9 +115,9 @@ export const SendMessageCard = () => {
               name="name"
               render={({ field: f }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className={label}>Name</FormLabel>
+                  <FormLabel className={label}>name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your name" className={field} {...f} />
+                    <Input placeholder="your name" autoComplete="name" className={field} {...f} />
                   </FormControl>
                   <FormMessage className="text-xs font-light" />
                 </FormItem>
@@ -121,9 +128,15 @@ export const SendMessageCard = () => {
               name="email"
               render={({ field: f }) => (
                 <FormItem className="space-y-2">
-                  <FormLabel className={label}>Email</FormLabel>
+                  <FormLabel className={label}>email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="your@email.com" className={field} {...f} />
+                    <Input
+                      type="email"
+                      autoComplete="email"
+                      placeholder="you@example.com"
+                      className={field}
+                      {...f}
+                    />
                   </FormControl>
                   <FormMessage className="text-xs font-light" />
                 </FormItem>
@@ -133,29 +146,14 @@ export const SendMessageCard = () => {
 
           <FormField
             control={form.control}
-            name="subject"
-            render={({ field: f }) => (
-              <FormItem className="space-y-2">
-                <FormLabel className={label}>Subject</FormLabel>
-                <FormControl>
-                  <Input placeholder="What's on your mind?" className={field} {...f} />
-                </FormControl>
-                <FormMessage className="text-xs font-light" />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="message"
             render={({ field: f }) => (
               <FormItem className="space-y-2">
-                <FormLabel className={label}>Message</FormLabel>
+                <FormLabel className={label}>message</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder="Tell me about the project, role, or idea..."
-                    rows={7}
-                    className={`${field} resize-none`}
+                    placeholder="what's the project, role, or idea?"
+                    className={`${field} min-h-40 resize-y`}
                     {...f}
                   />
                 </FormControl>
@@ -168,7 +166,8 @@ export const SendMessageCard = () => {
             <button
               type="submit"
               disabled={isPending}
-              className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors duration-200 group disabled:opacity-40 disabled:cursor-default cursor-pointer font-light border border-foreground/15 hover:border-foreground/30 focus-visible:outline-none focus-visible:border-foreground/45 px-5 py-2.5"
+              aria-busy={isPending}
+              className="inline-flex items-center gap-2 text-sm text-foreground/65 hover:text-foreground transition-colors duration-200 group disabled:opacity-60 disabled:cursor-default cursor-pointer font-light border border-foreground/30 hover:border-foreground/50 focus-visible:outline-none focus-visible:border-foreground/60 focus-visible:ring-1 focus-visible:ring-foreground/30 px-5 py-2.5"
             >
               {isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               <TextMorph>{submitLabel(isPending, submitStatus)}</TextMorph>
@@ -185,10 +184,10 @@ export const SendMessageCard = () => {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="flex items-center gap-2 text-sm text-foreground/50 font-light"
+                  className="flex items-center gap-2 text-sm text-foreground/65 font-light"
                 >
                   <CheckCircle className="h-3.5 w-3.5 shrink-0" />
-                  Message sent. I&apos;ll get back to you soon.
+                  message sent. i&apos;ll get back to you soon.
                 </motion.p>
               )}
               {submitStatus === "error" && (
@@ -196,10 +195,10 @@ export const SendMessageCard = () => {
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className="flex items-center gap-2 text-sm text-foreground/50 font-light"
+                  className="flex items-center gap-2 text-sm text-foreground/65 font-light"
                 >
                   <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                  Something went wrong. Try again.
+                  that didn&apos;t send. try again, or email {CONTACT_INFO.email}.
                 </motion.p>
               )}
             </AnimatePresence>

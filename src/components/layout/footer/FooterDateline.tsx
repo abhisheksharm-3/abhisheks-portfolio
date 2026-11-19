@@ -1,11 +1,11 @@
 "use client";
 
-/** The line under the signature: city, weekday, date and the current time in Chandigarh, like a letter's dateline. */
+/** The line under the signature: city, weekday, date and the current time in Pune, like a letter's dateline. */
 import { useSyncExternalStore } from "react";
 
 const REFRESH_MS = 30_000;
 
-const CHANDIGARH_TIME = new Intl.DateTimeFormat("en-IN", {
+const PUNE_TIME = new Intl.DateTimeFormat("en-IN", {
   timeZone: "Asia/Kolkata",
   weekday: "long",
   day: "numeric",
@@ -15,7 +15,7 @@ const CHANDIGARH_TIME = new Intl.DateTimeFormat("en-IN", {
 });
 
 const readNow = () => {
-  const parts = CHANDIGARH_TIME.formatToParts(new Date());
+  const parts = PUNE_TIME.formatToParts(new Date());
   const part = (type: Intl.DateTimeFormatPartTypes) =>
     parts.find((entry) => entry.type === type)?.value ?? "";
   return `${part("weekday")}, ${part("day")} ${part("month")} · ${part("hour")}:${part("minute")} ${part("dayPeriod")}`.toLowerCase();
@@ -33,8 +33,8 @@ export const FooterDateline = () => {
   const now = useSyncExternalStore(subscribe, readNow, readNothing);
 
   return (
-    <p className="mt-2.5 font-mono text-[11px] tracking-[0.04em] text-foreground/40 tabular-nums">
-      chandigarh{now && ` · ${now}`}
+    <p className="mt-2.5 font-mono text-[11px] tracking-[0.04em] text-foreground/60 tabular-nums">
+      pune{now && ` · ${now}`}
     </p>
   );
 };

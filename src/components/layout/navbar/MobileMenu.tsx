@@ -1,8 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ArrowRight, X } from "lucide-react";
-import Link from "next/link";
+import { X } from "lucide-react";
 import { ModeToggle } from "@/components/ModeToggle";
 import type { MobileMenuPropsType } from "@/lib/types/components";
 import { Logo } from "./Logo";
@@ -36,7 +35,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
         <button
           type="button"
           onClick={onClose}
-          className="p-2.5 -mr-2 text-foreground/40 hover:text-foreground/70 transition-colors duration-200"
+          className="p-2.5 -mr-2 text-foreground/60 hover:text-foreground/85 transition-colors duration-200"
           aria-label="Close menu"
         >
           <X className="h-4 w-4" />
@@ -55,17 +54,8 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
         ))}
       </nav>
 
-      <div className="flex items-center justify-between pt-8 border-t border-foreground/8">
+      <div className="flex items-center pt-8 border-t border-foreground/8">
         <ModeToggle />
-
-        <Link
-          href="/contact"
-          onClick={onClose}
-          className="inline-flex items-center gap-2 text-xs border border-foreground/15 text-foreground/55 hover:text-foreground/80 hover:border-foreground/25 transition-all duration-200 px-4 py-1.5"
-        >
-          Hire me
-          <ArrowRight className="h-3 w-3" />
-        </Link>
       </div>
     </motion.div>
   </>

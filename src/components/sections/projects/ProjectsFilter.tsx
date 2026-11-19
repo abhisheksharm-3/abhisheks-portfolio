@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useMemo } from "react";
 import { TextMorph } from "@/components/shared/TextMorph";
 import { PROJECT_CATEGORIES } from "@/data/projects";
@@ -37,15 +38,15 @@ export function ProjectsFilters({
   return (
     <div className="space-y-5">
       <div className="flex items-center justify-between">
-        <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
-          Filter & Browse
+        <span className="text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light">
+          filter by area
         </span>
         <span
-          className={`text-xs text-foreground/40 font-light transition-opacity duration-200 ${isPending ? "opacity-40" : "opacity-100"}`}
+          className={`text-xs text-foreground/60 font-light transition-opacity duration-200 ${isPending ? "opacity-40" : "opacity-100"}`}
         >
           <TextMorph>{`${filteredCount} ${filteredCount === 1 ? "project" : "projects"}`}</TextMorph>
           {activeFilter !== "all" && (
-            <span className="ml-1 text-foreground/30">/ {activeLabel}</span>
+            <span className="ml-1 text-foreground/60">/ {activeLabel}</span>
           )}
           {isPending && (
             <span className="ml-2 inline-flex gap-0.5 items-center">
@@ -73,20 +74,19 @@ export function ProjectsFilters({
               aria-pressed={isActive}
               onClick={() => setActiveFilter(filter.id)}
               className={`
-                px-3 py-1 text-xs font-light transition-all duration-200 border
-                ${
-                  isActive
-                    ? "border-foreground/25 text-foreground"
-                    : "border-foreground/8 text-foreground/35 hover:border-foreground/15 hover:text-foreground/55"
-                }
+                relative px-3 py-1 text-xs font-light transition-colors duration-200 border border-foreground/10
+                ${isActive ? "text-foreground" : "text-foreground/60 hover:border-foreground/20 hover:text-foreground"}
               `}
             >
+              {isActive && (
+                <motion.span
+                  layoutId="projects-filter-active"
+                  transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}
+                  className="pointer-events-none absolute -inset-px border border-foreground/40"
+                />
+              )}
               {filter.label}
-              <span
-                className={`ml-1.5 text-[10px] ${isActive ? "text-foreground/40" : "text-foreground/20"}`}
-              >
-                {filter.count}
-              </span>
+              <span className="ml-1.5 text-[10px] text-foreground/60">{filter.count}</span>
             </button>
           );
         })}

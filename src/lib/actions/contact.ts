@@ -88,14 +88,12 @@ export async function submitContactForm(
   }
 
   const safeName = sanitizeHeader(validation.data.name).replace(/["<>]/g, "");
-  const safeSubject = sanitizeHeader(validation.data.subject);
 
   const requestHeaders = await headers();
 
   const emailElement = React.createElement(ContactEmailTemplate, {
     name: validation.data.name,
     email: validation.data.email,
-    subject: validation.data.subject,
     message: validation.data.message,
     submittedAt: new Date().toLocaleString("en-IN", {
       timeZone: "Asia/Kolkata",
@@ -116,7 +114,7 @@ export async function submitContactForm(
       from: `"${safeName}" <${mailConfig.user}>`,
       to: mailConfig.recipient,
       replyTo: validation.data.email,
-      subject: `New Portfolio Message: ${safeSubject}`,
+      subject: `New Portfolio Message from ${safeName}`,
       text: emailText,
       html: emailHtml,
     });

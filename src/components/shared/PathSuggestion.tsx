@@ -2,8 +2,7 @@
 
 /** On a 404, shows the path that was typed and morphs it into the closest real page, when one is close. */
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { NAVIGATION_ITEMS } from "@/data/navigation";
 import { projects } from "@/data/projects";
 import { TextMorph } from "./TextMorph";
@@ -45,9 +44,19 @@ const closestPath = (typed: string) => {
   return isTypo ? best.path : null;
 };
 
+const subscribeToNothing = () => () => {};
+
+const readBrowserPath = () => window.location.pathname;
+
+/**
+ * The 404 is prerendered once for every missing URL, so the server cannot know the typed path.
+ * It renders nothing there, and the browser fills the suggestion in after hydration without a mismatch.
+ */
+const readNoPath = () => null;
+
 export const PathSuggestion = () => {
-  const typed = usePathname();
-  const suggestion = closestPath(typed);
+  const typed = useSyncExternalStore(subscribeToNothing, readBrowserPath, readNoPath);
+  const suggestion = typed ? closestPath(typed) : null;
   const [isCorrected, setIsCorrected] = useState(false);
 
   useEffect(() => {
@@ -56,7 +65,7 @@ export const PathSuggestion = () => {
     return () => window.clearTimeout(timer);
   }, [suggestion]);
 
-  if (!suggestion) return null;
+  if (!typed || !suggestion) return null;
 
   return (
     <p className="mb-10 flex flex-wrap items-baseline gap-x-2 font-mono text-sm text-foreground/45">

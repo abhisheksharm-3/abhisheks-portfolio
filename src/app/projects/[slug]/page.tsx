@@ -33,7 +33,7 @@ const DetailedProjectPage = () => {
           <Link
             href="/projects"
             transitionTypes={["nav-back"]}
-            className="group inline-flex items-center gap-2 text-xs text-foreground/40 hover:text-foreground/70 transition-colors duration-200"
+            className="group inline-flex items-center gap-2 text-xs text-foreground/60 hover:text-foreground transition-colors duration-200"
           >
             <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
             back to projects
@@ -48,11 +48,13 @@ const DetailedProjectPage = () => {
           <ProjectDetailMeta project={project} />
         </div>
 
-        <ProjectDetailImage slug={project.slug} src={project.imageSrc} alt={project.title} />
+        {project.imageSrc && (
+          <ProjectDetailImage src={project.imageSrc} alt={`screenshot of ${project.title}`} />
+        )}
 
         <ProjectDetailOverview project={project} />
 
-        <ProjectDetailMoreProjects />
+        <ProjectDetailMoreProjects slug={project.slug} />
       </div>
     </AppShell>
   );

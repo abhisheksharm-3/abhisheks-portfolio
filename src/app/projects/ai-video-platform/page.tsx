@@ -85,7 +85,7 @@ const POSTS = [
 /** A two-column editorial row: a mono label on the left, content on the right. */
 const Row = ({ label, children }: { label: ReactNode; children: ReactNode }) => (
   <div className="grid gap-x-14 gap-y-10 lg:grid-cols-[1fr_1.4fr]">
-    <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+    <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
       {label}
     </p>
     <div>{children}</div>
@@ -97,7 +97,7 @@ const ItemGrid = ({ items }: { items: { name: string; detail: string }[] }) => (
     {items.map((item) => (
       <div key={item.name}>
         <p className="mb-3 font-mono text-xs tracking-[0.05em] text-foreground/75">{item.name}</p>
-        <p className="text-sm font-light leading-relaxed text-foreground/55">{item.detail}</p>
+        <p className="text-sm font-light leading-relaxed text-foreground/65">{item.detail}</p>
       </div>
     ))}
   </div>
@@ -124,7 +124,7 @@ const AiVideoPlatformPage = () => {
           <Link
             href="/projects"
             transitionTypes={["nav-back"]}
-            className="group inline-flex items-center gap-2 text-xs text-foreground/40 transition-colors duration-200 hover:text-foreground/70"
+            className="group inline-flex items-center gap-2 text-xs text-foreground/60 transition-colors duration-200 hover:text-foreground/70"
           >
             <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
             back to projects
@@ -135,7 +135,7 @@ const AiVideoPlatformPage = () => {
           <div>
             <SharedElement name="project-title-ai-video-platform">
               <h1 className="font-serif text-[3.25rem] leading-[0.9] tracking-tight text-foreground sm:text-[6rem] lg:text-[7rem]">
-                AI video
+                ai video
                 <br />
                 platform
               </h1>
@@ -146,7 +146,7 @@ const AiVideoPlatformPage = () => {
           </div>
 
           <div className="space-y-6 self-end border-t border-foreground/10 pt-6 lg:border-t-0 lg:pt-0">
-            <p className="font-mono text-[11px] leading-loose tracking-[0.15em] text-foreground/40">
+            <p className="font-mono text-[11px] leading-loose tracking-[0.15em] text-foreground/60">
               170+ paying customers
               <br />
               ~$200k mrr
@@ -155,7 +155,7 @@ const AiVideoPlatformPage = () => {
               <br />
               two engineers
             </p>
-            <p className="text-sm font-light leading-relaxed text-foreground/55">
+            <p className="text-sm font-light leading-relaxed text-foreground/65">
               Client work through Wednesday. The client stays unnamed, so there are no screenshots
               here, only what I was handed and what it runs at.
             </p>
@@ -169,7 +169,7 @@ const AiVideoPlatformPage = () => {
         {project.notes && (
           <section className="mb-28">
             <div className="grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
-              <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+              <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
                 in the margin
               </p>
               <div className="max-w-md">
@@ -222,18 +222,15 @@ const AiVideoPlatformPage = () => {
           >
             <div className="space-y-8">
               <p className="font-serif text-2xl leading-relaxed text-foreground/85 sm:text-[2rem]">
-                <span className="float-left mr-3 mt-2 font-serif text-[4.5rem] leading-[0.7] text-foreground">
-                  R
-                </span>
-                enders came out warmer than the upload. I measured each stage instead of guessing,
+                Renders came out warmer than the upload. I measured each stage instead of guessing,
                 and found seven separate defects.
               </p>
-              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
+              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
                 The last one was the frame format: capturing PNG instead of JPEG made the colour
                 exact, at 21% more render time and 27% more render cost. The acceptance test was a
                 re-render of a real customer video.
               </p>
-              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/55">
+              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
                 Analytics went the other way. The old design stored the same lifetime counter again
                 and again: 10,254 rows over six months and no usable time series. I wrote down the
                 decision and rebuilt it as an append-only archive.
@@ -249,9 +246,12 @@ const AiVideoPlatformPage = () => {
                 <Link
                   key={post.slug}
                   href={`/writing/${post.slug}`}
-                  className="group flex items-center justify-between gap-4 border-b border-foreground/8 py-4 text-sm font-light text-foreground/55 transition-colors duration-200 hover:text-foreground/85"
+                  transitionTypes={["nav-forward"]}
+                  className="group flex items-center justify-between gap-4 border-b border-foreground/8 py-4 text-sm font-light text-foreground/65 transition-colors duration-200 hover:text-foreground/85"
                 >
-                  <span>{post.title}</span>
+                  <SharedElement name={`post-title-${post.slug}`}>
+                    <span>{post.title}</span>
+                  </SharedElement>
                   <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-foreground/25 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                 </Link>
               ))}
@@ -260,7 +260,7 @@ const AiVideoPlatformPage = () => {
         </section>
 
         <div>
-          <ProjectDetailMoreProjects />
+          <ProjectDetailMoreProjects slug={project.slug} />
         </div>
       </div>
     </AppShell>

@@ -1,10 +1,13 @@
-import { ArrowRight, ArrowUpRight } from "lucide-react";
-import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { CONTACT_INFO, SOCIAL_LINKS } from "@/data/contact";
 import { getSectionClasses } from "@/lib/config/spacing-standards";
 
+/**
+ * The home page's close. The email address is the one action; the social links under it
+ * are for finding me, not a second ask.
+ */
 export const ContactCTA = () => {
   return (
     <section className={getSectionClasses()}>
@@ -15,59 +18,38 @@ export const ContactCTA = () => {
           <span className="font-serif text-foreground select-none pr-4">let&apos;s talk</span>
         </SectionHeader>
 
-        <p className="text-foreground/55 text-base font-light leading-relaxed max-w-lg mb-10">
+        <p className="text-foreground/65 text-base font-light leading-relaxed max-w-lg mb-10">
           questions about something i built or wrote, or a problem you want a second pair of eyes
           on: email me.
         </p>
 
         <a
           href={`mailto:${CONTACT_INFO.email}`}
-          className="group inline-flex items-center gap-3 mb-16"
+          className="group inline-flex items-center gap-3 mb-16 max-w-full"
         >
-          <span className="text-2xl sm:text-3xl md:text-4xl font-light text-foreground/80 group-hover:text-foreground transition-colors duration-200 tracking-tight">
+          <span className="min-w-0 break-words text-xl sm:text-3xl md:text-4xl font-light text-foreground/80 group-hover:text-foreground transition-colors duration-200 tracking-tight">
             {CONTACT_INFO.email}
           </span>
-          <ArrowUpRight className="h-6 w-6 text-foreground/30 group-hover:text-foreground/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200 shrink-0" />
+          <ArrowUpRight className="h-6 w-6 text-foreground/40 group-hover:text-foreground/70 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200 shrink-0" />
         </a>
 
         <div className="h-px bg-primary/10 mb-8" />
 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-          <Link
-            href="/contact"
-            className="group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground transition-colors duration-200"
-          >
-            <span>let&apos;s build together</span>
-            <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform duration-200" />
-          </Link>
-
-          <div className="flex items-center gap-6">
-            {SOCIAL_LINKS.map((link) => (
+        <ul className="flex flex-wrap items-center gap-x-6 gap-y-3">
+          {SOCIAL_LINKS.map((link) => (
+            <li key={link.label}>
               <a
-                key={link.label}
                 href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group flex items-center gap-1.5 text-sm font-light text-foreground/40 hover:text-foreground/80 transition-colors duration-200"
+                className="flex items-center gap-1.5 text-sm font-light lowercase text-foreground/60 hover:text-foreground/85 transition-colors duration-200"
               >
                 <link.icon className="h-3.5 w-3.5" />
                 <span>{link.label}</span>
               </a>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-8 h-px bg-primary/10" />
-
-        <div className="mt-8">
-          <Link
-            href="/projects"
-            className="group inline-flex items-center gap-2 text-xs font-light text-foreground/35 hover:text-foreground/60 transition-colors duration-200"
-          >
-            <span>or browse things i&apos;ve made</span>
-            <ArrowRight className="h-3 w-3 group-hover:translate-x-0.5 transition-transform duration-200" />
-          </Link>
-        </div>
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

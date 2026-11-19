@@ -24,15 +24,15 @@ const NotFound = () => (
     <Suspense fallback={null}>
       <PathSuggestion />
     </Suspense>
-    <ul className="divide-y divide-foreground/8 border-y border-foreground/8 max-w-sm">
+    <ul className="divide-y divide-foreground/8 border-y border-foreground/8">
       {LINKS.map((link) => (
         <li key={link.href}>
           <Link
-            className="group flex items-center justify-between py-3 text-sm font-light text-foreground/55 hover:text-foreground/85 transition-colors duration-200"
+            className="group flex items-center justify-between py-3 text-sm font-light text-foreground/65 hover:text-foreground/90 transition-colors duration-200"
             href={link.href}
           >
             {link.label}
-            <span className="text-foreground/20 group-hover:text-foreground/50 group-hover:translate-x-0.5 transition-all duration-200">
+            <span className="text-foreground/40 group-hover:text-foreground/60 group-hover:translate-x-0.5 transition-[color,transform] duration-200">
               →
             </span>
           </Link>

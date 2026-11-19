@@ -21,13 +21,13 @@ export const StatePage = ({
 }) => (
   <AppShell>
     <div className="min-h-[70vh] flex items-center pt-36 pb-20 px-6 sm:px-10 lg:px-24">
-      <div className="relative z-10 w-full max-w-2xl">
-        <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
+      <div className="relative z-10 w-full max-w-xl">
+        <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light mb-5">
           {eyebrow}
         </p>
 
         <div>
-          <Heading className="text-4xl sm:text-5xl md:text-6xl font-serif leading-tight text-foreground mb-6">
+          <Heading className="text-4xl sm:text-5xl md:text-6xl font-serif leading-tight text-balance text-foreground mb-6">
             {title}
           </Heading>
         </div>
@@ -35,7 +35,7 @@ export const StatePage = ({
         <div className="h-px bg-primary/10 w-full mb-6" />
 
         {body && (
-          <p className="text-foreground/55 text-sm sm:text-base font-light leading-relaxed">
+          <p className="text-foreground/65 text-sm sm:text-base font-light leading-relaxed">
             {body}
           </p>
         )}
@@ -57,13 +57,13 @@ export const StateLink = ({
   children: ReactNode;
 }) => {
   const className =
-    "group inline-flex items-center gap-2 text-sm font-light text-foreground/45 hover:text-foreground/75 transition-colors duration-200";
+    "group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground/85 transition-colors duration-200";
 
   if (onClick) {
     return (
       <button className={className} onClick={onClick} type="button">
         {children}
-        <span className="text-foreground/25 group-hover:text-foreground/50 transition-colors duration-200">
+        <span className="text-foreground/40 group-hover:text-foreground/60 transition-colors duration-200">
           →
         </span>
       </button>
@@ -73,7 +73,7 @@ export const StateLink = ({
   return (
     <a className={className} href={href}>
       {children}
-      <span className="text-foreground/25 group-hover:text-foreground/50 transition-colors duration-200">
+      <span className="text-foreground/40 group-hover:text-foreground/60 transition-colors duration-200">
         →
       </span>
     </a>

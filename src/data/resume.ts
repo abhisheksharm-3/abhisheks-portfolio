@@ -199,26 +199,6 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
       },
     ],
   },
-  {
-    company: "Stardom",
-    title: "Software Development Intern",
-    location: "Remote",
-    period: "Jan. 2025 -- Jun. 2025",
-    lenses: [],
-    engagements: [
-      {
-        name: "Company web platform",
-        period: "Jan. 2025 -- Jun. 2025",
-        stack: "Next.js, Appwrite, React Query, Netlify",
-        bullets: [
-          {
-            text: "Built and deployed the company's first web platform with a custom CMS in 6 months, with automated Netlify deploys on every merge.",
-            lenses: [],
-          },
-        ],
-      },
-    ],
-  },
 ];
 
 export const RESUME_PROJECTS: readonly ResumeProject[] = [
