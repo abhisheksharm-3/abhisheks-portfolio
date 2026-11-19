@@ -2,8 +2,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { ElsewhereLinksPropsType } from "@/lib/types/components";
 
 /**
- * The "elsewhere" list shared by /about and /contact, so the same places read the same way
- * on both. Web addresses open in a new tab; mailto links stay in place.
+ * The "elsewhere" list. Web addresses open in a new tab; mailto links stay in place.
  */
 export const ElsewhereLinks = ({ links }: ElsewhereLinksPropsType) => (
   <div>

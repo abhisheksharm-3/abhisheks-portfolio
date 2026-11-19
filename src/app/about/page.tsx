@@ -3,10 +3,10 @@ import { AboutPageCTA } from "@/components/sections/about/AboutPageCTA";
 import { AboutPageHeader } from "@/components/sections/about/AboutPageHeader";
 import { BioCard } from "@/components/sections/about/BioCard";
 import { ContactCard } from "@/components/sections/about/ContactCard";
-import { ExperienceEducationSection } from "@/components/sections/about/ExperienceEducationSection";
 import { GitHubActivity } from "@/components/sections/about/GitHubActivity";
+import { HowIWorkSection } from "@/components/sections/about/HowIWorkSection";
 import { InterestsSection } from "@/components/sections/about/InterestsSection";
-import { SkillsSection } from "@/components/sections/about/SkillsSection";
+import { ListeningSection } from "@/components/sections/about/ListeningSection";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
@@ -35,15 +35,15 @@ const AboutPage = () => {
           </div>
 
           <div className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
-            <ExperienceEducationSection />
-          </div>
-
-          <div className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
-            <SkillsSection />
+            <HowIWorkSection />
           </div>
 
           <div className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
             <GitHubActivity />
+          </div>
+
+          <div className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+            <ListeningSection />
           </div>
 
           <div className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>

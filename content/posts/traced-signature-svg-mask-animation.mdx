@@ -1,0 +1,181 @@
+---
+title: "a traced signature that writes itself through an svg mask"
+subhead: "a traced signature is a filled shape, so stroke-dashoffset cannot draw it. 52 centerline strokes in an svg mask reveal the ink at a constant pen speed."
+date: "2026-11-19"
+keywords:
+  - "animate handwritten signature svg"
+  - "svg mask stroke-dashoffset filled path"
+  - "signature drawing animation constant speed"
+  - "getTotalLength requestAnimationFrame svg"
+  - "svg path draw animation filled shape"
+  - "react svg signature animation reduced motion"
+tags: ["frontend"]
+readingTime: 8
+type: "technical"
+searchIntent: "informational"
+draft: true
+faqs:
+  - question: "why can't I animate a filled svg signature with stroke-dashoffset?"
+    answer: "stroke-dashoffset animates the stroke of a path, and a traced signature is a filled outline. Its path runs around the edge of the ink, so dashing it draws the contour of every letter, both sides at once, and the fill does not follow. The result looks like an outline being traced, not ink being written. To get the look of a pen, you need a second set of paths that run down the middle of each stroke, and use those to reveal the filled shape instead of drawing it."
+  - question: "how do you reveal a filled svg path with an animated mask?"
+    answer: "Put centerline paths inside a mask element with a white stroke wide enough to cover the ink, then apply that mask to the filled outline. White in a mask means visible, so wherever a centerline has been drawn, the fill shows through. Animate stroke-dashoffset on the mask paths from their full length down to zero. The filled shape keeps its real edges and thickness, and the reveal follows the direction of the pen. In my footer the mask stroke is 24.7 units wide on an 825 by 308 viewBox."
+  - question: "how do you make an svg drawing animation move at a constant speed?"
+    answer: "Give each stroke a duration proportional to its length instead of the same duration for every stroke. I measure each mask path with getTotalLength after mount, divide by a fixed pen speed of 1.15 units per millisecond, and lay the strokes end to end on one timeline. A requestAnimationFrame loop maps elapsed time to each stroke's progress. Short strokes finish quickly and long ones take longer, which reads as one hand moving at one pace rather than a set of separate animations that all take the same time."
+  - question: "how do you add pen lifts to a signature animation?"
+    answer: "Compare where each stroke starts with where the previous one ended. If the gap is larger than a small threshold, treat it as the pen leaving the paper and add a pause before the next stroke begins. My footer uses a 14 unit threshold and a 110 millisecond pause. Without the pause, the jump between letters happens instantly and the signature looks machine drawn. With it, the rhythm reads closer to a person writing, and strokes that connect without a gap still flow straight into each other."
+  - question: "what should a signature animation do under prefers-reduced-motion?"
+    answer: "Show the finished signature and skip the animation entirely. In my component the effect that builds the timeline returns early when prefers-reduced-motion is set, so the mask paths never get a dash array and the whole signature is visible from the first paint. The same is true of the server render and of a reader without JavaScript, because the dash styles are only applied in the browser after mount. The default state of the markup is the complete signature, and the animation is something the browser adds on top."
+toc:
+  - { id: "why-stroke-dashoffset-cannot-draw-a-filled-signature", label: "why stroke-dashoffset cannot draw a filled signature", depth: 2 }
+  - { id: "how-the-mask-reveals-the-ink", label: "how the mask reveals the ink", depth: 2 }
+  - { id: "how-to-keep-the-pen-at-one-speed", label: "how to keep the pen at one speed", depth: 2 }
+  - { id: "what-happens-before-the-animation-runs", label: "what happens before the animation runs", depth: 2 }
+  - { id: "where-the-pen-leaves-the-page", label: "where the pen leaves the page", depth: 2 }
+  - { id: "what-i-would-change", label: "what i would change", depth: 2 }
+---
+
+A traced signature is a filled shape, so `stroke-dashoffset` cannot write it. I got it to write itself by keeping the filled outline as the visible ink and animating 52 centerline strokes inside an SVG mask over it, at a constant pen speed of 1.15 units per millisecond with a 110 ms pause wherever the pen lifts. By my count from the path data, that is 33 pen lifts and about 6 seconds of writing.
+
+The signature closes the footer on every page of this site. The footer reads as the end of a letter: "thanks for reading.", "yours,", the signature, a dateline, and a p.s. I traced the signature from a photo of my own handwriting, and I wanted it to look written, not faded in. This post covers the mask, the timeline, and the details that decide whether it looks like a pen or like an SVG demo.
+
+## why stroke-dashoffset cannot draw a filled signature
+
+The usual "draw a path" trick dashes a stroke and slides the dash along it. That needs a path that runs down the middle of the line. A traced signature is the opposite: its path runs around the edge of the ink, and the ink is the fill.
+
+Dashing that outline draws the contour of each letter, both edges at once, with nothing in between. The fill appears all at once or not at all. So I kept two shapes in `signature-path.ts`: `outline`, the filled ink, and `strokes`, 52 centerlines that follow the same marks.
+
+```ts
+export const SIGNATURE = {
+  width: 825,
+  height: 308,
+  maskWidth: 24.7,
+  outline: "M662.0 182.2L654.0 182.9L650.0 182.2 ...",
+  strokes: [
+    // 52 centerline paths, ordered left to right by where each starts
+    "M708.0 138.0L717.0 130.0L725.0 115.0L744.0 88.0L752.0 74.0L754.0 66.0",
+  ],
+} as const;
+```
+
+The outline is what the reader sees. The strokes are never painted. They only decide how much of the outline is visible at a given moment.
+
+## how the mask reveals the ink
+
+The strokes sit inside an SVG `<mask>` with a white stroke, and the mask is applied to the filled outline. In a mask, white means visible. Wherever a centerline has been drawn, the ink under it shows. The stroke width of 24.7 units is wide enough to cover the thickest part of the ink on an 825 by 308 viewBox, so a fully drawn mask reveals the whole outline.
+
+```tsx
+<mask id="footer-signature-mask" maskUnits="userSpaceOnUse" x="0" y="0"
+  width={SIGNATURE.width} height={SIGNATURE.height}>
+  <g fill="none" stroke="#fff" strokeWidth={SIGNATURE.maskWidth}
+    strokeLinecap="round" strokeLinejoin="round">
+    {SIGNATURE.strokes.map((d) => (
+      <path key={d} d={d} data-stroke="" />
+    ))}
+  </g>
+</mask>
+
+<path d={SIGNATURE.outline} fillRule="evenodd" mask="url(#footer-signature-mask)" />
+```
+
+The edges of the ink come from the outline, not from the mask. That is why the mask can be a crude, round-capped, over-wide stroke and the result still has the real shape of my handwriting. The mask only has to be wide enough and follow the right path. Round caps and joins matter here: with butt caps, the end of a partly drawn stroke cuts the ink square, which looks like a rendering artifact.
+
+The traced outline is 13 subpaths in one `d` string. With `fillRule="evenodd"`, any contour that sits inside another one becomes a hole, so enclosed counters in the letters stay empty instead of filling solid.
+
+## how to keep the pen at one speed
+
+Each stroke gets a duration proportional to its length. Giving every stroke the same duration makes short marks crawl and long ones rush, which is the main thing that makes these animations look generated. I measure each mask path with `getTotalLength()` after mount and lay the strokes end to end on one timeline:
+
+```ts
+const PEN_SPEED_PX_PER_MS = 1.15;
+const PEN_LIFT_MS = 110;
+const PEN_LIFT_MIN_GAP = 14;
+
+let elapsed = 0;
+let previousEnd: DOMPoint | null = null;
+const timeline = strokes.map(({ path, length }) => {
+  const start = path.getPointAtLength(0);
+  const isLifted =
+    previousEnd !== null &&
+    Math.hypot(start.x - previousEnd.x, start.y - previousEnd.y) > PEN_LIFT_MIN_GAP;
+  if (isLifted) elapsed += PEN_LIFT_MS;
+  const from = elapsed;
+  elapsed += length / PEN_SPEED_PX_PER_MS;
+  previousEnd = path.getPointAtLength(length);
+  return { path, length, from, to: elapsed };
+});
+```
+
+The pen lift rule compares where a stroke starts with where the previous one ended. A gap over 14 units counts as the pen leaving the paper and adds 110 ms. Strokes that continue from each other flow straight on with no pause. Without the lifts, the jump from one letter to the next is instant and the rhythm goes flat.
+
+A single `requestAnimationFrame` loop then maps elapsed time to each stroke's progress and sets its `strokeDashoffset`. The same loop moves a small nib circle to `getPointAtLength` at the current tip, so there is a visible point of contact while the ink is wet:
+
+```ts
+const draw = (now: number) => {
+  const time = now - startedAt;
+  for (const step of timeline) {
+    const progress = Math.min(1, Math.max(0, (time - step.from) / (step.to - step.from)));
+    step.path.style.strokeDashoffset = String(step.length * (1 - progress));
+    if (progress > 0 && progress < 1) {
+      const tip = step.path.getPointAtLength(step.length * progress);
+      placeNib(tip.x, tip.y);
+    }
+  }
+  if (time < totalMs) frame = requestAnimationFrame(draw);
+  else finish();
+};
+```
+
+The dash array is set to `${length} ${length + 1}`, a dash the length of the path and a gap one unit longer. With an offset equal to the length, the stroke is fully hidden and no sliver of the next dash wraps around into view.
+
+While writing, the SVG carries `data-state="wet"` and the ink is at full opacity. When the last stroke finishes it switches to `dry`, and a 1400 ms opacity transition settles the ink to 0.86. It is a small change, and it is the one that makes the end of the animation read as ink drying rather than an animation stopping.
+
+## what happens before the animation runs
+
+The prerendered HTML shows the complete signature. The dash styles are only applied in the browser, inside `createSigning`, after the paths exist and can be measured. Until then the mask strokes are plain, fully drawn paths, so the outline is fully visible.
+
+That ordering gives three fallbacks for free. A reader without JavaScript sees the signature. A reader with `prefers-reduced-motion` sees it too, because the effect returns before building anything:
+
+```tsx
+useEffect(() => {
+  const svg = svgRef.current;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!svg || prefersReducedMotion) return;
+
+  const signing = createSigning(svg);
+  playRef.current = signing.play;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      signing.play();
+      observer.disconnect();
+    },
+    { threshold: 0.7 },
+  );
+  observer.observe(svg);
+  // ...
+}, []);
+```
+
+And the play itself waits until 70% of the signature is on screen, so it runs once, where the reader can see it, and then the observer disconnects. The signature is wrapped in a button, so clicking it calls `play()` again. The button's `aria-label` says what it is and what activating it does, and the SVG inside is `aria-hidden`.
+
+## where the pen leaves the page
+
+The last point of the signature becomes the handle of a small dipper constellation, which echoes the constellation background that runs behind the rest of the site. The anchor is computed from the stroke data instead of hand-placed, so it stays correct if the signature is ever re-traced:
+
+```ts
+/** Where the pen leaves the page: the rightmost stroke end, the tip of the k's flourish. */
+const PEN_LIFT_POINT = SIGNATURE.strokes
+  .map(endPoint)
+  .reduce((rightmost, point) => (point[0] > rightmost[0] ? point : rightmost));
+```
+
+The six dipper stars and four loose stars are all offsets from that point. When the ink dries, the seven links between them draw in one after another, 220 ms apart after a 350 ms delay, using the same dash technique as the strokes. On screens below the `md` breakpoint the constellation is hidden, because there is no empty space beside the signature for it to sit in.
+
+## what i would change
+
+**Commit the tracing step.** The repo has the output of the trace, an outline and 52 centerlines, but not the script that produced them from the photo. If I want to re-sign, or adjust the stroke split, I have to redo that work by hand. The paths are data generated from a source image, and the generator belongs next to them.
+
+**Stop touching finished strokes every frame.** The draw loop writes `strokeDashoffset` on all 52 paths on every frame, including the ones that are already fully drawn or not started. It runs for about 6 seconds once per page, so I have not measured a cost, but tracking the active stroke index would cut the per-frame work to one or two paths.
+
+**Vary the pen speed.** A real pen slows into curves and speeds up on straight runs. The constant 1.15 units per millisecond is the simplest thing that reads as handwriting, and it is the part that still looks slightly mechanical on the long flourish at the end. Scaling speed by local curvature, read from `getPointAtLength` samples, is the next step if I come back to it.

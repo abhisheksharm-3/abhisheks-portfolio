@@ -104,10 +104,16 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
               get notified
             </p>
             <p className="text-sm text-foreground/60 font-light">
-              new posts go out on x and linkedin.
+              new posts go out by rss, x, and linkedin.
             </p>
           </div>
           <div className="flex items-center gap-6">
+            <a
+              href="/writing/feed.xml"
+              className="text-sm text-foreground/60 hover:text-foreground/90 transition-colors duration-200 font-light"
+            >
+              rss
+            </a>
             <a
               href="https://twitter.com/iabhisheksan"
               target="_blank"

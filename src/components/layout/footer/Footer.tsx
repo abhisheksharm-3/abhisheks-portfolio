@@ -1,9 +1,14 @@
 "use client";
 
 /** The site footer, written as the close of a letter: thanks, a signature, what's new lately, and a p.s. */
+import { RiSpotifyFill } from "@remixicon/react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { Suspense } from "react";
 import { CONTACT_INFO } from "@/data/contact";
 import { projects } from "@/data/projects";
+import { useListening } from "@/hooks/useListening";
+import { toListenedWhen } from "@/lib/listened-when";
 import type { FooterLatelyRowPropsType } from "@/lib/types/components";
 import { FooterDateline } from "./FooterDateline";
 import { FooterSignature } from "./FooterSignature";
@@ -38,6 +43,45 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
 };
 const buildDate = process.env.NEXT_PUBLIC_BUILD_DATE;
+
+const READING_PATHS = ["/writing", "/projects/", "/graveyard"];
+
+const SIGN_OFF_CLASS =
+  "font-serif text-[clamp(30px,4.4vw,44px)] italic leading-[1.1] tracking-[-0.02em] text-foreground/90";
+
+const GENERIC_SIGN_OFF = <p className={SIGN_OFF_CLASS}>thanks for stopping by.</p>;
+
+/** "thanks for reading." where there is something to read, a plainer line everywhere else. */
+const SignOff = () => {
+  const pathname = usePathname();
+  const isReadingPage = READING_PATHS.some((path) => pathname.startsWith(path));
+  return isReadingPage ? <p className={SIGN_OFF_CLASS}>thanks for reading.</p> : GENERIC_SIGN_OFF;
+};
+
+/**
+ * The current or last Spotify track. Track and artist names keep Spotify's casing and link back to
+ * Spotify with its icon, as Spotify's design guidelines require. Hidden while loading or on error.
+ */
+const ListeningRow = () => {
+  const { data: track } = useListening();
+  if (!track) return null;
+
+  return (
+    <LatelyRow verb={track.playedAt ? "played" : "listening"} when={toListenedWhen(track.playedAt)}>
+      <a
+        href={track.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`flex min-w-0 items-start gap-2 ${ROW_LINK_CLASS}`}
+      >
+        <RiSpotifyFill aria-label="Spotify" className="size-[21px] shrink-0 text-foreground/60" />
+        <span className="min-w-0 pt-0.5">
+          {track.name} · {track.artists}
+        </span>
+      </a>
+    </LatelyRow>
+  );
+};
 
 const LatelyRow = ({ verb, children, when }: FooterLatelyRowPropsType) => (
   <>
@@ -80,6 +124,7 @@ const Lately = () => {
             </Link>
           </LatelyRow>
         )}
+        <ListeningRow />
         {deployMessage && (
           <LatelyRow verb="deployed" when={buildDate && toShortDate(buildDate)}>
             <span className="min-w-0 text-foreground/85">{deployMessage.toLowerCase()}</span>
@@ -133,9 +178,9 @@ export const Footer = () => (
     <div className="mx-auto max-w-[2000px] px-6 pt-20 pb-7 sm:px-8 sm:pt-24 lg:px-24 2xl:px-40">
       <div className="grid grid-cols-1 gap-14 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:gap-16 lg:gap-24">
         <div className="flex min-w-0 flex-col">
-          <p className="font-serif text-[clamp(30px,4.4vw,44px)] italic leading-[1.1] tracking-[-0.02em] text-foreground/90">
-            thanks for reading.
-          </p>
+          <Suspense fallback={GENERIC_SIGN_OFF}>
+            <SignOff />
+          </Suspense>
           <p className="mt-5 ml-0.5 font-serif text-xl italic text-foreground/60">yours,</p>
 
           <div className="relative mt-2 md:mt-auto md:pt-2">
@@ -161,7 +206,15 @@ export const Footer = () => (
       <div className="mt-18 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-foreground/10 pt-5 font-mono text-[11px] tracking-[0.02em] text-foreground/60">
         <span>© {process.env.NEXT_PUBLIC_BUILD_YEAR} abhishek sharma</span>
         <span className="order-3 w-full md:order-none md:w-auto">
-          set in basteleur, space grotesk &amp; geist mono
+          set in basteleur, space grotesk &amp; geist mono ·{" "}
+          <a
+            href="https://old.abhisheksan.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors duration-200 hover:text-foreground"
+          >
+            the old portfolio ↗
+          </a>
         </span>
         <span>
           <span className="mr-5">18.52° n, 73.86° e</span>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { PortraitFlip } from "@/components/sections/about/PortraitFlip";
 import { ElsewhereLinks } from "@/components/shared/ElsewhereLinks";
 import { RESUME_URL, SOCIAL_LINKS } from "@/data/contact";
 
@@ -17,14 +18,15 @@ export const ContactCard = () => {
 
   return (
     <div className="h-full flex flex-col gap-8">
-      <div className="relative w-full aspect-square overflow-hidden group">
+      <PortraitFlip>
         <Image
-          src="https://github.com/abhisheksharm-3.png"
-          alt="Abhishek Sharma"
+          src="/images/portrait.webp"
+          alt="Abhishek in profile at an art exhibit in mumbai, lit by projected painted flowers"
+          sizes="(min-width: 1024px) 30vw, 90vw"
           fill
           className="object-cover transition-transform duration-700 group-hover:scale-105"
         />
-      </div>
+      </PortraitFlip>
 
       <ElsewhereLinks links={links} />
 

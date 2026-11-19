@@ -1,42 +1,46 @@
-import { Brain, Cloud, Code, Smartphone, Terminal } from "lucide-react";
-
 /**
- * Detailed expertise breakdown for the Skills/Expertise section
+ * Areas of work for the home page: one sentence of proof and the page that shows it.
+ * The skills of every area also feed the site's structured data.
  */
 export const EXPERTISE = [
   {
-    icon: Brain,
     title: "ai, rag & agents",
-    description:
-      "built a 26-agent content engine at work on langgraph and fastapi, with human review on postgres checkpoints. pgvector for retrieval, openrouter fallback chains for model routing. from personal rag apps to agent systems that publish their own pull requests.",
+    proof:
+      "a 26-agent content engine on langgraph and fastapi, with human review on postgres checkpoints.",
+    link: {
+      href: "/writing/langgraph-hitl-postgres-checkpoints-sse",
+      label: "how the review step works",
+    },
     skills: ["LangGraph", "LangChain", "LiteLLM", "pgvector", "RAG", "Claude API"],
   },
   {
-    icon: Code,
     title: "frontend",
-    description:
-      "react and next.js for most of it: analytics pages, a sales checkout, and modular pricing in 8 days on a client's live platform, a grading ui with in-browser pdf annotation, and this site. svelte for small things.",
+    proof:
+      "analytics pages, a sales checkout where 71% of quoted prospects paid, and modular pricing in 8 days on a client's live platform.",
+    link: { href: "/projects/ai-video-platform", label: "the ai video platform" },
     skills: ["React.js", "Next.js", "SvelteKit", "TailwindCSS", "TypeScript"],
   },
   {
-    icon: Terminal,
     title: "backend, apis & data",
-    description:
-      "spring boot and java 21 for a client's grading api (105 endpoints), fastapi for agent backends, go and node on the side. postgres everywhere, with row-level security doing the authorization, plus mongo and neo4j where they fit.",
+    proof:
+      "authorization lives in postgres row-level security, so a handler that forgets a check still can't read someone else's private gist.",
+    link: { href: "/projects/quickgist", label: "quickgist" },
     skills: ["Spring Boot", "FastAPI", "Go", "Node.js", "PostgreSQL", "Supabase"],
   },
   {
-    icon: Cloud,
     title: "cloud & devops",
-    description:
-      "provisioned a client's aws stack alone in terraform: 121 resources across 3 environments, ecs fargate, sqs with dead-letter queues, rds, cognito, and 20 alarms. load tested it with k6 at 100 concurrent graders. gcp for cloud run jobs.",
+    proof:
+      "self-hosted canvas has no webhooks, so submissions come in through an sqs polling chain with backoff retries and dead-letter queues.",
+    link: {
+      href: "/writing/canvas-lms-self-hosted-sqs-polling",
+      label: "canvas lms self-hosted: polling submissions without kinesis",
+    },
     skills: ["AWS (ECS, SQS, Terraform)", "GCP", "Docker", "Railway", "Vercel", "CI/CD"],
   },
   {
-    icon: Smartphone,
     title: "mobile",
-    description:
-      "android apps in jetpack compose (flockr, 22 releases to v2.0.0), cross-platform in react native with expo. spent a week prototyping hands-free voice mode for off grid, wednesday's offline ai app: six swappable tts engines, sentence-by-sentence synthesis, and barge-in on hardware echo cancellation. the shipped voice mode drew on it.",
+    proof: "flockr, an android app in jetpack compose, with 22 releases up to v2.0.0.",
+    link: { href: "/projects/flockr", label: "flockr" },
     skills: ["React Native", "Jetpack Compose", "Expo", "TTS Streaming", "Hardware AEC"],
   },
 ] as const;

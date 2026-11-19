@@ -508,3 +508,28 @@
     animation: none;
   }
 }
+
+/*
+ * FAQ rows: the answer eases open and closed. Browsers without ::details-content (or with
+ * reduced motion) toggle instantly, which is fine.
+ */
+.faq-row {
+  interpolate-size: allow-keywords;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .faq-row::details-content {
+    block-size: 0;
+    opacity: 0;
+    overflow: clip;
+    transition:
+      block-size 250ms ease-out,
+      opacity 200ms ease-out,
+      content-visibility 250ms allow-discrete;
+  }
+
+  .faq-row[open]::details-content {
+    block-size: auto;
+    opacity: 1;
+  }
+}

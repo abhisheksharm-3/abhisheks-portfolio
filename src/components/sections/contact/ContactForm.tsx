@@ -82,7 +82,7 @@ export const SendMessageCard = () => {
   return (
     <div>
       <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] mb-10 font-light">
-        send a message
+        or write here
       </p>
 
       <noscript>
