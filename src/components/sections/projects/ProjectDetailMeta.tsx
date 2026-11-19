@@ -17,10 +17,10 @@ export function ProjectDetailMeta({ project }: { project: ProjectType }) {
         <div className="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
           {details.map((detail) => (
             <div key={detail.label} className="flex flex-col gap-1.5">
-              <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/35">
+              <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/60">
                 {detail.label}
               </span>
-              <span className="text-sm font-light text-foreground/70">{detail.value}</span>
+              <span className="text-sm font-light text-foreground/75">{detail.value}</span>
             </div>
           ))}
         </div>
@@ -28,14 +28,14 @@ export function ProjectDetailMeta({ project }: { project: ProjectType }) {
 
       {project.tags.length > 0 && (
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
-          <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/35">
+          <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/60">
             stack
           </span>
           <div className="flex flex-wrap gap-1.5">
             {project.tags.map((tag) => (
               <span
                 key={tag}
-                className="border border-foreground/10 px-2.5 py-0.5 text-[11px] font-light text-foreground/50"
+                className="border border-foreground/15 px-2.5 py-0.5 text-[11px] font-light text-foreground/60"
               >
                 {tag}
               </span>

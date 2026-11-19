@@ -206,7 +206,6 @@
   font-weight: 300;
   line-height: 1.8;
   font-size: 1rem;
-  max-width: 68ch;
 }
 
 .prose-writing p {
@@ -221,6 +220,7 @@
   margin-top: 2.5rem;
   margin-bottom: 0.75rem;
   font-weight: 400;
+  scroll-margin-top: 6rem;
 }
 
 .prose-writing h3 {
@@ -245,12 +245,47 @@
 
 .prose-writing ul,
 .prose-writing ol {
-  padding-left: 1.5rem;
   margin-bottom: 1.25rem;
 }
 
+.prose-writing ol {
+  counter-reset: prose-item;
+}
+
 .prose-writing li {
+  position: relative;
   margin-bottom: 0.4rem;
+}
+
+.prose-writing ul > li {
+  padding-left: 1.5rem;
+}
+
+.prose-writing ul > li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.9em;
+  width: 0.625rem;
+  height: 1px;
+  background: color-mix(in oklch, var(--foreground) 25%, transparent);
+}
+
+.prose-writing ol > li {
+  padding-left: 2rem;
+  counter-increment: prose-item;
+}
+
+.prose-writing ol > li::before {
+  content: counter(prose-item, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0.15em;
+  font-family: var(--font-geist-mono);
+  font-size: 0.6875rem;
+  line-height: 1.8rem;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in oklch, var(--primary) 60%, transparent);
 }
 
 .prose-writing strong {
@@ -261,7 +296,7 @@
 .prose-writing blockquote {
   border-left: 2px solid color-mix(in oklch, var(--primary) 20%, transparent);
   padding-left: 1rem;
-  color: color-mix(in oklch, var(--foreground) 45%, transparent);
+  color: color-mix(in oklch, var(--foreground) 65%, transparent);
   margin: 1.5rem 0;
 }
 
@@ -273,7 +308,7 @@
   /* biome-ignore lint/complexity/noImportantStyles: rehype-pretty-code sets an inline background */
   background: color-mix(in oklch, var(--foreground) 4%, transparent) !important;
   border: 1px solid color-mix(in oklch, var(--primary) 10%, transparent);
-  border-radius: 4px;
+  border-radius: 0;
   padding: 1rem 1.25rem;
   overflow-x: auto;
   font-size: 0.8125rem;
@@ -283,14 +318,36 @@
 .prose-writing code {
   font-family: var(--font-geist-mono);
   font-size: 0.8125rem;
+  border-radius: 0;
+}
+
+.prose-writing [data-rehype-pretty-code-figure] span {
+  color: var(--shiki-light);
+  font-style: var(--shiki-light-font-style, normal);
+}
+
+.dark .prose-writing [data-rehype-pretty-code-figure] span {
+  color: var(--shiki-dark);
+  font-style: var(--shiki-dark-font-style, normal);
 }
 
 .prose-writing :not(pre) > code {
   background: color-mix(in oklch, var(--foreground) 6%, transparent);
   border: 1px solid color-mix(in oklch, var(--primary) 10%, transparent);
-  border-radius: 3px;
   padding: 0.15em 0.4em;
   color: color-mix(in oklch, var(--foreground) 80%, transparent);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 639px) {
+  .prose-writing figure[data-rehype-pretty-code-figure] {
+    margin-inline: -1.5rem;
+  }
+
+  .prose-writing pre {
+    border-inline: 0;
+    padding-inline: 1.5rem;
+  }
 }
 
 /* Table styles */
@@ -317,7 +374,7 @@
 }
 
 .prose-writing td {
-  color: color-mix(in oklch, var(--foreground) 55%, transparent);
+  color: color-mix(in oklch, var(--foreground) 65%, transparent);
   border-bottom: 1px solid color-mix(in oklch, var(--primary) 8%, transparent);
   padding: 0.5rem 0.875rem 0.5rem 0;
   font-weight: 300;
@@ -329,7 +386,7 @@
 }
 
 .prose-writing tbody tr:hover td {
-  color: color-mix(in oklch, var(--foreground) 70%, transparent);
+  color: color-mix(in oklch, var(--foreground) 85%, transparent);
 }
 
 /* Route loading indicator: a line that sweeps, in place of a spinner. */
@@ -391,6 +448,21 @@
   }
   ::view-transition-image-pair(.morph) {
     animation-name: vt-via-blur;
+  }
+}
+
+/* A theme change crossfades the whole page, header included. */
+@media (prefers-reduced-motion: no-preference) {
+  html:active-view-transition-type(theme)::view-transition-old(site-header) {
+    display: block;
+    animation: 280ms ease-out both vt-fade reverse;
+  }
+  html:active-view-transition-type(theme)::view-transition-new(site-header) {
+    animation: 280ms ease-out both vt-fade;
+  }
+  html:active-view-transition-type(theme)::view-transition-old(root),
+  html:active-view-transition-type(theme)::view-transition-new(root) {
+    animation-duration: 280ms;
   }
 }
 

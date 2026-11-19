@@ -103,13 +103,12 @@ const styles = {
 export const ContactEmailTemplate = ({
   name,
   email,
-  subject,
   message,
   submittedAt,
   userAgent,
   referer,
 }: ContactEmailPropsType) => {
-  const previewText = `New message from ${name}: ${subject}`;
+  const previewText = `New message from ${name}`;
 
   const details = [
     { label: "Name", value: name },
@@ -121,7 +120,6 @@ export const ContactEmailTemplate = ({
         </Link>
       ),
     },
-    { label: "Subject", value: subject },
     { label: "Submitted", value: submittedAt },
     { label: "Referrer", value: referer },
   ];

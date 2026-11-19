@@ -5,8 +5,13 @@ import z from "zod";
  * anything it pulls in ships on every page; the schema is only needed where the form is.
  */
 export const CONTACT_FORM_SCHEMA = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters.").max(100),
-  email: z.email("Please enter a valid email address.").max(254),
-  subject: z.string().min(3, "Subject must be at least 3 characters.").max(200),
-  message: z.string().min(10, "Message must be at least 10 characters.").max(5000),
+  name: z
+    .string()
+    .min(2, "a name, so i know who to reply to")
+    .max(100, "that name is over 100 characters"),
+  email: z.email("that email doesn't look right").max(254, "that email is over 254 characters"),
+  message: z
+    .string()
+    .min(10, "a sentence or two, so i know what this is about")
+    .max(5000, "that's over 5000 characters, trim it a little"),
 });

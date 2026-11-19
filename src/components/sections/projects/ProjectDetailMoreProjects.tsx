@@ -1,35 +1,35 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { projects } from "@/data/projects";
 
 /**
- * Renders a clean editorial "explore more projects" section.
- * No gradient decorators or animated widths — just clear typography and a link.
+ * Closes a project page with the next project in projects.ts order, within the same tier
+ * (current work or early learning work), wrapping to the first.
  */
-export function ProjectDetailMoreProjects() {
+export function ProjectDetailMoreProjects({ slug }: { slug: string }) {
+  const current = projects.find((project) => project.slug === slug);
+  const tier = projects.filter((project) => !!project.isArchived === !!current?.isArchived);
+  const next = tier[(tier.findIndex((project) => project.slug === slug) + 1) % tier.length];
+
   return (
     <div className="mt-12 pt-8">
       <div className="h-px bg-primary/10 mb-8" />
 
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
-        <div>
-          <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light block mb-4">
-            what&apos;s next
+      <Link
+        href={`/projects/${next.slug}`}
+        transitionTypes={["nav-forward"]}
+        className="group flex items-center justify-between gap-6"
+      >
+        <span className="max-w-2xl">
+          <span className="block font-serif text-2xl leading-tight text-foreground sm:text-3xl">
+            <span className="text-foreground/60">next:</span> {next.title}
           </span>
-          <h3 className="text-2xl sm:text-3xl font-serif text-primary leading-tight">
-            explore more projects
-          </h3>
-        </div>
-
-        <div className="flex-shrink-0">
-          <Link
-            href="/projects"
-            className="group inline-flex items-center gap-2 text-sm font-light text-foreground/60 hover:text-foreground border border-foreground/15 hover:border-foreground/30 transition-all duration-200 px-6 py-2.5"
-          >
-            view all projects
-            <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-          </Link>
-        </div>
-      </div>
+          <span className="mt-2 block text-sm font-light leading-relaxed text-foreground/60 transition-colors duration-200 group-hover:text-foreground/80">
+            {next.description}
+          </span>
+        </span>
+        <ArrowRight className="h-5 w-5 shrink-0 text-foreground/60 transition-transform duration-200 group-hover:translate-x-1 group-hover:text-foreground" />
+      </Link>
     </div>
   );
 }

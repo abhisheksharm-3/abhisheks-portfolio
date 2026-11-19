@@ -1,17 +1,6 @@
 import { Brain, Cloud, Code, Smartphone, Terminal } from "lucide-react";
 
 /**
- * Skills displayed in the Hero section
- */
-export const HERO_SKILLS = [
-  "frontend",
-  "backend & apis",
-  "ai agents",
-  "cloud & devops",
-  "mobile",
-] as const;
-
-/**
  * Detailed expertise breakdown for the Skills/Expertise section
  */
 export const EXPERTISE = [
@@ -26,7 +15,7 @@ export const EXPERTISE = [
     icon: Code,
     title: "frontend",
     description:
-      "react and next.js for most of it: a sales checkout and analytics pages on a client's live platform, a grading ui with in-browser pdf annotation, and this site. svelte for small things.",
+      "react and next.js for most of it: analytics pages, a sales checkout, and modular pricing in 8 days on a client's live platform, a grading ui with in-browser pdf annotation, and this site. svelte for small things.",
     skills: ["React.js", "Next.js", "SvelteKit", "TailwindCSS", "TypeScript"],
   },
   {

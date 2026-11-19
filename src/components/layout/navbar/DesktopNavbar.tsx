@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, History } from "lucide-react";
+import { History } from "lucide-react";
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { ModeToggle } from "@/components/ModeToggle";
@@ -24,7 +24,7 @@ export const DesktopNavbar = ({ activeItem }: DesktopNavbarPropsType) => (
               "text-sm font-light transition-colors duration-200",
               activeItem === item.name
                 ? "text-foreground"
-                : "text-foreground/45 hover:text-foreground/70",
+                : "text-foreground/60 hover:text-foreground/85",
             )}
           >
             {item.name}
@@ -46,18 +46,10 @@ export const DesktopNavbar = ({ activeItem }: DesktopNavbarPropsType) => (
       href="https://old.abhisheksan.com"
       target="_blank"
       rel="noopener noreferrer"
-      className="flex items-center gap-1.5 text-xs text-foreground/30 hover:text-foreground/55 transition-colors duration-200"
+      className="flex items-center gap-1.5 text-xs text-foreground/60 hover:text-foreground/85 transition-colors duration-200"
     >
       <History className="h-3 w-3" />
-      <span>Old Portfolio</span>
-    </Link>
-
-    <Link
-      href="/contact"
-      className="inline-flex items-center gap-2 text-xs border border-foreground/15 text-foreground/55 hover:text-foreground/80 hover:border-foreground/25 transition-all duration-200 px-4 py-1.5"
-    >
-      Hire me
-      <ArrowRight className="h-3 w-3" />
+      <span>old portfolio</span>
     </Link>
   </nav>
 );

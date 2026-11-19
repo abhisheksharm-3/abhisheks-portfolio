@@ -44,7 +44,7 @@ export async function generateMetadata({
       description: project.description,
       type: "article",
       url: `/projects/${project.slug}`,
-      images: [{ url: project.imageSrc, alt: project.title }],
+      images: [{ url: project.imageSrc ?? "/images/og-image.png", alt: project.title }],
     },
   };
 }

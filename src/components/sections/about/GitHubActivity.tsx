@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { CONTACT_INFO } from "@/data/contact";
 import { useGitHubStats } from "@/hooks/useGitHubStats";
 import type { ContributionDayType, ContributionWeekType } from "@/lib/types/stats";
 
@@ -83,49 +84,18 @@ export const GitHubActivity = () => {
   const { data: stats, isLoading } = useGitHubStats();
   const [hoveredDay, setHoveredDay] = useState<ContributionDayType | null>(null);
 
-  const displayStats = [
-    { label: "public repos", value: stats?.publicRepos ?? "—" },
-    {
-      label: "contributions",
-      value: stats?.contributions ? stats.contributions.toLocaleString() : "—",
-    },
-    { label: "stars earned", value: stats?.totalStars ?? "—" },
-  ];
-
   const { weeks, monthLabels, peakDay } = buildContributionGraph(stats?.contributionCalendar);
 
   return (
     <div className="relative">
-      <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
-        development activity
-      </p>
-      <h3 className="text-2xl font-serif text-foreground mb-6">GitHub Activity</h3>
+      <h2 className="text-2xl font-serif text-foreground mb-6">github activity</h2>
       <div className="h-px bg-primary/10 mb-8" />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-3 gap-6 mb-8">
-        {displayStats.map((stat) => (
-          <div key={stat.label} className="text-center">
-            <div className="text-3xl font-light text-foreground/80 mb-1">
-              {isLoading ? (
-                <span className="inline-block w-8 h-8 bg-foreground/5 rounded animate-pulse" />
-              ) : (
-                stat.value
-              )}
-            </div>
-            <div className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Contribution Graph */}
       {isLoading ? (
-        <div className="mb-8 pt-6 border-t border-primary/10">
+        <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <div className="h-3 w-32 bg-foreground/5 rounded animate-pulse" />
-            <div className="h-3 w-20 bg-foreground/5 rounded animate-pulse" />
+            <div className="h-3 w-32 bg-foreground/5 animate-pulse motion-reduce:animate-none" />
+            <div className="h-3 w-20 bg-foreground/5 animate-pulse motion-reduce:animate-none" />
           </div>
           <div className="grid grid-cols-[repeat(52,1fr)] gap-[3px] mt-4">
             {SKELETON_WEEKS.map((weekKey) => (
@@ -133,100 +103,107 @@ export const GitHubActivity = () => {
                 {SKELETON_DAYS.map((dayKey) => (
                   <div
                     key={`${weekKey}-${dayKey}`}
-                    className="w-full aspect-square bg-foreground/5 animate-pulse"
+                    className="w-full aspect-square bg-foreground/5 animate-pulse motion-reduce:animate-none"
                   />
                 ))}
               </div>
             ))}
           </div>
         </div>
+      ) : weeks.length === 0 ? (
+        <p className="mb-8 text-sm font-light text-foreground/65">
+          the activity graph isn&apos;t loading right now. the profile is at{" "}
+          <a
+            href={CONTACT_INFO.github.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-foreground/30 underline-offset-4 transition-colors duration-200 hover:text-foreground/85 hover:decoration-foreground/60"
+          >
+            github.com/{CONTACT_INFO.github.username}
+          </a>
+          .
+        </p>
       ) : (
-        weeks.length > 0 && (
-          <div className="mb-8 pt-6 border-t border-primary/10 relative">
-            <div className="flex items-center justify-between mb-2 relative h-6">
-              <div className="absolute inset-x-0 top-0 flex">
-                {monthLabels.map((month) => (
-                  <span
-                    key={`${month.label}-${month.position}`}
-                    className="text-[10px] text-foreground/40 absolute"
-                    style={{ left: `${month.position}%` }}
-                  >
-                    {month.label}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <AnimatePresence>
-              {hoveredDay && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute top-6 right-0 text-xs text-foreground/70 bg-background/95 backdrop-blur-sm px-3 py-1.5 border border-primary/10 z-10"
+        <div className="mb-8 relative">
+          <div className="flex items-center justify-between mb-2 relative h-6">
+            <div className="absolute inset-x-0 top-0 flex">
+              {monthLabels.map((month) => (
+                <span
+                  key={`${month.label}-${month.position}`}
+                  className="text-[10px] text-foreground/60 absolute"
+                  style={{ left: `${month.position}%` }}
                 >
-                  <span className="font-medium">{hoveredDay.contributionCount}</span>
-                  <span className="text-foreground/50"> commits on </span>
-                  <span className="text-foreground/60">{formatDate(hoveredDay.date)}</span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div className="mt-4 w-full max-w-full overflow-x-auto">
-              <div className="grid grid-cols-[repeat(53,1fr)] gap-[2px] min-w-0">
-                {weeks.map((week: ContributionWeekType) => (
-                  <div
-                    key={week.contributionDays[0]?.date ?? crypto.randomUUID()}
-                    className="flex flex-col gap-[3px]"
-                  >
-                    {week.contributionDays.map((day: ContributionDayType) => (
-                      <div
-                        key={day.date}
-                        role="img"
-                        aria-label={`${day.contributionCount} contributions on ${formatDate(day.date)}`}
-                        title={`${day.contributionCount} contributions on ${formatDate(day.date)}`}
-                        onMouseEnter={() => setHoveredDay(day)}
-                        onMouseLeave={() => setHoveredDay(null)}
-                        className={`w-full aspect-square cursor-pointer transition-all duration-150 hover:ring-1 hover:ring-foreground/50 ${getContributionColor(day.contributionCount)}`}
-                      />
-                    ))}
-                  </div>
-                ))}
-              </div>
+                  {month.label}
+                </span>
+              ))}
             </div>
+          </div>
 
-            <div className="flex items-center justify-between mt-4">
-              <div className="flex items-center gap-2 text-xs text-foreground/40">
-                <span>Less</span>
-                <div className="flex gap-[3px]">
-                  {[0, 2, 5, 8, 12].map((level) => (
+          <AnimatePresence>
+            {hoveredDay && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute top-6 right-0 text-xs text-foreground/70 bg-background/95 backdrop-blur-sm px-3 py-1.5 border border-primary/10 z-10"
+              >
+                <span className="font-medium">{hoveredDay.contributionCount}</span>
+                <span className="text-foreground/65"> commits on </span>
+                <span className="text-foreground/70">{formatDate(hoveredDay.date)}</span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div className="mt-4 w-full max-w-full overflow-x-auto">
+            <div className="grid grid-cols-[repeat(53,1fr)] gap-[2px] min-w-0">
+              {weeks.map((week: ContributionWeekType) => (
+                <div
+                  key={week.contributionDays[0]?.date ?? crypto.randomUUID()}
+                  className="flex flex-col gap-[3px]"
+                >
+                  {week.contributionDays.map((day: ContributionDayType) => (
                     <div
-                      key={level}
-                      className={`w-[10px] h-[10px] ${getContributionColor(level)}`}
+                      key={day.date}
+                      role="img"
+                      aria-label={`${day.contributionCount} contributions on ${formatDate(day.date)}`}
+                      title={`${day.contributionCount} contributions on ${formatDate(day.date)}`}
+                      onMouseEnter={() => setHoveredDay(day)}
+                      onMouseLeave={() => setHoveredDay(null)}
+                      className={`w-full aspect-square cursor-pointer transition-shadow duration-150 hover:ring-1 hover:ring-foreground/50 ${getContributionColor(day.contributionCount)}`}
                     />
                   ))}
                 </div>
-                <span>More</span>
-              </div>
-              <span className="text-[10px] text-foreground/40 font-mono">
-                Peak: {peakDay} commits/day
-              </span>
+              ))}
             </div>
           </div>
-        )
+
+          <div className="flex items-center justify-between mt-4">
+            <div className="flex items-center gap-2 text-xs text-foreground/60">
+              <span>less</span>
+              <div className="flex gap-[3px]">
+                {[0, 2, 5, 8, 12].map((level) => (
+                  <div key={level} className={`w-[10px] h-[10px] ${getContributionColor(level)}`} />
+                ))}
+              </div>
+              <span>more</span>
+            </div>
+            <span className="text-[10px] text-foreground/60 font-mono">
+              peak: {peakDay} commits/day
+            </span>
+          </div>
+        </div>
       )}
 
-      {/* Languages */}
       {stats?.topLanguages && stats.topLanguages.length > 0 && (
         <div>
-          <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-4">
+          <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light mb-4">
             frequently used
           </p>
           <div className="flex flex-wrap gap-2">
             {stats.topLanguages.slice(0, 6).map((lang: string) => (
               <span
                 key={lang}
-                className="px-2.5 py-0.5 text-xs font-light text-foreground/50 border border-foreground/8"
+                className="px-2.5 py-0.5 text-xs font-light text-foreground/65 border border-foreground/8"
               >
                 {lang}
               </span>

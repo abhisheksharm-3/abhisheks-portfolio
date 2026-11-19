@@ -15,7 +15,7 @@ export const SectionHeader = ({ subtitle, children, className }: SectionHeaderPr
     )}
   >
     <p
-      className={`text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
+      className={`text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light ${SPACING_STANDARDS.HEADER.TITLE_MARGIN_BOTTOM}`}
     >
       {subtitle}
     </p>

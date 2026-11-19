@@ -22,7 +22,8 @@ export interface ProjectType {
   slug: string;
   description: string;
   longDescription?: string;
-  imageSrc: string;
+  /** A real screenshot of the project, shown on its detail page. Absent for projects without one. */
+  imageSrc?: string;
   tags: string[];
   year: string;
   url?: string;
@@ -51,18 +52,9 @@ export interface ProjectsPropsType {
   footer?: ReactNode;
 }
 
-export interface ProjectCardPropsType {
+/** Props for a project row or card: the project and nothing else. */
+export interface ProjectRowPropsType {
   project: ProjectType;
-  delay?: number;
-  priority?: boolean;
-}
-
-/** Props for landing page project card with hover state management */
-export interface LandingProjectCardPropsType {
-  project: ProjectType;
-  isHovered: boolean;
-  onHover: () => void;
-  onLeave: () => void;
 }
 
 export interface ExpertiseType {
@@ -95,7 +87,6 @@ export interface TimelineCardPropsType {
 export interface ContactEmailPropsType {
   name: string;
   email: string;
-  subject: string;
   message: string;
   submittedAt: string;
   userAgent: string;
@@ -155,4 +146,16 @@ export interface ProjectNoteType {
 /** Props for MarginNotes. */
 export interface MarginNotesPropsType {
   notes: ProjectNoteType[];
+}
+
+/** One row of the "elsewhere" list: a label, the address shown, and where it goes. */
+export interface ElsewhereLinkType {
+  label: string;
+  href: string;
+  displayUrl: string;
+}
+
+/** Props for ElsewhereLinks. */
+export interface ElsewhereLinksPropsType {
+  links: readonly ElsewhereLinkType[];
 }

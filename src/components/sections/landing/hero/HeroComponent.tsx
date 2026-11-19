@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useMotionValue, useScroll, useSpring, useTransform } from "framer-motion";
+import { useMotionValue } from "framer-motion";
 import { useEffect, useRef } from "react";
 import {
   AbstractShapes,
@@ -9,29 +9,20 @@ import {
   AsymmetricalGrid,
   NoiseBackground,
 } from "./HeroBackground";
-import {
-  HeroEyebrow,
-  HeroName,
-  HeroNow,
-  HeroSkillsStrip,
-  HeroTagline,
-  ScrollIndicator,
-} from "./HeroContent";
+import { HeroEyebrow, HeroName, HeroNow, HeroTagline } from "./HeroContent";
 
 /**
- * The homepage hero: a single name-dominant editorial column over the
- * interactive constellation background.
+ * The homepage hero: a single name-dominant editorial column over the decorative
+ * background, sized to its content and aligned to the page grid the sections below use.
  *
- * 1.  **Mouse Parallax**: tracks mouse movement to drive the background depth.
- * 2.  **Scroll Animation**: fades and lifts the content as the user scrolls past.
- * 3.  **Content**: eyebrow, name, lede, and a quiet "what i do best" strip.
+ * Mouse parallax drives the background depth. The old scroll fade is gone: with a
+ * content-sized hero it would hide the name while it was still on screen.
  */
 export const Hero = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  // Track mouse position relative to the hero's center for the background parallax.
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       const { current: el } = containerRef;
@@ -46,34 +37,20 @@ export const Hero = () => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [mouseX, mouseY]);
 
-  // Fade and lift the content as the hero scrolls out of view.
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
-  const y = useTransform(scrollYProgress, [0, 0.5], [0, 100]);
-  const smoothY = useSpring(y, { damping: 15, stiffness: 100 });
-  const opacity = useTransform(scrollYProgress, [0, 0.4], [1, 0]);
-
   return (
-    <section ref={containerRef} className="relative min-h-[100vh] w-full overflow-hidden">
+    <section ref={containerRef} className="relative w-full overflow-hidden pb-8 sm:pb-12">
       <NoiseBackground />
       <AsymmetricalGrid />
       <AbstractShapes mouseX={mouseX} mouseY={mouseY} />
       <AnimatedPaths />
       <AsymmetricalDecoration mouseX={mouseX} mouseY={mouseY} />
 
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-start px-6 pb-14 pt-28 md:pt-40">
-        <motion.div style={{ y: smoothY, opacity }} className="flex flex-col">
-          <HeroEyebrow />
-          <HeroName />
-          <HeroTagline />
-          <HeroNow />
-          <HeroSkillsStrip />
-        </motion.div>
+      <div className="relative z-10 flex flex-col pt-4 md:pt-12">
+        <HeroEyebrow />
+        <HeroName />
+        <HeroTagline />
+        <HeroNow />
       </div>
-
-      <ScrollIndicator />
     </section>
   );
 };

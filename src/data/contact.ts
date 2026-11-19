@@ -1,12 +1,4 @@
-import {
-  RiGithubFill,
-  RiGithubLine,
-  RiInstagramLine,
-  RiLinkedinFill,
-  RiLinkedinLine,
-  RiTwitterXFill,
-} from "@remixicon/react";
-import { Mail } from "lucide-react";
+import { RiGithubFill, RiInstagramFill, RiLinkedinFill, RiTwitterXFill } from "@remixicon/react";
 
 /**
  * Personal contact information - centralized source of truth
@@ -25,6 +17,10 @@ export const CONTACT_INFO = {
   twitter: {
     username: "iabhisheksan",
     url: "https://x.com/iabhisheksan",
+  },
+  instagram: {
+    username: "abhishekxsharmaa",
+    url: "https://instagram.com/abhishekxsharmaa",
   },
 } as const;
 
@@ -51,36 +47,12 @@ export const SOCIAL_LINKS = [
     label: "X",
     icon: RiTwitterXFill,
     href: CONTACT_INFO.twitter.url,
-    displayUrl: `twitter.com/${CONTACT_INFO.twitter.username}`,
-  },
-] as const;
-
-/**
- * Contact info for ContactInfoCard component
- */
-export const CONTACT_DETAILS = [
-  {
-    label: "Email",
-    Icon: Mail,
-    link: `mailto:${CONTACT_INFO.email}`,
-    display: CONTACT_INFO.email,
-  },
-  {
-    label: "GitHub",
-    Icon: RiGithubLine,
-    link: CONTACT_INFO.github.url,
-    display: CONTACT_INFO.github.username,
-  },
-  {
-    label: "LinkedIn",
-    Icon: RiLinkedinLine,
-    link: CONTACT_INFO.linkedin.url,
-    display: CONTACT_INFO.linkedin.username,
+    displayUrl: `x.com/${CONTACT_INFO.twitter.username}`,
   },
   {
     label: "Instagram",
-    Icon: RiInstagramLine,
-    link: "https://instagram.com/abhishekxsharmaa",
-    display: "@abhishekxsharmaa",
+    icon: RiInstagramFill,
+    href: CONTACT_INFO.instagram.url,
+    displayUrl: `instagram.com/${CONTACT_INFO.instagram.username}`,
   },
 ] as const;

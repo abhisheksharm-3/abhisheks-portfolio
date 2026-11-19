@@ -1,4 +1,4 @@
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import type { PostFrontmatterType } from "@/lib/content/schema";
 
@@ -19,10 +19,10 @@ export function PostCta({ searchIntent }: PostCtaProps) {
     <div className="mt-12 pt-8 border-t border-primary/10">
       <Link
         href={href}
-        className="group inline-flex items-center gap-1.5 text-sm text-foreground/40 hover:text-foreground/80 transition-colors duration-200 font-light"
+        className="group inline-flex items-center gap-1.5 text-sm text-foreground/60 hover:text-foreground/90 transition-colors duration-200 font-light"
       >
         <span>{label}</span>
-        <ArrowUpRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+        <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-0.5 transition-transform duration-200" />
       </Link>
     </div>
   );

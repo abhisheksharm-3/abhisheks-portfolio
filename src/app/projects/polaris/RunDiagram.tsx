@@ -3,6 +3,26 @@
 import { useTheme } from "next-themes";
 import { useEffect, useId, useRef, useState } from "react";
 
+/** Space left of the first phase node when it is scrolled into view, so the ledger arrow stays visible. */
+const LEAD_IN_PX = 64;
+
+/** Whether the scroller has content past its right edge, so the fade only shows when it hints at something. */
+const canScrollRight = (el: HTMLElement) => el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
+
+/**
+ * Scrolls the first phase node into view, with a lead-in so the arrow from the ledger stays
+ * visible. The diagram is wider than its container, so without this a flow change redraws
+ * phases that are off-screen. Smooth unless the reader asked for reduced motion.
+ */
+const scrollToFirstPhase = (el: HTMLElement) => {
+  const firstPhase = el.querySelector('[id*="-flowchart-P0-"]');
+  if (!firstPhase) return;
+  const offset =
+    firstPhase.getBoundingClientRect().left - el.getBoundingClientRect().left + el.scrollLeft;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollTo({ left: offset - LEAD_IN_PX, behavior: reduceMotion ? "auto" : "smooth" });
+};
+
 /** Foreground ink for each theme, matching the site's neutral. */
 const INK = {
   dark: { base: "249, 249, 251", canvas: "28, 28, 34" },
@@ -48,6 +68,7 @@ export const RunDiagram = ({ flowName, phases }: { flowName: string; phases: str
   const reactId = useId().replace(/[^a-zA-Z0-9]/g, "");
   const { resolvedTheme } = useTheme();
   const [failed, setFailed] = useState(false);
+  const [hasMoreToRight, setHasMoreToRight] = useState(false);
 
   useEffect(() => {
     if (phases.length === 0) return;
@@ -75,7 +96,7 @@ export const RunDiagram = ({ flowName, phases }: { flowName: string; phases: str
             secondaryColor: "transparent",
             tertiaryColor: "transparent",
             lineColor: rgba(0.22),
-            textColor: rgba(0.55),
+            textColor: rgba(0.65),
             edgeLabelBackground: `rgb(${ink.canvas})`,
           },
           flowchart: {
@@ -98,6 +119,8 @@ export const RunDiagram = ({ flowName, phases }: { flowName: string; phases: str
         if (!cancelled && container.current) {
           container.current.innerHTML = svg;
           setFailed(false);
+          scrollToFirstPhase(container.current);
+          setHasMoreToRight(canScrollRight(container.current));
         }
       } catch {
         if (!cancelled) setFailed(true);
@@ -112,13 +135,13 @@ export const RunDiagram = ({ flowName, phases }: { flowName: string; phases: str
 
   if (phases.length === 0) {
     return (
-      <p className="font-serif text-2xl italic text-foreground/45">a question routes nowhere.</p>
+      <p className="font-serif text-2xl italic text-foreground/65">a question routes nowhere.</p>
     );
   }
 
   if (failed) {
     return (
-      <p className="font-mono text-xs text-foreground/45">
+      <p className="font-mono text-xs text-foreground/65">
         {phases
           .map((phase, index) => `${String(index + 1).padStart(2, "0")} ${phase}`)
           .join("  →  ")}
@@ -129,9 +152,14 @@ export const RunDiagram = ({ flowName, phases }: { flowName: string; phases: str
   return (
     <div
       ref={container}
+      onScroll={(event) => setHasMoreToRight(canScrollRight(event.currentTarget))}
       aria-label={`The ${flowName} flow runs ${phases.join(", then ")}, with a gate after every phase.`}
       role="img"
-      className="-mx-6 overflow-x-auto px-6 sm:-mx-10 sm:px-10 lg:mx-0 lg:px-0 [&_.sub]:text-[11px] [&_.sub]:opacity-45 [&_svg]:h-auto [&_svg]:max-w-none"
+      className={`-mx-6 overflow-x-auto px-6 sm:-mx-10 sm:px-10 lg:mx-0 lg:px-0 ${
+        hasMoreToRight
+          ? "[mask-image:linear-gradient(to_right,black_calc(100%_-_3rem),transparent)]"
+          : ""
+      } [&_.sub]:text-[11px] [&_.sub]:opacity-65 [&_svg]:h-auto [&_svg]:max-w-none`}
     />
   );
 };

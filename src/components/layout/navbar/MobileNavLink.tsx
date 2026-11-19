@@ -16,7 +16,7 @@ export const MobileNavLink = ({
     onClick={onClick}
     className={cn(
       "block text-2xl font-light transition-colors duration-200 py-2 relative",
-      isActive ? "text-foreground" : "text-foreground/35 hover:text-foreground/65",
+      isActive ? "text-foreground" : "text-foreground/60 hover:text-foreground/85",
     )}
   >
     {item.name}

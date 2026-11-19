@@ -16,12 +16,14 @@ async function fetchGitHubStats(): Promise<GitHubStatsType> {
 
 /**
  * React Query hook for fetching GitHub statistics.
- * Provides loading, error, and data states with automatic caching.
+ * Provides loading, error, and data states with automatic caching. Retries once, so a failing API
+ * shows the about page's error line in seconds instead of after React Query's default three retries.
  */
 export function useGitHubStats() {
   return useQuery<GitHubStatsType, Error>({
     queryKey: GITHUB_STATS_QUERY_KEY,
     queryFn: fetchGitHubStats,
     staleTime: STALE_TIME_MS,
+    retry: 1,
   });
 }

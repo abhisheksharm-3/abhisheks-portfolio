@@ -17,7 +17,7 @@ type PageHeaderPropsType = {
 export const PageHeader = ({ eyebrow, title, intro, children, className }: PageHeaderPropsType) => {
   return (
     <div className={cn("flex flex-col mb-10 sm:mb-12 relative z-10", className)}>
-      <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
+      <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light mb-5">
         {eyebrow}
       </p>
 
@@ -28,7 +28,7 @@ export const PageHeader = ({ eyebrow, title, intro, children, className }: PageH
       <div className="h-px bg-primary/10 w-full mb-6" />
 
       {intro && (
-        <p className="text-foreground/55 max-w-2xl text-sm sm:text-base font-light leading-relaxed">
+        <p className="text-foreground/65 max-w-2xl text-sm sm:text-base font-light leading-relaxed text-pretty">
           {intro}
         </p>
       )}

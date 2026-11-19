@@ -23,8 +23,8 @@ const toShortDate = (isoDate: string) => {
   return `${part("day")} ${part("month")}`.toLowerCase();
 };
 
-const LABEL_CLASS = "text-[11px] uppercase tracking-[0.2em] font-light text-primary/35";
-const ROW_DATE_CLASS = "shrink-0 pt-0.5 font-mono text-[11px] text-foreground/40";
+const LABEL_CLASS = "text-[11px] uppercase tracking-[0.2em] font-light text-primary/60";
+const ROW_DATE_CLASS = "shrink-0 pt-0.5 font-mono text-[11px] text-foreground/60";
 const ROW_LINK_CLASS =
   "min-w-0 text-foreground/85 transition-colors duration-200 hover:text-foreground after:inline-block after:pl-1 after:opacity-0 after:-translate-x-1 after:translate-y-0.5 after:transition-[opacity,transform] after:duration-200 after:content-['↗'] hover:after:translate-x-0 hover:after:translate-y-0 hover:after:opacity-60";
 
@@ -41,7 +41,7 @@ const buildDate = process.env.NEXT_PUBLIC_BUILD_DATE;
 
 const LatelyRow = ({ verb, children, when }: FooterLatelyRowPropsType) => (
   <>
-    <dt className="border-b border-foreground/10 py-3 pr-6 font-mono text-[11px] text-foreground/40">
+    <dt className="border-b border-foreground/10 py-3 pr-6 font-mono text-[11px] text-foreground/60">
       {verb}
     </dt>
     <dd className="flex min-w-0 justify-between gap-4 border-b border-foreground/10 py-2.5 text-sm">
@@ -60,14 +60,22 @@ const Lately = () => {
       <dl className="grid grid-cols-[auto_1fr] border-t border-foreground/10">
         {latestPost && (
           <LatelyRow verb="wrote" when={toShortDate(latestPost.date)}>
-            <Link href={`/writing/${latestPost.slug}`} className={ROW_LINK_CLASS}>
+            <Link
+              href={`/writing/${latestPost.slug}`}
+              transitionTypes={["nav-forward"]}
+              className={ROW_LINK_CLASS}
+            >
               {latestPost.title}
             </Link>
           </LatelyRow>
         )}
         {lastShipped && (
           <LatelyRow verb="shipped" when={lastShipped.duration?.toLowerCase()}>
-            <Link href={`/projects/${lastShipped.slug}`} className={ROW_LINK_CLASS}>
+            <Link
+              href={`/projects/${lastShipped.slug}`}
+              transitionTypes={["nav-forward"]}
+              className={ROW_LINK_CLASS}
+            >
               {lastShipped.title.toLowerCase()}
             </Link>
           </LatelyRow>
@@ -83,7 +91,7 @@ const Lately = () => {
 };
 
 const Postscript = () => (
-  <div className="flex min-w-0 flex-col gap-3.5 text-sm text-foreground/55">
+  <div className="flex min-w-0 flex-col gap-3.5 text-sm text-foreground/60">
     <span className={LABEL_CLASS}>p.s.</span>
     <p className="max-w-[34ch] border-t border-foreground/10 pt-3">
       the fastest way to reach me is{" "}
@@ -100,19 +108,19 @@ const Postscript = () => (
         href={CONTACT_INFO.github.url}
         target="_blank"
         rel="noopener noreferrer"
-        className="text-foreground/55 transition-colors duration-200 hover:text-foreground"
+        className="text-foreground/60 transition-colors duration-200 hover:text-foreground"
       >
         github ↗
       </a>
       <Link
         href="/writing"
-        className="text-foreground/55 transition-colors duration-200 hover:text-foreground"
+        className="text-foreground/60 transition-colors duration-200 hover:text-foreground"
       >
         writing
       </Link>
       <Link
         href="/resume"
-        className="text-foreground/55 transition-colors duration-200 hover:text-foreground"
+        className="text-foreground/60 transition-colors duration-200 hover:text-foreground"
       >
         resume
       </Link>
@@ -128,7 +136,7 @@ export const Footer = () => (
           <p className="font-serif text-[clamp(30px,4.4vw,44px)] italic leading-[1.1] tracking-[-0.02em] text-foreground/90">
             thanks for reading.
           </p>
-          <p className="mt-5 ml-0.5 font-serif text-xl italic text-foreground/55">yours,</p>
+          <p className="mt-5 ml-0.5 font-serif text-xl italic text-foreground/60">yours,</p>
 
           <div className="relative mt-2 md:mt-auto md:pt-2">
             <FooterSignature />
@@ -150,13 +158,13 @@ export const Footer = () => (
         </div>
       </div>
 
-      <div className="mt-18 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-foreground/10 pt-5 font-mono text-[11px] tracking-[0.02em] text-foreground/40">
+      <div className="mt-18 flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 border-t border-foreground/10 pt-5 font-mono text-[11px] tracking-[0.02em] text-foreground/60">
         <span>© {process.env.NEXT_PUBLIC_BUILD_YEAR} abhishek sharma</span>
         <span className="order-3 w-full md:order-none md:w-auto">
           set in basteleur, space grotesk &amp; geist mono
         </span>
         <span>
-          <span className="mr-5">30.73° n, 76.78° e</span>
+          <span className="mr-5">18.52° n, 73.86° e</span>
           <button
             type="button"
             onClick={scrollToTop}
