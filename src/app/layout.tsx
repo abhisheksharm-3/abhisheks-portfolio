@@ -3,6 +3,7 @@ import { Geist_Mono, Space_Grotesk } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import { LatestPostProvider } from "@/components/layout/footer/LatestPostContext";
 import { Providers } from "@/components/Providers";
 import { WebMcpTools } from "@/components/WebMcpTools";
 import { getAllPosts } from "@/lib/content/loader";
@@ -96,7 +97,7 @@ const RootLayout = async ({ children }: Readonly<RootLayoutPropsType>) => {
       >
         <JsonLd schemas={[personSchema, websiteSchema]} />
         <Providers>
-          {children}
+          <LatestPostProvider post={postIndex[0] ?? null}>{children}</LatestPostProvider>
           <Analytics />
         </Providers>
         <WebMcpTools posts={postIndex} />

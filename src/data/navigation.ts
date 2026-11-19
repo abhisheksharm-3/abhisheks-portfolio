@@ -2,7 +2,7 @@ import type { NavigationItemType } from "@/lib/types/components";
 
 /**
  * Centralized navigation configuration
- * Used by both navbar and footer components
+ * Used by the navbar components
  */
 export const NAVIGATION_ITEMS: readonly NavigationItemType[] = [
   { name: "home", href: "/" },

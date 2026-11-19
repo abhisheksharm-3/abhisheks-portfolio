@@ -126,3 +126,10 @@ export interface AppShellPropsType {
 }
 
 export type ContactFormDataType = z.infer<typeof CONTACT_FORM_SCHEMA>;
+
+/** One row of the footer's "lately" list: a verb, what it was done to, and when. */
+export interface FooterLatelyRowPropsType {
+  verb: string;
+  children: ReactNode;
+  when?: string;
+}
