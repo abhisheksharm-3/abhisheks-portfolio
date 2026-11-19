@@ -1,6 +1,22 @@
+import { execFileSync } from "node:child_process";
 import type { NextConfig } from "next";
 
 const isDev = process.env.NODE_ENV === "development";
+
+/**
+ * Subject line of the commit being built, for the footer's "deployed" row. Vercel exposes it as an
+ * env var; a local build asks git. Empty when neither is available, and the footer hides the row.
+ */
+const readDeployMessage = (): string => {
+  const fromVercel = process.env.VERCEL_GIT_COMMIT_MESSAGE;
+  if (fromVercel) return fromVercel.split("\n")[0];
+  try {
+    return execFileSync("git", ["log", "-1", "--format=%s"], { encoding: "utf8" }).trim();
+  } catch {
+    console.warn("[next.config] no commit message available; the footer hides its deployed row");
+    return "";
+  }
+};
 
 const contentSecurityPolicy = [
   "default-src 'self'",
@@ -28,7 +44,11 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   // Baked at build time: cacheComponents rejects new Date() during a client prerender.
-  env: { NEXT_PUBLIC_BUILD_YEAR: String(new Date().getFullYear()) },
+  env: {
+    NEXT_PUBLIC_BUILD_YEAR: String(new Date().getFullYear()),
+    NEXT_PUBLIC_BUILD_DATE: new Date().toISOString().slice(0, 10),
+    NEXT_PUBLIC_DEPLOY_MESSAGE: readDeployMessage(),
+  },
   reactCompiler: true,
   cacheComponents: true,
   partialPrefetching: true,
