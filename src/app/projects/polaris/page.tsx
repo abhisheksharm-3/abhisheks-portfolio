@@ -1,16 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
+import { MarginNotes } from "@/components/sections/projects/MarginNotes";
 import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
+import { SharedElement } from "@/components/shared/SharedElement";
 import { projects } from "@/data/projects";
-import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { RunDiagram } from "./RunDiagram";
 
 /** Every flow in rules/flows.json, with the phases it runs in order. */
@@ -98,32 +98,27 @@ const PolarisPage = () => {
 
   return (
     <AppShell>
-      <motion.div
-        variants={CONTAINER_VARIANTS}
-        initial="hidden"
-        animate="visible"
-        className="relative overflow-hidden pt-36 pb-28 px-6 sm:px-10 lg:px-24"
-      >
+      <div className="relative overflow-hidden pt-36 pb-28 px-6 sm:px-10 lg:px-24">
         <ProjectsPageBackground />
 
-        <motion.div variants={ITEM_VARIANTS} className="mb-14">
+        <div className="mb-14">
           <Link
             href="/projects"
+            transitionTypes={["nav-back"]}
             className="group inline-flex items-center gap-2 text-xs text-foreground/40 transition-colors duration-200 hover:text-foreground/70"
           >
             <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
             back to projects
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.header
-          variants={ITEM_VARIANTS}
-          className="grid gap-x-14 gap-y-10 lg:grid-cols-[1.6fr_1fr]"
-        >
+        <header className="grid gap-x-14 gap-y-10 lg:grid-cols-[1.6fr_1fr]">
           <div>
-            <h1 className="font-serif text-[4rem] leading-[0.85] tracking-tight text-foreground sm:text-[7rem] lg:text-[8.5rem]">
-              Polaris
-            </h1>
+            <SharedElement name="project-title-polaris">
+              <h1 className="font-serif text-[4rem] leading-[0.85] tracking-tight text-foreground sm:text-[7rem] lg:text-[8.5rem]">
+                Polaris
+              </h1>
+            </SharedElement>
             <p className="mt-8 max-w-xl font-serif text-2xl italic leading-snug text-foreground/70 sm:text-3xl">
               A project operating system for Claude&nbsp;Code.
             </p>
@@ -151,13 +146,26 @@ const PolarisPage = () => {
               view source
             </a>
           </div>
-        </motion.header>
+        </header>
 
-        <motion.div variants={ITEM_VARIANTS} className="mt-16 mb-20">
+        <div className="mt-16 mb-20">
           <ProjectDetailMeta project={project} />
-        </motion.div>
+        </div>
 
-        <motion.section variants={ITEM_VARIANTS} className="mb-24">
+        {project.notes && (
+          <section className="mb-28">
+            <div className="grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
+              <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
+                in the margin
+              </p>
+              <div className="max-w-md">
+                <MarginNotes notes={project.notes} />
+              </div>
+            </div>
+          </section>
+        )}
+
+        <section className="mb-24">
           <div className="grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
             <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
               install
@@ -174,9 +182,9 @@ const PolarisPage = () => {
               </p>
             </div>
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section variants={ITEM_VARIANTS} className="mb-28">
+        <section className="mb-28">
           <div className="grid gap-x-14 gap-y-10 lg:grid-cols-[1fr_1.4fr]">
             <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
               the problem
@@ -199,9 +207,9 @@ const PolarisPage = () => {
               </p>
             </div>
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section variants={ITEM_VARIANTS} className="mb-28">
+        <section className="mb-28">
           <div className="mb-12 grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
             <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
               how a run
@@ -240,9 +248,9 @@ const PolarisPage = () => {
           <div className="border-t border-foreground/8 pt-12">
             <RunDiagram flowName={activeFlow.name} phases={activeFlow.phases} />
           </div>
-        </motion.section>
+        </section>
 
-        <motion.section variants={ITEM_VARIANTS} className="mb-4">
+        <section className="mb-4">
           <div className="grid gap-x-14 gap-y-10 lg:grid-cols-[1fr_1.4fr]">
             <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/35">
               what holds
@@ -263,12 +271,12 @@ const PolarisPage = () => {
               ))}
             </div>
           </div>
-        </motion.section>
+        </section>
 
-        <motion.div variants={ITEM_VARIANTS}>
+        <div>
           <ProjectDetailMoreProjects />
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </AppShell>
   );
 };

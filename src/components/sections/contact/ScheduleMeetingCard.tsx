@@ -1,14 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 
 export const ScheduleMeetingCard = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 16 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-  >
+  <div>
     <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] mb-4 font-light">
       prefer to talk?
     </p>
@@ -23,5 +16,5 @@ export const ScheduleMeetingCard = () => (
       Book a time slot
       <ExternalLink className="h-3.5 w-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
     </a>
-  </motion.div>
+  </div>
 );

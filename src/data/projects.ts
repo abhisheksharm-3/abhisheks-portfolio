@@ -20,6 +20,20 @@ export const projects: ProjectType[] = [
     duration: "june 2026 - present",
     category: "ai",
     isBuilding: true,
+    notes: [
+      {
+        text: "renders came out warmer than the upload. not my colour code, the jpeg frames remotion captures.",
+        href: "/writing/remotion-jpeg-frames-bt601-bt709-color-shift",
+      },
+      {
+        text: "one boolean meant for product type also matched the per-seat tier and gave whole orgs zero ai tokens.",
+        href: "/writing/one-boolean-zeroed-a-teams-token-pool",
+      },
+      {
+        text: "a pause on trial_end gets undone by any schedule still attached. release the schedule first.",
+        href: "/writing/stripe-pause-release-schedule-before-trial",
+      },
+    ],
   },
   {
     title: "Polaris",
@@ -37,6 +51,7 @@ export const projects: ProjectType[] = [
     duration: "2026 - present",
     category: "ai",
     isBuilding: true,
+    notes: [{ text: "the footer on this site went through polaris's own gate before it shipped." }],
   },
   {
     title: "ProjectSleeve",
@@ -55,6 +70,11 @@ export const projects: ProjectType[] = [
     duration: "September 2026",
     category: "web",
     isBuilding: false,
+    notes: [
+      {
+        text: "github turns off scheduled workflows after 60 quiet days, so cron keep-alives stop without telling you.",
+      },
+    ],
   },
   {
     title: "Credify",

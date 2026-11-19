@@ -18,45 +18,30 @@ const scrollToSection = (sectionId: string): void => {
  * thing a recruiter looks for and it was previously buried on the about page.
  */
 export const HeroEyebrow: React.FC = () => (
-  <motion.p
-    animate={{ opacity: 1, y: 0 }}
-    className="mb-8 text-[11px] uppercase tracking-[0.2em] font-light text-primary/35"
-    initial={{ opacity: 0, y: 20 }}
-    transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-  >
+  <p className="mb-8 text-[11px] uppercase tracking-[0.2em] font-light text-primary/35">
     associate forward deployed engineer · wednesday solutions
-  </motion.p>
+  </p>
 );
 
 /**
  * The dominant name statement that owns the fold.
  */
 export const HeroName: React.FC = () => (
-  <motion.h1
-    initial={{ opacity: 0, y: 40 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-    className="font-serif text-primary leading-[0.92] tracking-tight text-[clamp(3.25rem,13vw,7.5rem)]"
-  >
+  <h1 className="font-serif text-primary leading-[0.92] tracking-tight text-[clamp(3.25rem,13vw,7.5rem)]">
     Abhishek
     <br />
     Sharma
-  </motion.h1>
+  </h1>
 );
 
 /**
  * One-line lede beneath the name.
  */
 export const HeroTagline: React.FC = () => (
-  <motion.p
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
-    className="mt-8 max-w-xl text-lg sm:text-xl md:text-2xl font-light leading-snug text-foreground/65"
-  >
+  <p className="mt-8 max-w-xl text-lg sm:text-xl md:text-2xl font-light leading-snug text-foreground/65">
     analytics, billing, access, and releases for client platforms, from the first call to
     production.
-  </motion.p>
+  </p>
 );
 
 /**
@@ -64,12 +49,7 @@ export const HeroTagline: React.FC = () => (
  * Both existed only in EXPERIENCE_DATA, below the fold on /about.
  */
 export const HeroNow: React.FC = () => (
-  <motion.div
-    animate={{ opacity: 1, y: 0 }}
-    className="mt-6 space-y-1.5 text-sm font-light text-foreground/45"
-    initial={{ opacity: 0, y: 20 }}
-    transition={{ duration: 0.8, delay: 0.6, ease: [0.22, 1, 0.36, 1] }}
-  >
+  <div className="mt-6 space-y-1.5 text-sm font-light text-foreground/45">
     <p>
       currently the engineer behind{" "}
       <Link
@@ -84,19 +64,14 @@ export const HeroNow: React.FC = () => (
     <p className="text-foreground/35">
       winner of the network18 track at google&apos;s gen ai exchange hackathon.
     </p>
-  </motion.div>
+  </div>
 );
 
 /**
  * "what i do best" — a single quiet horizontal strip of focus areas.
  */
 export const HeroSkillsStrip: React.FC = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-    className="mt-8"
-  >
+  <div className="mt-8">
     <div className="mb-4 flex items-center gap-4">
       <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/35">
         what i do best
@@ -110,20 +85,17 @@ export const HeroSkillsStrip: React.FC = () => (
         </li>
       ))}
     </ul>
-  </motion.div>
+  </div>
 );
 
 /**
  * Bottom-right scroll affordance, keyboard-accessible.
  */
 export const ScrollIndicator: React.FC = () => (
-  <motion.button
+  <button
     type="button"
     onClick={() => scrollToSection("work-section")}
     aria-label="scroll to projects"
-    initial={{ opacity: 0 }}
-    animate={{ opacity: 1 }}
-    transition={{ duration: 1, delay: 1.4 }}
     className="absolute bottom-10 right-6 z-10 flex items-center gap-2 sm:right-12"
   >
     <span className="text-[10px] uppercase tracking-[0.2em] font-light text-foreground/35">
@@ -136,5 +108,5 @@ export const ScrollIndicator: React.FC = () => (
     >
       <ChevronDown size={14} className="text-primary/50" />
     </motion.span>
-  </motion.button>
+  </button>
 );

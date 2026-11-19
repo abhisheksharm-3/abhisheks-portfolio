@@ -1,15 +1,8 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { CONTACT_DETAILS } from "@/data/contact";
 
 export const ContactInfoCard = () => (
-  <motion.div
-    initial={{ opacity: 0, y: 16 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-  >
+  <div>
     <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] mb-4 font-light">
       elsewhere
     </p>
@@ -31,5 +24,5 @@ export const ContactInfoCard = () => (
         </a>
       ))}
     </div>
-  </motion.div>
+  </div>
 );

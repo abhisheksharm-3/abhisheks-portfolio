@@ -4,6 +4,7 @@ import { RiGithubLine } from "@remixicon/react";
 import { ArrowUpRight, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { SharedElement } from "@/components/shared/SharedElement";
 import { Card } from "@/components/ui/card";
 import type { ProjectCardPropsType } from "@/lib/types/components";
 
@@ -11,43 +12,47 @@ export const ProjectCard = ({ project, priority = false }: ProjectCardPropsType)
   return (
     <div className="group h-full">
       <Card className="h-full rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent hover:border-foreground/15 focus-within:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
-        <div className="relative w-full h-44 overflow-hidden shrink-0">
-          <Image
-            src={project.imageSrc}
-            alt={project.title}
-            fill
-            className="object-cover object-left grayscale brightness-90 transition-[transform,filter] duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={priority}
-            loading={priority ? undefined : "lazy"}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+        <SharedElement name={`project-image-${project.slug}`}>
+          <div className="relative w-full h-44 overflow-hidden shrink-0">
+            <Image
+              src={project.imageSrc}
+              alt={project.title}
+              fill
+              className="object-cover object-left grayscale brightness-90 transition-[transform,filter] duration-500 group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={priority}
+              loading={priority ? undefined : "lazy"}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
-          <span className="absolute top-3 right-3 text-[10px] font-mono text-white/45">
-            {project.year}
-          </span>
+            <span className="absolute top-3 right-3 text-[10px] font-mono text-white/45">
+              {project.year}
+            </span>
 
-          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-            {project.tags.slice(0, 3).map((tag: string) => (
-              <span
-                key={tag}
-                className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/65 text-[10px] font-light"
-              >
-                {tag}
-              </span>
-            ))}
-            {project.tags.length > 3 && (
-              <span className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/40 text-[10px] font-light">
-                +{project.tags.length - 3}
-              </span>
-            )}
+            <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+              {project.tags.slice(0, 3).map((tag: string) => (
+                <span
+                  key={tag}
+                  className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/65 text-[10px] font-light"
+                >
+                  {tag}
+                </span>
+              ))}
+              {project.tags.length > 3 && (
+                <span className="px-2 py-0.5 bg-black/40 backdrop-blur-sm text-white/40 text-[10px] font-light">
+                  +{project.tags.length - 3}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        </SharedElement>
 
         <div className="p-5 flex flex-col flex-1">
-          <h3 className="text-lg font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-200 mb-1.5">
-            {project.title}
-          </h3>
+          <SharedElement name={`project-title-${project.slug}`}>
+            <h3 className="text-lg font-serif text-foreground/85 group-hover:text-foreground transition-colors duration-200 mb-1.5">
+              {project.title}
+            </h3>
+          </SharedElement>
 
           <p className="text-foreground/55 text-sm font-light leading-relaxed mb-4 line-clamp-2 flex-1">
             {project.description}
@@ -96,6 +101,7 @@ export const ProjectCard = ({ project, priority = false }: ProjectCardPropsType)
             )}
             <Link
               href={`/projects/${project.slug}`}
+              transitionTypes={["nav-forward"]}
               className="flex items-center gap-1 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200 ml-auto group/link"
             >
               details

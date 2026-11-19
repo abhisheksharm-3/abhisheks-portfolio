@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import type { ProjectType } from "@/lib/types/components";
 
 /**
@@ -15,12 +12,7 @@ export function ProjectDetailMeta({ project }: { project: ProjectType }) {
   ].filter((detail) => detail.value);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      className="border-t border-foreground/8 pt-8"
-    >
+    <div className="border-t border-foreground/8 pt-8">
       {details.length > 0 && (
         <div className="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
           {details.map((detail) => (
@@ -51,6 +43,6 @@ export function ProjectDetailMeta({ project }: { project: ProjectType }) {
           </div>
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
+import { SharedElement } from "@/components/shared/SharedElement";
 import { PostCta } from "@/components/writing/PostCta";
 import { PostToc } from "@/components/writing/PostToc";
 import { getAllPosts, getPostBySlug } from "@/lib/content/loader";
@@ -139,9 +140,11 @@ export default async function PostPage({ params }: Props) {
               {frontmatter.tags[0]} / {formattedDate} / {frontmatter.readingTime} min
             </p>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif leading-tight text-foreground mb-4">
-              {frontmatter.title}
-            </h1>
+            <SharedElement name={`post-title-${slug}`}>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif leading-tight text-foreground mb-4">
+                {frontmatter.title}
+              </h1>
+            </SharedElement>
 
             <p className="text-foreground/60 font-light leading-relaxed mb-8">
               {frontmatter.subhead}

@@ -1,16 +1,14 @@
 "use client";
 
-import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { GraveyardBackground } from "@/components/sections/graveyard/GraveyardBackground";
 import { GraveyardIntroCard } from "@/components/sections/graveyard/GraveyardIntroCard";
 import { GraveyardProjectCard } from "@/components/sections/graveyard/GraveyardProjectCard";
 import { GraveyardSectionHeader } from "@/components/sections/graveyard/GraveyardSectionHeader";
 import { deadProjects } from "@/data/projects";
-import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 const inspirationalQuotes = [
@@ -20,7 +18,7 @@ const inspirationalQuotes = [
 
 /**
  * Renders the Graveyard page, showcasing abandoned projects as learning experiences.
- * Features orchestrated animations and a random inspirational quote.
+ * Features a random inspirational quote.
  * @returns {JSX.Element} The GraveyardPage component.
  */
 const GraveyardPage = () => {
@@ -31,39 +29,27 @@ const GraveyardPage = () => {
   useEffect(() => {
     setQuote(inspirationalQuotes[Math.floor(Math.random() * inspirationalQuotes.length)]);
   }, []);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   return (
     <AppShell>
-      <motion.div
-        ref={sectionRef}
-        variants={CONTAINER_VARIANTS}
-        initial="hidden"
-        animate={isInView ? "visible" : "hidden"}
-        className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden"
-      >
+      <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden">
         <GraveyardBackground />
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <GraveyardSectionHeader quote={quote} />
-        </motion.div>
+        <GraveyardSectionHeader quote={quote} />
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <GraveyardIntroCard />
-        </motion.div>
+        <GraveyardIntroCard />
 
         <div
           className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 ${SPACING_STANDARDS.GRID.GAP_MEDIUM} mb-8`}
         >
-          {deadProjects.map((project, index) => (
-            <motion.div key={project.title} variants={ITEM_VARIANTS}>
-              <GraveyardProjectCard project={project} index={index} />
-            </motion.div>
+          {deadProjects.map((project) => (
+            <div key={project.title}>
+              <GraveyardProjectCard project={project} />
+            </div>
           ))}
         </div>
 
-        <motion.div variants={ITEM_VARIANTS} className="mt-8">
+        <div className="mt-8">
           <div className="h-px bg-primary/10 mb-8" />
           <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
             prefer the living
@@ -75,8 +61,8 @@ const GraveyardPage = () => {
             Escape the Graveyard
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </Link>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
     </AppShell>
   );
 };

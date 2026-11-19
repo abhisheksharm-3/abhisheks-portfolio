@@ -1,9 +1,5 @@
-"use client";
-
-import { motion, useInView } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { useRef } from "react";
 import type { PostMeta } from "@/lib/content/loader";
 
 /**
@@ -12,19 +8,10 @@ import type { PostMeta } from "@/lib/content/loader";
  * without competing with the work above it.
  */
 export const FeaturedWriting = ({ post }: { post: PostMeta | undefined }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true, amount: 0.3 });
-
   if (!post) return null;
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-      className="relative z-10 border-t border-foreground/8 pt-8"
-    >
+    <div className="relative z-10 border-t border-foreground/8 pt-8">
       <div className="flex items-baseline justify-between gap-6 mb-5">
         <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
           latest writing
@@ -49,6 +36,6 @@ export const FeaturedWriting = ({ post }: { post: PostMeta | undefined }) => {
           {post.frontmatter.tags[0]} / {post.frontmatter.readingTime} min
         </p>
       </Link>
-    </motion.div>
+    </div>
   );
 };

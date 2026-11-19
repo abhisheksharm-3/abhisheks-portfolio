@@ -1,8 +1,16 @@
+import { ViewTransition } from "react";
 import type { AppShellPropsType } from "@/lib/types/components";
 import { cn } from "@/lib/utils";
 import { ConstellationBackground } from "./ConstellationBackground";
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
+
+/**
+ * Page content slides in the direction of travel when a link tags the navigation `nav-forward` or
+ * `nav-back`. AppShell renders inside each page, not the layout, so enter and exit fire per route.
+ * Untagged navigations (browser back, refresh) swap without motion.
+ */
+const PAGE_SLIDE = { "nav-forward": "nav-forward", "nav-back": "nav-back", default: "none" };
 
 /**
  * Provides the main application shell and consistent page layout.
@@ -33,7 +41,9 @@ export const AppShell: React.FC<AppShellPropsType> = ({
         </div>
       )}
       <Navbar />
-      <main className="relative z-10 flex-1">{children}</main>
+      <ViewTransition enter={PAGE_SLIDE} exit={PAGE_SLIDE} default="none">
+        <main className="relative z-10 flex-1">{children}</main>
+      </ViewTransition>
       <Footer />
     </div>
   );

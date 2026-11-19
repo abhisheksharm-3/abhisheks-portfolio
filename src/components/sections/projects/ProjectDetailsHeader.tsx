@@ -1,8 +1,6 @@
-"use client";
-
 import { RiGithubLine } from "@remixicon/react";
-import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
+import { SharedElement } from "@/components/shared/SharedElement";
 import type { ProjectType } from "@/lib/types/components";
 
 /**
@@ -12,19 +10,16 @@ import type { ProjectType } from "@/lib/types/components";
  */
 export function ProjectDetailHeader({ project }: { project: ProjectType }) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-      className="flex flex-col"
-    >
+    <div className="flex flex-col">
       <span className="mb-5 text-[11px] uppercase tracking-[0.2em] font-light text-primary/35">
         project · {project.year}
       </span>
 
-      <h1 className="mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground">
-        {project.title}
-      </h1>
+      <SharedElement name={`project-title-${project.slug}`}>
+        <h1 className="mb-6 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-serif leading-tight text-foreground">
+          {project.title}
+        </h1>
+      </SharedElement>
 
       <div className="mb-6 h-px w-full bg-primary/10" />
 
@@ -69,6 +64,6 @@ export function ProjectDetailHeader({ project }: { project: ProjectType }) {
           )}
         </div>
       )}
-    </motion.div>
+    </div>
   );
 }

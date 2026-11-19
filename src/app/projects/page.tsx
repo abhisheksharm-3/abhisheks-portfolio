@@ -1,8 +1,8 @@
 "use client";
 
-import { AnimatePresence, motion, useInView } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useMemo, useRef, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { AppShell } from "@/components/layout/AppShell";
 import { ProjectCard } from "@/components/sections/projects/ProjectCard";
 import { ProjectsCTA } from "@/components/sections/projects/ProjectsCTA";
@@ -10,7 +10,6 @@ import { ProjectsFilters } from "@/components/sections/projects/ProjectsFilter";
 import { ProjectsHeader } from "@/components/sections/projects/ProjectsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
 import { archivedProjects, selectedProjects } from "@/data/projects";
-import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
 
 /**
@@ -38,24 +37,14 @@ const ProjectsPage = () => {
     });
   };
 
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.01, margin: "100px 0px 0px 0px" });
   return (
     <AppShell>
-      <motion.div
-        variants={CONTAINER_VARIANTS}
-        initial="hidden"
-        ref={sectionRef}
-        animate={isInView ? "visible" : "hidden"}
-        className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden"
-      >
+      <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden">
         <ProjectsPageBackground />
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <ProjectsHeader />
-        </motion.div>
+        <ProjectsHeader />
 
-        <motion.div variants={ITEM_VARIANTS} className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+        <div className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
           <ProjectsFilters
             activeFilter={activeFilter}
             setActiveFilter={handleFilterChange}
@@ -63,7 +52,7 @@ const ProjectsPage = () => {
             filteredCount={filteredProjects.length}
             isPending={isPending}
           />
-        </motion.div>
+        </div>
 
         <motion.div
           layout
@@ -74,10 +63,10 @@ const ProjectsPage = () => {
               <motion.div
                 key={project.title}
                 layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               >
                 <ProjectCard project={project} priority={index === 0} />
               </motion.div>
@@ -86,10 +75,7 @@ const ProjectsPage = () => {
         </motion.div>
 
         {activeFilter === "all" && (
-          <motion.section
-            variants={ITEM_VARIANTS}
-            className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}
-          >
+          <section className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
             <h2 className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-1">
               earlier work
             </h2>
@@ -114,13 +100,11 @@ const ProjectsPage = () => {
                 </li>
               ))}
             </ul>
-          </motion.section>
+          </section>
         )}
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <ProjectsCTA />
-        </motion.div>
-      </motion.div>
+        <ProjectsCTA />
+      </div>
     </AppShell>
   );
 };
