@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
@@ -12,11 +11,9 @@ import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDet
 import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
 import { projects } from "@/data/projects";
-import { CONTAINER_VARIANTS, ITEM_VARIANTS } from "@/lib/config/page-animations";
 
 /**
  * Renders the detailed view for a single project based on the URL slug.
- * Features an orchestrated entry animation for all page sections.
  * @returns {JSX.Element} The ProjectDetailPage component.
  */
 const DetailedProjectPage = () => {
@@ -29,44 +26,34 @@ const DetailedProjectPage = () => {
 
   return (
     <AppShell>
-      <motion.div
-        variants={CONTAINER_VARIANTS}
-        initial="hidden"
-        animate="visible"
-        className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden"
-      >
+      <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden">
         <ProjectsPageBackground />
 
-        <motion.div variants={ITEM_VARIANTS} className="mb-10">
+        <div className="mb-10">
           <Link
             href="/projects"
+            transitionTypes={["nav-back"]}
             className="group inline-flex items-center gap-2 text-xs text-foreground/40 hover:text-foreground/70 transition-colors duration-200"
           >
             <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
             back to projects
           </Link>
-        </motion.div>
+        </div>
 
-        <motion.div variants={ITEM_VARIANTS} className="mb-10">
+        <div className="mb-10">
           <ProjectDetailHeader project={project} />
-        </motion.div>
+        </div>
 
-        <motion.div variants={ITEM_VARIANTS} className="mb-12">
+        <div className="mb-12">
           <ProjectDetailMeta project={project} />
-        </motion.div>
+        </div>
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <ProjectDetailImage src={project.imageSrc} alt={project.title} />
-        </motion.div>
+        <ProjectDetailImage slug={project.slug} src={project.imageSrc} alt={project.title} />
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <ProjectDetailOverview project={project} />
-        </motion.div>
+        <ProjectDetailOverview project={project} />
 
-        <motion.div variants={ITEM_VARIANTS}>
-          <ProjectDetailMoreProjects />
-        </motion.div>
-      </motion.div>
+        <ProjectDetailMoreProjects />
+      </div>
     </AppShell>
   );
 };

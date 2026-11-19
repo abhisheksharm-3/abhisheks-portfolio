@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { AlertTriangle, ArrowRight, CheckCircle, Loader2 } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import { TextMorph } from "@/components/shared/TextMorph";
 import {
   Form,
   FormControl,
@@ -23,6 +24,13 @@ import type { ContactFormDataType } from "@/lib/types/components";
 const field =
   "border border-foreground/10 bg-foreground/[0.03] dark:bg-foreground/[0.03] shadow-none rounded-none px-3 py-3 h-auto text-base text-foreground placeholder:text-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-foreground/25 focus-visible:bg-foreground/[0.06] dark:focus-visible:bg-foreground/[0.06] transition-all duration-200";
 const label = "text-[10px] text-primary/35 uppercase tracking-[0.18em] font-light";
+
+/** The submit button's label morphs through the send: "Send Message", "Sending", then "Sent" while the success note shows. */
+const submitLabel = (isPending: boolean, status: "success" | "error" | null) => {
+  if (isPending) return "Sending";
+  if (status === "success") return "Sent";
+  return "Send Message";
+};
 
 export const SendMessageCard = () => {
   const [isPending, startTransition] = useTransition();
@@ -64,11 +72,7 @@ export const SendMessageCard = () => {
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <div>
       <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] mb-10 font-light">
         send a message
       </p>
@@ -166,16 +170,10 @@ export const SendMessageCard = () => {
               disabled={isPending}
               className="inline-flex items-center gap-2 text-sm text-foreground/60 hover:text-foreground transition-colors duration-200 group disabled:opacity-40 disabled:cursor-default cursor-pointer font-light border border-foreground/15 hover:border-foreground/30 focus-visible:outline-none focus-visible:border-foreground/45 px-5 py-2.5"
             >
-              {isPending ? (
-                <>
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                  Sending
-                </>
-              ) : (
-                <>
-                  Send Message
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-                </>
+              {isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+              <TextMorph>{submitLabel(isPending, submitStatus)}</TextMorph>
+              {!isPending && submitStatus !== "success" && (
+                <ArrowRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" />
               )}
             </button>
           </div>
@@ -208,6 +206,6 @@ export const SendMessageCard = () => {
           </div>
         </form>
       </Form>
-    </motion.div>
+    </div>
   );
 };

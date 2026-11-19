@@ -1,9 +1,5 @@
-"use client";
-
-import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 import { AppShell } from "@/components/layout/AppShell";
-import { STAGGER_CONTAINER_VARIANTS, STAGGER_ITEM_VARIANTS } from "@/lib/config/page-animations";
 
 /**
  * The shared shell for 404, error, and loading. These are pages a visitor lands on
@@ -25,42 +21,27 @@ export const StatePage = ({
 }) => (
   <AppShell>
     <div className="min-h-[70vh] flex items-center pt-36 pb-20 px-6 sm:px-10 lg:px-24">
-      <motion.div
-        variants={STAGGER_CONTAINER_VARIANTS}
-        initial="hidden"
-        animate="visible"
-        className="relative z-10 w-full max-w-2xl"
-      >
-        <motion.p
-          variants={STAGGER_ITEM_VARIANTS}
-          className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5"
-        >
+      <div className="relative z-10 w-full max-w-2xl">
+        <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-5">
           {eyebrow}
-        </motion.p>
+        </p>
 
-        <motion.div variants={STAGGER_ITEM_VARIANTS}>
+        <div>
           <Heading className="text-4xl sm:text-5xl md:text-6xl font-serif leading-tight text-foreground mb-6">
             {title}
           </Heading>
-        </motion.div>
+        </div>
 
-        <motion.div variants={STAGGER_ITEM_VARIANTS} className="h-px bg-primary/10 w-full mb-6" />
+        <div className="h-px bg-primary/10 w-full mb-6" />
 
         {body && (
-          <motion.p
-            variants={STAGGER_ITEM_VARIANTS}
-            className="text-foreground/55 text-sm sm:text-base font-light leading-relaxed"
-          >
+          <p className="text-foreground/55 text-sm sm:text-base font-light leading-relaxed">
             {body}
-          </motion.p>
+          </p>
         )}
 
-        {children && (
-          <motion.div variants={STAGGER_ITEM_VARIANTS} className="mt-10">
-            {children}
-          </motion.div>
-        )}
-      </motion.div>
+        {children && <div className="mt-10">{children}</div>}
+      </div>
     </div>
   </AppShell>
 );

@@ -11,6 +11,7 @@ export interface InViewPropsType {
 export interface MobileNavLinkPropsType {
   item: NavigationItemType;
   isActive: boolean;
+  transitionTypes?: string[];
   onClick: () => void;
 }
 
@@ -28,6 +29,8 @@ export interface ProjectType {
   github?: string;
   /** A notebook that shows the model training, for ML projects. */
   notebook?: string;
+  /** Asides shown in the page margin: true things that happened while building it, newest insight first. */
+  notes?: ProjectNoteType[];
   isFeatured: boolean;
   /** Early learning work: listed as a text row, not a card. */
   isArchived?: boolean;
@@ -57,8 +60,6 @@ export interface ProjectCardPropsType {
 /** Props for landing page project card with hover state management */
 export interface LandingProjectCardPropsType {
   project: ProjectType;
-  index: number;
-  isInView: boolean;
   isHovered: boolean;
   onHover: () => void;
   onLeave: () => void;
@@ -115,7 +116,6 @@ export interface MobileMenuPropsType {
 export interface SectionHeaderPropsType {
   subtitle: string;
   children: React.ReactNode;
-  isInView: boolean;
   className?: string;
 }
 
@@ -132,4 +132,27 @@ export interface FooterLatelyRowPropsType {
   verb: string;
   children: ReactNode;
   when?: string;
+}
+
+/** Props for TextMorph: the current string, which morphs from the previous one when it changes. */
+export interface TextMorphPropsType {
+  children: string;
+  className?: string;
+}
+
+/** Props for SharedElement: a page-unique name shared by both ends of the move, and the element itself. */
+export interface SharedElementPropsType {
+  name: string;
+  children: ReactNode;
+}
+
+/** One margin note on a project page, optionally linking to the post that tells the whole story. */
+export interface ProjectNoteType {
+  text: string;
+  href?: string;
+}
+
+/** Props for MarginNotes. */
+export interface MarginNotesPropsType {
+  notes: ProjectNoteType[];
 }

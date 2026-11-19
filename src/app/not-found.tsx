@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { PathSuggestion } from "@/components/shared/PathSuggestion";
 import { StatePage } from "@/components/shared/StatePage";
 
 const LINKS = [
@@ -19,6 +21,9 @@ const NotFound = () => (
     eyebrow="404"
     title="this page doesn't exist"
   >
+    <Suspense fallback={null}>
+      <PathSuggestion />
+    </Suspense>
     <ul className="divide-y divide-foreground/8 border-y border-foreground/8 max-w-sm">
       {LINKS.map((link) => (
         <li key={link.href}>

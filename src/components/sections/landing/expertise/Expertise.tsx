@@ -1,7 +1,3 @@
-"use client";
-
-import { useInView } from "framer-motion";
-import { useRef } from "react";
 import { SectionHeader } from "@/components/shared/SectionHeader";
 import { SharedBackground } from "@/components/shared/SharedBackground";
 import { EXPERTISE } from "@/data/skills-expertise";
@@ -11,27 +7,24 @@ import { FeaturedSkillsSection, SecondarySkillsGrid } from "./ExpertiseComponent
 /**
  * The main component for the Skills/Expertise section.
  * It orchestrates the display of a header, featured skills, and a grid of
- * additional skills, all animated on scroll.
+ * additional skills.
  */
 export const Skills = () => {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
-
   // Split the services data for different layout treatments
   const mainServices = EXPERTISE.slice(0, 3);
   const additionalServices = EXPERTISE.slice(3, 6);
 
   return (
-    <section ref={sectionRef} className={getSectionClasses()} id="skills">
-      <SharedBackground isInView={isInView} noiseFilterId="skillsNoiseFilter" />
+    <section className={getSectionClasses()} id="skills">
+      <SharedBackground isInView noiseFilterId="skillsNoiseFilter" />
 
       <div className="relative z-10 w-full">
-        <SectionHeader subtitle="expertise" isInView={isInView}>
+        <SectionHeader subtitle="expertise">
           <span className="font-serif text-foreground select-none pr-4">what i do best</span>
         </SectionHeader>
 
-        <FeaturedSkillsSection mainServices={mainServices} isInView={isInView} />
-        <SecondarySkillsGrid additionalServices={additionalServices} isInView={isInView} />
+        <FeaturedSkillsSection mainServices={mainServices} />
+        <SecondarySkillsGrid additionalServices={additionalServices} />
       </div>
     </section>
   );

@@ -6,6 +6,7 @@ import { ArrowUpRight, Check, Copy, ExternalLink } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
+import { SharedElement } from "@/components/shared/SharedElement";
 import type { ProjectType } from "@/lib/types/components";
 
 interface ProjectCardPartPropsType {
@@ -14,41 +15,43 @@ interface ProjectCardPartPropsType {
 }
 
 export const ProjectImageContainer = ({ project, isHovered }: ProjectCardPartPropsType) => (
-  <div className="relative w-full h-52 sm:h-64 overflow-hidden shrink-0">
-    <motion.div
-      className="relative w-full h-full"
-      animate={{ scale: isHovered ? 1.03 : 1 }}
-      transition={{ duration: 0.6, ease: "easeOut" }}
-    >
-      <Image
-        src={project.imageSrc}
-        alt={project.title}
-        fill
-        className={`object-cover object-left transition-all duration-500 ${
-          isHovered ? "grayscale-0 brightness-100" : "grayscale brightness-90"
-        }`}
-        sizes="(max-width: 1024px) 100vw, 50vw"
-        draggable={false}
-      />
-    </motion.div>
-    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+  <SharedElement name={`project-image-${project.slug}`}>
+    <div className="relative w-full h-52 sm:h-64 overflow-hidden shrink-0">
+      <motion.div
+        className="relative w-full h-full"
+        animate={{ scale: isHovered ? 1.03 : 1 }}
+        transition={{ duration: 0.6, ease: "easeOut" }}
+      >
+        <Image
+          src={project.imageSrc}
+          alt={project.title}
+          fill
+          className={`object-cover object-left transition-all duration-500 ${
+            isHovered ? "grayscale-0 brightness-100" : "grayscale brightness-90"
+          }`}
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          draggable={false}
+        />
+      </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
 
-    <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-      {project.tags?.slice(0, 2).map((tag) => (
-        <span
-          key={tag}
-          className="text-[10px] font-light text-white/65 bg-black/40 backdrop-blur-sm px-2 py-0.5"
-        >
-          {tag}
-        </span>
-      ))}
-      {(project.tags?.length ?? 0) > 2 && (
-        <span className="text-[10px] font-light text-white/40 bg-black/40 backdrop-blur-sm px-2 py-0.5">
-          +{(project.tags?.length ?? 0) - 2}
-        </span>
-      )}
+      <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+        {project.tags?.slice(0, 2).map((tag) => (
+          <span
+            key={tag}
+            className="text-[10px] font-light text-white/65 bg-black/40 backdrop-blur-sm px-2 py-0.5"
+          >
+            {tag}
+          </span>
+        ))}
+        {(project.tags?.length ?? 0) > 2 && (
+          <span className="text-[10px] font-light text-white/40 bg-black/40 backdrop-blur-sm px-2 py-0.5">
+            +{(project.tags?.length ?? 0) - 2}
+          </span>
+        )}
+      </div>
     </div>
-  </div>
+  </SharedElement>
 );
 
 /** The install command with a copy button, for projects you install rather than visit. */
@@ -86,9 +89,11 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
       <span className="text-[10px] text-foreground/35 font-mono">{project.year}</span>
     </div>
 
-    <h3 className="text-xl font-serif text-foreground/85 group-hover:text-foreground group-focus-within:text-foreground transition-colors duration-200 mb-2 leading-snug">
-      {project.title}
-    </h3>
+    <SharedElement name={`project-title-${project.slug}`}>
+      <h3 className="text-xl font-serif text-foreground/85 group-hover:text-foreground group-focus-within:text-foreground transition-colors duration-200 mb-2 leading-snug">
+        {project.title}
+      </h3>
+    </SharedElement>
 
     <p className="text-foreground/55 text-sm font-light leading-relaxed flex-1 mb-4 line-clamp-3">
       {project.description}
@@ -125,6 +130,7 @@ export const ProjectContent = ({ project }: ProjectCardPartPropsType) => (
         <Link
           className="group/link flex items-center gap-1 text-xs text-foreground/35 hover:text-foreground/65 transition-colors duration-200"
           href={`/projects/${project.slug}`}
+          transitionTypes={["nav-forward"]}
         >
           details
           <ArrowUpRight className="h-3 w-3 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform duration-200" />

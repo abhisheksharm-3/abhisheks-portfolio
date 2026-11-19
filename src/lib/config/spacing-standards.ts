@@ -43,13 +43,6 @@ export const SPACING_STANDARDS = {
     LIST_SPACING: "space-y-6", // Standard list item spacing
     SMALL_SPACING: "mb-4", // Small spacing
   },
-
-  // Animation delays for consistent staggered animations
-  ANIMATION: {
-    STAGGER_DELAY: 0.15, // Standard stagger delay between items
-    SECTION_DELAY: 0.3, // Delay for section animations
-    ITEM_DELAY: 0.6, // Delay for individual item animations
-  },
 } as const;
 
 /**

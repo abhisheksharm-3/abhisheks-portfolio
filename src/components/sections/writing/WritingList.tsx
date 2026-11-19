@@ -1,9 +1,7 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { PageHeader } from "@/components/shared/PageHeader";
+import { SharedElement } from "@/components/shared/SharedElement";
 import { corpusStats, groupByDomain } from "@/lib/content/domains";
 import type { PostMeta } from "@/lib/content/loader";
 
@@ -23,12 +21,7 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
         title="thoughts & notes"
         intro="write-ups from production work. things that bit me, how i diagnosed them, and what i would do differently."
       >
-        <motion.div
-          animate={{ opacity: 1 }}
-          className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-2 text-[11px] uppercase tracking-[0.18em] font-light text-primary/35"
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.7, delay: 0.3 }}
-        >
+        <div className="mt-8 flex flex-wrap items-baseline gap-x-8 gap-y-2 text-[11px] uppercase tracking-[0.18em] font-light text-primary/35">
           <span>
             <span className="text-foreground/70">{stats.posts}</span> write-ups
           </span>
@@ -39,17 +32,12 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
             <span className="text-foreground/70">{stats.questions}</span> questions answered
           </span>
           <span>mostly from production work</span>
-        </motion.div>
+        </div>
       </PageHeader>
 
       {groups.length > 0 && (
-        <motion.div
-          animate={{ opacity: 1 }}
-          className="mb-16"
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.7, delay: 0.2 }}
-        >
-          {groups.map((group, groupIndex) => (
+        <div className="mb-16">
+          {groups.map((group) => (
             <section className="mb-14 last:mb-0" key={group.id}>
               <div className="flex items-center gap-4 mb-8">
                 <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
@@ -60,28 +48,22 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
               </div>
 
               <div className="divide-y divide-primary/8">
-                {group.posts.map((post, index) => (
-                  <motion.div
-                    animate={{ opacity: 1, y: 0 }}
-                    initial={{ opacity: 0, y: 12 }}
-                    key={post.slug}
-                    transition={{
-                      duration: 0.5,
-                      ease: [0.22, 1, 0.36, 1],
-                      delay: 0.25 + groupIndex * 0.05 + index * 0.05,
-                    }}
-                  >
+                {group.posts.map((post) => (
+                  <div key={post.slug}>
                     <Link
                       className="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 py-6"
                       href={`/writing/${post.slug}`}
+                      transitionTypes={["nav-forward"]}
                     >
                       <span className="text-[11px] text-primary/35 uppercase tracking-[0.15em] font-light sm:w-28 shrink-0">
                         {post.frontmatter.date.slice(0, 7)}
                       </span>
                       <div className="flex-1">
-                        <p className="text-base font-light text-foreground/70 group-hover:text-foreground/90 transition-colors duration-200 leading-snug mb-1">
-                          {post.frontmatter.title}
-                        </p>
+                        <SharedElement name={`post-title-${post.slug}`}>
+                          <p className="text-base font-light text-foreground/70 group-hover:text-foreground/90 transition-colors duration-200 leading-snug mb-1">
+                            {post.frontmatter.title}
+                          </p>
+                        </SharedElement>
                         <p className="text-xs text-foreground/35 font-light italic leading-relaxed">
                           {post.frontmatter.subhead}
                         </p>
@@ -90,20 +72,16 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
                         {post.frontmatter.readingTime} min
                       </span>
                     </Link>
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </section>
           ))}
-        </motion.div>
+        </div>
       )}
 
       {draftPosts.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.7, delay: 0.35 }}
-        >
+        <div>
           <div className="flex items-center gap-4 mb-8">
             <span className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
               drafts in progress
@@ -112,16 +90,9 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
           </div>
 
           <div className="divide-y divide-primary/8">
-            {draftPosts.map((post, index) => (
-              <motion.div
+            {draftPosts.map((post) => (
+              <div
                 key={post.slug}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.5,
-                  ease: [0.22, 1, 0.36, 1],
-                  delay: 0.4 + index * 0.07,
-                }}
                 className="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-8 py-6"
               >
                 <span className="text-[11px] text-primary/35 uppercase tracking-[0.15em] font-light sm:w-28 shrink-0">
@@ -138,18 +109,13 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
                 <span className="text-[10px] text-primary/25 uppercase tracking-[0.15em] font-light shrink-0 self-start sm:self-auto mt-1 sm:mt-0">
                   drafting
                 </span>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       )}
 
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.85 }}
-        className="mt-12 pt-8 border-t border-primary/10"
-      >
+      <div className="mt-12 pt-8 border-t border-primary/10">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
           <div>
             <p className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light mb-2">
@@ -180,7 +146,7 @@ export function WritingList({ posts, draftPosts }: WritingListPropsType) {
             </a>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

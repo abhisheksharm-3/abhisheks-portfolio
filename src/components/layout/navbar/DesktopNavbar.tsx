@@ -2,9 +2,11 @@
 
 import { ArrowRight, History } from "lucide-react";
 import Link from "next/link";
+import { ViewTransition } from "react";
 import { ModeToggle } from "@/components/ModeToggle";
 import { NAVIGATION_ITEMS } from "@/data/navigation";
 import { cn } from "@/lib/utils";
+import { navTransitionTypes } from "./nav-direction";
 
 interface DesktopNavbarPropsType {
   activeItem: string | null;
@@ -17,6 +19,7 @@ export const DesktopNavbar = ({ activeItem }: DesktopNavbarPropsType) => (
         <li key={item.name} className="relative">
           <Link
             href={item.href}
+            transitionTypes={navTransitionTypes(activeItem, item.name)}
             className={cn(
               "text-sm font-light transition-colors duration-200",
               activeItem === item.name
@@ -27,7 +30,9 @@ export const DesktopNavbar = ({ activeItem }: DesktopNavbarPropsType) => (
             {item.name}
           </Link>
           {activeItem === item.name && (
-            <span className="absolute -bottom-1 left-0 h-px w-full bg-foreground/25" />
+            <ViewTransition name="nav-indicator">
+              <span className="absolute -bottom-1 left-0 h-px w-full bg-foreground/25" />
+            </ViewTransition>
           )}
         </li>
       ))}

@@ -7,6 +7,7 @@ import { ModeToggle } from "@/components/ModeToggle";
 import type { MobileMenuPropsType } from "@/lib/types/components";
 import { Logo } from "./Logo";
 import { MobileNavLink } from "./MobileNavLink";
+import { navTransitionTypes } from "./nav-direction";
 
 export const MobileMenu: React.FC<MobileMenuPropsType> = ({
   onClose,
@@ -43,24 +44,18 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
       </div>
 
       <nav className="flex-1 flex flex-col justify-start gap-1">
-        {navigationItems.map((item, index) => (
-          <motion.div
+        {navigationItems.map((item) => (
+          <MobileNavLink
             key={item.name}
-            initial={{ opacity: 0, x: 16 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.05 + index * 0.05, duration: 0.3, ease: "easeOut" }}
-          >
-            <MobileNavLink item={item} isActive={item.name === activeItem} onClick={onClose} />
-          </motion.div>
+            item={item}
+            isActive={item.name === activeItem}
+            transitionTypes={navTransitionTypes(activeItem, item.name)}
+            onClick={onClose}
+          />
         ))}
       </nav>
 
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.35, duration: 0.3 }}
-        className="flex items-center justify-between pt-8 border-t border-foreground/8"
-      >
+      <div className="flex items-center justify-between pt-8 border-t border-foreground/8">
         <ModeToggle />
 
         <Link
@@ -71,7 +66,7 @@ export const MobileMenu: React.FC<MobileMenuPropsType> = ({
           Hire me
           <ArrowRight className="h-3 w-3" />
         </Link>
-      </motion.div>
+      </div>
     </motion.div>
   </>
 );

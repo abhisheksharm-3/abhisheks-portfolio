@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -10,12 +7,7 @@ import Link from "next/link";
  */
 export function ProjectDetailMoreProjects() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="mt-12 pt-8"
-    >
+    <div className="mt-12 pt-8">
       <div className="h-px bg-primary/10 mb-8" />
 
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
@@ -38,6 +30,6 @@ export function ProjectDetailMoreProjects() {
           </Link>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }

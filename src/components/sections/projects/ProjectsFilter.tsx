@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { useMemo } from "react";
+import { TextMorph } from "@/components/shared/TextMorph";
 import { PROJECT_CATEGORIES } from "@/data/projects";
 import type { ProjectType } from "@/lib/types/components";
 
@@ -43,7 +43,7 @@ export function ProjectsFilters({
         <span
           className={`text-xs text-foreground/40 font-light transition-opacity duration-200 ${isPending ? "opacity-40" : "opacity-100"}`}
         >
-          {filteredCount} {filteredCount === 1 ? "project" : "projects"}
+          <TextMorph>{`${filteredCount} ${filteredCount === 1 ? "project" : "projects"}`}</TextMorph>
           {activeFilter !== "all" && (
             <span className="ml-1 text-foreground/30">/ {activeLabel}</span>
           )}
@@ -63,12 +63,7 @@ export function ProjectsFilters({
         </span>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="flex flex-wrap gap-2"
-      >
+      <div className="flex flex-wrap gap-2">
         {filters.map((filter) => {
           const isActive = activeFilter === filter.id;
           return (
@@ -95,7 +90,7 @@ export function ProjectsFilters({
             </button>
           );
         })}
-      </motion.div>
+      </div>
     </div>
   );
 }

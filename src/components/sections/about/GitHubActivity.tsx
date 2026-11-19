@@ -104,14 +104,8 @@ export const GitHubActivity = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-6 mb-8">
-        {displayStats.map((stat, index) => (
-          <motion.div
-            key={stat.label}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1, duration: 0.4 }}
-            className="text-center"
-          >
+        {displayStats.map((stat) => (
+          <div key={stat.label} className="text-center">
             <div className="text-3xl font-light text-foreground/80 mb-1">
               {isLoading ? (
                 <span className="inline-block w-8 h-8 bg-foreground/5 rounded animate-pulse" />
@@ -122,7 +116,7 @@ export const GitHubActivity = () => {
             <div className="text-[11px] text-primary/35 uppercase tracking-[0.2em] font-light">
               {stat.label}
             </div>
-          </motion.div>
+          </div>
         ))}
       </div>
 
@@ -148,12 +142,7 @@ export const GitHubActivity = () => {
         </div>
       ) : (
         weeks.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4, duration: 0.6 }}
-            className="mb-8 pt-6 border-t border-primary/10 relative"
-          >
+          <div className="mb-8 pt-6 border-t border-primary/10 relative">
             <div className="flex items-center justify-between mb-2 relative h-6">
               <div className="absolute inset-x-0 top-0 flex">
                 {monthLabels.map((month) => (
@@ -223,7 +212,7 @@ export const GitHubActivity = () => {
                 Peak: {peakDay} commits/day
               </span>
             </div>
-          </motion.div>
+          </div>
         )
       )}
 

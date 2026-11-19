@@ -10,20 +10,13 @@ import type { DeadProjectType } from "@/data/projects";
 
 interface GraveyardProjectCardProps {
   project: DeadProjectType;
-  index: number;
 }
 
-export const GraveyardProjectCard = ({ project, index }: GraveyardProjectCardProps) => {
+export const GraveyardProjectCard = ({ project }: GraveyardProjectCardProps) => {
   const [isShowingLessons, setIsShowingLessons] = useState(false);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.05 }}
-      transition={{ duration: 0.6, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }}
-      className="group h-full"
-    >
+    <div className="group h-full">
       <Card className="h-full rounded-none shadow-none py-0 gap-0 border-foreground/8 bg-transparent hover:border-foreground/15 transition-colors duration-200 overflow-hidden flex flex-col">
         <div className="relative w-full h-44 overflow-hidden shrink-0">
           <Image
@@ -71,7 +64,7 @@ export const GraveyardProjectCard = ({ project, index }: GraveyardProjectCardPro
             abandoned at {project.progress}
           </span>
 
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={isShowingLessons ? "lessons" : "reason"}
               initial={{ opacity: 0, y: 6 }}
@@ -128,6 +121,6 @@ export const GraveyardProjectCard = ({ project, index }: GraveyardProjectCardPro
           </div>
         </div>
       </Card>
-    </motion.div>
+    </div>
   );
 };

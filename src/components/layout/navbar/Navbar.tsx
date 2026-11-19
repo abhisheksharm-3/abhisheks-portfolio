@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -66,10 +66,8 @@ export const Navbar = () => {
 
   return (
     <>
-      <motion.header
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+      <header
+        style={{ viewTransitionName: "site-header" }}
         className={cn(
           "fixed top-0 w-full px-6 sm:px-8 lg:px-24 2xl:px-40 flex justify-between items-center z-40 transition-all duration-300",
           isScrolled ? "py-3" : "py-5",
@@ -96,7 +94,7 @@ export const Navbar = () => {
             <Menu size={18} />
           </button>
         </div>
-      </motion.header>
+      </header>
 
       <AnimatePresence mode="wait">
         {isMobileMenuOpen && <ActiveMobileMenu onClose={() => setIsMobileMenuOpen(false)} />}
