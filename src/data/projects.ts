@@ -99,6 +99,29 @@ export const projects: ProjectType[] = [
     longDescription:
       "an android app for shared homes, built alone in kotlin and jetpack compose on supabase. splits by equal, exact, percentage, or shares, a fewest-payments settle-up over upi, chores that rotate between housemates, a shopping list that becomes an expense, and location sharing that expires on the server. amounts live in the currency's smallest unit, and postgres triggers reject any unbalanced ledger write from any client. 22 releases so far, up to v2.0.0.",
     imageSrc: "/images/projects/flockr.png",
+    screens: [
+      {
+        src: "/images/projects/flockr/home.webp",
+        alt: "flockr home screen",
+        caption: "home, with what you're owed and each house",
+        width: 540,
+        height: 1146,
+      },
+      {
+        src: "/images/projects/flockr/hub.webp",
+        alt: "flockr house hub screen",
+        caption: "a house's hub over a map of its street",
+        width: 540,
+        height: 1146,
+      },
+      {
+        src: "/images/projects/flockr/usage.webp",
+        alt: "flockr usage screen",
+        caption: "usage items on a month calendar",
+        width: 540,
+        height: 1146,
+      },
+    ],
     tags: ["Kotlin", "Jetpack Compose", "Android", "Supabase", "PostgreSQL"],
     year: "2025",
     url: "https://github.com/abhisheksharm-3/flockr/releases",

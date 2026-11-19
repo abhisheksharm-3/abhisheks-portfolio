@@ -1,6 +1,5 @@
 "use client";
 
-import { History } from "lucide-react";
 import Link from "next/link";
 import { ViewTransition } from "react";
 import { ModeToggle } from "@/components/ModeToggle";
@@ -41,15 +40,5 @@ export const DesktopNavbar = ({ activeItem }: DesktopNavbarPropsType) => (
     <div className="w-px h-4 bg-foreground/10" />
 
     <ModeToggle />
-
-    <Link
-      href="https://old.abhisheksan.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-1.5 text-xs text-foreground/60 hover:text-foreground/85 transition-colors duration-200"
-    >
-      <History className="h-3 w-3" />
-      <span>old portfolio</span>
-    </Link>
   </nav>
 );

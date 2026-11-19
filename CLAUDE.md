@@ -127,6 +127,10 @@ govern post content.
   and `MY_MAIL` at runtime (Gmail OAuth2 via nodemailer). `CONTACT_PUBLIC_EMAIL` overrides the
   fallback address shown in error messages.
 - The GitHub activity graph needs `GITHUB_ACCESS_TOKEN` and `GITHUB_USERNAME`.
+- The footer's Spotify row and the /about top lists need `SPOTIFY_CLIENT_ID`, `SPOTIFY_CLIENT_SECRET`,
+  and `SPOTIFY_REFRESH_TOKEN` (owner must keep Spotify Premium). `npm run spotify-auth` writes them to
+  `.env.local` and Vercel; the refresh token lives 180 days, so rerun it then. Spotify's rules apply: keep its
+  casing on titles, show its icon, link back to open.spotify.com.
 - The background system (`ConstellationBackground`, `*Background` files, `ColorBlobs`,
   `LightBeams`, `NoiseTexture`, `ScanLines`, `AbstractPath`) is hand-tuned. Do not modify it
   unless the task is explicitly about the background.

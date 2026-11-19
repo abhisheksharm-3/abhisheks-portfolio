@@ -8,6 +8,7 @@ import { ProjectDetailImage } from "@/components/sections/projects/ProjectDetail
 import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
 import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDetailOverview";
+import { ProjectDetailScreens } from "@/components/sections/projects/ProjectDetailScreens";
 import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
 import { projects } from "@/data/projects";
@@ -48,8 +49,12 @@ const DetailedProjectPage = () => {
           <ProjectDetailMeta project={project} />
         </div>
 
-        {project.imageSrc && (
-          <ProjectDetailImage src={project.imageSrc} alt={`screenshot of ${project.title}`} />
+        {project.screens ? (
+          <ProjectDetailScreens screens={project.screens} />
+        ) : (
+          project.imageSrc && (
+            <ProjectDetailImage src={project.imageSrc} alt={`screenshot of ${project.title}`} />
+          )
         )}
 
         <ProjectDetailOverview project={project} />

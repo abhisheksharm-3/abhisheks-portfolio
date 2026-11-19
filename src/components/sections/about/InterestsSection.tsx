@@ -1,27 +1,25 @@
+import { DefinitionRows } from "@/components/sections/about/DefinitionRows";
+import { PhotoStrip } from "@/components/sections/about/PhotoStrip";
 import { PERSONAL_INTERESTS } from "@/data/about";
+
+const rows = PERSONAL_INTERESTS.map(({ category, description }) => ({
+  term: category,
+  detail: description,
+}));
 
 /**
  * Renders personal interests as a plain two-column list: the topic, then one true line.
+ * The photo strip sits above it and renders nothing until there are photos.
  */
 export const InterestsSection = () => {
   return (
     <div>
       <h2 className="text-2xl font-serif text-foreground mb-8">what keeps me going</h2>
-      <div className="h-px bg-primary/10 mb-2" />
+      <div className="h-px bg-primary/10 mb-8" />
 
-      <dl className="divide-y divide-primary/10">
-        {PERSONAL_INTERESTS.map((interest) => (
-          <div
-            key={interest.category}
-            className="grid grid-cols-1 gap-1 py-5 sm:grid-cols-[10rem_1fr] sm:gap-10"
-          >
-            <dt className="text-sm text-foreground/85">{interest.category}</dt>
-            <dd className="max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
-              {interest.description}
-            </dd>
-          </div>
-        ))}
-      </dl>
+      <PhotoStrip />
+
+      <DefinitionRows rows={rows} />
     </div>
   );
 };

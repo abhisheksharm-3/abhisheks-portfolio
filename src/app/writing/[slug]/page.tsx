@@ -7,6 +7,7 @@ import { notFound } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { SharedElement } from "@/components/shared/SharedElement";
 import { PostCta } from "@/components/writing/PostCta";
+import { FAQ_ID, PostFaq } from "@/components/writing/PostFaq";
 import { PostToc } from "@/components/writing/PostToc";
 import { projects } from "@/data/projects";
 import { getAllPosts, getPostBySlug } from "@/lib/content/loader";
@@ -90,8 +91,6 @@ function buildJsonLd(post: Awaited<ReturnType<typeof getPostBySlug>>) {
 
   return { articleSchema, faqSchema, breadcrumbs };
 }
-
-const FAQ_ID = "frequently-asked-questions";
 
 function projectForPost(slug: string) {
   return projects.find((project) =>
@@ -185,26 +184,7 @@ export default async function PostPage({ params }: Props) {
             {frontmatter.faqs && frontmatter.faqs.length > 0 && (
               <>
                 <div className="h-px bg-primary/10 w-full mt-12 mb-10" />
-                <section aria-labelledby={`${FAQ_ID}-heading`} className="scroll-mt-24" id={FAQ_ID}>
-                  <h2
-                    className="mb-6 font-serif text-xl italic text-foreground/85"
-                    id={`${FAQ_ID}-heading`}
-                  >
-                    frequently asked questions
-                  </h2>
-                  <dl className="space-y-8">
-                    {frontmatter.faqs.map((faq) => (
-                      <div key={faq.question}>
-                        <dt className="mb-2 font-serif text-lg font-normal italic leading-snug text-foreground/85">
-                          {faq.question}
-                        </dt>
-                        <dd className="font-light leading-[1.8] text-foreground/70">
-                          {faq.answer}
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </section>
+                <PostFaq faqs={frontmatter.faqs} />
               </>
             )}
 
