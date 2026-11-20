@@ -138,14 +138,15 @@ const topOf = (type: "artists" | "tracks", range: string, token: string) =>
 /**
  * Top tracks over four weeks, six months and a year; top artists over four weeks and a year; and
  * the newest liked songs. Cached for hours, so the about page prerenders it and Spotify is asked a
- * few times a day at most. Resolves null when the top lists
- * are unavailable, and the page hides the section.
+ * few times a day at most. Resolves null when the top lists are unavailable, and the page hides the
+ * section. A failed or partial answer is cached for minutes only, so a rate limit at build time
+ * does not leave the page empty for the hour.
  */
 export const fetchTopListening = async (): Promise<SpotifyTopType | null> => {
   "use cache";
-  cacheLife("hours");
   try {
     const token = await getAccessToken();
+    let hasLiked = true;
     const [tracksMonth, tracksHalfYear, tracksYear, artistsMonth, artistsYear, liked] =
       await Promise.all([
         topOf("tracks", "short_term", token),
@@ -153,8 +154,14 @@ export const fetchTopListening = async (): Promise<SpotifyTopType | null> => {
         topOf("tracks", "long_term", token),
         topOf("artists", "short_term", token),
         topOf("artists", "long_term", token),
-        orElse(getJson(`/me/tracks?limit=${TOP_LIMIT}`, token), null, "liked songs"),
+        getJson(`/me/tracks?limit=${TOP_LIMIT}`, token).catch((error) => {
+          console.error("Spotify liked songs unavailable", error);
+          hasLiked = false;
+          return null;
+        }),
       ]);
+    if (hasLiked) cacheLife("hours");
+    else cacheLife("minutes");
     return {
       tracksMonth: tracksMonth.items.map(toTrack),
       tracksHalfYear: tracksHalfYear.items.map(toTrack),
@@ -170,6 +177,7 @@ export const fetchTopListening = async (): Promise<SpotifyTopType | null> => {
     };
   } catch (error) {
     console.error("Failed to load Spotify top listening", error);
+    cacheLife("minutes");
     return null;
   }
 };
