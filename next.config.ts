@@ -74,6 +74,13 @@ const nextConfig: NextConfig = {
         pathname: "/image/**",
         search: "",
       },
+      {
+        protocol: "https",
+        hostname: "covers.openlibrary.org",
+        port: "",
+        pathname: "/b/isbn/**",
+        search: "",
+      },
     ],
   },
   async redirects() {

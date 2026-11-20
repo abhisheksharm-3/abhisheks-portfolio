@@ -389,16 +389,6 @@
   color: color-mix(in oklch, var(--foreground) 85%, transparent);
 }
 
-/* Route loading indicator: a line that sweeps, in place of a spinner. */
-@keyframes loading-sweep {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(300%);
-  }
-}
-
 /* Footer constellation: stars dim and brighten slowly. */
 @keyframes twinkle {
   0%,
@@ -531,5 +521,31 @@
   .faq-row[open]::details-content {
     block-size: auto;
     opacity: 1;
+  }
+}
+
+/* Slow drifting light behind the client project's panel, which has no screenshot to show. Still
+   under reduced motion. */
+.drift-light {
+  position: absolute;
+  inset: -40%;
+  background:
+    radial-gradient(circle at 30% 40%, oklch(0.62 0.12 30 / 0.28), transparent 40%),
+    radial-gradient(circle at 70% 65%, oklch(0.6 0.1 250 / 0.24), transparent 42%);
+  filter: blur(30px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .drift-light {
+    animation: drift-light 16s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes drift-light {
+  from {
+    transform: translate3d(-6%, -4%, 0) rotate(0deg);
+  }
+  to {
+    transform: translate3d(6%, 5%, 0) rotate(25deg);
   }
 }

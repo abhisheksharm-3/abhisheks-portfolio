@@ -15,20 +15,18 @@ export interface SpotifyTrackType extends SpotifyItemType {
 }
 
 /**
- * The live track. playedAt is null while it plays, and then progressMs, device and upNext describe
- * the playback; otherwise it is the last track played and when.
+ * The live track. playedAt is null while it plays, and then device and upNext describe the
+ * playback; otherwise it is the last track played and when.
  */
 export type SpotifyListeningType =
   | (SpotifyTrackType & {
       playedAt: string | null;
-      progressMs: number | null;
-      durationMs: number;
       device: string | null;
       upNext: SpotifyTrackType[];
     })
   | null;
 
-/** The about page's listening data. hourCounts has 24 entries, plays per hour in Pune time. */
+/** The about page's listening data. */
 export interface SpotifyTopType {
   tracksMonth: SpotifyTrackType[];
   tracksHalfYear: SpotifyTrackType[];
@@ -36,5 +34,4 @@ export interface SpotifyTopType {
   artistsMonth: SpotifyItemType[];
   artistsYear: SpotifyItemType[];
   liked: (SpotifyTrackType & { addedAt: string })[];
-  hourCounts: number[];
 }

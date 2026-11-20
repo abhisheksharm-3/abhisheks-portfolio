@@ -6,6 +6,8 @@ import { RiGithubFill, RiInstagramFill, RiLinkedinFill, RiTwitterXFill } from "@
 export const CONTACT_INFO = {
   email: "abhishek@abhisheksan.com",
   website: "abhisheksan.com",
+  /** 30-minute call, booked through cal.com, held on google meet. */
+  booking: "https://cal.com/abhisheksan/30min",
   github: {
     username: "abhisheksharm-3",
     url: "https://github.com/abhisheksharm-3",

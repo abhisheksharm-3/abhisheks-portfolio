@@ -1,267 +1,233 @@
-import { ArrowLeft, ArrowUpRight } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import type { ReactNode } from "react";
 import { AppShell } from "@/components/layout/AppShell";
+import { FigureGrid, type FigureTileType } from "@/components/sections/projects/FigureTile";
 import { MarginNotes } from "@/components/sections/projects/MarginNotes";
 import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
+import { ContentBlock } from "@/components/shared/ContentBlock";
 import { SharedElement } from "@/components/shared/SharedElement";
+import { PostCover } from "@/components/writing/PostCover";
 import { projects } from "@/data/projects";
+import { getAllPosts } from "@/lib/content/loader";
+
+/** What it runs at, on the hero panel. */
+const SCALE = [
+  { figure: "170+", label: "paying customers" },
+  { figure: "~$200k", label: "a month through billing" },
+  { figure: "2", label: "engineers on it" },
+] as const;
 
 /** What the client handed over, as opposed to what got built. */
-const TRUSTED = [
+const TRUSTED: FigureTileType[] = [
   {
+    figure: "55",
+    label: "live subscriptions moved",
     name: "plan migrations",
     detail:
-      "moved 55 live subscriptions, monthly and annual, onto modular pricing in stripe with a dry-run-first script and grandfather coupons that hold each old price. every annual account was checked line by line.",
+      "monthly and annual, onto modular pricing with a dry-run-first script and grandfather coupons that hold each old price. every annual account checked line by line.",
   },
   {
+    figure: "42",
+    label: "production releases since june",
     name: "releases",
-    detail:
-      "i promote to main and write the release notes the founders read: 42 production releases since june, each migration checked against the live schema first.",
+    detail: "i promote to main and write the release notes the founders read.",
   },
   {
+    figure: "live",
+    label: "schema, not the repo's",
     name: "production data",
     detail:
-      "migrations and edge functions reach production through me, checked against the live schema rather than the one in the repo.",
+      "migrations and edge functions reach production through me, checked against what's running.",
   },
   {
+    figure: "68",
+    label: "fixes in four months",
     name: "the support queue",
     detail:
-      "customer reports come straight to me, and go back with a root cause, a fix, and when it ships. 68 fixes in four months.",
+      "customer reports come straight to me and go back with a root cause, a fix, and when it ships.",
   },
 ];
 
-const BUILT = [
+const BUILT: FigureTileType[] = [
   {
-    name: "social analytics",
-    detail:
-      "built alone from scratch: a time series over five networks, recorded on a schedule because the provider only reports lifetime counters. a team insights query went from 58s to 0.07s.",
-  },
-  {
+    figure: "+35%",
+    label: "revenue from existing customers",
     name: "billing",
     detail:
-      "pricing rebuilt into modular plans in 8 days, after which revenue from existing customers rose 35%. a sales checkout where 71% of quoted prospects paid, at a median of 12 minutes. plus ach for large contracts, and pause, refund, and credit flows.",
+      "pricing rebuilt into modular plans in 8 days, plus ach for large contracts, and pause, refund, and credit flows.",
   },
   {
+    figure: "71%",
+    label: "of quoted prospects paid",
+    name: "checkout configurator",
+    detail: "sales builds a proposal; the buyer pays through it at a median of 12 minutes.",
+  },
+  {
+    figure: "5",
+    label: "networks, one archive",
+    name: "social analytics",
+    detail:
+      "built alone from scratch: a time series recorded on a schedule, because the provider only reports lifetime counters.",
+  },
+  {
+    figure: "0.00%",
+    label: "frozen frames, from 23.42%",
     name: "render fixes",
     detail:
-      "the editor is a teammate's; i own what feeds its lambda render. a browser-side re-encode took frozen frames from 23.42% to 0.00%.",
+      "the editor is a teammate's; i own what feeds its lambda render. a browser-side re-encode fixed the frames.",
   },
   {
-    name: "scriptwriting agents",
-    detail:
-      "a pipeline that plans a script and ties every figure to a cited source. paused for now: accurate, but too fact-heavy to sound right on camera yet.",
+    figure: "712 → 0",
+    label: "type errors, across 46 prs",
+    name: "ci",
+    detail: "tests on changed files only, and feature-pr ci from 48 minutes to under 5.",
   },
   {
+    figure: "1",
+    label: "postgres rule for every seat",
     name: "teams",
     detail:
-      "co-built with a teammate: seat permissions in one postgres rule that the database, edge functions, and ui all read, plus an audit trail of every action taken on someone's behalf.",
-  },
-  {
-    name: "ci",
-    detail:
-      "712 type errors to zero across 46 prs, tests on changed files only, and feature-pr ci from 48 minutes to under 5.",
+      "co-built with a teammate: the database, edge functions, and ui all read the same permission, with an audit trail of every action taken on someone's behalf.",
   },
 ];
 
-const POSTS = [
-  {
-    slug: "remotion-jpeg-frames-bt601-bt709-color-shift",
-    title: "jpeg frames shifted the colour of every render",
-  },
-  {
-    slug: "stripe-pause-release-schedule-before-trial",
-    title: "stripe pause: release the schedule before the trial",
-  },
-  {
-    slug: "stripe-ach-subscriptions-settlement-grace-period",
-    title: "provisioning stripe subscriptions before ach settles",
-  },
-];
-
-/** A two-column editorial row: a mono label on the left, content on the right. */
-const Row = ({ label, children }: { label: ReactNode; children: ReactNode }) => (
-  <div className="grid gap-x-14 gap-y-10 lg:grid-cols-[1fr_1.4fr]">
-    <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
-      {label}
-    </p>
-    <div>{children}</div>
-  </div>
-);
-
-const ItemGrid = ({ items }: { items: { name: string; detail: string }[] }) => (
-  <div className="grid grid-cols-1 gap-x-12 gap-y-10 sm:grid-cols-2">
-    {items.map((item) => (
-      <div key={item.name}>
-        <p className="mb-3 font-mono text-xs tracking-[0.05em] text-foreground/75">{item.name}</p>
-        <p className="text-sm font-light leading-relaxed text-foreground/65">{item.detail}</p>
-      </div>
-    ))}
-  </div>
-);
+const POST_SLUGS = [
+  "remotion-jpeg-frames-bt601-bt709-color-shift",
+  "stripe-pause-release-schedule-before-trial",
+  "stripe-ach-subscriptions-settlement-grace-period",
+] as const;
 
 /**
- * The client-work page. The client is unnamed, so the page leads with what was
- * handed over and what it runs at, not with screenshots. A static route, so it
- * takes precedence over /projects/[slug].
+ * The client-work page. The client is unnamed, so it opens on what the platform runs at instead
+ * of screenshots, then puts every claim beside its number. A static route, so it takes precedence
+ * over /projects/[slug].
  */
-const AiVideoPlatformPage = () => {
+const AiVideoPlatformPage = async () => {
   const project = projects.find((p) => p.slug === "ai-video-platform");
+  if (!project) notFound();
 
-  if (!project) {
-    notFound();
-  }
+  const posts = await getAllPosts();
+  const writtenUp = POST_SLUGS.flatMap((slug) => posts.filter((post) => post.slug === slug));
 
   return (
     <AppShell>
-      <div className="relative overflow-hidden pt-36 pb-28 px-6 sm:px-10 lg:px-24">
+      <div className="relative overflow-hidden px-6 pt-36 pb-28 sm:px-10 lg:px-24">
         <ProjectsPageBackground />
 
-        <div className="mb-14">
+        <div className="relative z-10 mb-12">
           <Link
             href="/projects"
             transitionTypes={["nav-back"]}
-            className="group inline-flex items-center gap-2 text-xs text-foreground/60 transition-colors duration-200 hover:text-foreground/70"
+            className="group inline-flex items-center gap-2 text-xs text-foreground/60 transition-colors duration-200 hover:text-foreground"
           >
-            <ArrowLeft className="h-3 w-3 transition-transform group-hover:-translate-x-1" />
+            <ArrowLeft className="h-3 w-3 transition-transform duration-200 group-hover:-translate-x-1" />
             back to projects
           </Link>
         </div>
 
-        <header className="grid gap-x-14 gap-y-10 lg:grid-cols-[1.6fr_1fr]">
-          <div>
+        <header className="relative z-10 grid grid-cols-1 items-stretch gap-10 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] md:gap-14">
+          <div className="flex flex-col justify-end gap-6">
+            <span className="font-mono text-[11px] text-foreground/60">
+              client work · since june 2026
+            </span>
             <SharedElement name="project-title-ai-video-platform">
-              <h1 className="font-serif text-[3.25rem] leading-[0.9] tracking-tight text-foreground sm:text-[6rem] lg:text-[7rem]">
-                ai video
-                <br />
-                platform
+              <h1 className="font-serif text-5xl leading-[1.02] text-foreground sm:text-6xl lg:text-7xl">
+                an ai video platform, for a us client
               </h1>
             </SharedElement>
-            <p className="mt-8 max-w-xl font-serif text-2xl italic leading-snug text-foreground/70 sm:text-3xl">
-              Brought in to cover a month of leave. Still running it.
+            <p className="max-w-xl font-serif text-2xl italic leading-snug text-foreground/70">
+              i own its billing, built its checkout and analytics, and ship every release.
             </p>
           </div>
-
-          <div className="space-y-6 self-end border-t border-foreground/10 pt-6 lg:border-t-0 lg:pt-0">
-            <p className="font-mono text-[11px] leading-loose tracking-[0.15em] text-foreground/60">
-              170+ paying customers
-              <br />
-              ~$200k mrr
-              <br />
-              on it since june 2026
-              <br />
-              two engineers
-            </p>
-            <p className="text-sm font-light leading-relaxed text-foreground/65">
-              Client work through Wednesday. The client stays unnamed, so there are no screenshots
-              here, only what I was handed and what it runs at.
-            </p>
+          <div className="relative flex aspect-[4/5] flex-col justify-between overflow-hidden border border-foreground/10 bg-foreground/[0.04] p-6 sm:p-8">
+            <span aria-hidden="true" className="drift-light" />
+            <span className="relative font-mono text-[11px] text-foreground/60">
+              what it runs at
+            </span>
+            <dl className="relative flex flex-col gap-6">
+              {SCALE.map(({ figure, label }) => (
+                <div key={label}>
+                  <dt className="sr-only">{label}</dt>
+                  <dd>
+                    <span className="block font-serif text-5xl leading-none text-foreground sm:text-6xl">
+                      {figure}
+                    </span>
+                    <span className="mt-2 block font-mono text-[11px] text-foreground/60">
+                      {label}
+                    </span>
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </header>
 
-        <div className="mt-16 mb-20">
+        <div className="relative z-10 mt-16 mb-20">
           <ProjectDetailMeta project={project} />
         </div>
 
-        {project.notes && (
-          <section className="mb-28">
-            <div className="grid gap-x-14 gap-y-6 lg:grid-cols-[1fr_1.4fr]">
-              <p className="font-mono text-[11px] uppercase leading-loose tracking-[0.2em] text-primary/60">
-                in the margin
-              </p>
-              <div className="max-w-md">
-                <MarginNotes notes={project.notes} />
-              </div>
-            </div>
-          </section>
-        )}
-
-        <section className="mb-28">
-          <Row
-            label={
-              <>
-                what they
-                <br />
-                trusted me with
-              </>
-            }
+        <div className="relative z-10 space-y-24">
+          <ContentBlock
+            label="what they trusted me with"
+            note="the money path, the releases, the production database"
           >
-            <p className="mb-12 font-serif text-2xl leading-relaxed text-foreground/85 sm:text-[2rem]">
-              The money path, the releases, and the production database.
-            </p>
-            <ItemGrid items={TRUSTED} />
-          </Row>
-        </section>
+            <FigureGrid items={TRUSTED} columns={4} />
+          </ContentBlock>
 
-        <section className="mb-28">
-          <Row
-            label={
-              <>
-                what i
-                <br />
-                built
-              </>
-            }
-          >
-            <ItemGrid items={BUILT} />
-          </Row>
-        </section>
+          <ContentBlock label="what i built">
+            <FigureGrid items={BUILT} />
+          </ContentBlock>
 
-        <section className="mb-28">
-          <Row
-            label={
-              <>
-                how i
-                <br />
-                work on it
-              </>
-            }
-          >
-            <div className="space-y-8">
-              <p className="font-serif text-2xl leading-relaxed text-foreground/85 sm:text-[2rem]">
-                Renders came out warmer than the upload. I measured each stage instead of guessing,
+          <ContentBlock label="how i work on it">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-14">
+              <p className="font-serif text-2xl leading-snug text-foreground/90 sm:text-3xl">
+                renders came out warmer than the upload. i measured each stage instead of guessing,
                 and found seven separate defects.
               </p>
-              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
-                The last one was the frame format: capturing PNG instead of JPEG made the colour
-                exact, at 21% more render time and 27% more render cost. The acceptance test was a
-                re-render of a real customer video.
-              </p>
-              <p className="max-w-2xl text-sm font-light leading-relaxed text-foreground/65">
-                Analytics went the other way. The old design stored the same lifetime counter again
-                and again: 10,254 rows over six months and no usable time series. I wrote down the
-                decision and rebuilt it as an append-only archive.
-              </p>
+              <div className="space-y-5 text-sm font-light leading-relaxed text-foreground/70">
+                <p>
+                  the last one was the frame format: capturing png instead of jpeg made the colour
+                  exact, at 21% more render time and 27% more render cost. the acceptance test was a
+                  re-render of a real customer video.
+                </p>
+                <p>
+                  analytics went the other way. the old design stored the same lifetime counter
+                  again and again: 10,254 rows over six months and no usable time series. i wrote
+                  down the decision and rebuilt it as an append-only archive.
+                </p>
+              </div>
             </div>
-          </Row>
-        </section>
+          </ContentBlock>
 
-        <section className="mb-4">
-          <Row label="written up">
-            <div>
-              {POSTS.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/writing/${post.slug}`}
-                  transitionTypes={["nav-forward"]}
-                  className="group flex items-center justify-between gap-4 border-b border-foreground/8 py-4 text-sm font-light text-foreground/65 transition-colors duration-200 hover:text-foreground/85"
-                >
-                  <SharedElement name={`post-title-${post.slug}`}>
-                    <span>{post.title}</span>
-                  </SharedElement>
-                  <ArrowUpRight className="h-3.5 w-3.5 shrink-0 text-foreground/25 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                </Link>
-              ))}
-            </div>
-          </Row>
-        </section>
+          {project.notes && (
+            <ContentBlock label="notes from building it">
+              <MarginNotes notes={project.notes} />
+            </ContentBlock>
+          )}
 
-        <div>
-          <ProjectDetailMoreProjects slug={project.slug} />
+          {writtenUp.length > 0 && (
+            <ContentBlock label="written up">
+              <ul className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                {writtenUp.map((post) => (
+                  <li key={post.slug}>
+                    <Link
+                      href={`/writing/${post.slug}`}
+                      transitionTypes={["nav-forward"]}
+                      className="group block"
+                    >
+                      <PostCover post={post} />
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </ContentBlock>
+          )}
         </div>
+
+        <ProjectDetailMoreProjects slug={project.slug} />
       </div>
     </AppShell>
   );

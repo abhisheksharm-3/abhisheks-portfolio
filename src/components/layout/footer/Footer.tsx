@@ -28,6 +28,12 @@ const toShortDate = (isoDate: string) => {
   return `${part("day")} ${part("month")}`.toLowerCase();
 };
 
+/** "september 2026" becomes "sep 2026", matching the short dates beside it. */
+const toShortMonth = (duration: string) => {
+  const [month = "", year = ""] = duration.toLowerCase().split(" ");
+  return `${month.slice(0, 3)} ${year}`.trim();
+};
+
 const LABEL_CLASS = "text-[11px] uppercase tracking-[0.2em] font-light text-primary/60";
 const ROW_DATE_CLASS = "shrink-0 pt-0.5 font-mono text-[11px] text-foreground/60";
 const ROW_LINK_CLASS =
@@ -114,7 +120,10 @@ const Lately = () => {
           </LatelyRow>
         )}
         {lastShipped && (
-          <LatelyRow verb="shipped" when={lastShipped.duration?.toLowerCase()}>
+          <LatelyRow
+            verb="shipped"
+            when={lastShipped.duration && toShortMonth(lastShipped.duration)}
+          >
             <Link
               href={`/projects/${lastShipped.slug}`}
               transitionTypes={["nav-forward"]}
@@ -138,7 +147,7 @@ const Lately = () => {
 const Postscript = () => (
   <div className="flex min-w-0 flex-col gap-3.5 text-sm text-foreground/60">
     <span className={LABEL_CLASS}>p.s.</span>
-    <p className="max-w-[34ch] border-t border-foreground/10 pt-3">
+    <p className="border-t border-foreground/10 pt-3">
       the fastest way to reach me is{" "}
       <a
         href={`mailto:${CONTACT_INFO.email}`}

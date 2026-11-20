@@ -1,48 +1,28 @@
 import type { ProjectType } from "@/lib/types/components";
 
 /**
- * Horizontal metadata band for a project detail page: role / client / duration
- * as editorial columns, plus the stack. Replaces the old boxed sidebar.
+ * The facts of a project in one row across the page: role, client, dates and stack, each in its
+ * own cell with room around it. Cells without a value are left out.
  */
 export function ProjectDetailMeta({ project }: { project: ProjectType }) {
   const details = [
     { label: "role", value: project.role },
     { label: "client", value: project.client },
-    { label: "duration", value: project.duration },
+    { label: "dates", value: project.duration },
+    { label: "stack", value: project.tags.join(", ") },
   ].filter((detail) => detail.value);
 
   return (
-    <div className="border-t border-foreground/8 pt-8">
-      {details.length > 0 && (
-        <div className="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-3">
-          {details.map((detail) => (
-            <div key={detail.label} className="flex flex-col gap-1.5">
-              <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/60">
-                {detail.label}
-              </span>
-              <span className="text-sm font-light text-foreground/75">{detail.value}</span>
-            </div>
-          ))}
+    <dl className="grid grid-cols-2 border-y border-foreground/10 md:grid-cols-4">
+      {details.map((detail) => (
+        <div
+          key={detail.label}
+          className="flex flex-col gap-1.5 border-foreground/10 py-5 pr-5 md:border-l md:pl-5 md:first:border-l-0 md:first:pl-0"
+        >
+          <dt className="font-mono text-[11px] text-foreground/60">{detail.label}</dt>
+          <dd className="text-sm font-light leading-relaxed text-foreground/85">{detail.value}</dd>
         </div>
-      )}
-
-      {project.tags.length > 0 && (
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
-          <span className="text-[11px] uppercase tracking-[0.2em] font-light text-primary/60">
-            stack
-          </span>
-          <div className="flex flex-wrap gap-1.5">
-            {project.tags.map((tag) => (
-              <span
-                key={tag}
-                className="border border-foreground/15 px-2.5 py-0.5 text-[11px] font-light text-foreground/60"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
+      ))}
+    </dl>
   );
 }

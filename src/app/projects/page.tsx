@@ -1,35 +1,28 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
-import { type ComponentType, useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { AppShell } from "@/components/layout/AppShell";
-import { ProjectFeature } from "@/components/sections/projects/ProjectFeature";
-import { ProjectListRow } from "@/components/sections/projects/ProjectListRow";
 import { ProjectsCTA } from "@/components/sections/projects/ProjectsCTA";
 import { ProjectsFilters } from "@/components/sections/projects/ProjectsFilter";
-import { ProjectsHeader } from "@/components/sections/projects/ProjectsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
-import { SharedElement } from "@/components/shared/SharedElement";
+import { ContentBlock } from "@/components/shared/ContentBlock";
+import { PageHeader } from "@/components/shared/PageHeader";
+import { ProjectTile } from "@/components/shared/ProjectTile";
+import { ProjectVisual } from "@/components/shared/ProjectVisual";
 import { archivedProjects, selectedProjects } from "@/data/projects";
-import { SPACING_STANDARDS } from "@/lib/config/spacing-standards";
-import type { ProjectRowPropsType, ProjectType } from "@/lib/types/components";
+import { SITE_MEDIA } from "@/data/site-media";
+import type { ProjectType } from "@/lib/types/components";
 
-const CURRENT_YEAR = selectedProjects[0].year;
+const FADE = { duration: 0.35, ease: [0.22, 1, 0.36, 1] } as const;
 
 /**
- * One tier of the filtered list. Rows fade out and in as the filter changes and the rest of the
- * page reflows around them. Renders nothing when the filter leaves the tier empty.
+ * A grid of project tiles for one tier. Tiles fade as the filter adds or removes them and the
+ * rest reflow into place. Renders nothing when the filter leaves the tier empty.
  */
-const ProjectTier = ({
-  projects,
-  Row,
-  className,
-}: {
-  projects: ProjectType[];
-  Row: ComponentType<ProjectRowPropsType>;
-  className: string;
-}) =>
+const TileGrid = ({ projects, className }: { projects: ProjectType[]; className: string }) =>
   projects.length > 0 && (
     <motion.ul layout className={className}>
       <AnimatePresence initial={false}>
@@ -40,9 +33,9 @@ const ProjectTier = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            transition={FADE}
           >
-            <Row project={project} />
+            <ProjectTile project={project} />
           </motion.li>
         ))}
       </AnimatePresence>
@@ -50,13 +43,14 @@ const ProjectTier = ({
   );
 
 /**
- * Renders the projects page: this year's work as editorial rows, older work as a hairline list,
- * and early learning work as text. Filter changes run in a transition.
- * @returns {JSX.Element} The ProjectsPage component.
+ * The projects page: the header beside the photo from the night credify won, the area filter,
+ * what's running now and what shipped as picture-first tiles, then earlier work as small
+ * thumbnails. Filter changes run in a transition.
  */
 const ProjectsPage = () => {
   const [activeFilter, setActiveFilter] = useState("all");
   const [isPending, startTransition] = useTransition();
+  const { gurugramNight } = SITE_MEDIA;
 
   const filteredProjects = useMemo(
     () =>
@@ -65,72 +59,89 @@ const ProjectsPage = () => {
         : selectedProjects.filter((project) => project.category === activeFilter),
     [activeFilter],
   );
-
-  const currentProjects = filteredProjects.filter((project) => project.year === CURRENT_YEAR);
-  const pastProjects = filteredProjects.filter((project) => project.year !== CURRENT_YEAR);
-
-  const handleFilterChange = (filter: string) => {
-    startTransition(() => {
-      setActiveFilter(filter);
-    });
-  };
+  const running = filteredProjects.filter((project) => project.isBuilding);
+  const shipped = filteredProjects.filter((project) => !project.isBuilding);
 
   return (
     <AppShell>
-      <div className="pt-36 pb-16 px-6 sm:px-10 lg:px-24 relative overflow-hidden">
+      <div className="relative overflow-hidden px-6 pt-36 pb-16 sm:px-10 lg:px-24">
         <ProjectsPageBackground />
 
-        <ProjectsHeader />
+        <div className="relative z-10 grid grid-cols-1 items-end gap-8 md:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] md:gap-12">
+          <PageHeader
+            eyebrow="project archive"
+            title="things i've built"
+            intro="client work, web apps, android apps and ai tools since 2023, newest first. the ones i stopped are on the graveyard."
+            className="mb-0 sm:mb-0"
+          />
+          <figure className="flex flex-col gap-2">
+            <div className="relative aspect-[4/3] overflow-hidden border border-foreground/10">
+              <Image
+                src={gurugramNight.src}
+                alt={gurugramNight.alt}
+                fill
+                priority
+                sizes="(min-width: 768px) 40vw, 90vw"
+                className="object-cover"
+              />
+            </div>
+            <figcaption className="font-mono text-[11px] text-foreground/60">
+              {gurugramNight.caption}
+            </figcaption>
+          </figure>
+        </div>
 
-        <div className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
+        <div className="relative z-10 mt-14 mb-12">
           <ProjectsFilters
             activeFilter={activeFilter}
-            setActiveFilter={handleFilterChange}
+            setActiveFilter={(filter) => startTransition(() => setActiveFilter(filter))}
             projects={selectedProjects}
             filteredCount={filteredProjects.length}
             isPending={isPending}
           />
         </div>
 
-        <ProjectTier projects={currentProjects} Row={ProjectFeature} className="mb-12" />
+        <div className="relative z-10 space-y-20 sm:space-y-24">
+          {running.length > 0 && (
+            <ContentBlock label="running now">
+              <TileGrid
+                projects={running}
+                className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-4"
+              />
+            </ContentBlock>
+          )}
 
-        <ProjectTier
-          projects={pastProjects}
-          Row={ProjectListRow}
-          className={`border-b border-foreground/8 ${SPACING_STANDARDS.CONTENT.SECTION_SPACING}`}
-        />
+          {shipped.length > 0 && (
+            <ContentBlock label="shipped">
+              <TileGrid
+                projects={shipped}
+                className="grid grid-cols-1 gap-x-5 gap-y-12 sm:grid-cols-2 lg:grid-cols-3"
+              />
+            </ContentBlock>
+          )}
 
-        {activeFilter === "all" && (
-          <section className={SPACING_STANDARDS.CONTENT.SECTION_SPACING}>
-            <h2 className="text-[11px] text-primary/60 uppercase tracking-[0.2em] font-light mb-1">
-              earlier work
-            </h2>
-            <p className="text-xs text-foreground/60 font-light mb-6">
-              where i learned. kept for the record, not the resume.
-            </p>
-            <ul className="divide-y divide-foreground/8 border-y border-foreground/8">
-              {archivedProjects.map((project) => (
-                <li key={project.slug}>
-                  <Link
-                    href={`/projects/${project.slug}`}
-                    transitionTypes={["nav-forward"]}
-                    className="group flex items-baseline justify-between gap-4 py-3 text-sm font-light"
-                  >
-                    <SharedElement name={`project-title-${project.slug}`}>
-                      <span className="text-foreground/70 group-hover:text-foreground transition-colors duration-200">
-                        {project.title}
+          {activeFilter === "all" && (
+            <ContentBlock label="earlier work" note="where i learned, kept for the record">
+              <ul className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-4 lg:grid-cols-6">
+                {archivedProjects.map((project) => (
+                  <li key={project.slug}>
+                    <Link
+                      href={`/projects/${project.slug}`}
+                      transitionTypes={["nav-forward"]}
+                      className="group block"
+                    >
+                      <ProjectVisual project={project} />
+                      <span className="mt-2 flex items-baseline justify-between gap-2 font-mono text-[11px] text-foreground/60 transition-colors duration-200 group-hover:text-foreground">
+                        <span className="truncate">{project.title.toLowerCase()}</span>
+                        <span className="shrink-0">{project.year}</span>
                       </span>
-                    </SharedElement>
-                    <span className="hidden sm:block flex-1 text-xs text-foreground/60 truncate">
-                      {project.description}
-                    </span>
-                    <span className="text-xs text-foreground/60 tabular-nums">{project.year}</span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </ContentBlock>
+          )}
+        </div>
 
         <ProjectsCTA />
       </div>

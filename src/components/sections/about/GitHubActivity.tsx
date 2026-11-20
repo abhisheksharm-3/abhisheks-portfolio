@@ -88,9 +88,6 @@ export const GitHubActivity = () => {
 
   return (
     <div className="relative">
-      <h2 className="text-2xl font-serif text-foreground mb-6">github activity</h2>
-      <div className="h-px bg-primary/10 mb-8" />
-
       {isLoading ? (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">

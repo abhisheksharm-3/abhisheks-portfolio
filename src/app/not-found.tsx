@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { PathSuggestion } from "@/components/shared/PathSuggestion";
 import { StatePage } from "@/components/shared/StatePage";
+import { SITE_MEDIA } from "@/data/site-media";
 
 const LINKS = [
   { href: "/", label: "home" },
@@ -14,31 +15,33 @@ export const metadata = {
   title: "Not found | Abhishek Sharma",
 };
 
-/** 404. Same language as every other page: no gradients, no shouting. */
+/** 404: the title over a clip from the exhibit's glass room, then the typo correction and the pages that still work. */
 const NotFound = () => (
   <StatePage
-    body="the link is either stale or i moved something. these still work:"
     eyebrow="404"
-    title="this page doesn't exist"
+    title="this page is lost in here somewhere."
+    media={SITE_MEDIA.notFound}
+    overlay={
+      <Suspense fallback={null}>
+        <PathSuggestion onMedia />
+      </Suspense>
+    }
   >
-    <Suspense fallback={null}>
-      <PathSuggestion />
-    </Suspense>
-    <ul className="divide-y divide-foreground/8 border-y border-foreground/8">
+    <nav
+      aria-label="pages that still work"
+      className="flex flex-wrap items-baseline gap-x-6 gap-y-2 font-mono text-xs text-foreground/60"
+    >
+      <span>these still work:</span>
       {LINKS.map((link) => (
-        <li key={link.href}>
-          <Link
-            className="group flex items-center justify-between py-3 text-sm font-light text-foreground/65 hover:text-foreground/90 transition-colors duration-200"
-            href={link.href}
-          >
-            {link.label}
-            <span className="text-foreground/40 group-hover:text-foreground/60 group-hover:translate-x-0.5 transition-[color,transform] duration-200">
-              →
-            </span>
-          </Link>
-        </li>
+        <Link
+          key={link.href}
+          className="text-foreground/85 underline decoration-foreground/20 underline-offset-4 transition-colors duration-200 hover:decoration-foreground"
+          href={link.href}
+        >
+          {link.label}
+        </Link>
       ))}
-    </ul>
+    </nav>
   </StatePage>
 );
 

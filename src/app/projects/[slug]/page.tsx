@@ -4,18 +4,19 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound, useParams } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
-import { ProjectDetailImage } from "@/components/sections/projects/ProjectDetailImage";
 import { ProjectDetailMeta } from "@/components/sections/projects/ProjectDetailMeta";
 import { ProjectDetailMoreProjects } from "@/components/sections/projects/ProjectDetailMoreProjects";
 import { ProjectDetailOverview } from "@/components/sections/projects/ProjectDetailOverview";
 import { ProjectDetailScreens } from "@/components/sections/projects/ProjectDetailScreens";
 import { ProjectDetailHeader } from "@/components/sections/projects/ProjectDetailsHeader";
 import { ProjectsPageBackground } from "@/components/sections/projects/ProjectsPageBackground";
+import { ContentBlock } from "@/components/shared/ContentBlock";
+import { ProjectVisual } from "@/components/shared/ProjectVisual";
 import { projects } from "@/data/projects";
 
 /**
- * Renders the detailed view for a single project based on the URL slug.
- * @returns {JSX.Element} The ProjectDetailPage component.
+ * A project's page: its header beside its picture, the facts in one row, what it does, its
+ * screens when it has them, and the next project as a picture.
  */
 const DetailedProjectPage = () => {
   const params = useParams();
@@ -41,23 +42,24 @@ const DetailedProjectPage = () => {
           </Link>
         </div>
 
-        <div className="mb-10">
+        <div className="relative z-10 mb-14 grid grid-cols-1 items-end gap-10 md:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] md:gap-12">
           <ProjectDetailHeader project={project} />
+          <ProjectVisual project={project} />
         </div>
 
-        <div className="mb-12">
+        <div className="mb-16">
           <ProjectDetailMeta project={project} />
         </div>
 
-        {project.screens ? (
-          <ProjectDetailScreens screens={project.screens} />
-        ) : (
-          project.imageSrc && (
-            <ProjectDetailImage src={project.imageSrc} alt={`screenshot of ${project.title}`} />
-          )
-        )}
-
         <ProjectDetailOverview project={project} />
+
+        {project.screens && (
+          <div className="mb-16">
+            <ContentBlock label="screens">
+              <ProjectDetailScreens screens={project.screens} />
+            </ContentBlock>
+          </div>
+        )}
 
         <ProjectDetailMoreProjects slug={project.slug} />
       </div>
