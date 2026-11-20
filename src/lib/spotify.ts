@@ -11,7 +11,6 @@ const TOKEN_URL = "https://accounts.spotify.com/api/token";
 const API_URL = "https://api.spotify.com/v1";
 const TOP_LIMIT = 5;
 const UP_NEXT_LIMIT = 3;
-const RECENT_LIMIT = 50;
 
 interface SpotifyImageJsonType {
   url: string;
@@ -28,7 +27,6 @@ interface SpotifyArtistJsonType {
 interface SpotifyTrackJsonType extends SpotifyArtistJsonType {
   type: string;
   artists: SpotifyArtistJsonType[];
-  duration_ms: number;
   album: { images: SpotifyImageJsonType[] };
 }
 
@@ -107,7 +105,7 @@ const isTrack = (item: SpotifyTrackJsonType | null | undefined): item is Spotify
   item?.type === "track";
 
 /**
- * The track playing right now with its progress, device and the next few in the queue; or, when
+ * The track playing right now with its device and the next few in the queue; or, when
  * nothing (or an ad or a podcast) is playing, the last track played. Titles keep Spotify's casing.
  */
 export const fetchListening = async (): Promise<SpotifyListeningType> => {
@@ -118,8 +116,6 @@ export const fetchListening = async (): Promise<SpotifyListeningType> => {
     return {
       ...toTrack(player.item),
       playedAt: null,
-      progressMs: player.progress_ms ?? 0,
-      durationMs: player.item.duration_ms,
       device: player.device?.type?.toLowerCase() ?? null,
       upNext: (queue?.queue ?? []).filter(isTrack).slice(0, UP_NEXT_LIMIT).map(toTrack),
     };
@@ -130,34 +126,19 @@ export const fetchListening = async (): Promise<SpotifyListeningType> => {
     ? {
         ...toTrack(last.track),
         playedAt: last.played_at,
-        progressMs: null,
-        durationMs: last.track.duration_ms,
         device: null,
         upNext: [],
       }
     : null;
 };
 
-const IST_HOUR = new Intl.DateTimeFormat("en-IN", {
-  timeZone: "Asia/Kolkata",
-  hour: "numeric",
-  hourCycle: "h23",
-});
-
-/** Counts plays per hour of the day in Pune time, index 0 being midnight to 1am. */
-const toHourCounts = (playedAts: string[]) => {
-  const counts = Array.from({ length: 24 }, () => 0);
-  for (const playedAt of playedAts) counts[Number(IST_HOUR.format(new Date(playedAt)))] += 1;
-  return counts;
-};
-
 const topOf = (type: "artists" | "tracks", range: string, token: string) =>
   getJson(`/me/top/${type}?time_range=${range}&limit=${TOP_LIMIT}`, token);
 
 /**
- * Top tracks over four weeks, six months and a year; top artists over four weeks and a year; the
- * newest liked songs; and the hours of the last 50 plays. Cached for hours, so the about page
- * prerenders it and Spotify is asked a few times a day at most. Resolves null when the top lists
+ * Top tracks over four weeks, six months and a year; top artists over four weeks and a year; and
+ * the newest liked songs. Cached for hours, so the about page prerenders it and Spotify is asked a
+ * few times a day at most. Resolves null when the top lists
  * are unavailable, and the page hides the section.
  */
 export const fetchTopListening = async (): Promise<SpotifyTopType | null> => {
@@ -165,7 +146,7 @@ export const fetchTopListening = async (): Promise<SpotifyTopType | null> => {
   cacheLife("hours");
   try {
     const token = await getAccessToken();
-    const [tracksMonth, tracksHalfYear, tracksYear, artistsMonth, artistsYear, liked, recent] =
+    const [tracksMonth, tracksHalfYear, tracksYear, artistsMonth, artistsYear, liked] =
       await Promise.all([
         topOf("tracks", "short_term", token),
         topOf("tracks", "medium_term", token),
@@ -173,11 +154,6 @@ export const fetchTopListening = async (): Promise<SpotifyTopType | null> => {
         topOf("artists", "short_term", token),
         topOf("artists", "long_term", token),
         orElse(getJson(`/me/tracks?limit=${TOP_LIMIT}`, token), null, "liked songs"),
-        orElse(
-          getJson(`/me/player/recently-played?limit=${RECENT_LIMIT}`, token),
-          null,
-          "recent plays",
-        ),
       ]);
     return {
       tracksMonth: tracksMonth.items.map(toTrack),
@@ -190,9 +166,6 @@ export const fetchTopListening = async (): Promise<SpotifyTopType | null> => {
           ...toTrack(entry.track),
           addedAt: entry.added_at,
         }),
-      ),
-      hourCounts: toHourCounts(
-        (recent?.items ?? []).map((entry: { played_at: string }) => entry.played_at),
       ),
     };
   } catch (error) {

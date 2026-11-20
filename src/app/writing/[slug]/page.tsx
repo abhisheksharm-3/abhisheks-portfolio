@@ -6,11 +6,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AppShell } from "@/components/layout/AppShell";
 import { SharedElement } from "@/components/shared/SharedElement";
+import { PostByline } from "@/components/writing/PostByline";
+import { PostCover } from "@/components/writing/PostCover";
 import { PostCta } from "@/components/writing/PostCta";
 import { FAQ_ID, PostFaq } from "@/components/writing/PostFaq";
 import { PostToc } from "@/components/writing/PostToc";
 import { projects } from "@/data/projects";
 import { getAllPosts, getPostBySlug } from "@/lib/content/loader";
+import { toPostOgUrl } from "@/lib/content/og-url";
 import { breadcrumbSchema, JsonLd } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/site";
 
@@ -29,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!post) return {};
 
   const { frontmatter } = post;
-  const ogUrl = `/og?title=${encodeURIComponent(frontmatter.title)}&tag=${encodeURIComponent(frontmatter.tags[0] ?? "")}&subhead=${encodeURIComponent(frontmatter.subhead)}&date=${encodeURIComponent(new Date(frontmatter.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }))}&min=${frontmatter.readingTime}`;
+  const ogUrl = toPostOgUrl(frontmatter);
 
   return {
     title: `${frontmatter.title} | Abhishek Sharma`,
@@ -105,6 +108,10 @@ export default async function PostPage({ params }: Props) {
   if (!post) notFound();
 
   const { frontmatter, content, toc } = post;
+  const allPosts = await getAllPosts();
+  const index = allPosts.findIndex((entry) => entry.slug === slug);
+  const meta = allPosts[index];
+  const next = allPosts.length > 1 ? allPosts[(index + 1) % allPosts.length] : undefined;
   const schemas = buildJsonLd(post);
   const project = projectForPost(slug);
   const tocEntries = frontmatter.faqs?.length
@@ -175,7 +182,11 @@ export default async function PostPage({ params }: Props) {
               {frontmatter.subhead}
             </p>
 
-            <div className="h-px bg-primary/10 w-full mb-8" />
+            {meta && (
+              <div className="mb-10">
+                <PostCover post={meta} />
+              </div>
+            )}
 
             <PostToc entries={tocEntries} />
 
@@ -217,6 +228,8 @@ export default async function PostPage({ params }: Props) {
                 </div>
               </>
             )}
+
+            <PostByline next={next} />
 
             <PostCta searchIntent={frontmatter.searchIntent} />
           </div>

@@ -16,6 +16,31 @@ export interface MobileNavLinkPropsType {
 
 export type ProjectCategory = "ai" | "web" | "mobile";
 
+/** One row of a project's case file: what i did on it, and the figure that came from it. */
+export interface ProjectCaseRowType {
+  did: string;
+  detail: string;
+  figure: string;
+  figureLabel: string;
+}
+
+/** Something the client's side said to me, attributed by role only, never by name. */
+export interface ProjectQuoteType {
+  text: string;
+  who: string;
+  when: string;
+}
+
+/** The case file the about page's work reading tells for one client project. */
+export interface ProjectCaseFileType {
+  /** The scale line beside the title, e.g. customers and revenue. */
+  scale: string;
+  /** The home page's receipt: what i own on the project and what runs through it, as short label/value lines. */
+  receipt: { label: string; value: string }[];
+  rows: ProjectCaseRowType[];
+  quotes?: ProjectQuoteType[];
+}
+
 export interface ProjectType {
   title: string;
   slug: string;
@@ -44,18 +69,8 @@ export interface ProjectType {
   client?: string;
   duration?: string;
   isBuilding?: boolean;
-}
-
-export interface ProjectsPropsType {
-  headline?: string;
-  showCta?: boolean;
-  /** Rendered under the project grid, inside the section's spacing. */
-  footer?: ReactNode;
-}
-
-/** Props for a project row or card: the project and nothing else. */
-export interface ProjectRowPropsType {
-  project: ProjectType;
+  /** Told as the case file on the about page's work reading. One project carries it. */
+  caseFile?: ProjectCaseFileType;
 }
 
 /** One area of work: a single sentence of proof, the page that shows it, and its tools as plain text. */
@@ -136,18 +151,6 @@ export interface MarginNotesPropsType {
   notes: ProjectNoteType[];
 }
 
-/** One row of the "elsewhere" list: a label, the address shown, and where it goes. */
-export interface ElsewhereLinkType {
-  label: string;
-  href: string;
-  displayUrl: string;
-}
-
-/** Props for ElsewhereLinks. */
-export interface ElsewhereLinksPropsType {
-  links: readonly ElsewhereLinkType[];
-}
-
 /** One app screen on a project page: the file, its pixel size, and a caption naming what it shows. */
 export interface ProjectScreenType {
   src: string;
@@ -185,20 +188,9 @@ export interface PhotoType {
   video?: string;
 }
 
-/** Props for StripVideo: the loop, its poster, and the label read in place of the moving image. */
-export interface StripVideoPropsType {
+/** Props for LoopVideo: the loop, its poster, and the label read in place of the moving image. */
+export interface LoopVideoPropsType {
   video: string;
   poster: string;
   alt: string;
-}
-
-/** One row of a hairline definition list: a short term and the detail beside it. */
-export interface DefinitionRowType {
-  term: string;
-  detail: ReactNode;
-}
-
-/** Props for DefinitionRows. */
-export interface DefinitionRowsPropsType {
-  rows: readonly DefinitionRowType[];
 }

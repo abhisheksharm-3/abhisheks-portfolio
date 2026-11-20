@@ -20,6 +20,7 @@ import { CONTACT_INFO } from "@/data/contact";
 import { CONTACT_FORM_SCHEMA } from "@/data/contact-schema";
 import { submitContactForm } from "@/lib/actions/contact";
 import type { ContactFormDataType } from "@/lib/types/components";
+import { PRIMARY_BUTTON } from "@/lib/ui/button-classes";
 
 /**
  * Field chrome. `scroll-mt-32` keeps a field that validation just focused clear of the fixed
@@ -81,10 +82,6 @@ export const SendMessageCard = () => {
 
   return (
     <div>
-      <p className="text-[11px] text-primary/60 uppercase tracking-[0.2em] mb-10 font-light">
-        or write here
-      </p>
-
       <noscript>
         <p className="mb-8 text-sm font-light text-foreground/65">
           this form needs javascript to submit. email{" "}
@@ -109,32 +106,52 @@ export const SendMessageCard = () => {
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-9">
+          <div className="grid grid-cols-1 gap-9 md:grid-cols-2 md:gap-x-10">
+            <div className="flex flex-col gap-9">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field: f }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className={label}>name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="your name" autoComplete="name" className={field} {...f} />
+                    </FormControl>
+                    <FormMessage className="text-xs font-light" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field: f }) => (
+                  <FormItem className="space-y-2">
+                    <FormLabel className={label}>email</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        autoComplete="email"
+                        placeholder="you@example.com"
+                        className={field}
+                        {...f}
+                      />
+                    </FormControl>
+                    <FormMessage className="text-xs font-light" />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
-              name="name"
+              name="message"
               render={({ field: f }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel className={label}>name</FormLabel>
+                <FormItem className="flex flex-col space-y-2">
+                  <FormLabel className={label}>message</FormLabel>
                   <FormControl>
-                    <Input placeholder="your name" autoComplete="name" className={field} {...f} />
-                  </FormControl>
-                  <FormMessage className="text-xs font-light" />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field: f }) => (
-                <FormItem className="space-y-2">
-                  <FormLabel className={label}>email</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="email"
-                      autoComplete="email"
-                      placeholder="you@example.com"
-                      className={field}
+                    <Textarea
+                      placeholder="what's the project, role, or idea?"
+                      className={`${field} min-h-40 resize-y md:h-full`}
                       {...f}
                     />
                   </FormControl>
@@ -144,30 +161,12 @@ export const SendMessageCard = () => {
             />
           </div>
 
-          <FormField
-            control={form.control}
-            name="message"
-            render={({ field: f }) => (
-              <FormItem className="space-y-2">
-                <FormLabel className={label}>message</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="what's the project, role, or idea?"
-                    className={`${field} min-h-40 resize-y`}
-                    {...f}
-                  />
-                </FormControl>
-                <FormMessage className="text-xs font-light" />
-              </FormItem>
-            )}
-          />
-
           <div className="flex items-center gap-6 pt-2">
             <button
               type="submit"
               disabled={isPending}
               aria-busy={isPending}
-              className="inline-flex items-center gap-2 text-sm text-foreground/65 hover:text-foreground transition-colors duration-200 group disabled:opacity-60 disabled:cursor-default cursor-pointer font-light border border-foreground/30 hover:border-foreground/50 focus-visible:outline-none focus-visible:border-foreground/60 focus-visible:ring-1 focus-visible:ring-foreground/30 px-5 py-2.5"
+              className={`group ${PRIMARY_BUTTON}`}
             >
               {isPending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               <TextMorph>{submitLabel(isPending, submitStatus)}</TextMorph>

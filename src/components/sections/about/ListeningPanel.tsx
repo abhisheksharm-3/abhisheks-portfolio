@@ -1,9 +1,8 @@
 "use client";
 
 /**
- * The about page's Spotify data: most played tracks as covers that play in Spotify's player when
- * chosen, most played artists, the newest liked songs, and the hours the last 50 plays happened.
- * Names keep Spotify's casing.
+ * The about page's Spotify lists: most played tracks as covers that play in Spotify's player when
+ * chosen, most played artists, the newest liked songs. Names keep Spotify's casing.
  */
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
@@ -12,7 +11,8 @@ import { SpotifyEmbed } from "@/components/sections/about/SpotifyEmbed";
 import type { SpotifyItemType, SpotifyTopType, SpotifyTrackType } from "@/lib/types/spotify";
 import { cn } from "@/lib/utils";
 
-const LABEL_CLASS = "text-[11px] uppercase tracking-[0.2em] font-light text-primary/60";
+/** The heading of each list inside the listening section. */
+export const LIST_HEADING_CLASS = "font-serif text-xl text-foreground/90";
 const EASE_OUT: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 const TRACK_RANGES = [
@@ -28,7 +28,7 @@ const ARTIST_RANGES = [
 
 const SHORT_DATE = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short" });
 
-/** A section label with a row of range buttons beside it. */
+/** A list heading with a row of range buttons beside it. */
 const RangeHeader = <KeyType extends string>({
   title,
   ranges,
@@ -41,7 +41,7 @@ const RangeHeader = <KeyType extends string>({
   onChange: (key: KeyType) => void;
 }) => (
   <div className="mb-5 flex flex-wrap items-baseline gap-x-6 gap-y-2">
-    <p className={LABEL_CLASS}>{title}</p>
+    <h3 className={LIST_HEADING_CLASS}>{title}</h3>
     <div className="flex gap-4 font-mono text-[11px]">
       {ranges.map(({ key, label }) => (
         <button
@@ -128,7 +128,7 @@ const CoverRow = ({
 );
 
 const ArtistRow = ({ artists }: { artists: SpotifyItemType[] }) => (
-  <ol className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 lg:grid-cols-5">
+  <ol className="grid grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
     {artists.map((artist, index) => (
       <li key={artist.id}>
         <a
@@ -138,13 +138,13 @@ const ArtistRow = ({ artists }: { artists: SpotifyItemType[] }) => (
           className="group flex items-center gap-3"
         >
           {artist.image && (
-            <span className="relative size-12 shrink-0 overflow-hidden rounded-full border border-foreground/10">
-              <Image src={artist.image} alt="" fill sizes="48px" className="object-cover" />
+            <span className="relative size-14 shrink-0 overflow-hidden rounded-full border border-foreground/10">
+              <Image src={artist.image} alt="" fill sizes="56px" className="object-cover" />
             </span>
           )}
           <span className="min-w-0">
             <span className="block font-mono text-[11px] text-foreground/60">0{index + 1}</span>
-            <span className="block truncate text-sm text-foreground/85 transition-colors duration-200 group-hover:text-foreground">
+            <span className="block truncate text-foreground/85 transition-colors duration-200 group-hover:text-foreground">
               {artist.name}
             </span>
           </span>
@@ -154,79 +154,51 @@ const ArtistRow = ({ artists }: { artists: SpotifyItemType[] }) => (
   </ol>
 );
 
-const LikedList = ({ liked }: { liked: SpotifyTopType["liked"] }) => (
-  <ol className="divide-y divide-primary/10 border-y border-primary/10">
-    {liked.map((track) => (
-      <li key={track.id}>
-        <a
-          href={track.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group flex items-center gap-4 py-3"
-        >
-          {track.image && (
-            <span className="relative size-10 shrink-0 border border-foreground/10">
-              <Image src={track.image} alt="" fill sizes="40px" className="object-cover" />
+/** The newest liked songs, each with its cover and the day it was liked. */
+export const LikedList = ({ liked }: { liked: SpotifyTopType["liked"] }) => (
+  <div>
+    <h3 className={`${LIST_HEADING_CLASS} mb-4`}>just liked</h3>
+    <ol className="border-b border-primary/10">
+      {liked.map((track) => (
+        <li key={track.id} className="border-t border-primary/10">
+          <a
+            href={track.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-4 py-2.5"
+          >
+            {track.image && (
+              <span className="relative size-10 shrink-0 border border-foreground/10">
+                <Image src={track.image} alt="" fill sizes="40px" className="object-cover" />
+              </span>
+            )}
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-sm text-foreground/85 transition-colors duration-200 group-hover:text-foreground">
+                {track.name}
+              </span>
+              <span className="block truncate text-xs font-light text-foreground/60">
+                {track.artists}
+              </span>
             </span>
-          )}
-          <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm text-foreground/85 transition-colors duration-200 group-hover:text-foreground">
-              {track.name}
+            <span className="shrink-0 font-mono text-[11px] text-foreground/60">
+              {SHORT_DATE.format(new Date(track.addedAt)).toLowerCase()}
             </span>
-            <span className="block truncate text-xs font-light text-foreground/60">
-              {track.artists}
-            </span>
-          </span>
-          <span className="shrink-0 font-mono text-[11px] text-foreground/60">
-            {SHORT_DATE.format(new Date(track.addedAt)).toLowerCase()}
-          </span>
-        </a>
-      </li>
-    ))}
-  </ol>
+          </a>
+        </li>
+      ))}
+    </ol>
+  </div>
 );
-
-const HOURS = Array.from({ length: 24 }, (_, hour) => hour);
-const HOUR_TICKS = [0, 6, 12, 18];
-
-/** One column per hour of the day in Pune time, darker for more of the last 50 plays. */
-const HourStrip = ({ counts }: { counts: number[] }) => {
-  const peak = Math.max(...counts, 1);
-  const busiest = counts.indexOf(peak);
-  return (
-    <div>
-      <div
-        role="img"
-        aria-label={`last 50 plays by hour, most around ${busiest}:00`}
-        className="grid h-16 grid-cols-24 items-end gap-0.5"
-      >
-        {HOURS.map((hour) => (
-          <span
-            key={hour}
-            title={`${hour}:00 · ${counts[hour]} plays`}
-            style={{ height: `${Math.max((counts[hour] / peak) * 100, 4)}%` }}
-            className={counts[hour] ? "bg-foreground/50" : "bg-foreground/8"}
-          />
-        ))}
-      </div>
-      <div className="mt-2 grid grid-cols-4 font-mono text-[11px] text-foreground/60">
-        {HOUR_TICKS.map((hour) => (
-          <span key={hour}>{String(hour).padStart(2, "0")}:00</span>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 type TrackRangeType = (typeof TRACK_RANGES)[number]["key"];
 type ArtistRangeType = (typeof ARTIST_RANGES)[number]["key"];
 
+/** On repeat and most played artists, each with its own range switch. */
 export const ListeningPanel = ({ top }: { top: SpotifyTopType }) => {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [trackRange, setTrackRange] = useState<TrackRangeType>("tracksMonth");
   const [artistRange, setArtistRange] = useState<ArtistRangeType>("artistsMonth");
   const playing = top[trackRange].find((track) => track.id === playingId);
-  const hasPlays = top.hourCounts.some(Boolean);
 
   return (
     <div className="space-y-14">
@@ -269,23 +241,6 @@ export const ListeningPanel = ({ top }: { top: SpotifyTopType }) => {
           <ArtistRow artists={top[artistRange]} />
         </Swap>
       </div>
-
-      {(top.liked.length > 0 || hasPlays) && (
-        <div className="grid grid-cols-1 gap-14 md:grid-cols-2 md:gap-16">
-          {top.liked.length > 0 && (
-            <div>
-              <p className={`${LABEL_CLASS} mb-5`}>just liked</p>
-              <LikedList liked={top.liked} />
-            </div>
-          )}
-          {hasPlays && (
-            <div>
-              <p className={`${LABEL_CLASS} mb-5`}>when i listen · last 50 plays, ist</p>
-              <HourStrip counts={top.hourCounts} />
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 };

@@ -8,3 +8,11 @@ export const toListenedWhen = (playedAt: string | null) => {
   const hours = Math.round(minutes / 60);
   return hours < 24 ? `${hours}h ago` : `${Math.round(hours / 24)}d ago`;
 };
+
+const DEVICE_LABELS: Record<string, string> = {
+  computer: "on my laptop",
+  smartphone: "on my phone",
+};
+
+/** Spotify's device type as a phrase: "computer" becomes "on my laptop", anything else "on a <type>". */
+export const toDeviceLabel = (device: string) => DEVICE_LABELS[device] ?? `on a ${device}`;

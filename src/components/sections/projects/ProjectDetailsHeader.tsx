@@ -1,18 +1,22 @@
 import { RiGithubLine } from "@remixicon/react";
 import { ExternalLink } from "lucide-react";
 import { SharedElement } from "@/components/shared/SharedElement";
+import { PROJECT_CATEGORIES } from "@/data/projects";
+import { toSince } from "@/lib/project-dates";
 import type { ProjectType } from "@/lib/types/components";
 
 /**
- * Editorial header for a project detail page: eyebrow, serif title, divider,
- * the description as a serif italic lede, and quiet action links. Mirrors the shared PageHeader rhythm used
- * across the rest of the site.
+ * Header for a project page: its area and dates in mono, the serif title, the description as a
+ * serif italic lede, and quiet action links.
  */
 export function ProjectDetailHeader({ project }: { project: ProjectType }) {
+  const categoryLabel = PROJECT_CATEGORIES.find(
+    (category) => category.id === project.category,
+  )?.label;
   return (
     <div className="flex flex-col">
-      <span className="mb-5 text-[11px] uppercase tracking-[0.2em] font-light text-primary/60">
-        project · {project.year}
+      <span className="mb-5 font-mono text-[11px] text-foreground/60">
+        {[categoryLabel, toSince(project.duration) || project.year].filter(Boolean).join(" · ")}
       </span>
 
       <SharedElement name={`project-title-${project.slug}`}>
@@ -20,8 +24,6 @@ export function ProjectDetailHeader({ project }: { project: ProjectType }) {
           {project.title}
         </h1>
       </SharedElement>
-
-      <div className="mb-6 h-px w-full bg-primary/10" />
 
       <p className="max-w-2xl font-serif text-2xl italic leading-snug text-foreground/70 sm:text-3xl">
         {project.description}

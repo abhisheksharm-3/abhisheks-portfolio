@@ -10,7 +10,7 @@ export const projects: ProjectType[] = [
     description:
       "client work: analytics, billing, team access, and releases for a us client's ai video platform at ~$200k mrr",
     longDescription:
-      "brought in to cover a month of leave in june 2026, and still running it. a us client's ai video platform with 170+ paying customers and ~$200k mrr. i built its analytics module alone from scratch: five social networks on an append-only postgres archive, and a team insights query cut from 58s to 0.07s. i own its stripe billing: pricing rebuilt into modular plans in 8 days, after which revenue from existing customers rose 35%, and a sales checkout where 71% of quoted prospects paid. team access co-built with a teammate, render fixes for the video editor, and 42 production releases since june.",
+      "a us client's ai video platform with 170+ paying customers and ~$200k mrr, since june 2026. i built its analytics module alone from scratch: five social networks on an append-only postgres archive. i own its stripe billing: pricing rebuilt into modular plans in 8 days, after which revenue from existing customers rose 35%, and a sales checkout where 71% of quoted prospects paid. team access co-built with a teammate, render fixes for the video editor, and 42 production releases since june.",
     tags: ["TypeScript", "React", "Supabase", "Stripe", "AWS Lambda", "Remotion", "Python"],
     year: "2026",
     isFeatured: true,
@@ -19,6 +19,64 @@ export const projects: ProjectType[] = [
     duration: "june 2026 - present",
     category: "ai",
     isBuilding: true,
+    caseFile: {
+      scale: "170+ paying customers · ~$200k mrr",
+      receipt: [
+        { label: "billing", value: "mine, end to end" },
+        { label: "checkout configurator", value: "built it" },
+        { label: "analytics", value: "built it, alone" },
+        { label: "paying customers", value: "170+" },
+        { label: "runs through billing", value: "~$200k a month" },
+        { label: "releases shipped", value: "42" },
+      ],
+      rows: [
+        {
+          did: "i own billing, end to end",
+          detail:
+            "stripe plans and subscriptions, the billing worker, and every account change the client's team asks for.",
+          figure: "+35%",
+          figureLabel:
+            "revenue from existing customers after i rebuilt pricing into modular plans, in 8 days",
+        },
+        {
+          did: "i built the checkout configurator",
+          detail:
+            "sales builds a proposal; the buyer changes billing cadence, credits and studio days, pays, and lands in an account set up for them.",
+          figure: "71%",
+          figureLabel: "of quoted prospects paid through it",
+        },
+        {
+          did: "i built analytics, alone, from scratch",
+          detail: "five social networks on an append-only postgres archive.",
+          figure: "1,000×",
+          figureLabel:
+            "headroom under the networks' rate limit, by design: at most 81 of 86,400 calls a day per advisor",
+        },
+        {
+          did: "i ship the releases",
+          detail: "and write the release notes the client reads.",
+          figure: "42",
+          figureLabel: "production releases since june",
+        },
+      ],
+      quotes: [
+        {
+          text: "I am loving it! Thank you and your team so much for the quickness on the changes, it works great so far.",
+          who: "the client's support lead",
+          when: "oct 2026",
+        },
+        {
+          text: "The project management patch you added … has been really great. We're actively using that and it's become an important part of our workflow.",
+          who: "a member of the client's team",
+          when: "sep 2026",
+        },
+        {
+          text: "This looks awesome. I don't see anything I'd improve right off the bat here.",
+          who: "the client, on the analytics demo call",
+          when: "oct 2026",
+        },
+      ],
+    },
     notes: [
       {
         text: "renders came out warmer than the upload. not my colour code, the jpeg frames remotion captures.",
@@ -49,7 +107,6 @@ export const projects: ProjectType[] = [
     duration: "2026 - present",
     category: "ai",
     isBuilding: true,
-    notes: [{ text: "the footer on this site went through polaris's own gate before it shipped." }],
   },
   {
     title: "ProjectSleeve",
@@ -139,7 +196,7 @@ export const projects: ProjectType[] = [
     description: "cited answers from your documents, repos, and videos.",
     longDescription:
       "my rag playground, now a cited q&a app. ask across documents, spreadsheets, repos, and videos, and every claim links to the passage it came from: sql for spreadsheets, path and line for repos, timestamps for videos. retrieval fuses pgvector and full-text search in one postgres function, and a rework cut a repository index from 2,664 chunks to 711 with the same coverage.",
-    imageSrc: "/images/projects/inquora.png",
+    imageSrc: "/images/projects/inquora.webp",
     tags: ["NextJs", "TypeScript", "TailwindCSS", "RAG"],
     year: "2025",
     url: "https://inquora.vercel.app/",
@@ -501,11 +558,14 @@ export interface DeadProjectType {
   epitaph: string;
   link?: string;
   repo?: string;
+  /** What the project's live page looks like today. Absent for one that never launched. */
+  imageSrc?: string;
 }
 
 export const deadProjects: DeadProjectType[] = [
   {
     title: "WesternFront",
+    imageSrc: "/images/graveyard/westernfront.webp",
     description: "conflict news aggregator",
     reason:
       "reddit discontinued the api tier it ran on, and the rss feeds i fell back to were unreliable and visibly slanted. an aggregator is only as good as its sources, and mine stopped being trustworthy.",
@@ -517,6 +577,7 @@ export const deadProjects: DeadProjectType[] = [
   },
   {
     title: "Aventra",
+    imageSrc: "/images/graveyard/aventra.webp",
     description: "ai trip planner",
     reason:
       "the same problem statement later appeared at google's 2025 gen ai exchange hackathon. i overscoped it and underestimated the work, and it stalled at 60%.",
@@ -524,7 +585,7 @@ export const deadProjects: DeadProjectType[] = [
       "cut scope before building. ai calls and realtime apis need hard limits from the start.",
     duration: "april - may 2025",
     epitaph: "overscoped and stalled.",
-    link: "https://aventra.click",
+    link: "https://aventra-plan.vercel.app/",
     repo: "https://github.com/abhisheksharm-3/aventra",
   },
   {
@@ -537,6 +598,7 @@ export const deadProjects: DeadProjectType[] = [
   },
   {
     title: "Lexalyze",
+    imageSrc: "/images/graveyard/lexalyze.webp",
     description: "ai legal doc parser",
     reason:
       "built as my nlp course project under strict limits on which tools i could use. i have not had time to pick it back up.",
@@ -549,6 +611,7 @@ export const deadProjects: DeadProjectType[] = [
   },
   {
     title: "Triptalkies",
+    imageSrc: "/images/graveyard/triptalkies.webp",
     description: "trip planning prototype",
     reason:
       "my only project with custom auth written from scratch. i shipped a v1 and did not take it further.",

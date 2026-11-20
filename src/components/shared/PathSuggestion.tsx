@@ -54,7 +54,8 @@ const readBrowserPath = () => window.location.pathname;
  */
 const readNoPath = () => null;
 
-export const PathSuggestion = () => {
+/** `onMedia` sets the line in white for use over a photo or clip. */
+export const PathSuggestion = ({ onMedia = false }: { onMedia?: boolean }) => {
   const typed = useSyncExternalStore(subscribeToNothing, readBrowserPath, readNoPath);
   const suggestion = typed ? closestPath(typed) : null;
   const [isCorrected, setIsCorrected] = useState(false);
@@ -68,11 +69,13 @@ export const PathSuggestion = () => {
   if (!typed || !suggestion) return null;
 
   return (
-    <p className="mb-10 flex flex-wrap items-baseline gap-x-2 font-mono text-sm text-foreground/45">
-      <TextMorph>{isCorrected ? "you meant" : "you typed"}</TextMorph>
+    <p
+      className={`flex flex-wrap items-baseline gap-x-2 font-mono text-sm ${onMedia ? "mt-5 text-white/75" : "mb-10 text-foreground/60"}`}
+    >
+      <TextMorph>{isCorrected ? "did you mean" : "you typed"}</TextMorph>
       <Link
         href={suggestion}
-        className="text-foreground/85 underline decoration-foreground/15 underline-offset-4 transition-colors duration-200 hover:decoration-foreground"
+        className={`underline underline-offset-4 transition-colors duration-200 ${onMedia ? "text-white decoration-white/40 hover:decoration-white" : "text-foreground/85 decoration-foreground/15 hover:decoration-foreground"}`}
       >
         <TextMorph>{isCorrected ? suggestion : typed}</TextMorph>
       </Link>
