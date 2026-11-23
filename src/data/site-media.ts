@@ -8,14 +8,6 @@ import type { PhotoType } from "@/lib/types/components";
 const media = <T extends Record<string, PhotoType>>(entries: T) => entries;
 
 export const SITE_MEDIA = media({
-  homeHero: {
-    src: "/images/site/deccan-queen-window.webp",
-    video: "/images/site/deccan-queen-window.mp4",
-    alt: "the ghats sliding past the window of the deccan queen's dining car, a ketchup bottle on the table",
-    width: 720,
-    height: 1280,
-    caption: "the deccan queen, through the ghats · oct 2026",
-  },
   hackathon: {
     src: "/images/site/google-wall-me.webp",
     alt: "abhishek in a white polo in front of the coloured google letters on a slatted wood wall",
@@ -96,6 +88,53 @@ export const SITE_MEDIA = media({
     caption: "dharamshala after dark · nov 2026",
   },
 });
+
+/**
+ * The home hero's clips, each cropped to 4:5 and 8 seconds long. A visit plays the one after the
+ * clip the same browser saw last, so returning visitors cycle through all of them.
+ */
+export const HERO_CLIPS = [
+  {
+    src: "/images/site/deccan-queen-window.webp",
+    video: "/images/site/deccan-queen-window.mp4",
+    alt: "the ghats sliding past the window of the deccan queen's dining car, a ketchup bottle on the table",
+    width: 720,
+    height: 1280,
+    caption: "the deccan queen, through the ghats · oct 2026",
+  },
+  {
+    src: "/images/site/exhibit-flowers.webp",
+    video: "/images/site/exhibit-flowers.mp4",
+    alt: "white and pale blue flowers drawing themselves on a dark wall, projected at an exhibit",
+    width: 720,
+    height: 900,
+    caption: "projected flowers at an exhibit, mumbai · oct 2026",
+  },
+  {
+    src: "/images/site/exhibit-white-tree.webp",
+    video: "/images/site/exhibit-white-tree.mp4",
+    alt: "a white installation of branching arcs under tall windows, seen from a balcony above",
+    width: 720,
+    height: 900,
+    caption: "a white tree of arcs at the nmacc, mumbai · oct 2026",
+  },
+  {
+    src: "/images/site/sea-sun-marine-drive.webp",
+    video: "/images/site/sea-sun-marine-drive.mp4",
+    alt: "the sun low in a hazy sky, its path glittering across the sea",
+    width: 720,
+    height: 900,
+    caption: "the sun on the sea off marine drive · oct 2026",
+  },
+  {
+    src: "/images/site/diwali-sunali.webp",
+    video: "/images/site/diwali-sunali.mp4",
+    alt: "a firework bursting in gold sparks against a dark night sky",
+    width: 720,
+    height: 900,
+    caption: "diwali in sunali · nov 2026",
+  },
+] as const satisfies readonly PhotoType[];
 
 /** The four photos under "off the clock" on the home page, each leading to the about page. */
 export const HOME_PHOTOS = [
