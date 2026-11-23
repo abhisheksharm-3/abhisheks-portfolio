@@ -3,8 +3,6 @@
 import { useMotionValue } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { ListeningLine } from "@/components/shared/ListeningLine";
-import { LoopVideo } from "@/components/shared/LoopVideo";
-import { SITE_MEDIA } from "@/data/site-media";
 import {
   AbstractShapes,
   AnimatedPaths,
@@ -12,11 +10,12 @@ import {
   AsymmetricalGrid,
   NoiseBackground,
 } from "./HeroBackground";
+import { HeroClip } from "./HeroClip";
 import { HeroEyebrow, HeroName, HeroTagline } from "./HeroContent";
 
 /**
- * The homepage hero: the name, the line under it and what's playing, beside a silent clip from
- * the deccan queen's window, over the decorative background.
+ * The homepage hero: the name, the line under it and what's playing, beside a silent clip that
+ * changes on each visit, over the decorative background.
  *
  * Mouse parallax drives the background depth. The old scroll fade is gone: with a
  * content-sized hero it would hide the name while it was still on screen.
@@ -57,18 +56,7 @@ export const Hero = () => {
             <ListeningLine />
           </div>
         </div>
-        <figure className="w-full max-w-sm md:ml-auto md:max-w-md">
-          <div className="relative aspect-[4/5] overflow-hidden border border-foreground/10">
-            <LoopVideo
-              video={SITE_MEDIA.homeHero.video}
-              poster={SITE_MEDIA.homeHero.src}
-              alt={SITE_MEDIA.homeHero.alt}
-            />
-          </div>
-          <figcaption className="mt-2 font-mono text-[11px] text-foreground/60">
-            {SITE_MEDIA.homeHero.caption}
-          </figcaption>
-        </figure>
+        <HeroClip />
       </div>
     </section>
   );
