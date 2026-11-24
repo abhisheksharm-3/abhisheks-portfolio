@@ -230,7 +230,7 @@ export const RESUME_PROJECTS: readonly ResumeProject[] = [
         lenses: ["general", "fullstack"],
       },
       {
-        text: "Found 22 database functions in Flockr with no membership check and authorized each one before v2.0.0, and moved split remainders to cent allocation in 1 shared function in place of 3 copies that had drifted apart.",
+        text: "Enforced household membership in all 22 of Flockr's database functions, and split every shared expense to the cent in 1 Postgres function, with remainders allocated so each split sums exactly to its total.",
         lenses: ["general"],
       },
     ],
@@ -246,7 +246,7 @@ export const RESUME_PROJECTS: readonly ResumeProject[] = [
         lenses: ["fde", "fullstack"],
       },
       {
-        text: "Took Inquora from a broken deploy to live retrieval in 1 day: the send path cut from 6 roundtrips to 1, a Postgres ingest queue that retries on crash, and CI that blocks a merge on 5 checks from lint to build.",
+        text: "Cut Inquora's message send path from 6 roundtrips to 1, moved file ingest onto a Postgres queue that retries after a crash, and set up CI that blocks a merge on any of 5 checks, from lint to build.",
         lenses: ["fullstack"],
       },
     ],
