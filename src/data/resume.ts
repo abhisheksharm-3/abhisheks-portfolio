@@ -106,7 +106,7 @@ export const RESUME_EXPERIENCE: readonly ResumeRole[] = [
             lenses: [],
           },
           {
-            text: "Enabled ACH bank debit for the client's $5K+/month contracts 8 days after inheriting the codebase, with a 2-month grace period for failed payments; now live on 11 subscriptions worth ~$39K a month.",
+            text: "Enabled ACH bank debit for the client's $5K+/month contracts 8 days after inheriting the codebase, with a 2-month grace period for failed payments; now live on 11 subscriptions billing ~$39K a month after discounts.",
             lenses: [],
           },
           {
